@@ -2488,7 +2488,7 @@ RECIPES:Register(RECIPE)
 
 ------------------------------------------------ ARMOR UPGRADES
 //
-RECIPE = {}
+--[[ RECIPE = {}
 RECIPE.uid = "armorupplate"
 RECIPE.name = "Scrap Plate Covering"
 RECIPE.category = "Armor - Padding and Inserts"
@@ -2505,12 +2505,12 @@ RECIPE.items = {
 RECIPE.result = {
     ["armorup_scrap"] = 1
 }
-RECIPES:Register(RECIPE)
+RECIPES:Register(RECIPE) ]]
 
 //
 
 
-RECIPE = {}
+--[[ RECIPE = {}
 RECIPE.uid = "armorupevasion"
 RECIPE.name = "Weight Reduction Kit"
 RECIPE.category = "Armor - Padding and Inserts"
@@ -2527,11 +2527,11 @@ RECIPE.items = {
 RECIPE.result = {
     ["armorup_evasion"] = 1
 }
-RECIPES:Register(RECIPE)
+RECIPES:Register(RECIPE) ]]
 
 //
 
-RECIPE = {}
+--[[ RECIPE = {}
 RECIPE.uid = "armorupenergy"
 RECIPE.name = "Rubber Insulation Inserts"
 RECIPE.category = "Armor - Padding and Inserts"
@@ -2548,11 +2548,11 @@ RECIPE.items = {
 RECIPE.result = {
     ["armorup_energy"] = 1
 }
-RECIPES:Register(RECIPE)
+RECIPES:Register(RECIPE) ]]
 
 //
 
-RECIPE = {}
+--[[ RECIPE = {}
 RECIPE.uid = "armorupballistic"
 RECIPE.name = "Kevlar Inserts"
 RECIPE.category = "Armor - Padding and Inserts"
@@ -2570,7 +2570,7 @@ RECIPE.result = {
     ["armorup_ballistic"] = 1
 }
 RECIPES:Register(RECIPE)
-
+ ]]
 //
 
 
@@ -2785,8 +2785,8 @@ RECIPE.desc = "A medium sized self-contained fusion plant for rifle-sized energy
 RECIPE.profession = "science"
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
-    ["plastic"] = 5,
-	["lead"] = 5,
+    ["plastic"] = 4,
+	["lead"] = 4,
 	
 }
 RECIPE.result = {
@@ -2796,16 +2796,16 @@ RECIPES:Register(RECIPE)
 
 //
 RECIPE = {}
-RECIPE.uid = "make_ammo_mfc"
-RECIPE.name = "Microfusion Cells"
+RECIPE.uid = "make_ammo_mfc_maxcharge"
+RECIPE.name = "Microfusion Cells Max Charge "
 RECIPE.category = "Science - Ammo"
 RECIPE.model = "models/fallout new vegas/microfusion_cell.mdl"
 RECIPE.desc = "A medium sized self-contained fusion plant for rifle-sized energy weapons. This one is fully charged."
 RECIPE.profession = "science"
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
-    ["plastic"] = 4,
-	["lead"] = 4,
+    ["plastic"] = 5,
+	["lead"] = 5,
 	
 }
 RECIPE.result = {
@@ -2836,7 +2836,7 @@ RECIPES:Register(RECIPE)
 //
 
 RECIPE = {}
-RECIPE.uid = "make_ammo_energycellmax"
+RECIPE.uid = "make_ammo_energycellovercharge"
 RECIPE.name = "Energy Cells Over Charged"
 RECIPE.category = "Science - Ammo"
 RECIPE.model = "models/mosi/fallout4/ammo/gammaround.mdl"
@@ -2844,8 +2844,8 @@ RECIPE.desc = "A small self-contained energy unit for one-handed energy weapons.
 RECIPE.profession = "science"
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
-    ["plastic"] = 4,
-	["lead"] = 4,
+    ["plastic"] = 3,
+	["lead"] = 3,
 	
 }
 RECIPE.result = {
@@ -2864,8 +2864,8 @@ RECIPE.desc = "A small self-contained energy unit for one-handed energy weapons.
 RECIPE.profession = "science"
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
-    ["plastic"] = 3,
-	["lead"] = 3,
+    ["plastic"] = 4,
+	["lead"] = 4,
 	
 }
 RECIPE.result = {

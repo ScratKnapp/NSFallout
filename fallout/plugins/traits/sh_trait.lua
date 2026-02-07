@@ -233,7 +233,7 @@ TRAITS:Register(TRAIT)
 local TRAIT = {}
 TRAIT.uid = "gunslinger" 
 TRAIT.name = "Gunslinger"
-TRAIT.desc = "+15% damage with pistols/revolvers."
+TRAIT.desc = "+15% damage with pistols/revolvers using the Guns skill."
 TRAIT.category = "Perks (Passive)"
 TRAIT.icon = "fonvui/hud/icons/perks/Gunslinger.png"
 TRAIT.OnAttackData = function(self, action, attacker, info)
@@ -252,7 +252,7 @@ TRAITS:Register(TRAIT)
 local TRAIT = {}
 TRAIT.uid = "rifleman" 
 TRAIT.name = "Rifleman"
-TRAIT.desc = "+15% damage with rifles."
+TRAIT.desc = "+15% damage with Precision Rifles and Assault Rifles using the Guns skill."
 TRAIT.category = "Perks (Passive)"
 TRAIT.icon = "fonvui/hud/icons/perks/Rifleman.png"
 TRAIT.OnAttackData = function(self, action, attacker, info)

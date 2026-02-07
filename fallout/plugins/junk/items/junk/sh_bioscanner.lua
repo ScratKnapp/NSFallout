@@ -8,7 +8,7 @@ ITEM.height = 1
 
 ITEM.salvage = {
 	["asbestos"] = 2,
-	["fiberopticss"] = 2,
+	["fiberoptics"] = 2,
 	["nuclearmaterial"] = 2,
 
 }

@@ -21,11 +21,7 @@ ENT.models = {
 }
 
 ENT.resources = {
-	["mana_core_1"] = 1,
-	["gem_agate"] = 1,
-	["ore_coal"] = 5,
-	["ore_iron"] = 50,
-	["ore_rock"] = 25
+	["steel"] = 10,
 }
 
 ENT.gatherAmt = {7,9}
