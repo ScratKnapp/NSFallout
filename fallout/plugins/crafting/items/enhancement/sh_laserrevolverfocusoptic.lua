@@ -1,0 +1,18 @@
+ITEM.name = "Laser Revolver Focus Optic"
+ITEM.desc = "An extension to the revolver's 'barrel' that places several focusing lenses to strengthen the output of outbound lasers."
+ITEM.uniqueID = "laserrevolverfocusoptic"
+ITEM.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
+ITEM.flag = "v"
+ITEM.category = "Upgrades"
+ITEM.slot = "Laser Revolver Focus Optic"
+ITEM.width = 1
+ITEM.height = 1
+ITEM.maxstack = 1
+
+ITEM.combiner = true
+ITEM.weaponOnly = true
+ 
+ITEM.dmg = 2
+
+ 
+ 

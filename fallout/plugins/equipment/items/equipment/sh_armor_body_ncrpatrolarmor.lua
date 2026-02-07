@@ -1,0 +1,31 @@
+ITEM.name = "NCR Ranger Patrol Armor Vest"
+ITEM.desc = "An NCR reproduced set of combat armor issued to NCR Rangers."
+ITEM.model = "models/thespireroleplay/items/clothes/group054.mdl"
+ITEM.width = 2
+ITEM.height = 2
+ITEM.iconCam = {
+	pos = Vector(232.82006835938, 196.6298828125, 142),
+	ang = Angle(25, 220, 0),
+	fov = 4,
+	outline = true,
+	outlineColor = Color(15, 250, 0),
+}
+ITEM.price = 1500
+ITEM.durability = 250
+
+ITEM.armor = {
+	["Body"] = 18,
+}
+
+ITEM.upgradeSlots = {
+["Inserts"] = true,
+
+}
+
+ITEM.res = { --percentage based armor
+  ["Kinetic"] = 0,
+  ["Energy"] = 0, 
+}
+ITEM.specialSlot = "Body" --what slot it goes in
+ITEM.skill = { --gives the player stats on equip
+}

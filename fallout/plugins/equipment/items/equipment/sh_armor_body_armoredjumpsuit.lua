@@ -1,0 +1,31 @@
+ITEM.name = "Armored Jumpsuit"
+ITEM.desc = "A very simple mechanic jumpsuit modified to have protective leather padding."
+ITEM.model = "models/fallout/apparel/leatherarmor.mdl"
+ITEM.width = 2
+ITEM.height = 2
+ITEM.iconCam = {
+	pos = Vector(-200, 0, 0),
+	ang = Angle(0, -0, 0),
+	fov = 8,
+	outline = true,
+	outlineColor = Color(15, 250, 0),
+}
+ITEM.price = 100
+ITEM.durability = 250
+
+ITEM.armor = {
+	["Body"] = 5,
+}
+
+ITEM.upgradeSlots = {
+["Inserts"] = true,
+
+}
+
+ITEM.res = { --percentage based armor
+  ["Kinetic"] = 0,
+  ["Energy"] = 0, 
+}
+ITEM.specialSlot = "Body" --what slot it goes in
+ITEM.skill = { --gives the player stats on equip
+}
