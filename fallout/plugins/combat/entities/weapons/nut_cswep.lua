@@ -432,6 +432,11 @@ function SWEP:DrawHUD()
 		if IsValid(self.viewed) then
 			local textSizeX, textSizeY
 			local name = self.viewed:Name()
+			local dead = false
+
+			if self.viewed:getHP() <= 0 then
+				dead = true
+			end
 			if action then
 				local actionTbl = ACTS.actions[action.uid] or {}
 				local accuracy = 0
@@ -474,8 +479,17 @@ function SWEP:DrawHUD()
 				posY = posY + textSizeY
 				--target string
 				if not action.selfOnly then
-					local targetString = "Target: " .. name
-					nut.util.drawText(targetString, posX, posY, Color(0,238,0,150), 1, 1, "nutCombatTarget")
+
+					local targetString = ""
+
+					if dead then
+						targetString = "Target: " .. name .. "(DEAD)"
+						nut.util.drawText(targetString, posX, posY, Color(255,0,0,150), 1, 1, "nutCombatTarget")
+					else
+						targetString = "Target: " .. name 
+						nut.util.drawText(targetString, posX, posY, Color(0,238,0,150), 1, 1, "nutCombatTarget")
+					end 
+
 					--offset the text
 					textSizeX, textSizeY = surface.GetTextSize(targetString)
 					posY = posY + textSizeY

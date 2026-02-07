@@ -9,7 +9,7 @@ ITEM.iconCam = {
 	fov = 3.3,
 }
 
-ITEM.specialSlot = "Primary"
+ITEM.specialSlot = {"Sidearm", "Primary"}
 ITEM.category = "Weapons"
 ITEM.weaponType = "Pistol" -- Unarmed, Pistol, Rifle, Sniper, SMG, Shotgun, LMG, Energy, Melee
 ITEM.durability = 500

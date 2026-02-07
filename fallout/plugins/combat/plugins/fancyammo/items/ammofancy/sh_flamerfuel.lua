@@ -1,7 +1,7 @@
 ITEM.name = "Flamer Fuel"
 ITEM.desc = "A tank full of flammable fuel meant for use in a Flamer."
 ITEM.uniqueID = "ammo_flamer"
-ITEM.model = "models/fallout new vegas/electron_charge_pack.mdl"
+ITEM.model = "models/mosi/fallout4/ammo/flamerfuel.mdl"
 ITEM.category = "Ammunition"
 
 ITEM.ammo = "Flamer Fuel"
