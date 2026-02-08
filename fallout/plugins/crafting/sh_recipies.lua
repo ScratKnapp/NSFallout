@@ -3151,6 +3151,72 @@ RECIPES:Register(RECIPE)
 
 //
 RECIPE = {}
+RECIPE.uid = "lasermusketscoperec"
+RECIPE.name = "Laser Musket Scope"
+RECIPE.category = "Science - Attachments"
+RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
+RECIPE.desc = "A short range scope for a Laser Musket to replace its basic iron sights."
+RECIPE.profession = "science"
+RECIPE.items = {
+    --uniqueID, if unspecified in the file, are the file name without the sh_
+    ["plastic"] = 4,
+    ["glass"] = 4,
+	["steel"] = 10,
+	["oil"] = 1,
+	["spring"] = 1,
+	
+}
+RECIPE.result = {
+    ["lasermusketscope"] = 1
+}
+RECIPES:Register(RECIPE)
+
+//
+RECIPE = {}
+RECIPE.uid = "lasermusket2shotcaperec"
+RECIPE.name = "Laser Musket 2 Shot Capacitor"
+RECIPE.category = "Science - Attachments"
+RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
+RECIPE.desc = "A short range scope for a Laser Musket to replace its basic iron sights."
+RECIPE.profession = "science"
+RECIPE.items = {
+    --uniqueID, if unspecified in the file, are the file name without the sh_
+	["plastic"] = 6,
+    ["circuitry"] = 8,
+	["steel"] = 10,
+	["acid"] = 4,
+	["spring"] = 4,
+	
+}
+RECIPE.result = {
+    ["lasermusket2shotcap"] = 1
+}
+RECIPES:Register(RECIPE)
+
+//
+RECIPE = {}
+RECIPE.uid = "laserrepeaterscope"
+RECIPE.name = "Laser Repeater Scope"
+RECIPE.category = "Science - Attachments"
+RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
+RECIPE.desc = "A holographic sight for a Laser Repeater."
+RECIPE.profession = "science"
+RECIPE.items = {
+    --uniqueID, if unspecified in the file, are the file name without the sh_
+	["plastic"] = 6,
+    ["circuitry"] = 6,
+	["steel"] = 10,
+	["acid"] = 4,
+    ["glass"] = 4,
+	
+}
+RECIPE.result = {
+    ["laserrepeaterscope"] = 1
+}
+RECIPES:Register(RECIPE)
+
+//
+RECIPE = {}
 RECIPE.uid = "plasmapistolionizerrec"
 RECIPE.name = "Plasma Pistol Ionizer"
 RECIPE.category = "Science - Attachments"

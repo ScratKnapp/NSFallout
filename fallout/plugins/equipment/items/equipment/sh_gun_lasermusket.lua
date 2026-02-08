@@ -41,6 +41,11 @@ ITEM.reqStats = {
   ["str"] = 2,
 }
 
+ITEM.upgradeSlots = {
+	["Laser Musket 2 Shot Capacitor"] = true,
+	["Laser Musket Scope"] = true,
+}
+
 ITEM.skillScaleDmg = {
     ["energy"] = 0.1,
 }

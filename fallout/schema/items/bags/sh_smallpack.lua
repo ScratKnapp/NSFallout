@@ -2,7 +2,7 @@ local INVENTORY_TYPE_ID = "grid"
 
 ITEM.name = "Small Backpack"
 ITEM.desc = "A small convenient backpack that allows you to carry more things."
-ITEM.model = "models/warz/largebackpack.mdl"
+ITEM.model = "models/vex/fallout76/backpacks/backpack_01.mdl"
 ITEM.width = 2
 ITEM.height = 2
 ITEM.invWidth = 3

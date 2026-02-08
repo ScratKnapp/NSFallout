@@ -434,7 +434,7 @@ function SWEP:DrawHUD()
 			local name = self.viewed:Name()
 			local dead = false
 
-			if self.viewed:getHP() <= 0 then
+			if self.viewed:getHP() and tonumber(self.viewed:getHP()) <= 0 then
 				dead = true
 			end
 			if action then
