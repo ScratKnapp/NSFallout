@@ -146,6 +146,16 @@ else
 				char:updateAttrib(k, v)
 			end
 		end
+
+		local history = client:getHistory()
+
+		if history ~= "none" then 
+			local historyList = HISTORIES.histories
+
+			if(historyList[history].func) then
+			historyList[history].func(client, char)
+			end
+		end 
 		
 		local pointAttrib = math.floor(charLevel/nut.config.get("specialLevels", 2)) * nut.config.get("specialPerLevel", 1)
 		local pointSkill = math.floor((charLevel-1)/nut.config.get("skillLevels", 1)) * nut.config.get("skillPerLevel", 5)
