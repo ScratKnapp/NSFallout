@@ -66,6 +66,11 @@ ITEM.onCombineTo = function(itemSelf, itemTarget)
 		client:notify("Can only be used on items with damage.")
 		return true
 	end
+
+	if (itemSelf.meleeOnly) and itemTarget.category ~= "Weapon - Melee" then
+		client:Notify("You can only use these on melee weapons.")
+		return true
+	end
 	
 	if(itemSelf.slot and !itemTarget.upgradeSlots) then
 		client:notify("Can only be used on items with slots.")
