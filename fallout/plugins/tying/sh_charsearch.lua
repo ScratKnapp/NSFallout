@@ -100,6 +100,15 @@ else
 					panel == localInvPanel and storageInvPanel or localInvPanel
 				if (IsValid(otherPanel)) then otherPanel:Remove() end
 			end
+			
+			if(nut.gui.equipment) then
+				nut.gui.equipment:Remove()
+			end
+			
+			if(nut.gui.augment) then
+				nut.gui.augment:Remove()
+			end
+			
 			panel:oldOnRemove()
 			
 			netstream.Start("searchExit", target, inventory)

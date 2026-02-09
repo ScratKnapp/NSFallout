@@ -185,7 +185,8 @@ PLUGIN.helperFuncs["getRes"] = function(self, part)
 	local inv = char:getInv()
 	
 	--resistance, start with resist from buffs
-	local res = table.Copy(self.res or {})
+	local res = self:getNetVar("res", self.res or {})
+	res = table.Copy(res)
 	
 	local buffRes = self:getBuffAttributeTbl("res") or {}
 	
@@ -675,8 +676,8 @@ PLUGIN.helperFuncs["receiveDamage"] = function(self, dmg, dmgT, part)
 	dmg = dmg * math.max(1 - (res[dmgT] or 0), 0)
 	
 	dmg = dmg * math.max(1 - (res["dmg"] or 0), 0) --general damage reduction
-	
-	if(PLUGIN:IsBroadType(dmgT, "ballistic")) then
+
+	if(PLUGIN:IsBroadType(dmgT, "kinetic")) then
 		dmg = dmg * math.max(1 - (res["Kinetic"] or 0), 0)
 	elseif(PLUGIN:IsBroadType(dmgT, "energy")) then
 		dmg = dmg * math.max(1 - (res["energy"] or 0), 0)

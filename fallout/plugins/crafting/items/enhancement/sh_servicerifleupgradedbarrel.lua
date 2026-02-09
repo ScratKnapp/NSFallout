@@ -12,7 +12,6 @@ ITEM.maxstack = 1
 ITEM.combiner = true
 ITEM.weaponOnly = true
  
-ITEM.dmg = 2
-
- 
- 
+ITEM.dmg = {
+	["12.7mm"] = 2,
+}

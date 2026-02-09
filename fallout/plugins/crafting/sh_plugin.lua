@@ -279,21 +279,21 @@ function PLUGIN:loadTables()
 			local position = v.pos
 			local angles = v.angles
 			local entity = ents.Create(v.ent)
-			entity:SetPos(position)
-			entity:SetAngles(angles)
-			entity:Spawn()
-			entity:Activate()
-			
-			entity:setNetVar("id", v.invID)
-			
-			local phys = entity:GetPhysicsObject()
-			if phys and phys:IsValid() then
-				phys:EnableMotion(false)
+			if(IsValid(entity)) then
+				entity:SetPos(position)
+				entity:SetAngles(angles)
+				entity:Spawn()
+				entity:Activate()
+				
+				entity:setNetVar("id", v.invID)
+				
+				local phys = entity:GetPhysicsObject()
+				if IsValid(phys) then
+					phys:EnableMotion(false)
+				end
 			end
 		end
 	end
-	
-	self.loadedData = true
 end
 
 function PLUGIN:LoadData()

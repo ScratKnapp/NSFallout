@@ -60,6 +60,7 @@ if SERVER then
 				
 				local item = table.Random(self.spawngroups[container.lootable] or self.spawngroups["default"])
 				local inventory = container:getInv()
+				if(!inventory) then return false end
 				
 				if(table.Count(inventory:getItems()) < nut.config.get("stor_locallimit", 2)) then
 					local itemObj = nut.item.list[item]

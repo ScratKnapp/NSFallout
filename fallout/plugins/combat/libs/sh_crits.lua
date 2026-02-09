@@ -53,7 +53,8 @@ PLUGIN.helperFuncs["rollCrit"] = function(self, bonusC, bonusM, weaponItem)
 	return mult, msg
 end
 
-hook.Add("nut_OnCombatAttack", "nut_CritModify", function(action, attacker, info)
+hook.Add("nut_OnCombatAttack", "nut_CritModify", function(action, attacker, info, fakeAttack)
+	if(fakeAttack) then return end
 	
 	local weapon = info.weapon or (info.action and info.action.weapon)
 	local weaponItem

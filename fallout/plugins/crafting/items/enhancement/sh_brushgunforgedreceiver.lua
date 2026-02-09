@@ -12,4 +12,6 @@ ITEM.maxstack = 1
 ITEM.combiner = true
 ITEM.weaponOnly = true
 
-ITEM.dmg = 2
+ITEM.dmg = {
+	[".45-70 Gov't"] = 2,
+}

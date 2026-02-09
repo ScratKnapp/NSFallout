@@ -11,4 +11,6 @@ ITEM.upgradeLimit = 5
 ITEM.combiner = true
 ITEM.weaponOnly = true
 
-ITEM.dmg = 1 --how many attribs the thing gives
+ITEM.dmg = {
+	["Slash"] = 1,
+}

@@ -152,7 +152,9 @@ function playerMeta:buffGetHit()
 	end
 end
 
-hook.Add("nut_OnCombatAttack", "nut_buffOnHit", function(action, attacker, info)
+hook.Add("nut_OnCombatAttack", "nut_buffOnHit", function(action, attacker, info, fakeAttack)
+	if(!fakeAttack) then return end
+	
 	attacker:buffOnHit()
 end)
 
@@ -185,7 +187,7 @@ if(SERVER) then
 		if((self.nextNetworkBuff or 0) > CurTime()) then return end
 		self.nextNetworkBuff = CurTime() + 1
 	
-		for k, client in pairs(player.GetAll()) do
+		for k, client in ipairs(player.GetAll()) do
 			local clientNet = PLUGIN.networkQueueBuff[client]
 		
 			if(clientNet and !table.IsEmpty(clientNet)) then

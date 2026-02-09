@@ -49,11 +49,12 @@ function ENT:deleteInventory()
 end
 
 function ENT:OnRemove()
-	if (not self.nutForceDelete) then
-		if (not nut.entityDataLoaded or not PLUGIN.loadedData) then return end
+	if (!self.nutForceDelete) then
+		if (!nut.entityDataLoaded) then return end
 		if (self.nutIsSafe) then return end
 		if (nut.shuttingDown) then return end
 	end
+	
 	self:deleteInventory()
 	PLUGIN:saveStorage()
 end

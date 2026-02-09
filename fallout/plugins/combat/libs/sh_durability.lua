@@ -49,7 +49,9 @@ PLUGIN.helperFuncs["durabilityDefense"] = function(self, part)
 	end
 end
 
-hook.Add("nut_OnCombatAttack", "nut_durabilityOffense", function(action, attacker, info)
+hook.Add("nut_OnCombatAttack", "nut_durabilityOffense", function(action, attacker, info, fakeAttack)
+	if(fakeAttack) then return end
+	
 	local weapon = info.weapon or (info.action and info.action.weapon)
 	if(!weapon) then return end
 	

@@ -341,7 +341,7 @@ nut.command.add("endturnall", {
 	adminOnly = true,
 	onRun = function(client, arguments)	
 		for k, v in ipairs(player.GetAll()) do
-			v:setNetVar("turnOverIcon", true)
+			v:setNetVar("turnOverIcon", nil)
 		end
 	end
 })

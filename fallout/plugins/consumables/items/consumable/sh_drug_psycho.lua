@@ -16,10 +16,9 @@ ITEM.duration = 1800
  
 ITEM.buffTbl = {
 	amp = {
-	["Energy"] = 25,
-	["Kinetic"] = 25,
+		["Energy"] = 25,
+		["Kinetic"] = 25,
 	},
-
 }
 
 ITEM.effect = {

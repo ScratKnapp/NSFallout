@@ -161,10 +161,17 @@ local PANEL = {}
 		self.labels = {}
 	
 		timer.Simple(0, function()
+			local selected = self.selected
+			local cooldowns = {}
+		
+			if(selected and selected.getCooldowns) then
+				cooldowns = selected:getCooldowns()
+			end
+
 			--load default actions
 			for k, action in pairs(self.actions) do
 				if(action.category == "Default") then 
-					self:addActionButton(action, k)
+					self:addActionButton(action, k, cooldowns)
 				end
 			end
 		
@@ -172,12 +179,12 @@ local PANEL = {}
 			for k, action in SortedPairsByMemberValue(self.actions or {}, "category" or "") do
 				if(action.category == "Default") then continue end
 				
-				self:addActionButton(action, k)
+				self:addActionButton(action, k, cooldowns)
 			end
 		end)	
 	end
 	
-	function PANEL:addActionButton(action, actionIndex)
+	function PANEL:addActionButton(action, actionIndex, cooldowns)
 		local categories = self.categories
 		local inner = self.inner
 	
@@ -299,6 +306,23 @@ local PANEL = {}
 		button:SetFont("nutSmallFont")
 		
 		local actionName = actionData.name or action.name or "Unnamed Action"
+		
+		local cooldown = cooldowns[action.uid]
+		if(!cooldown) then
+			local weapon = action.weapon
+			if(weapon) then
+				--weapon given actions on cd
+				--done this way so each weapon has its own cds
+				cooldown = cooldowns[action.uid..weapon]
+			end
+		end
+		
+		if(cooldown) then
+			local duration = cooldown.duration
+		
+			actionName = actionName.. " CD: " ..duration.. "T"
+		end
+		
 		--puts the weapon name next to the action
 		--felt a bit cluttered
 		--[[

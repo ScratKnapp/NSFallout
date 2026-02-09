@@ -512,9 +512,13 @@ function PANEL:Init()
 		surface.SetTextPos(w*0.5-textSizeX*0.5, h*0.5-textSizeY*0.5) 
 		surface.DrawText(levelText)
 	end
-	respec.DoClick = function(self)
+	respec.DoClick = function(panel)
 		Derma_Query("Do you want to respec?", "Respec", "Yes", function()
 			netstream.Start("nut_respec")
+			
+			timer.Simple(0, function()
+				self:ReopenPanel()
+			end)
 		end, "No")
 	end
 	self.respec = respec
@@ -719,7 +723,7 @@ function PANEL:PerkChoose(button)
 	if(IsValid(self.perkChoose)) then self.perkChoose:Remove() end
 	
 	local client = LocalPlayer()
-	
+
 	--so we can exclude them
 	local clientPerks = client:getTraitsData()
 
@@ -755,6 +759,7 @@ function PANEL:PerkChoose(button)
 	
 	for k, v in pairs(perks) do
 		if(v.hidden) then continue end
+		if(client:hasTrait(k)) then continue end
 	
 		local name = v.name
 		local desc = v.desc
@@ -810,6 +815,10 @@ function PANEL:PerkChoose(button)
 				end
 			
 				netstream.Start("perkAdd", v.uid)
+				
+				timer.Simple(0, function()
+					self:ReopenPanel()
+				end)
 			end, "No", function()
 			
 			end)
@@ -855,6 +864,12 @@ function PANEL:OnKeyCodePressed(key)
 			nut.gui.menu:remove()
 		end
 	end
+end
+
+function PANEL:ReopenPanel()
+	local parent = self:GetParent()
+	self:Remove()
+	parent:Add("nutStats")
 end
 vgui.Register("nutStats", PANEL, "EditablePanel")
 

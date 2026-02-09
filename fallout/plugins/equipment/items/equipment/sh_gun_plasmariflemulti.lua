@@ -46,7 +46,7 @@ ITEM.upgradeSlots = {
 }
 
 ITEM.skillScaleDmg = {
-    ["energyweapons"] = 0.15,
+    ["energy"] = 0.15,
 }
 
 ITEM.skillScaleAcc = {

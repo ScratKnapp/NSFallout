@@ -28,7 +28,7 @@ PLUGIN.specialAmmoTypes = {
 
 	--armor piercing
 	["AP"] = function(action, attacker, info)
-		action.dmg = action.dmg*0.8
+		action.dmg = action.dmg*0.9
 	end,
 	
 	--Overpressure
@@ -146,7 +146,8 @@ PLUGIN.specialAmmoTypes = {
 	end,
 }
 
-hook.Add("nut_ActionAttackData", "nut_CombatAmmoUse", function(action, attacker, info)
+hook.Add("nut_ActionAttackData", "nut_CombatAmmoUse", function(action, attacker, info, fakeAttack)
+	if(fakeAttack) then return end
 	if(!action.dmg) then return end
 	
 	local actionTbl = info.actionTbl

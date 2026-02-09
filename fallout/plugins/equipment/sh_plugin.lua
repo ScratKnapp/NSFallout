@@ -203,8 +203,16 @@ if SERVER then
 		local inventory = self:getChar():getInv()
 		if inventory then
 			local position = self:getItemDropPos()
-			--x, y = inventory:findFreePosition(item)
-			inventory:addItem(item)
+			
+			local x, y = inventory:findFreePosition(item)
+			if(x and y) then
+				item:setData("x", x)
+				item:setData("y", y)
+			
+				inventory:addItem(item)
+			else
+				item:spawn(position)
+			end
 		end
 
 		local char = self:getChar()

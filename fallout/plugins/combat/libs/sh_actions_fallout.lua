@@ -1058,7 +1058,7 @@ ACT.effects = {
         duration = 1,
         strength = 1,
 
-		evasion = 200,
+		armor = 200,
 
 		hitsDef = 2,
 		

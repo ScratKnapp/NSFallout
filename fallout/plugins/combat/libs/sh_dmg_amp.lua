@@ -9,6 +9,12 @@ PLUGIN.helperFuncs["getAmp"] = function(self)
 	--amplifications, start with amp from buffs
 	local amp = self:getNetVar("amp", self.amp or {})
 	amp = table.Copy(amp)
+
+	local buffAmp = self:getBuffAttributeTbl("amp") or {}
+	
+	for k, v in pairs(buffAmp) do
+		amp[k] = (amp[k] or 0) + v
+	end
 	
 	hook.Run("nut_OnGetAmp", self, amp)
 	
@@ -41,9 +47,25 @@ hook.Add("nut_ActionAttackData", "nut_AmpModify", function(action, attacker, inf
 	local amp = attacker:getAmp()
 	
 	if(amp) then
+		local broadTypes = {
+			["Kinetic"] = true,
+			["Energy"] = true,
+		}
+		
+		--generalized damage amp
+		for k, v in pairs(broadTypes) do
+			if(amp[k] and PLUGIN:IsBroadType(action.dmgT, k)) then
+				action.dmg = action.dmg * (1 + amp[k])
+			end
+		end
+	
+		--specific damage amp
 		if(amp[action.dmgT]) then
 			action.dmg = action.dmg * (1 + amp[action.dmgT])
-		elseif(amp["dmg"]) then --general damage amp
+		end
+		
+		--general damage amp
+		if(amp["dmg"]) then 
 			action.dmg = action.dmg * (1 + amp["dmg"])
 		end
 	end

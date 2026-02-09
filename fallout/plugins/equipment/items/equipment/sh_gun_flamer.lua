@@ -41,7 +41,7 @@ ITEM.reqStats = {
 }
 
 ITEM.skillScaleAcc = {
-["energyweapons"] = 2
+["energy"] = 2
 }
 
 ITEM.skillScaleDmg = {

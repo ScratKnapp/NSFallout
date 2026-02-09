@@ -132,7 +132,7 @@ TRAIT.OnDamageProcess = function(self, attackData, dmgTbl)
 	for k, v in pairs(dmgTbl.damage or {}) do
 		local dmgT = v.dmgT
 	
-		if(nut.plugin.list["combat"]:IsBroadType(dmgT, "ballistic")) then
+		if(nut.plugin.list["combat"]:IsBroadType(dmgT, "kinetic")) then
 			v.dmg = v.dmg * 0.8
 		end
 	end
@@ -194,7 +194,7 @@ TRAIT.OnAttackData = function(self, action, attacker, info)
 	local partString = info.partString
 
 	if(partString and partString == "Body" and action.accuracy) then
-		action.accuracy = action.accuracy * 1.35
+		action.accuracy = action.accuracy + math.abs(action.accuracy * 0.35)
 	end
 end
 TRAITS:Register(TRAIT)
@@ -406,7 +406,7 @@ TRAIT.category = "Perks (Passive)"
 TRAIT.icon = "fonvui/hud/icons/perks/sniper.png"
 TRAIT.OnAttackData = function(self, action, attacker, info)
 	if(info.partString and info.partString == "Head") then
-		action.accuracy = action.accuracy*1.2
+		action.accuracy = action.accuracy + math.abs(action.accuracy * 0.2)
 	end
 end
 TRAITS:Register(TRAIT)

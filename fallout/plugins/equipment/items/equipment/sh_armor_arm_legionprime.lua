@@ -1,0 +1,24 @@
+ITEM.name = "Legion Prime Manica"
+ITEM.desc = "Leather with metal reinforcement armguard for the Legion."
+ITEM.model = "models/mosi/fallout4/props/junk/ammobag.mdl"
+ITEM.height = 1
+ITEM.width = 1
+ITEM.price = 50
+ITEM.durability = 250
+
+ITEM.armor = {
+	["Left Arm"] = 12,
+	["Right Arm"] = 12,
+}
+
+ITEM.upgradeSlots = {
+	["Inserts"] = true,
+}
+
+ITEM.res = { --percentage based armor
+  ["Kinetic"] = 0,
+  ["Energy"] = 0, 
+}
+ITEM.specialSlot = "Arms" --what slot it goes in
+ITEM.skill = { --gives the player stats on equip
+}
