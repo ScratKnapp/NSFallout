@@ -14,7 +14,7 @@ ITEM.price = 3500
 ITEM.durability = 250
 
 ITEM.armor = {
-	["Head"] = 15,
+	["Head"] = 20,
 }
 
 ITEM.upgradeSlots = {

@@ -16,7 +16,7 @@ ITEM.faction = FACTION_MUTANT -- FACTION_MUTANT or FACTION_ROBOT
 ITEM.category = "Equipment - Special"
 
 ITEM.armor = {
-	["Head"] = 9,
+	["Head"] = 10,
 }
 
 ITEM.upgradeSlots = {

@@ -1,6 +1,6 @@
 ITEM.name = "5.56 SMG"
-ITEM.desc = "A Texas Arms designed submachinegun, designed to fire 5.56 rounds."
-ITEM.model = "models/weapons/radiumrifle.mdl"
+ITEM.desc = "A Texas Arms designed, shortened assault carbine, designed to fire 5.56 rounds."
+ITEM.model = "models/rs2_weapons/xm117/w_rs2v_xm177.mdl"
 ITEM.width = 3
 ITEM.height = 2
 ITEM.iconCam = {
@@ -14,12 +14,12 @@ ITEM.category = "Weapons"
 ITEM.weaponType = "SMG" -- Unarmed, Pistol, Rifle, Sniper, SMG, Shotgun, LMG, Energy, Melee
 ITEM.durability = 500
 ITEM.price = 600
-ITEM.magSize = 30 --how many times it can be used before reloading is necessary
+ITEM.magSize = 25 --how many times it can be used before reloading is necessary
 
 ITEM.weight = 1
 ITEM.weapondual = false
 ITEM.ammo = "5.56"
-ITEM.critC = 15
+ITEM.critC = 10
 
 ITEM.dmg = {
 	["5.56"] = 20
@@ -41,6 +41,12 @@ ITEM.reqStats = {
 }
 
 ITEM.upgradeSlots = {
+["5.56 SMG Heavy Barrel"] = true,
+["5.56 SMG Holo Sight"] = true,
+
+}
+
+ITEM.upgradeSlots = {
 
 }
 
@@ -48,7 +54,7 @@ ITEM.partMod = {
 	["Head"] = { --only affects this spot
 		accuracy = 0, --this is added
 		accuracyMult = 0, --this is a multiplier
-		dmg = -0.35, --this adds to the existing multiplier
+		dmg = -0.3, --this adds to the existing multiplier
 		},
 }
 
