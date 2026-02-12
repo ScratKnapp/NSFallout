@@ -3283,6 +3283,29 @@ RECIPE.result = {
 }
 RECIPES:Register(RECIPE)
 
+RECIPE = {}
+RECIPE.uid = "laserreeaterfocusopticsrec"
+RECIPE.name = "Laser Repeater Focus Optics"
+RECIPE.category = "Science - Attachments"
+RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
+RECIPE.desc = "An extension to the repeater's 'barrel' that places several focusing lenses to strengthen the output of outbound lasers."
+RECIPE.profession = "science"
+RECIPE.items = {
+    --uniqueID, if unspecified in the file, are the file name without the sh_
+    ["plastic"] = 6,
+    ["circuitry"] = 6,
+	["steel"] = 10,
+	["oil"] = 1,
+	["spring"] = 2,
+	
+}
+RECIPE.result = {
+    ["laserrepeaterfocusoptic"] = 1
+}
+RECIPES:Register(RECIPE)
+
+//
+
 //
 RECIPE = {}
 RECIPE.uid = "plasmapistolionizerrec"

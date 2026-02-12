@@ -40,6 +40,7 @@ ITEM.reqStats = {
 
 ITEM.upgradeSlots = {
 	["Laser Repeater Scope"] = true,
+	["Laser Focus Optics"] = true,
 }
 
 ITEM.skillScaleDmg = {
