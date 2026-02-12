@@ -13,5 +13,5 @@ ITEM.combiner = true
 ITEM.weaponOnly = true
  
 ITEM.dmg = {
-	["5.56"] = 2,
+	["5.56"] = 5,
 }

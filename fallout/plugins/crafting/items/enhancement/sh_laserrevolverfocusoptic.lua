@@ -13,5 +13,5 @@ ITEM.combiner = true
 ITEM.weaponOnly = true
 
 ITEM.dmg = {
-	["Energy Cell"] = 2,
+	["Energy Cell"] = 4,
 }

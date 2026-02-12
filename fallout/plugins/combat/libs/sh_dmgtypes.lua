@@ -9,7 +9,7 @@ PLUGIN.dmgTypes = {
 	},
 	[".22LR HP"]= {
 		name = ".22LR Hollow Point",
-		armor = 1.1,		
+		armor = 1.15,		
 		special = "HP",
 		kinetic = true,
 	},
@@ -22,7 +22,7 @@ PLUGIN.dmgTypes = {
 	
 	[".38 HP"] = {
 		name = ".38 Hollow Point",
-		armor = 1.1,		
+		armor = 1.15,		
 		kinetic = true,
 	},
 	
@@ -34,7 +34,7 @@ PLUGIN.dmgTypes = {
 	
 	[".308 HP"] = {
 		name = ".308 Hollow Point",
-		armor = 1.1,		
+		armor = 1.15,		
 		special = "HP",
 		kinetic = true,
 	},
@@ -54,7 +54,7 @@ PLUGIN.dmgTypes = {
 	
 	[".357 Magnum HP"] = {
 		name = ".357 Hollow Point",
-		armor = 1.1,		
+		armor = 1.15,		
 		special = "HP",
 		kinetic = true,
 	},
@@ -67,7 +67,7 @@ PLUGIN.dmgTypes = {
 	
 	[".44 Magnum HP"] = {
 		name = ".44 Hollow Point",
-		armor = 1.1,		
+		armor = 1.15,		
 		special = "HP",
 		kinetic = true,
 	},
@@ -86,7 +86,7 @@ PLUGIN.dmgTypes = {
 	},
 	[".45 Auto HP"] = {
 		name = ".45 Hollow Point",
-		armor = 1.1,		
+		armor = 1.15,		
 		special = "HP",
 		kinetic = true,
 	},
@@ -104,7 +104,7 @@ PLUGIN.dmgTypes = {
 	},
 	[".45-70 Gov't HP"] = {
 		name = ".45-70 Gov't HP",
-		armor = 1.1,		
+		armor = 1.15,		
 		special = "HP",
 		kinetic = true,
 	},
@@ -152,7 +152,7 @@ PLUGIN.dmgTypes = {
 	},
 	["5mm HP"] = {
 		name = "5mm HP",
-		armor = 1.1,		
+		armor = 0.9,		
 		special = "HP",
 		kinetic = true,
 	},
@@ -176,7 +176,7 @@ PLUGIN.dmgTypes = {
 	},
 	["5.56 HP"] = {
 		name = "5.56 HP",
-		armor = 1.1,		
+		armor = 1.15,		
 		special = "HP",
 		kinetic = true,
 	},
@@ -194,7 +194,7 @@ PLUGIN.dmgTypes = {
 	},
 	["9mm HP"] = {
 		name = "9mm HP",
-		armor = 1.1,		
+		armor = 1.15,		
 		special = "HP",
 		kinetic = true,
 	},
@@ -206,7 +206,7 @@ PLUGIN.dmgTypes = {
 	},
 	["10mm HP"] = {
 		name = "10mm HP",
-		armor = 1.1,		
+		armor = 1.15,		
 		special = "HP",
 		kinetic = true,
 	},
@@ -218,7 +218,7 @@ PLUGIN.dmgTypes = {
 	},
 	["12.7mm HP"] = {
 		name = "12.7mm HP",
-		armor = 1.1,		
+		armor = 1.15,		
 		special = "HP",
 		kinetic = true,
 	},

@@ -23,7 +23,7 @@ ITEM.weapondual = false
 ITEM.ammo = "5.56"
 
 ITEM.dmg = {
-	["5.56"] = 22
+	["5.56"] = 21
 }
 
 ITEM.multi = 1 --how many hits it does, dont need to put it here if it's just 1
@@ -49,11 +49,16 @@ ITEM.skillScaleAcc = {
 ["guns"] = 1.5,
 }
 
+ITEM.upgradeSlots = {
+["Improved Stamped MG Barrel"] = true,
+
+}
+
 ITEM.partMod = {
 	["Head"] = { --only affects this spot
 		accuracy = 0, --this is added
 		accuracyMult = 0, --this is a multiplier
-		dmg = -0.25, --this adds to the existing multiplier
+		dmg = -0.3, --this adds to the existing multiplier
 		},
 }
 
@@ -63,3 +68,4 @@ ITEM.actions = {
 "suppression",
 
 }
+

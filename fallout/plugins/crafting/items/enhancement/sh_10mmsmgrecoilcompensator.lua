@@ -1,5 +1,5 @@
 ITEM.name = "10mm SMG Recoil Compensator"
-ITEM.desc = "A muzzle device that attaches to the barrel to reduce recoil and muzzle flip."
+ITEM.desc = "A muzzle device that attaches to the barrel to reduce recoil and muzzle flip, significantly improving its burst fire."
 ITEM.uniqueID = "10mmsmgcompensator"
 ITEM.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 ITEM.flag = "v"
@@ -12,4 +12,4 @@ ITEM.maxstack = 1
 ITEM.combiner = true
 ITEM.weaponOnly = true
 
-ITEM.accuracy = 2
+ITEM.accuracy = 8

@@ -23,12 +23,12 @@ end
 PLUGIN.specialAmmoTypes = {
 	--hollow point
 	["HP"] = function(action, attacker, info)
-		action.dmg = action.dmg*1.25
+		action.dmg = action.dmg*1.2
 	end,
 
 	--armor piercing
 	["AP"] = function(action, attacker, info)
-		action.dmg = action.dmg*0.9
+		action.dmg = action.dmg*0.95
 	end,
 	
 	--Overpressure

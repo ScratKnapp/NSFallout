@@ -1,5 +1,5 @@
 ITEM.name = "Assault Carbine"
-ITEM.desc = "A pre-war rifle with a high firerate, issued to paratroopers prior to the Great War."
+ITEM.desc = "A pre-war assault rifle with a high firerate, issued to paratroopers prior to the Great War."
 ITEM.model = "models/halokiller38/fallout/weapons/assaultrifles/assaultcarbine.mdl"
 ITEM.width = 4
 ITEM.height = 2
@@ -63,8 +63,9 @@ ITEM.skillScaleAcc = {
 }
 
 ITEM.actions = {	
-"burstfire_rifle",
+"burstfire_smg",
 "aimedshot_precision",
 "suppression1",
 
 }
+

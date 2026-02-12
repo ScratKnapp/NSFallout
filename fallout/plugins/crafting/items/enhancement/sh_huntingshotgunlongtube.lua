@@ -13,5 +13,3 @@ ITEM.combiner = true
 ITEM.weaponOnly = true
  
 ITEM.magSize = 4
- 
- 

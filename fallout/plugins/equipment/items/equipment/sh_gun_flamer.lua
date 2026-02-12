@@ -20,7 +20,7 @@ ITEM.weapondual = false
 ITEM.ammo = "Flamer Fuel"
 
 ITEM.dmg = {
-	["Flamer Fuel"] = 10
+	["Flamer Fuel"] = 17
 }
 
 ITEM.multi = 5 --how many hits it does, dont need to put it here if it's just 1

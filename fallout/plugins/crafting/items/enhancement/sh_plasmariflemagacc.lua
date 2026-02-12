@@ -13,5 +13,5 @@ ITEM.combiner = true
 ITEM.weaponOnly = true
  
 ITEM.dmg = {
-	["Microfusion Cell"] = 2,
+	["Microfusion Cell"] = 4,
 }
