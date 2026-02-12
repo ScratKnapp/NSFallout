@@ -5759,6 +5759,101 @@ RECIPE.result = {
 RECIPES:Register(RECIPE)
 
 //
+
+RECIPE = {}
+RECIPE.uid = "make_breakdownlasermusket"
+RECIPE.name = "Breakdown Laser Musket"
+RECIPE.category = "Breakdown - Weapon (Energy Weapons)"
+RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
+RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.profession = "science"
+RECIPE.items = {
+    --uniqueID, if unspecified in the file, are the file name without the sh_
+    ["gun_lasermusket"] = 1,
+	
+}
+RECIPE.result = {
+	["steel"] = 1,
+	["screw"] = 2,
+	["glass"] = 2,
+	["spring"] = 2,
+	["circuitry"] = 2,
+	["wood"] = 2,
+}
+
+RECIPES:Register(RECIPE)
+
+
+//
+RECIPE = {}
+RECIPE.uid = "make_breakdownlaserrevolver"
+RECIPE.name = "Breakdown Laser Revolver"
+RECIPE.category = "Breakdown - Weapon (Energy Weapons)"
+RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
+RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.profession = "science"
+RECIPE.items = {
+    --uniqueID, if unspecified in the file, are the file name without the sh_
+    ["gun_laserrevolver"] = 1,
+	
+}
+RECIPE.result = {
+	["steel"] = 2,
+	["screw"] = 2,
+	["glass"] = 1,
+	["spring"] = 1,
+	["circuitry"] = 1,
+}
+RECIPES:Register(RECIPE)
+
+//
+
+RECIPE = {}
+RECIPE.uid = "make_breakdownlaserpistol"
+RECIPE.name = "Breakdown AEP-9 Laser Pistol"
+RECIPE.category = "Breakdown - Weapon (Energy Weapons)"
+RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
+RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.profession = "science"
+RECIPE.items = {
+    --uniqueID, if unspecified in the file, are the file name without the sh_
+    ["gun_laserrevolver"] = 1,
+	
+}
+RECIPE.result = {
+	["steel"] = 3,
+	["screw"] = 2,
+	["glass"] = 1,
+	["spring"] = 2,
+	["circuitry"] = 2,
+}
+RECIPES:Register(RECIPE)
+
+//
+
+RECIPE = {}
+RECIPE.uid = "make_breakdownlaserrepeater"
+RECIPE.name = "Breakdown Laser Repeater"
+RECIPE.category = "Breakdown - Weapon (Energy Weapons)"
+RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
+RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.profession = "science"
+RECIPE.items = {
+    --uniqueID, if unspecified in the file, are the file name without the sh_
+    ["gun_laserrepeater"] = 1,
+	
+}
+RECIPE.result = {
+	["steel"] = 3,
+	["screw"] = 2,
+	["glass"] = 1,
+	["spring"] = 2,
+	["circuitry"] = 3,
+}
+RECIPES:Register(RECIPE)
+
+//
+
 RECIPE = {}
 RECIPE.uid = "make_breakdownboxingglove"
 RECIPE.name = "Breakdown Boxing Glove"
