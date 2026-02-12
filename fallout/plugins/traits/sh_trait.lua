@@ -382,6 +382,32 @@ TRAIT.icon = "fonvui/hud/icons/perks/Quickdraw.png"
 TRAITS:Register(TRAIT)
 //
 local TRAIT = {}
+TRAIT.uid = "ranger" 
+TRAIT.name = "Ranger"
+TRAIT.desc = "You're a snowflake. Enjoy your 2 bonus evasion."
+TRAIT.category = "Perks (Passive)"
+TRAIT.hidden = true
+--TRAIT.icon = "fonvui/hud/icons/perks/Toughness.png"
+TRAIT.OnAttackData = function(self, action, attacker, info)
+	if(action.dmg) then
+		action.dmg = action.dmg * 1.10
+	end
+end
+TRAIT.onLoaded = function(client)
+	local buff = {
+		uid = TRAIT.uid,
+		name = TRAIT.name,
+		
+		evasion = 2,
+		
+		hidden = true
+	}
+	
+	client:addBuff(buff)
+end
+TRAITS:Register(TRAIT)
+//
+local TRAIT = {}
 TRAIT.uid = "refractor" 
 TRAIT.name = "Refractor"
 TRAIT.desc = "Receive -20% damage from energy weapons."
@@ -551,7 +577,7 @@ TRAITS:Register(TRAIT)
 local TRAIT = {}
 TRAIT.uid = "supermutant" 
 TRAIT.name = "Supermutant Body"
-TRAIT.desc = "+75% Radiation Resistance, 25% Kinetic Resistance, -15 Evasion, +100 Health"
+TRAIT.desc = "+75% Radiation Resistance, -20 Evasion, +100 Health"
 TRAIT.category = "Perks (Race)"
 TRAIT.hidden = true
 --TRAIT.icon = "fonvui/hud/icons/perks/Toughness.png"
@@ -562,10 +588,9 @@ TRAIT.onLoaded = function(client)
 
 		res = {
 			["Radiation"] = 75,
-			["Kinetic"] = 25,
 		},
 		
-		evasion = -15,
+		evasion = -20,
 		hpMax = 100,
 		
 		hidden = true
@@ -575,4 +600,3 @@ TRAIT.onLoaded = function(client)
 end
 TRAITS:Register(TRAIT)
 //
-
