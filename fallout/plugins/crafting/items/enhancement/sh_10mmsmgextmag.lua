@@ -12,4 +12,4 @@ ITEM.maxstack = 1
 ITEM.combiner = true
 ITEM.weaponOnly = true
 
-ITEM.magSize = 10
+ITEM.magSize = 5

@@ -12,8 +12,6 @@ ITEM.maxstack = 1
 ITEM.combiner = true
 ITEM.weaponOnly = true
 
-ITEM.accuracy = 1
-
 ITEM.dmg = {
-	[".357 Magnum"] = 1,
+	[".357 Magnum"] = 5,
 }

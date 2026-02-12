@@ -13,7 +13,5 @@ ITEM.combiner = true
 ITEM.weaponOnly = true
 
 ITEM.dmg = {
-	["10mm"] = 2,
+	["10mm"] = 4,
 }
- 
- 
