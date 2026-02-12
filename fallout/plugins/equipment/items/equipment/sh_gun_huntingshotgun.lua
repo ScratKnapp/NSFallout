@@ -42,6 +42,7 @@ ITEM.reqStats = {
 ITEM.upgradeSlots = {
 ["Hunting Shotgun Long Tube"] = true,
 ["Hunting Shotgun Choke"] = true,
+["Hunting Shotgun Shell Conversion"] = true,
 
 }
 

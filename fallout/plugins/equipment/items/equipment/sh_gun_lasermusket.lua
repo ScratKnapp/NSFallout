@@ -47,13 +47,15 @@ ITEM.upgradeSlots = {
 }
 
 ITEM.skillScaleDmg = {
-    ["energy"] = 0.1,
+    ["energy"] = 0.3,
 }
 
 ITEM.skillScaleAcc = {
-["energy"] = 2,
+["energy"] = 2.5,
 }
 
 ITEM.actions = {	
+"overcharge",
+
 
 }
