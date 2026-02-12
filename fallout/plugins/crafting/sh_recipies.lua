@@ -941,7 +941,7 @@ RECIPES:Register(RECIPE)
 //
 RECIPE = {}
 RECIPE.uid = "9mmsmgdrumrec"
-RECIPE.name = "name"
+RECIPE.name = "9mm SMG Drum"
 RECIPE.category = "Attachments - SMGs"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A drum magazine that increases magazine capacity from 30 to 60 rounds."
@@ -962,16 +962,16 @@ RECIPES:Register(RECIPE)
 //
 RECIPE = {}
 RECIPE.uid = "9mmsmglightboltrec"
-RECIPE.name = "name"
+RECIPE.name = "9mm SMG Light Bolt"
 RECIPE.category = "Attachments - SMGs"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A modified, shorter bolt that increases the fire rate of a 9mm SMG."
 RECIPE.profession = "gunsmith"
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
-    ["steel"] = 6,
-    ["screw"] = 1,
-	["spring"] = 1,
+    ["steel"] = 8,
+    ["screw"] = 3,
+	["spring"] = 2,
 	["oil"] = 4,
 	
 }
@@ -990,7 +990,8 @@ RECIPE.desc = "A long magazine that increases the round capacity of a 10mm pisto
 RECIPE.profession = "gunsmith"
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
-    ["steel"] = 5,
+    ["steel"] = 6,
+	["aluminum"] = 4,
     ["screw"] = 2,
 	["spring"] = 1,
 	["oil"] = 1,
@@ -1032,9 +1033,9 @@ RECIPE.desc = "A barrel threading kit and threaded suppressor that attaches to t
 RECIPE.profession = "gunsmith"
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
-    ["steel"] = 5,
-    ["screw"] = 3,
-	["oil"] = 2,
+    ["steel"] = 8,
+    ["screw"] = 4,
+	["oil"] = 3,
 	
 }
 RECIPE.result = {
@@ -1052,9 +1053,9 @@ RECIPE.desc = "A long magazine that increases the round capacity of a 10mm SMG f
 RECIPE.profession = "gunsmith"
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
-    ["steel"] = 7,
-    ["screw"] = 2,
-	["spring"] = 2,
+    ["steel"] = 10,
+    ["screw"] = 4,
+	["spring"] = 4,
 	["oil"] = 1,
 	
 }
@@ -1073,9 +1074,9 @@ RECIPE.desc = "A muzzle device that attaches to the barrel to reduce recoil and 
 RECIPE.profession = "gunsmith"
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
-    ["steel"] = 6,
-    ["screw"] = 2,
-	["spring"] = 1,
+    ["steel"] = 10,
+    ["screw"] = 4,
+	["spring"] = 4,
 	["oil"] = 1,
 	
 }
@@ -1694,9 +1695,9 @@ RECIPE.profession = "gunsmith"
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
     ["plastic"] = 4,
-    ["screw"] = 4,
+    ["screw"] = 6,
 	["spring"] = 6,
-	["steel"] = 10,
+	["steel"] = 15,
 	["oil"] = 2,
 	
 }
@@ -1715,9 +1716,9 @@ RECIPE.desc = "A 3.5x magnification scope, intended to be mounted on top of a se
 RECIPE.profession = "gunsmith"
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
-    ["plastic"] = 6,
+    ["plastic"] = 8,
     ["glass"] = 6,
-	["steel"] = 10,
+	["steel"] = 12,
 	["oil"] = 2,
 	
 }
@@ -1936,8 +1937,9 @@ RECIPE.desc = "A slightly longer barrel with a higher rifling twist rate that im
 RECIPE.profession = "gunsmith"
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
-    ["screw"] = 2,
+    ["screw"] = 4,
 	["steel"] = 10,
+	["steel"] = 8,
 	["oil"] = 3,
 	
 }
@@ -2105,9 +2107,94 @@ RECIPES:Register(RECIPE)
 
 //
 
+RECIPE = {}
+RECIPE.uid = "make_556smghbarrel"
+RECIPE.name = "5.56 SMG Heavy Barrel"
+RECIPE.category = "Attachments - SMGs"
+RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
+RECIPE.desc = "A heavier barrel that supports better chamber pressures with a higher twist rate. More velocity for more damage."
+RECIPE.profession = "gunsmith"
+RECIPE.items = {
+    --uniqueID, if unspecified in the file, are the file name without the sh_
+	["steel"] = 15,
+	["aluminum"] = 10,
+	["acid"] = 2,
+	["oil"] = 2,
+	["screw"] = 2,
+	
+}
+RECIPE.result = {
+    ["556smghbarrel"] = 1
+}
+RECIPES:Register(RECIPE)
 
+//
 
+RECIPE = {}
+RECIPE.uid = "make_556smgscope"
+RECIPE.name = "5.56 SMG Holographic Sight"
+RECIPE.category = "Attachments - SMGs"
+RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
+RECIPE.desc = "A simple, robust sight made with reinforced glass with a projected laser."
+RECIPE.profession = "gunsmith"
+RECIPE.items = {
+    --uniqueID, if unspecified in the file, are the file name without the sh_
+	["aluminum"] = 8,
+	["nuclearmaterial"] = 5,
+	["screw"] = 5,
+	
+}
+RECIPE.result = {
+    ["556smgscope"] = 1
+}
+RECIPES:Register(RECIPE)
 
+//
+
+RECIPE = {}
+RECIPE.uid = "make_stampedmgbarrel"
+RECIPE.name = "Gunrunner's Stamped MG Barrel"
+RECIPE.category = "Attachments - LMGs"
+RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
+RECIPE.desc = "A special LMG barrel that replaces the water cooling heatsink with a reinforced air-cooled barrel, steel heat shield, and improved sights."
+RECIPE.profession = "gunsmith"
+RECIPE.items = {
+    --uniqueID, if unspecified in the file, are the file name without the sh_
+	["steel"] = 25,
+	["aluminum"] = 10,
+	["oil"] = 4,
+	["spring"] = 8,
+	["screw"] = 8,
+	
+}
+RECIPE.result = {
+    ["stampedmgbarrel"] = 1
+}
+RECIPES:Register(RECIPE)
+
+//
+
+RECIPE = {}
+RECIPE.uid = "make_huntingshellconversion"
+RECIPE.name = "Hunting Shotgun Conversion Kit"
+RECIPE.category = "Attachments - Shotguns"
+RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
+RECIPE.desc = "A conversion kit that enables the hunting shotgun to fit longer shells, marginally boosting its damage."
+RECIPE.profession = "gunsmith"
+RECIPE.items = {
+    --uniqueID, if unspecified in the file, are the file name without the sh_
+	["steel"] = 10,
+	["aluminum"] = 8,
+	["spring"] = 6,
+	["screw"] = 2,
+	
+}
+RECIPE.result = {
+    ["huntingshellconversion"] = 1
+}
+RECIPES:Register(RECIPE)
+
+//
 
 
 
@@ -2791,25 +2878,6 @@ RECIPE.items = {
 }
 RECIPE.result = {
     ["ammo_mfcovercharge"] = 1
-}
-RECIPES:Register(RECIPE)
-
-//
-RECIPE = {}
-RECIPE.uid = "make_ammo_mfc_maxcharge"
-RECIPE.name = "Microfusion Cells Max Charge "
-RECIPE.category = "Science - Ammo"
-RECIPE.model = "models/fallout new vegas/microfusion_cell.mdl"
-RECIPE.desc = "A medium sized self-contained fusion plant for rifle-sized energy weapons. This one is fully charged."
-RECIPE.profession = "science"
-RECIPE.items = {
-    --uniqueID, if unspecified in the file, are the file name without the sh_
-    ["plastic"] = 5,
-	["lead"] = 5,
-	
-}
-RECIPE.result = {
-    ["ammo_mfcmax"] = 1
 }
 RECIPES:Register(RECIPE)
 
@@ -3527,8 +3595,8 @@ RECIPE.desc = "A kit which has the tools needed to add extra weight, or sharpeni
 RECIPE.profession = "blacksmith"
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
-    ["plastic"] = 5,
-	["steel"] = 10,
+    ["plastic"] = 2,
+	["steel"] = 3,
 	["oil"] = 1,
 	
 }
@@ -3549,8 +3617,8 @@ RECIPE.desc = "A kit which has the tools needed to rebalance a melee weapon, for
 RECIPE.profession = "blacksmith"
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
-    ["plastic"] = 5,
-	["steel"] = 10,
+    ["plastic"] = 2,
+	["steel"] = 3,
 	["oil"] = 1,
 	
 }
