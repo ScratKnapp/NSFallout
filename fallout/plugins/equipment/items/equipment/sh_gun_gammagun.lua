@@ -1,27 +1,27 @@
-ITEM.name = "Holo Rifle"
-ITEM.desc = "A modified pump-action energy based sniper rifle of unknown origin."
-ITEM.model = "models/halokiller38/fallout/weapons/energy weapons/holorifle.mdl"
-ITEM.width = 4
+ITEM.name = "Gamma Gun"
+ITEM.desc = "A crude radiation based energy pistol with a metal bowl and complex wiring meant to propel bursts of radiation."
+ITEM.model = "models/weapons/gammagun.mdl"
+ITEM.width = 2
 ITEM.height = 2
 ITEM.iconCam = {
-	pos = Vector(550.71850585938, 458, 334.5),
+	pos = Vector(127.8874130249, 111.1056137085, 80.955528259277),
 	ang = Angle(25, 220, 0),
-	fov = 3,
+	fov = 4,
 }
 
-ITEM.specialSlot = "Primary"
+ITEM.specialSlot = {"Sidearm", "Primary"}
 ITEM.category = "Weapons"
 ITEM.weaponType = "Energy" -- Unarmed, Pistol, Rifle, Sniper, SMG, Shotgun, LMG, Energy, Melee
 ITEM.durability = 500
-ITEM.price = 25500
-ITEM.magSize = 4 --how many times it can be used before reloading is necessary
+ITEM.price = 2000
+ITEM.magSize = 8 --how many times it can be used before reloading is necessary
 
 ITEM.weight = 1
 ITEM.weapondual = false
-ITEM.ammo = "Microfusion Cell"
+ITEM.ammo = "Energy Cell"
 
 ITEM.dmg = {
-	["Microfusion Cell"] = 85
+	["Radiation"] = 25
 }
 
 ITEM.multi = 1 --how many hits it does, dont need to put it here if it's just 1
@@ -32,23 +32,30 @@ ITEM.costAP = 1 --how much AP is used when using this weapon normally
 --the number in here determines the affects on accuracy at that range 
 -- -1 in the first spot will reduce accuracy at long range by 1
 -- 1 in the last spot will increase accuracy at close range by 1
-ITEM.range = {0,0,-4,-75}
-ITEM.class = "tfa_holo_rifle"
-
-ITEM.reqStats = {
-  ["str"] = 5,
-}
+ITEM.range = {-75,-20,1,0}
+ITEM.class = "aus_w_laserpistol"
 
 ITEM.upgradeSlots = {
+["Laser Pistol Combat Sight"] = true,
+["Laser Pistol Focus Optic"] = true,
+["Laser Pistol Recycler"] = true,
 
+}
+
+ITEM.reqStats = {
+  ["str"] = 2,
 }
 
 ITEM.skillScaleDmg = {
-    ["energy"] = 1.2,
+    ["energy"] = 0.3,
 }
 
 ITEM.skillScaleAcc = {
-["energy"] = 1.5,}
+["energy"] = 2.5,
+}
+
 ITEM.actions = {	
+"overcharge",
+
 
 }

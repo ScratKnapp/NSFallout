@@ -21,7 +21,7 @@ ITEM.weapondual = false
 ITEM.ammo = "5.56"
 
 ITEM.dmg = {
-	["5.56"] = 27
+	["5.56"] = 28
 }
 
 ITEM.multi = 1 --how many hits it does, dont need to put it here if it's just 1
@@ -43,7 +43,7 @@ ITEM.partMod = {
 	["Head"] = { --only affects this spot
 		accuracy = 0, --this is added
 		accuracyMult = 0, --this is a multiplier
-		dmg = -0.25, --this adds to the existing multiplier
+		dmg = -0.2, --this adds to the existing multiplier
 		},
 }
 

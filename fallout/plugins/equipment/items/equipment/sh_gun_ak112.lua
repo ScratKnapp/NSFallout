@@ -1,27 +1,27 @@
-ITEM.name = "Cowboy Repeater"
-ITEM.desc = "A lever action rifle designed to fire .357 magnum rounds."
-ITEM.model = "models/halokiller38/fallout/weapons/rifles/cowboyrepeater.mdl"
+ITEM.name = "AK-112 Assault Rifle"
+ITEM.desc = "A foreign pre-war rifle designed to utilize 5mm."
+ITEM.model = "models/props/ak112.mdl"
 ITEM.width = 4
 ITEM.height = 2
 ITEM.iconCam = {
-	pos = Vector(386.78936767578, 336, 239.64172363281),
+	pos = Vector(537.82238769531, 450, 326.79998779297),
 	ang = Angle(25, 220, 0),
-	fov = 3.05,
+	fov = 2.4,
 }
 
 ITEM.specialSlot = "Primary"
 ITEM.category = "Weapons"
 ITEM.weaponType = "Rifle" -- Unarmed, Pistol, Rifle, Sniper, SMG, Shotgun, LMG, Energy, Melee
 ITEM.durability = 500
-ITEM.price = 750
-ITEM.magSize = 7 --how many times it can be used before reloading is necessary
+ITEM.price = 1100
+ITEM.magSize = 20 --how many times it can be used before reloading is necessary
 
 ITEM.weight = 1
 ITEM.weapondual = false
-ITEM.ammo = ".357 Magnum"
+ITEM.ammo = "5mm"
 
 ITEM.dmg = {
-	[".357 Magnum"] = 28
+	["5mm"] = 20
 }
 
 ITEM.multi = 1 --how many hits it does, dont need to put it here if it's just 1
@@ -32,38 +32,39 @@ ITEM.costAP = 1 --how much AP is used when using this weapon normally
 --the number in here determines the affects on accuracy at that range 
 -- -1 in the first spot will reduce accuracy at long range by 1
 -- 1 in the last spot will increase accuracy at close range by 1
-ITEM.range = {-15,1,0,-75}
-ITEM.class = "aus_w_cowboyrepeater"
-
-ITEM.partMod = {
-	["Head"] = { --only affects this spot
-		accuracy = 0, --this is added
-		accuracyMult = 0, --this is a multiplier
-		dmg = 0.4, --this adds to the existing multiplier
-		},
-}
+ITEM.range = {-25,1,0,-75}
+ITEM.class = "aus_w_hmar"
 
 ITEM.reqStats = {
-  ["str"] = 3,
-}
-
-ITEM.upgradeSlots = {
-["Repeater Long Tube"] = true,
-["Repeater Custom Action"] = true,
-["Repeater Maple Stock"] = true,
-
+  ["str"] = 2,
 }
 
 ITEM.skillScaleDmg = {
     ["guns"] = 0.15,
 }
 
+ITEM.upgradeSlots = {
+["AK112 Custom Bolt"] = true,
+["AK112 Rifle Scope"] = true,
+["AK112 Rifle Receiver"] = true,
+
+}
+
+ITEM.partMod = {
+	["Head"] = { --only affects this spot
+		accuracy = 0, --this is added
+		accuracyMult = 0, --this is a multiplier
+		dmg = -0.25, --this adds to the existing multiplier
+		},
+}
+
 ITEM.skillScaleAcc = {
-["guns"] = 3,
+["guns"] = 1.5,
 }
 
 ITEM.actions = {	
-"aimedshot_sniper",
-"doubletap_precision",
+"burstfire_rifle",
+"aimedshot_precision",
+"suppression1",
 
 }
