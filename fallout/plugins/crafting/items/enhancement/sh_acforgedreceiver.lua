@@ -12,4 +12,5 @@ ITEM.maxstack = 1
 ITEM.combiner = true
 ITEM.weaponOnly = true
 
-ITEM.accuracy = 6
+ITEM.accuracy = 10
+
