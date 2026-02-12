@@ -15,5 +15,6 @@ ITEM.weaponOnly = true
 ITEM.accuracy = 6
  
 ITEM.dmg = {
-	["5.56"] = 4,
+	["5.56"] = 3,
+
 }
