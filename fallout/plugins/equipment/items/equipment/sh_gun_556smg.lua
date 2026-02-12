@@ -46,10 +46,6 @@ ITEM.upgradeSlots = {
 
 }
 
-ITEM.upgradeSlots = {
-
-}
-
 ITEM.partMod = {
 	["Head"] = { --only affects this spot
 		accuracy = 0, --this is added
@@ -73,3 +69,4 @@ ITEM.actions = {
 
 
 }
+
