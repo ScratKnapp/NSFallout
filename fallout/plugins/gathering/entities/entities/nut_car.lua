@@ -26,6 +26,7 @@ ENT.resources = {
 	["oil"] = 5,
 	["rubber"] = 5,
 	["adhesive"] = 5,
+	["plastic"] = 5,
 	["j_torquerod"] = 4,
 	["j_tubeflange"] = 4,
 	["j_connectingrod"] = 2,
