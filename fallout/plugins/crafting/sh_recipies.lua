@@ -5140,6 +5140,25 @@ RECIPES:Register(RECIPE)
 
 //
 RECIPE = {}
+RECIPE.uid = "make_grenade_mfccluster"
+RECIPE.name = "MFC Cluster Grenade"
+RECIPE.category = "Throwing Weapons"
+RECIPE.model = "models/mosi/fallout4/ammo/microfusioncell.mdl"
+RECIPE.desc = "With some copper wire and adhesive, link three MFC Grenades together into a multi-hitting clusterbomb."
+RECIPE.profession = "science"
+RECIPE.xp = 0.01
+RECIPE.items = {
+	["grenade_mfccluster"] = 3,
+	["copper"] = 3,
+	["adhesive"] = 5,
+}
+RECIPE.result = {
+	["grenade_mfccluster"] = 1
+}
+RECIPES:Register(RECIPE)
+
+//
+RECIPE = {}
 RECIPE.uid = "make_grenade_mfcgrenade"
 RECIPE.name = "Microfusion Cell Grenade"
 RECIPE.category = "Throwing Weapons"
