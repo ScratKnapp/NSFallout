@@ -9,5 +9,5 @@ ITEM.maxstack = 10
 ITEM.action = "grenade_mfcgrenade"
 
 ITEM.skillScaleAcc = {
-	["throwing"] = 2,
+	["explosives"] = 2,
 }

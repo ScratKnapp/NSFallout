@@ -3780,9 +3780,45 @@ RECIPE.result = {
 RECIPES:Register(RECIPE)
 
 //
+RECIPE = {}
+RECIPE.uid = "make_charcoal_science"
+RECIPE.name = "Make Charcoal"
+RECIPE.category = "Ammo - Components"
+RECIPE.model = "models/fallout3/furniture/campfire03.mdl"
+RECIPE.desc = "A piece of charcoal"
+RECIPE.profession = "gunsmith"
+RECIPE.xp = 0.01
+RECIPE.items = {
+	["wood"] = 1,
+}
+RECIPE.result = {
+	["charcoal"] = 1
+}
+RECIPES:Register(RECIPE)
+
+//
 
 RECIPE = {}
 RECIPE.uid = "make_gunpowder"
+RECIPE.name = "Make Gunpowder"
+RECIPE.category = "Ammo - Components"
+RECIPE.model = "models/mosi/fnv/props/workstations/reloadingbench.mdl"
+RECIPE.desc = "A mix of sulfur and charcoal"
+RECIPE.profession = "gunsmith"
+RECIPE.xp = 0.01
+RECIPE.items = {
+	["charcoal"] = 1,
+	["sulfur"] = 1,
+}
+RECIPE.result = {
+	["gunpowder"] = 1
+}
+RECIPES:Register(RECIPE)
+
+//
+
+RECIPE = {}
+RECIPE.uid = "make_gunpowder_science"
 RECIPE.name = "Make Gunpowder"
 RECIPE.category = "Ammo - Components"
 RECIPE.model = "models/mosi/fnv/props/workstations/reloadingbench.mdl"
@@ -5074,11 +5110,31 @@ RECIPE.xp = 0.01
 RECIPE.items = {
 	["adhesive"] = 1,
 	["cloth"] = 1,
-	["gunpowder"] = 3,
+	["gunpowder"] = 1,
 	["steel"] = 5,
 }
 RECIPE.result = {
 	["grenade_tincan"] = 1
+}
+RECIPES:Register(RECIPE)
+
+//
+RECIPE = {}
+RECIPE.uid = "make_grenade_bottlecapmine"
+RECIPE.name = "Bottlecap Mine"
+RECIPE.category = "Throwing Weapons"
+RECIPE.model = "models/halokiller38/fallout/weapons/mines/bottlecapmine.mdl"
+RECIPE.desc = "Make a high yield placed explosive with a load of gunpowder, shrapnel, and a container."
+RECIPE.profession = "science"
+RECIPE.xp = 0.01
+RECIPE.items = {
+	["adhesive"] = 3,
+	["circuitry"] = 1,
+	["gunpowder"] = 5,
+	["steel"] = 6,
+}
+RECIPE.result = {
+	["mine_bottlecap"] = 1
 }
 RECIPES:Register(RECIPE)
 
@@ -5098,6 +5154,25 @@ RECIPE.items = {
 }
 RECIPE.result = {
 	["grenade_mfcgrenade"] = 1
+}
+RECIPES:Register(RECIPE)
+
+//
+RECIPE = {}
+RECIPE.uid = "make_grenade_firebomb"
+RECIPE.name = "Firebomb"
+RECIPE.category = "Throwing Weapons"
+RECIPE.model = "models/halokiller38/fallout/weapons/explosives/firebomb.mdl"
+RECIPE.desc = "A makeshift incendiary grenade made from flammable fluids inside a glass bottle."
+RECIPE.profession = "science"
+RECIPE.xp = 0.01
+RECIPE.items = {
+	["adhesive"] = 1,
+	["glass"] = 5,
+	["oil"] = 3,
+}
+RECIPE.result = {
+	["grenade_molotov"] = 1
 }
 RECIPES:Register(RECIPE)
 
