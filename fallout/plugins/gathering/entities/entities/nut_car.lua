@@ -30,6 +30,12 @@ ENT.resources = {
 	["j_tubeflange"] = 4,
 	["j_connectingrod"] = 2,
 	["j_coolantcap"] = 1,
+	["j_aluminumcan"] = 1,
+	["j_camera"] = 1,
+	["j_lightbulb"] = 1,
+	["j_oilcan"] = 1,
+	["j_phone"] = 1
+	
 }
 
 ENT.gatherAmt = {7,9}
