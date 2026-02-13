@@ -5189,7 +5189,7 @@ RECIPE.items = {
 	["adhesive"] = 1,
 	["glass"] = 5,
 	["oil"] = 3,
-	{"cloth"} = 3
+	["cloth"] = 3
 }
 RECIPE.result = {
 	["grenade_molotov"] = 1
