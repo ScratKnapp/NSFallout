@@ -3780,45 +3780,9 @@ RECIPE.result = {
 RECIPES:Register(RECIPE)
 
 //
-RECIPE = {}
-RECIPE.uid = "make_charcoal_science"
-RECIPE.name = "Make Charcoal"
-RECIPE.category = "Ammo - Components"
-RECIPE.model = "models/fallout3/furniture/campfire03.mdl"
-RECIPE.desc = "A piece of charcoal"
-RECIPE.profession = "gunsmith"
-RECIPE.xp = 0.01
-RECIPE.items = {
-	["wood"] = 1,
-}
-RECIPE.result = {
-	["charcoal"] = 1
-}
-RECIPES:Register(RECIPE)
-
-//
 
 RECIPE = {}
 RECIPE.uid = "make_gunpowder"
-RECIPE.name = "Make Gunpowder"
-RECIPE.category = "Ammo - Components"
-RECIPE.model = "models/mosi/fnv/props/workstations/reloadingbench.mdl"
-RECIPE.desc = "A mix of sulfur and charcoal"
-RECIPE.profession = "gunsmith"
-RECIPE.xp = 0.01
-RECIPE.items = {
-	["charcoal"] = 1,
-	["sulfur"] = 1,
-}
-RECIPE.result = {
-	["gunpowder"] = 1
-}
-RECIPES:Register(RECIPE)
-
-//
-
-RECIPE = {}
-RECIPE.uid = "make_gunpowder_science"
 RECIPE.name = "Make Gunpowder"
 RECIPE.category = "Ammo - Components"
 RECIPE.model = "models/mosi/fnv/props/workstations/reloadingbench.mdl"
