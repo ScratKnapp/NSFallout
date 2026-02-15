@@ -168,7 +168,7 @@ nut.command.add("chargetattrib", {
 })
 
 --used for a player to display their own stat for event things
-nut.command.add("statcheck", {
+nut.command.add("attribcheck", {
 	syntax = "<string attribute>",
 	onRun = function(client, arguments)
 		if(IsValid(client) and client:getChar()) then
@@ -184,9 +184,33 @@ nut.command.add("statcheck", {
 				local value = client:getChar():getAttrib(attribName, 0)
 				local name = nut.attribs.list[attribName].name
 		
-				nut.chat.send(client, "statcheck", "has " .. value .. " " .. name)
+				nut.plugin.list["chatboxextra"]:ChatboxSend(client, "statcheck", client:Name().. " has a " ..  name .. " value of " .. value)
 			else
 				client:notify("Invalid Attribute")
+			end
+		end
+	end
+})
+
+nut.command.add("skillcheck", {
+	syntax = "<string skill>",
+	onRun = function(client, arguments)
+		if(IsValid(client) and client:getChar()) then
+			local findAtt = arguments[1]
+			local attribName
+			for k, v in pairs(nut.skills.list) do
+				if (nut.util.stringMatches(L(v.name, client), findAtt) or nut.util.stringMatches(k, findAtt)) then
+					attribName = k
+				end
+			end
+			
+			if(attribName) then
+				local value = client:getChar():getSkill(attribName, 0)
+				local name = nut.skills.list[attribName].name
+		
+				nut.plugin.list["chatboxextra"]:ChatboxSend(client, "statcheck", client:Name().. " has a " ..  name .. " value of " .. value)
+			else
+				client:notify("Invalid Skill")
 			end
 		end
 	end
