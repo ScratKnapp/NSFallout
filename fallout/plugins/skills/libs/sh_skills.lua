@@ -33,7 +33,7 @@ local function createSkillCheck(skillID, commandName)
 				crit = 1
 			end
 
-			local rollText = "rolls " ..d20*crit.. " + " ..math.Round(skill*0.5*crit)..critText..((bonus and (" + " ..bonus.. " ")) or " ").. "(" ..roll.. ") for " ..name.. "."
+			local rollText = "rolls " ..d20*crit.. " + " ..math.Round(skill*0.5*crit) .. " Stat Bonus "..critText..((bonus and (" + Bonus Of " ..bonus.. " ")) or " ").. " = " ..roll.. " for " ..name.. "."
 
 			if(nut.plugin.list["chatboxextra"]) then
 				nut.plugin.list["chatboxextra"]:ChatboxSend(client, "skillcheck", client:Name().. " " ..rollText)
