@@ -7,7 +7,7 @@ PLUGIN.helperFuncs["getCrit"] = function(self, weaponItem)
 	local chance = char:getAttrib("luck", 0)
 	chance = chance + self:getBuffAttribute("critC")
 
-	local mult = 2
+	local mult = 1.5
 	mult = mult + self:getBuffAttribute("critM")
 	
 	if(weaponItem) then
@@ -25,7 +25,7 @@ PLUGIN.helperFuncs["getCrit"] = function(self, weaponItem)
 	end
 	
 	if(self:hasTrait("bettercrits")) then
-		mult = mult * 1.25
+		mult = mult * 1.15
 	end
 	
 	return chance, mult
