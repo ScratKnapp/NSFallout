@@ -335,9 +335,31 @@ ACT.ammoUse = 5 --how much ammo it uses
 ACT.restrict = true --if you don't put this anyone can use it
 ACTS:Register(ACT)
 
+--
+
 local ACT
 ACT = {}
 ACT.uid = "runngun"
+ACT.name = "Run and Gun"
+ACT.desc = "Move 1 AP distance and attack an enemy for only one AP cost."
+ACT.category = "Gun"
+ACT.restrict = true
+ACT.attackString = "fires while moving at"
+ACT.costAP = 1
+ACT.CD = 1
+ACT.dmg = 0
+ACT.accuracy = 0
+ACT.accuracyMult = 1
+ACT.multi = 3
+ACT.weaponMult = 1
+ACT.ammoUse = 1 --how much ammo it uses
+ACTS:Register(ACT)
+
+--
+
+local ACT
+ACT = {}
+ACT.uid = "runngunshotgun"
 ACT.name = "Run and Gun"
 ACT.desc = "Move 1 AP distance and attack an enemy for only one AP cost."
 ACT.category = "Gun"
@@ -349,12 +371,9 @@ ACT.dmg = 0
 ACT.accuracy = 0
 ACT.accuracyMult = 1
 ACT.weaponMult = 1
-ACT.weaponMult = 1
+ACT.multi = 8
 ACT.ammoUse = 1 --how much ammo it uses
 ACTS:Register(ACT)
-
---
-
 
 --
 local ACT = {}
@@ -654,36 +673,74 @@ ACT.effects = {
 ACTS:Register(ACT)
 --
 
+
+local ACT
+ACT = {}
+ACT.uid = "overcharge"
+ACT.name = "Overcharge"
+ACT.desc = "Amp up the power on your energy weapon and fire a stronger shot."
+ACT.category = "Energy Weapons"
+ACT.restrict = true
+ACT.attackString = "fires a beam at"
+ACT.CD = 2
+ACT.dmg = 0
+ACT.weaponMult = 1.5
+ACTS:Register(ACT)
+--
+
 local ACT
 ACT = {}
 ACT.uid = "stun"
-ACT.name = "Stun"
+ACT.name = "Daze"
 ACT.desc = "Throw a stunning attack."
 ACT.category = "Melee"
 ACT.restrict = true
 ACT.attackString = "attempts to stun"
 ACT.CD = 2
 ACT.dmg = 0
-ACT.dmgT = "Blunt"
-ACT.weaponMult = 1
 ACT.weaponMult = 1
 ACT.effects = {
     [1] = {
         uid = ACT.uid,
 
-        name = "Stun",
-        effect = "stun",
+        name = "Dazed",
+        effect = "dazed",
         duration = 1,
         strength = 1,
-
-        chance = 100,
+		accuracyMult = 0.75, --multiplies accuracy by this number
 
         debuff = true,
     }
 }
 ACTS:Register(ACT)
---
 
+--
+local ACT
+ACT = {}
+ACT.uid = "sweep"
+ACT.name = "Leg Sweep"
+ACT.desc = "Attempt to sweep your opponent's legs out."
+ACT.category = "Melee"
+ACT.restrict = true
+ACT.attackString = "attempts to sweep"
+ACT.dmg = 0
+ACT.CD = 2
+ACT.weaponMult = 1.2
+ACT.effects = {
+    [1] = {
+        uid = ACT.uid,
+
+        name = "Knockdown",
+        effect = "knockdown",
+        duration = 1,
+        strength = 1,
+
+        debuff = true,
+    }
+}
+ACTS:Register(ACT)
+
+--
 local ACT
 ACT = {}
 ACT.uid = "charge"
@@ -695,6 +752,58 @@ ACT.attackString = "charges at"
 ACT.CD = 2
 ACT.dmg = 0
 ACT.weaponMult = 1
+ACT.effects = {
+    [1] = {
+        uid = ACT.uid,
+
+        name = "Off Balance",
+        effect = "offbalance",
+        duration = 1,
+        strength = 1,
+		evasion = -25,
+		
+		selfApply = true,
+		debuff = true,
+    }
+}
+ACTS:Register(ACT)
+
+--
+local ACT
+ACT = {}
+ACT.uid = "tackle"
+ACT.name = "Tackle"
+ACT.desc = "Move 1 AP distance and tackle an enemy."
+ACT.category = "Melee"
+ACT.restrict = true
+ACT.attackString = "tackles"
+ACT.CD = 2
+ACT.dmg = 0
+ACT.weaponMult = 1
+ACT.effects = {
+    [1] = {
+        uid = ACT.uid,
+
+        name = "Knockdown",
+        effect = "knockdown",
+        duration = 1,
+        strength = 1,
+
+        debuff = true,
+    },
+	[2] = {
+        uid = ACT.uid,
+
+        name = "Off Balance",
+        effect = "offbalance",
+        duration = 1,
+        strength = 1,
+		evasion = -25,
+		
+		selfApply = true,
+		debuff = true,
+    }
+}
 ACTS:Register(ACT)
 
 --
@@ -740,6 +849,33 @@ ACT.attackString = "swings at"
 ACT.CD = 2
 ACT.dmg = 10
 ACT.weaponMult = 1.5
+ACTS:Register(ACT)
+
+--
+
+local ACT
+ACT = {}
+ACT.uid = "bodyslam"
+ACT.name = "Bodyslam"
+ACT.desc = "Grab your enemy and slam them on the ground. Or throw your body weight at your enemy."
+ACT.category = "Melee"
+ACT.restrict = true
+ACT.attackString = "bodyslams"
+ACT.CD = 2
+ACT.weaponMult = 1.25
+ACT.effects = {
+    [1] = {
+        uid = ACT.uid,
+
+        name = "Knockdown",
+        effect = "knockdown",
+        duration = 1,
+        strength = 1,
+
+        debuff = true,
+    }
+}
+
 ACTS:Register(ACT)
 
 --

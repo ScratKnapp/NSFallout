@@ -59,6 +59,6 @@ ITEM.actions = {
 "slug3",
 "aimedshot_shotgun",
 "suppressionshotgun",
-"runngun",
+"runngunshotgun",
 
 }
