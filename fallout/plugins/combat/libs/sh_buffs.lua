@@ -76,12 +76,7 @@ function playerMeta:addBuff(buff, id)
 	end
 	
 	if(buff.apMax or buff.maxAP) then
-		local buffAP = buff.apMax or buff.maxAP
-	
-		local curAP = self:getAP()
-		local new = math.Clamp(curAP+buffAP, 0, self:getMaxAP())
-		
-		self:setAP(new)
+		self:addAP(1)
 	end
 	
 	if(buff.ap and self.addAP) then
