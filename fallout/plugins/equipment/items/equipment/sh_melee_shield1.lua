@@ -47,7 +47,7 @@ ITEM.skillScaleDmg = {
 ["melee"] = 1.5,}
 
 ITEM.actions = {	
-"block",
+"block1",
 
 }
 

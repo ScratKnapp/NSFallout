@@ -1058,9 +1058,10 @@ ACT.effects = {
         duration = 1,
         strength = 1,
 
-		armor = 200,
-
-		hitsDef = 2,
+        res = {
+			["Kinetic"] = 50,
+			["Energy"] = -50,
+		},
 		
 		selfApply = true,
 		buff = true,

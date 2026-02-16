@@ -47,7 +47,7 @@ ITEM.actions = {
 "charge",
 "stun",
 "heavyattack",
-"block",
+"block1",
 "wideswing",
 
 
