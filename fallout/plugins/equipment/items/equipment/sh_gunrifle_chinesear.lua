@@ -12,7 +12,7 @@ ITEM.iconCam = {
 ITEM.specialSlot = "Primary"
 ITEM.category = "Weapons"
 ITEM.weaponType = "Rifle" -- Unarmed, Pistol, Rifle, Sniper, SMG, Shotgun, LMG, Energy, Melee
-ITEM.durability = 500
+ITEM.durability = 200
 ITEM.price = 1200
 ITEM.magSize = 30 --how many times it can be used before reloading is necessary
 
@@ -21,7 +21,7 @@ ITEM.weapondual = false
 ITEM.ammo = "5.56"
 
 ITEM.dmg = {
-	["5.56"] = 25
+	["5.56"] = 16
 }
 
 ITEM.multi = 1 --how many hits it does, dont need to put it here if it's just 1
@@ -40,11 +40,11 @@ ITEM.reqStats = {
 }
 
 ITEM.skillScaleDmg = {
-    ["guns"] = 0.15,
+    ["guns"] = 0,
 }
 
 ITEM.skillScaleAcc = {
-["guns"] = 1.5,
+["guns"] = 1.2,
 }
 ITEM.partMod = {
 	["Head"] = { --only affects this spot

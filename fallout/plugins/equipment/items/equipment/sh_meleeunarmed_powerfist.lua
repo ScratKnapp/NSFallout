@@ -12,20 +12,18 @@ ITEM.iconCam = {
 }
 ITEM.specialSlot = "Sidearm"
 ITEM.category = "Weapon - Melee"
-ITEM.durability = 500
-ITEM.price = 500
+ITEM.durability = 200
+ITEM.price = 200
  
 
 ITEM.weight = 1
 ITEM.weapondual = false
-ITEM.dmg = 25 --base damage
-ITEM.dmgT = "Blunt" --damage type
 ITEM.costAP = 1 --how much AP is used when using this weapon normally
 ITEM.accuracy = 1 --bonus accuracy, can also go negative. defaults to 0 if not setITEM.costAP = 1 --how much AP is used when using this weapon normally
 ITEM.class = "aus_m_fists_powerfist"
 
 ITEM.dmg = {
-	["Blunt"] = 20
+	["Blunt"] = 13
 }
 
 --long, medium, close
@@ -50,7 +48,7 @@ ITEM.skillScaleAcc = {
 ["unarmed"] = 3,}
 
 ITEM.skillScaleDmg = {
-["unarmed"] = 2,}
+["unarmed"] = 0.7,}
 
 ITEM.actions = {	
 "tackle",

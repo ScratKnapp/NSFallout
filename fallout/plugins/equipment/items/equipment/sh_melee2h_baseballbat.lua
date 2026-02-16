@@ -1,4 +1,4 @@
-ITEM.name = "Wooden Bat"
+ITEM.name = "Wooden Baseball Bat"
 ITEM.desc = "A baseball bat."
 ITEM.model = "models/mosi/fallout4/props/weapons/melee/baseballbat.mdl"
 ITEM.width = 3
@@ -12,7 +12,7 @@ ITEM.iconCam = {
 }
 ITEM.specialSlot = "Primary"
 ITEM.category = "Weapon - Melee"
-ITEM.durability = 500
+ITEM.durability = 200
 ITEM.price = 125
  
 
@@ -37,14 +37,15 @@ ITEM.reqStats = {
 }
 
 ITEM.skillScaleAcc = {
-["melee"] = 2,}
+["melee"] = 2,
+}
 
 ITEM.skillScaleDmg = {
-["melee"] = 1.5,}
+["melee"] = 0.4,
+}
 
 ITEM.actions = {	
 "charge",
-"stun",
 "heavyattack",
 "wideswing",
 

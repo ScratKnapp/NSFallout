@@ -12,7 +12,7 @@ ITEM.iconCam = {
 }
 ITEM.specialSlot = "Sidearm"
 ITEM.category = "Weapon - Melee"
-ITEM.durability = 500
+ITEM.durability = 200
 ITEM.price = 500
  
 
@@ -21,10 +21,9 @@ ITEM.weapondual = false
 ITEM.costAP = 1 --how much AP is used when using this weapon normally
 ITEM.accuracy = 1 --bonus accuracy, can also go negative. defaults to 0 if not setITEM.costAP = 1 --how much AP is used when using this weapon normally
 ITEM.class = "aus_m_knife_revolutionarysword"
-ITEM.critC = 5
 
 ITEM.dmg = {
-	["Slash"] = 23
+	["Slash"] = 19
 }
 
 --long, medium, close
@@ -38,10 +37,12 @@ ITEM.reqStats = {
 }
 
 ITEM.skillScaleAcc = {
-	["melee"] = 2,}
+	["melee"] = 2,
+	}
 
 ITEM.skillScaleDmg = {
-["melee"] = 1.5,}
+["melee"] = 0.4,
+}
 
 ITEM.actions = {	
 	"charge",

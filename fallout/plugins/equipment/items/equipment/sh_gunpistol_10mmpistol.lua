@@ -12,14 +12,14 @@ ITEM.iconCam = {
 ITEM.specialSlot = {"Sidearm", "Primary"}
 ITEM.category = "Weapons"
 ITEM.weaponType = "Pistol" -- Unarmed, Pistol, Rifle, Sniper, SMG, Shotgun, LMG, Energy, Melee
-ITEM.durability = 500
+ITEM.durability = 200
 ITEM.price = 250
 ITEM.magSize = 12 --how many times it can be used before reloading is necessary
 
 ITEM.weight = 1
 ITEM.weapondual = false
 ITEM.dmg = {
-	["10mm"] = 17
+	["10mm"] = 12
 }
 
 ITEM.ammo = "10mm"
@@ -37,7 +37,7 @@ ITEM.range = {-75,-8,1,0}
 ITEM.class = "aus_w_10mmpistol"
 
 ITEM.reqStats = {
-	["str"] = 1,
+	["str"] = 2,
 }
 
 ITEM.partMod = {
@@ -54,11 +54,11 @@ ITEM.upgradeSlots = {
 	["10mm Pistol Silencer"] = true,
 }
 ITEM.skillScaleDmg = {
-    ["guns"] = 0.15,
+    ["guns"] = 0,
 }
 
 ITEM.skillScaleAcc = {
-	["guns"] = 1.5,
+	["guns"] = 1.2,
 }
 	
 ITEM.actions = {

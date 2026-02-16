@@ -12,7 +12,7 @@ ITEM.iconCam = {
 }
 ITEM.specialSlot = "Primary"
 ITEM.category = "Weapon - Melee"
-ITEM.durability = 500
+ITEM.durability = 200
 ITEM.price = 250
  
 
@@ -23,7 +23,7 @@ ITEM.accuracy = 1 --bonus accuracy, can also go negative. defaults to 0 if not s
 ITEM.class = "aus_m_spear_poolcue"
 
 ITEM.dmg = {
-	["Slash"] = 20
+	["Slash"] = 12
 }
 
 --long, medium, close
@@ -38,10 +38,12 @@ ITEM.reqStats = {
 }
 
 ITEM.skillScaleAcc = {
-	["melee"] = 2,}
+	["melee"] = 2,
+}
 
 ITEM.skillScaleDmg = {
-	["melee"] = 1.5,}
+	["melee"] = 0.35,
+}
 
 ITEM.actions = {	
 	"charge",

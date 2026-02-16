@@ -155,7 +155,7 @@ TRAITS:Register(TRAIT)
 local TRAIT = {}
 TRAIT.uid = "bettercrits" 
 TRAIT.name = "Better Crits"
-TRAIT.desc = "+25% Critical Damage"
+TRAIT.desc = "+15% Critical Damage"
 TRAIT.category = "Perks (Passive)"
 TRAIT.icon = "fonvui/hud/icons/perks/Better Crits.png"
 TRAITS:Register(TRAIT)

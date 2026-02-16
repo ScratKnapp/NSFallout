@@ -12,8 +12,8 @@ ITEM.iconCam = {
 ITEM.specialSlot = {"Sidearm", "Primary"}
 ITEM.category = "Weapons"
 ITEM.weaponType = "Pistol" -- Unarmed, Pistol, Rifle, Sniper, SMG, Shotgun, LMG, Energy, Melee
-ITEM.durability = 500
-ITEM.price = 950
+ITEM.durability = 200
+ITEM.price = 25
 ITEM.magSize = 16 --how many times it can be used before reloading is necessary
 
 ITEM.weight = 1
@@ -22,7 +22,7 @@ ITEM.ammo = ".22LR"
 ITEM.critC = 20
 
 ITEM.dmg = {
-	[".22LR"] = 13
+	[".22LR"] = 6
 }
 
 ITEM.multi = 1 --how many hits it does, dont need to put it here if it's just 1
@@ -49,7 +49,7 @@ ITEM.partMod = {
 }
 
 ITEM.skillScaleDmg = {
-    ["guns"] = 0.15,
+    ["guns"] = 0,
 }
 
 ITEM.skillScaleAcc = {

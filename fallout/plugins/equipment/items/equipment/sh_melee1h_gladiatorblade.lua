@@ -1,6 +1,6 @@
 ITEM.name = "Gladiator's Blade"
-ITEM.desc = "A well tested and bloodied blade forged for Gladiators."
-ITEM.model = "models/weapons/cultistblade.mdl"
+ITEM.desc = "A well tested and bloodied blade forged for the Legion's accomplished."
+ITEM.model = "models/halokiller38/fallout/weapons/melee/machetegladius.mdl"
 ITEM.width = 3
 ITEM.height = 1
 ITEM.iconCam = {
@@ -12,7 +12,7 @@ ITEM.iconCam = {
 }
 ITEM.specialSlot = "Sidearm"
 ITEM.category = "Weapon - Melee"
-ITEM.durability = 500
+ITEM.durability = 200
 ITEM.price = 500
  
 
@@ -21,10 +21,9 @@ ITEM.weapondual = false
 ITEM.costAP = 1 --how much AP is used when using this weapon normally
 ITEM.accuracy = 1 --bonus accuracy, can also go negative. defaults to 0 if not set
 ITEM.class = "aus_m_chineseofficersword"
-ITEM.critC = 5
 
 ITEM.dmg = {
-	["Slash"] = 25
+	["Slash"] = 23
 }
 
 --long, medium, close
@@ -38,10 +37,12 @@ ITEM.reqStats = {
 }
 
 ITEM.skillScaleAcc = {
-	["melee"] = 2,}
+	["melee"] = 2,
+	}
 
 ITEM.skillScaleDmg = {
-["melee"] = 1.5,}
+["melee"] = 0.45,
+}
 
 ITEM.actions = {	
 "charge",

@@ -12,7 +12,7 @@ ITEM.iconCam = {
 ITEM.specialSlot = "Primary"
 ITEM.category = "Weapons"
 ITEM.weaponType = "Energy" -- Unarmed, Pistol, Rifle, Sniper, SMG, Shotgun, LMG, Energy, Melee
-ITEM.durability = 500
+ITEM.durability = 300
 ITEM.price = 3500
 ITEM.magSize = 10 --how many times it can be used before reloading is necessary
 
@@ -48,7 +48,7 @@ ITEM.partMod = {
 }
 
 ITEM.skillScaleDmg = {
-    ["energy"] = 0.3,
+    ["energy"] = 0,
 }
 
 ITEM.skillScaleAcc = {

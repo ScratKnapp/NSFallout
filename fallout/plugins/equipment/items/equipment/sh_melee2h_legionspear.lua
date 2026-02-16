@@ -38,10 +38,12 @@ ITEM.reqStats = {
 }
 
 ITEM.skillScaleAcc = {
-	["melee"] = 2,}
+	["melee"] = 2,
+}
 
 ITEM.skillScaleDmg = {
-	["melee"] = 1.5,}
+	["melee"] = 0.4,
+}
 
 ITEM.actions = {	
 	"charge",

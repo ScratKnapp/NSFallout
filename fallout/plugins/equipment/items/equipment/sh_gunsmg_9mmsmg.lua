@@ -12,17 +12,17 @@ ITEM.iconCam = {
 ITEM.specialSlot = "Primary"
 ITEM.category = "Weapons"
 ITEM.weaponType = "SMG" -- Unarmed, Pistol, Rifle, Sniper, SMG, Shotgun, LMG, Energy, Melee
-ITEM.durability = 500
+ITEM.durability = 200
 ITEM.price = 400
 ITEM.magSize = 30 --how many times it can be used before reloading is necessary
 
 ITEM.weight = 1
 ITEM.weapondual = false
 ITEM.ammo = "9mm"
-ITEM.critC = 15
+ITEM.critC = 5
 
 ITEM.dmg = {
-	["9mm"] = 15
+	["9mm"] = 7
 }
 
 ITEM.multi = 1 --how many hits it does, dont need to put it here if it's just 1

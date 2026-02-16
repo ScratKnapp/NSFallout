@@ -12,7 +12,7 @@ ITEM.iconCam = {
 }
 ITEM.specialSlot = "Primary"
 ITEM.category = "Weapon - Melee"
-ITEM.durability = 500
+ITEM.durability = 200
 ITEM.price = 250
  
 
@@ -44,7 +44,7 @@ ITEM.skillScaleAcc = {
 ["melee"] = 2,}
 
 ITEM.skillScaleDmg = {
-["melee"] = 1.5,}
+["melee"] = 0.3,}
 
 ITEM.actions = {	
 "block1",

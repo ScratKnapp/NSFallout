@@ -1,6 +1,6 @@
 ITEM.name = "Atomic Fist"
 ITEM.desc = "A prototype powerfist intended for military use, made with an internalized servo system powered by a micro-fusion pack within. Punch with Nuclear Power."
-ITEM.model = "models/mosi/fallout4/props/weapons/melee/powerfist.mdl"
+ITEM.model = "models/models/bos/saturnitefist.mdl"
 ITEM.width = 2
 ITEM.height = 1
 ITEM.iconCam = {
@@ -12,8 +12,8 @@ ITEM.iconCam = {
 }
 ITEM.specialSlot = "Sidearm"
 ITEM.category = "Weapon - Melee"
-ITEM.durability = 500
-ITEM.price = 500
+ITEM.durability = 200
+ITEM.price = 200
  
 
 ITEM.weight = 1
@@ -40,7 +40,7 @@ ITEM.skillScaleAcc = {
 	["unarmed"] = 2,}
 
 ITEM.skillScaleDmg = {
-    ["unarmed"] = 2,}
+    ["unarmed"] = 0.8,}
 
 
 ITEM.actions = {	

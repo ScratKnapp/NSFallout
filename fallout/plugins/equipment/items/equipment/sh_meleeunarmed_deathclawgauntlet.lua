@@ -12,7 +12,7 @@ ITEM.iconCam = {
 }
 ITEM.specialSlot = "Sidearm"
 ITEM.category = "Weapon - Melee"
-ITEM.durability = 500
+ITEM.durability = 200
 ITEM.price = 250
  
 
@@ -23,7 +23,7 @@ ITEM.accuracy = 1 --bonus accuracy, can also go negative. defaults to 0 if not s
 ITEM.class = "aus_m_fists_deathclawgauntlet"
 
 ITEM.dmg = {
-	["Slash"] = 17
+	["Slash"] = 16
 }
 
 --long, medium, close
@@ -41,7 +41,7 @@ ITEM.skillScaleAcc = {
 ["unarmed"] = 3,}
 
 ITEM.skillScaleDmg = {
-["unarmed"] = 2,}
+["unarmed"] = 0.75,}
 
 ITEM.actions = {	
 "tackle",

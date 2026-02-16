@@ -12,7 +12,7 @@ ITEM.iconCam = {
 ITEM.specialSlot = "Primary"
 ITEM.category = "Weapons"
 ITEM.weaponType = "Sniper" -- Unarmed, Pistol, Rifle, Sniper, SMG, Shotgun, LMG, Energy, Melee
-ITEM.durability = 500
+ITEM.durability = 200
 ITEM.price = 2500
 ITEM.magSize = 5 --how many times it can be used before reloading is necessary
 
@@ -21,7 +21,7 @@ ITEM.weapondual = false
 ITEM.ammo = ".308"
 
 ITEM.dmg = {
-	["308"] = 75
+	["308"] = 70
 }
 
 ITEM.multi = 1 --how many hits it does, dont need to put it here if it's just 1
@@ -39,7 +39,7 @@ ITEM.partMod = {
 	["Head"] = { --only affects this spot
 		accuracy = 0, --this is added
 		accuracyMult = 0, --this is a multiplier
-		dmg = 0.1, --this adds to the existing multiplier
+		dmg = 0.4, --this adds to the existing multiplier
 	},
 }
 
@@ -58,7 +58,7 @@ ITEM.skillScaleDmg = {
 }
 
 ITEM.skillScaleAcc = {
-["guns"] = 2,
+["guns"] = 2.5,
 }
 
 ITEM.actions = {	

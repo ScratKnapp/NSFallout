@@ -12,7 +12,7 @@ ITEM.iconCam = {
 }
 ITEM.specialSlot = "Sidearm"
 ITEM.category = "Weapon - Melee"
-ITEM.durability = 500
+ITEM.durability = 200
 ITEM.price = 150
  
 
@@ -48,7 +48,7 @@ ITEM.skillScaleAcc = {
 ["unarmed"] = 3,}
 
 ITEM.skillScaleDmg = {
-["unarmed"] = 2,}
+["unarmed"] = 0.65,}
 
 ITEM.actions = {	
 "tackle",

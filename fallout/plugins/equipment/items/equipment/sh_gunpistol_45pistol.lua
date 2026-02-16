@@ -12,7 +12,7 @@ ITEM.iconCam = {
 ITEM.specialSlot = {"Sidearm", "Primary"}
 ITEM.category = "Weapons"
 ITEM.weaponType = "Pistol" -- Unarmed, Pistol, Rifle, Sniper, SMG, Shotgun, LMG, Energy, Melee
-ITEM.durability = 500
+ITEM.durability = 200
 ITEM.price = 250
 ITEM.magSize = 8 --how many times it can be used before reloading is necessary
 
@@ -22,7 +22,7 @@ ITEM.ammo = ".45 Auto"
 ITEM.critC = 20
 
 ITEM.dmg = {
-	["45"] = 19
+	[".45 Auto"] = 12
 }
 
 ITEM.reqStats = {
@@ -55,11 +55,11 @@ ITEM.partMod = {
 }
 
 ITEM.skillScaleDmg = {
-["guns"] = 0.15,
+["guns"] = 0,
 }
 
 ITEM.skillScaleAcc = {
-["guns"] = 1.5,
+["guns"] = 1.2,
 }
 
 ITEM.actions = {

@@ -12,7 +12,7 @@ ITEM.iconCam = {
 ITEM.specialSlot = "Primary"
 ITEM.category = "Weapons"
 ITEM.weaponType = "Pistol" -- Unarmed, Pistol, Rifle, Sniper, SMG, Shotgun, LMG, Energy, Melee
-ITEM.durability = 500
+ITEM.durability = 200
 ITEM.price = 750
 ITEM.magSize = 5 --how many times it can be used before reloading is necessary
 
@@ -22,7 +22,7 @@ ITEM.ammo = ".45-70 Gov't"
 ITEM.critC = 25
 
 ITEM.dmg = {
-	[".45-70 Gov't"] = 35
+	[".45-70 Gov't"] = 23
 }
 
 ITEM.multi = 1 --how many hits it does, dont need to put it here if it's just 1
@@ -49,11 +49,11 @@ ITEM.partMod = {
 }
 
 ITEM.skillScaleDmg = {
-    ["guns"] = 0.15,
+    ["guns"] = 0,
 }
 
 ITEM.skillScaleAcc = {
-["guns"] = 1.5,
+["guns"] = 1.2,
 }
 
 ITEM.actions = {	

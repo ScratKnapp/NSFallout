@@ -12,14 +12,14 @@ ITEM.iconCam = {
 ITEM.specialSlot = "Primary"
 ITEM.category = "Weapons"
 ITEM.weaponType = "Energy" -- Unarmed, Pistol, Rifle, Sniper, SMG, Shotgun, LMG, Energy, Melee
-ITEM.durability = 500
+ITEM.durability = 200
 ITEM.price = 500
-ITEM.magSize = 24 --how many times it can be used before reloading is necessary
+ITEM.magSize = 8 --how many times it can be used before reloading is necessary
 
 ITEM.weight = 1
 ITEM.weapondual = false
 ITEM.dmg = {
-	["Microfusion Cell"] = 28
+	["Microfusion Cell"] = 14
 }
 ITEM.ammo = "Microfusion Cell"
 
@@ -32,7 +32,7 @@ ITEM.costAP = 1 --how much AP is used when using this weapon normally
 -- -1 in the first spot will reduce accuracy at long range by 1
 -- 1 in the last spot will increase accuracy at close range by 1
 ITEM.range = {0,0,-4,-75}
-ITEM.class = "tfa_holo_rifle"
+ITEM.class = "aus_w_laserrifle"
 
 ITEM.reqStats = {
   ["str"] = 2,
@@ -52,7 +52,7 @@ ITEM.upgradeSlots = {
 }
 
 ITEM.skillScaleDmg = {
-    ["energy"] = 0.3,
+    ["energy"] = 0,
 }
 
 ITEM.skillScaleAcc = {

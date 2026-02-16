@@ -1,6 +1,5 @@
 ITEM.name = "Switchblade"
 ITEM.desc = "A small pocket knife with the blade held in position by a spring."
-
 ITEM.model = "models/mosi/fallout4/props/weapons/melee/switchblade.mdl"
 ITEM.width = 1
 ITEM.height = 1
@@ -13,7 +12,7 @@ ITEM.iconCam = {
 }
 ITEM.specialSlot = "Sidearm"
 ITEM.category = "Weapon - Melee"
-ITEM.durability = 500
+ITEM.durability = 200
 ITEM.price = 75
  
 
@@ -22,10 +21,9 @@ ITEM.weapondual = false
 ITEM.costAP = 1 --how much AP is used when using this weapon normally
 ITEM.accuracy = 1 --bonus accuracy, can also go negative. defaults to 0 if not set
 ITEM.class = "aus_m_knife_switchblade"
-ITEM.critC = 5
 
 ITEM.dmg = {
-	["Slash"] = 14
+	["Slash"] = 7
 }
 
 --long, medium, close
@@ -39,10 +37,12 @@ ITEM.reqStats = {
 }
 
 ITEM.skillScaleAcc = {
-["melee"] = 2,}
+["melee"] = 2,
+}
 
 ITEM.skillScaleDmg = {
-["melee"] = 1.5,}
+["melee"] = 0.35,
+}
 
 ITEM.actions = {	
 "charge",

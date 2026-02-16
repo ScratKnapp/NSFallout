@@ -1,29 +1,29 @@
-ITEM.name = "Pool Cue Spear and Shield"
-ITEM.desc = "A pool cue with a speartip attached to the end. Comes with a sheet metal shield."
-ITEM.model = "models/mosi/fallout4/props/weapons/melee/poolcue.mdl"
-ITEM.width = 3
+ITEM.name = "Mantis Gauntlet"
+ITEM.desc = "A gauntlet made from a severed giant mantis foreleg, reinforced with metal bars and leather straps."
+ITEM.model = "models/halokiller38/fallout/weapons/melee/mantisgauntlet.mdl"
+ITEM.width = 2
 ITEM.height = 1
 ITEM.iconCam = {
-	pos = Vector(585.28594970703, 464.05227661133, 385.62091064453),
+	pos = Vector(256, 208.02418518066, 158),
 	ang = Angle(25, 220, 0),
-	fov = 1.5,
+	fov = 3,
 	outline = true,
 	outlineColor = Color(16, 255, 0),
 }
-ITEM.specialSlot = "Primary"
+ITEM.specialSlot = "Sidearm"
 ITEM.category = "Weapon - Melee"
-ITEM.durability = 500
-ITEM.price = 350
+ITEM.durability = 200
+ITEM.price = 250
  
 
 ITEM.weight = 1
 ITEM.weapondual = false
 ITEM.costAP = 1 --how much AP is used when using this weapon normally
-ITEM.accuracy = 1 --bonus accuracy, can also go negative. defaults to 0 if not setITEM.costAP = 1 --how much AP is used when using this weapon normally
-ITEM.class = "aus_m_spear_poolcue_shielded"
+ITEM.accuracy = 1 --bonus accuracy, can also go negative. defaults to 0 if not set
+ITEM.class = "aus_m_fists_deathclawgauntlet"
 
 ITEM.dmg = {
-	["Slash"] = 20
+	["Slash"] = 8
 }
 
 --long, medium, close
@@ -34,20 +34,20 @@ ITEM.range = {-100,-100,-100,1}-- arccw_bo1_makarov
 -- arccw_bo1_makarov
 
 ITEM.reqStats = {
-  ["str"] = 3,
+  ["str"] = 2,
 }
 
 ITEM.skillScaleAcc = {
-	["melee"] = 2,}
+["unarmed"] = 3,}
 
 ITEM.skillScaleDmg = {
-["melee"] = 1.5,}
+["unarmed"] = 0.65,}
 
 ITEM.actions = {	
-"charge",
-"heavyattack",
-"wideswing",
-
+"tackle",
+"sweep",
+"bodyslam",
+"combo",
 
 }
 

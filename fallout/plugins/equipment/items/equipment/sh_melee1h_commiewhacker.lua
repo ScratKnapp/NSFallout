@@ -12,7 +12,7 @@ ITEM.iconCam = {
 }
 ITEM.specialSlot = "Sidearm"
 ITEM.category = "Weapon - Melee"
-ITEM.durability = 500
+ITEM.durability = 200
 ITEM.price = 50
  
 
@@ -21,10 +21,9 @@ ITEM.weapondual = false
 ITEM.costAP = 1 --how much AP is used when using this weapon normally
 ITEM.accuracy = 1 --bonus accuracy, can also go negative. defaults to 0 if not set
 ITEM.class = "aus_m_commiewhacker"
-ITEM.critC = 5
 
 ITEM.dmg = {
-	["Blunt"] = 10
+	["Blunt"] = 3
 }
 
 --long, medium, close
@@ -39,10 +38,12 @@ ITEM.reqStats = {
 }
 
 ITEM.skillScaleAcc = {
-["melee"] = 2,}
+["melee"] = 2,
+}
 
 ITEM.skillScaleDmg = {
-["melee"] = 1.5,}
+["melee"] = 0.35,
+}
 
 ITEM.actions = {	
 "charge",

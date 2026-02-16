@@ -12,7 +12,7 @@ ITEM.iconCam = {
 }
 ITEM.specialSlot = "Sidearm"
 ITEM.category = "Weapon - Melee"
-ITEM.durability = 500
+ITEM.durability = 200
 ITEM.price = 25
  
 
@@ -20,7 +20,7 @@ ITEM.weight = 1
 ITEM.weapondual = false
 
 ITEM.dmg = {
-	["Blunt"] = 3
+	["Blunt"] = 2
 }
 
 ITEM.costAP = 1 --how much AP is used when using this weapon normally
@@ -53,7 +53,7 @@ ITEM.skillScaleAcc = {
 ["unarmed"] = 3,}
 
 ITEM.skillScaleDmg = {
-["unarmed"] = 2,}
+["unarmed"] = 0.6,}
 
 ITEM.actions = {	
 "tackle",

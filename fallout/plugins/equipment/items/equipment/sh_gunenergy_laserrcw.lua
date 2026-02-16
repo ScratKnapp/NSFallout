@@ -21,7 +21,7 @@ ITEM.weapondual = false
 ITEM.ammo = "Electron Charge Pack"
 
 ITEM.dmg = {
-	["Electron Charge Pack"] = 18
+	["Electron Charge Pack"] = 12
 }
 
 ITEM.multi = 1 --how many hits it does, dont need to put it here if it's just 1
@@ -53,7 +53,7 @@ ITEM.upgradeSlots = {
 }
 
 ITEM.skillScaleDmg = {
-    ["energy"] = 0.3,
+    ["energy"] = 0,
 }
 
 ITEM.skillScaleAcc = {

@@ -23,7 +23,7 @@ ITEM.weapondual = false
 ITEM.ammo = "5.56"
 
 ITEM.dmg = {
-	["5.56"] = 22
+	["5.56"] = 8
 }
 
 ITEM.multi = 1 --how many hits it does, dont need to put it here if it's just 1
@@ -42,11 +42,11 @@ ITEM.reqStats = {
 }
 
 ITEM.skillScaleDmg = {
-    ["guns"] = 0.15,
+    ["guns"] = 0,
 }
 
 ITEM.skillScaleAcc = {
-["guns"] = 1.5,
+["guns"] = 1.2,
 }
 
 ITEM.partMod = {

@@ -12,7 +12,7 @@ ITEM.iconCam = {
 }
 ITEM.specialSlot = "Primary"
 ITEM.category = "Weapon - Melee"
-ITEM.durability = 500
+ITEM.durability = 200
 ITEM.price = 500
  
 
@@ -23,7 +23,7 @@ ITEM.accuracy = 1 --bonus accuracy, can also go negative. defaults to 0 if not s
 ITEM.class = "aus_m_twohanded_grognakaxe"
 
 ITEM.dmg = {
-	["Slash"] = 55
+	["Slash"] = 38
 }
 
 --long, medium, close
@@ -40,7 +40,7 @@ ITEM.skillScaleAcc = {
 	["melee"] = 2,}
 
 ITEM.skillScaleDmg = {
-["melee"] = 1.5,}
+["melee"] = 0.5,}
 
 ITEM.actions = {	
 "charge",

@@ -12,7 +12,7 @@ ITEM.iconCam = {
 ITEM.specialSlot = "Primary"
 ITEM.category = "Weapons"
 ITEM.weaponType = "Energy" -- Unarmed, Pistol, Rifle, Sniper, SMG, Shotgun, LMG, Energy, Melee
-ITEM.durability = 1000
+ITEM.durability = 500
 ITEM.price = 5000
 ITEM.magSize = 240 --how many times it can be used before reloading is necessary
 
@@ -21,7 +21,7 @@ ITEM.weapondual = false
 ITEM.ammo = "Electron Charge Pack"
 
 ITEM.dmg = {
-	["Electron Charge Pack"] = 25
+	["Electron Charge Pack"] = 22
 }
 
 ITEM.multi = 5 --how many hits it does, dont need to put it here if it's just 1
@@ -48,11 +48,11 @@ ITEM.partMod = {
 }
 
 ITEM.skillScaleDmg = {
-    ["energy"] = 0.2,
+    ["energy"] = 0,
 }
 
 ITEM.skillScaleAcc = {
-["energy"] = 1.5,
+["energy"] = 2.5,
 }
 
 ITEM.actions = {	

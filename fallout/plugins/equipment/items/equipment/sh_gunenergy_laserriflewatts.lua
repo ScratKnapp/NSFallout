@@ -12,7 +12,7 @@ ITEM.iconCam = {
 ITEM.specialSlot = "Primary"
 ITEM.category = "Weapons"
 ITEM.weaponType = "Energy" -- Unarmed, Pistol, Rifle, Sniper, SMG, Shotgun, LMG, Energy, Melee
-ITEM.durability = 500
+ITEM.durability = 200
 ITEM.price = 3500
 ITEM.magSize = 12 --how many times it can be used before reloading is necessary
 
@@ -21,7 +21,7 @@ ITEM.weapondual = false
 ITEM.ammo = "Microfusion Cell"
 
 ITEM.dmg = {
-	["Microfusion Cell"] = 45
+	["Microfusion Cell"] = 40
 }
 
 ITEM.multi = 1 --how many hits it does, dont need to put it here if it's just 1
@@ -54,11 +54,11 @@ ITEM.upgradeSlots = {
 }
 
 ITEM.skillScaleDmg = {
-    ["energy"] = 0.3,
+    ["energy"] = 0,
 }
 
 ITEM.skillScaleAcc = {
-["energy"] = 2.5,
+["energy"] = 3,
 }
 
 ITEM.actions = {	

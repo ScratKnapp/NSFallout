@@ -23,7 +23,7 @@ ITEM.accuracy = 1 --bonus accuracy, can also go negative. defaults to 0 if not s
 ITEM.class = "aus_m_board"
 
 ITEM.dmg = {
-	["Blunt"] = 14
+	["Blunt"] = 10
 }
 
 --long, medium, close
@@ -37,10 +37,12 @@ ITEM.reqStats = {
 }
 
 ITEM.skillScaleAcc = {
-["melee"] = 2,}
+["melee"] = 2,
+}
 
 ITEM.skillScaleDmg = {
-["melee"] = 1.5,}
+["melee"] = 0.35,
+}
 
 ITEM.actions = {	
 "charge",

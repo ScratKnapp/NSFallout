@@ -12,7 +12,7 @@ ITEM.iconCam = {
 ITEM.specialSlot = {"Sidearm", "Primary"}
 ITEM.category = "Weapons"
 ITEM.weaponType = "Pistol" -- Unarmed, Pistol, Rifle, Sniper, SMG, Shotgun, LMG, Energy, Melee
-ITEM.durability = 500
+ITEM.durability = 200
 ITEM.price = 750
 ITEM.magSize = 7 --how many times it can be used before reloading is necessary
 
@@ -22,7 +22,7 @@ ITEM.ammo = "12.7mm"
 ITEM.critC = 20
 
 ITEM.dmg = {
-	["12.7mm"] = 30
+	["12.7mm"] = 20
 }
 
 ITEM.multi = 1 --how many hits it does, dont need to put it here if it's just 1
@@ -37,7 +37,7 @@ ITEM.range = {-75,-20,1,0}
 ITEM.class = "aus_w_127pistol"
 
 ITEM.reqStats = {
-  ["str"] = 5,
+  ["str"] = 4,
 }
 
 ITEM.partMod = {
@@ -53,11 +53,11 @@ ITEM.upgradeSlots = {
 }
 
 ITEM.skillScaleDmg = {
-    ["guns"] = 0.15,
+    ["guns"] = 0,
 }
 
 ITEM.skillScaleAcc = {
-["guns"] = 1.5,
+["guns"] = 1.2,
 }
 
 ITEM.actions = {

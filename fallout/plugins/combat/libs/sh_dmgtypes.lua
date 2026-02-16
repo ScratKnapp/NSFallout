@@ -2,17 +2,44 @@ local PLUGIN = PLUGIN
 
 PLUGIN.dmgTypes = {
 	--guns
+		["Nails"] = {
+		name = "Nails",
+		armor = 0.95,
+		kinetic = true,
+	},
+	
+		["BB"] = {
+		name = "BB",
+		armor = 0.95,
+		kinetic = true,
+	},
+	
 	[".22LR"] = {
 		name = "22LR Damage",
 		armor = 0.95,
 		kinetic = true,
 	},
+	
 	[".22LR HP"]= {
 		name = ".22LR Hollow Point",
 		armor = 1.15,		
 		special = "HP",
 		kinetic = true,
 	},
+	
+	[".32"] = {
+		name = ".32",
+		armor = 0.95,
+		kinetic = true,
+	},
+	
+	[".32 HP"] = {
+		name = ".32 Hollow Point",
+		armor = 1.15,	
+		special = "HP",		
+		kinetic = true,
+	},
+
 	
 	[".38"] = {
 		name = ".38",
@@ -22,7 +49,8 @@ PLUGIN.dmgTypes = {
 	
 	[".38 HP"] = {
 		name = ".38 Hollow Point",
-		armor = 1.15,		
+		armor = 1.15,
+		special = "HP",
 		kinetic = true,
 	},
 	

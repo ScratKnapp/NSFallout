@@ -1,27 +1,27 @@
-ITEM.name = "Gauss Rifle"
-ITEM.desc = "A prototype rifle set with capacitors and wiring to charge and release a 2mm EC charge and launch a projectile at extremely high speed."
-ITEM.model = "models/halokiller38/fallout/weapons/energy weapons/gaussrifle.mdl"
+ITEM.name = "BB Gun"
+ITEM.desc = "A pneumatically-powered lever action airgun."
+ITEM.model = "models/halokiller38/fallout/weapons/rifles/bbgun01.mdl"
 ITEM.width = 4
 ITEM.height = 2
 ITEM.iconCam = {
-	pos = Vector(437.6240234375, 390.5, 275),
+	pos = Vector(537.66888427734, 450, 328),
 	ang = Angle(25, 220, 0),
-	fov = 3,
+	fov = 2,
 }
 
 ITEM.specialSlot = "Primary"
 ITEM.category = "Weapons"
-ITEM.weaponType = "Sniper" -- Unarmed, Pistol, Rifle, Sniper, SMG, Shotgun, LMG, Energy, Melee
-ITEM.durability = 500
-ITEM.price = 5000
+ITEM.weaponType = "Rifle" -- Unarmed, Pistol, Rifle, Sniper, SMG, Shotgun, LMG, Energy, Melee
+ITEM.durability = 200
+ITEM.price = 900
 ITEM.magSize = 5 --how many times it can be used before reloading is necessary
 
 ITEM.weight = 1
 ITEM.weapondual = false
-ITEM.ammo = "2mm EC"
+ITEM.ammo = "BB"
 
 ITEM.dmg = {
-	["2mm EC"] = 100
+	["BB"] = 2
 }
 
 ITEM.multi = 1 --how many hits it does, dont need to put it here if it's just 1
@@ -32,22 +32,38 @@ ITEM.costAP = 1 --how much AP is used when using this weapon normally
 --the number in here determines the affects on accuracy at that range 
 -- -1 in the first spot will reduce accuracy at long range by 1
 -- 1 in the last spot will increase accuracy at close range by 1
-ITEM.range = {2,0,-10,-75}
-ITEM.class = "aus_w_gauss"
+ITEM.range = {-10,1,0,-75}
+ITEM.class = "aus_w_varmintrifle"
 
 ITEM.reqStats = {
-  ["str"] = 4,
+  ["str"] = 2,
+}
+
+ITEM.partMod = {
+	["Head"] = { --only affects this spot
+		accuracy = 0, --this is added
+		accuracyMult = 0, --this is a multiplier
+		dmg = 0.4, --this adds to the existing multiplier
+		},
+}
+
+ITEM.upgradeSlots = {
+["Varmint Rifle Ext. Magazine"] = true,
+["Varmint Rifle Night Scope"] = true,
+["Varmint Rifle Silencer"] = true,
+
 }
 
 ITEM.skillScaleDmg = {
-    ["guns"] = 0.15,
+    ["guns"] = 0,
 }
 
 ITEM.skillScaleAcc = {
-["guns"] = 1.5,
+["guns"] = 2,
 }
 
 ITEM.actions = {	
-"aimedshot_precision",
+"aimedshot_sniper",
+"doubletap_precision",
 
 }

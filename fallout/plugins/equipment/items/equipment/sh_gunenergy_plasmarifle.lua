@@ -33,7 +33,7 @@ ITEM.costAP = 1 --how much AP is used when using this weapon normally
 -- -1 in the first spot will reduce accuracy at long range by 1
 -- 1 in the last spot will increase accuracy at close range by 1
 ITEM.range = {-15,1,0,-75}
-ITEM.class = "tfa_multiplas"
+ITEM.class = "aus_w_plasmarifle"
 
 ITEM.reqStats = {
   ["str"] = 3,
@@ -55,11 +55,11 @@ ITEM.upgradeSlots = {
 }
 
 ITEM.skillScaleDmg = {
-    ["energy"] = 0.3,
+    ["energy"] = 0,
 }
 
 ITEM.skillScaleAcc = {
-["energy"] = 2.5,
+["energy"] = 2,
 }
 
 ITEM.actions = {	

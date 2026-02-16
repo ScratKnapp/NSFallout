@@ -20,7 +20,7 @@ ITEM.weight = 1
 ITEM.weapondual = false
 
 ITEM.dmg = {
-	["10mm"] = 17
+	["10mm"] = 12
 }
 
 ITEM.ammo = "10mm"
@@ -41,7 +41,7 @@ ITEM.reqStats = {
 }
 
 ITEM.skillScaleDmg = {
-    ["guns"] = 0.15,
+    ["guns"] = 0,
 }
 
 ITEM.skillScaleAcc = {

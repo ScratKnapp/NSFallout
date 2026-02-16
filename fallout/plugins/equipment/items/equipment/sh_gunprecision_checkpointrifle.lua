@@ -1,5 +1,5 @@
-ITEM.name = "Checkpoint Rifle"
-ITEM.desc = "A heavily modified, gas-operated rifle designed off of the NCR service rifle."
+ITEM.name = "Checkpoint Carbine"
+ITEM.desc = "A heavily modified, gas-operated rifle with a short barrel and ring supports around the barrel cover."
 ITEM.model = "models/illusion/fwp/w_servicerifle.mdl"
 ITEM.width = 4
 ITEM.height = 2
@@ -12,7 +12,7 @@ ITEM.iconCam = {
 ITEM.specialSlot = "Primary"
 ITEM.category = "Weapons"
 ITEM.weaponType = "Rifle" -- Unarmed, Pistol, Rifle, Sniper, SMG, Shotgun, LMG, Energy, Melee
-ITEM.durability = 500
+ITEM.durability = 200
 ITEM.price = 1200
 ITEM.magSize = 20 --how many times it can be used before reloading is necessary
 
@@ -21,7 +21,7 @@ ITEM.weapondual = false
 ITEM.ammo = "12.7mm"
 
 ITEM.dmg = {
-	["12.7mm"] = 41
+	["12.7mm"] = 21
 }
 
 ITEM.multi = 1 --how many hits it does, dont need to put it here if it's just 1
@@ -55,11 +55,11 @@ ITEM.upgradeSlots = {
 }
 
 ITEM.skillScaleDmg = {
-    ["guns"] = 0.15,
+    ["guns"] = 0,
 }
 
 ITEM.skillScaleAcc = {
-["guns"] = 3,
+["guns"] = 2,
 }
 
 ITEM.actions = {	

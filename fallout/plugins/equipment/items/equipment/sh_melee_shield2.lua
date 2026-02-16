@@ -12,7 +12,7 @@ ITEM.iconCam = {
 }
 ITEM.specialSlot = "Primary"
 ITEM.category = "Weapon - Melee"
-ITEM.durability = 500
+ITEM.durability = 200
 ITEM.price = 300
  
 
@@ -23,7 +23,7 @@ ITEM.accuracy = 1 --bonus accuracy, can also go negative. defaults to 0 if not s
 ITEM.class = "aus_m_baseballbat_wood_barbwire"
 
 ITEM.dmg = {
-	["Blunt"] = 14
+	["Blunt"] = 12
 }
 
 --long, medium, close
@@ -44,7 +44,7 @@ ITEM.skillScaleAcc = {
 ["melee"] = 2,}
 
 ITEM.skillScaleDmg = {
-["melee"] = 1.5,}
+["melee"] = 0.3,}
 
 ITEM.actions = {	
 "block2",

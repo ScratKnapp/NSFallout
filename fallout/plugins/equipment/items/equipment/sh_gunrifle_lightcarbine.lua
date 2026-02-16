@@ -1,6 +1,6 @@
 ITEM.name = "Light Carbine"
 ITEM.desc = "A shorned and slim rifle chambered in .38; capable of firing fully automatic."
-ITEM.model = "models/bf1/weapons/desert dweller carbine.mdl"
+ITEM.model = "models/bf1/weapons/winchester model 1907.mdl"
 ITEM.width = 4
 ITEM.height = 2
 ITEM.iconCam = {
@@ -16,14 +16,14 @@ ITEM.category = "Weapons"
 ITEM.weaponType = "Rifle" -- Unarmed, Pistol, Rifle, Sniper, SMG, Shotgun, LMG, Energy, Melee
 ITEM.durability = 200
 ITEM.price = 250
-ITEM.magSize = 48 --how many times it can be used before reloading is necessary
+ITEM.magSize = 30 --how many times it can be used before reloading is necessary
 
 ITEM.weight = 1
 ITEM.weapondual = false
 ITEM.ammo = ".38"
 
 ITEM.dmg = {
-	[".38"] = 16
+	[".38"] = 11
 }
 
 ITEM.multi = 1 --how many hits it does, dont need to put it here if it's just 1
@@ -42,11 +42,11 @@ ITEM.reqStats = {
 }
 
 ITEM.skillScaleDmg = {
-    ["guns"] = 0.15,
+    ["guns"] = 0,
 }
 
 ITEM.skillScaleAcc = {
-["guns"] = 1.5,
+["guns"] = 1.2,
 }
 
 ITEM.partMod = {

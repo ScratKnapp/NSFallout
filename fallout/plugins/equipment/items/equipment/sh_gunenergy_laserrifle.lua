@@ -1,5 +1,5 @@
 ITEM.name = "AER-9 Laser Rifle"
-ITEM.desc = "The AER-9 laser gun is a crystal array housed in titanium to fire energy beams powered by microfusion cells."
+ITEM.desc = "The AER-9 laser gun houses a crystal array in titanium to fire energy beams powered by microfusion cells."
 ITEM.model = "models/halokiller38/fallout/weapons/energy weapons/laserrifle.mdl"
 ITEM.width = 4
 ITEM.height = 2
@@ -12,7 +12,7 @@ ITEM.iconCam = {
 ITEM.specialSlot = "Primary"
 ITEM.category = "Weapons"
 ITEM.weaponType = "Energy" -- Unarmed, Pistol, Rifle, Sniper, SMG, Shotgun, LMG, Energy, Melee
-ITEM.durability = 500
+ITEM.durability = 200
 ITEM.price = 2800
 ITEM.magSize = 30 --how many times it can be used before reloading is necessary
 
@@ -21,7 +21,7 @@ ITEM.weapondual = false
 ITEM.ammo = "Microfusion Cell"
 
 ITEM.dmg = {
-	["Microfusion Cell"] = 24
+	["Microfusion Cell"] = 20
 }
 
 ITEM.multi = 1 --how many hits it does, dont need to put it here if it's just 1
@@ -53,10 +53,8 @@ ITEM.upgradeSlots = {
 
 }
 
-ITEM.durability = 500
-
 ITEM.skillScaleDmg = {
-    ["energy"] = 0.3,
+    ["energy"] = 0,
 }
 
 ITEM.skillScaleAcc = {

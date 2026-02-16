@@ -14,7 +14,7 @@ ITEM.iconCam = {
 ITEM.specialSlot = {"Sidearm", "Primary"}
 ITEM.category = "Weapons"
 ITEM.weaponType = "Energy" -- Unarmed, Pistol, Rifle, Sniper, SMG, Shotgun, LMG, Energy, Melee
-ITEM.durability = 500
+ITEM.durability = 200
 ITEM.price = 400
 ITEM.magSize = 6 --how many times it can be used before reloading is necessary
 
@@ -23,7 +23,7 @@ ITEM.weapondual = false
 ITEM.ammo = "Energy Cell"
 
 ITEM.dmg = {
-	["Energy Cell"] = 21
+	["Energy Cell"] = 12
 }
 
 ITEM.multi = 1 --how many hits it does, dont need to put it here if it's just 1
@@ -57,7 +57,7 @@ ITEM.partMod = {
 }
 
 ITEM.skillScaleDmg = {
-    ["energy"] = 0.3,
+    ["energy"] = 0,
 }
 
 ITEM.skillScaleAcc = {

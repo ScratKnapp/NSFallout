@@ -1,5 +1,5 @@
 ITEM.name = "Chinese SMG"
-ITEM.desc = "A Chinese submachinegun that outlived the Great War. Chambered in .22, it is easy to replicate and maintain."
+ITEM.desc = "A Chinese submachinegun that outlived the Great War. Chambered in .32, it is easy to replicate and maintain."
 ITEM.model = "models/khrcw2/doipack/w_suomi.mdl"
 ITEM.width = 3
 ITEM.height = 2
@@ -12,17 +12,17 @@ ITEM.iconCam = {
 ITEM.specialSlot = "Primary"
 ITEM.category = "Weapons"
 ITEM.weaponType = "SMG" -- Unarmed, Pistol, Rifle, Sniper, SMG, Shotgun, LMG, Energy, Melee
-ITEM.durability = 500
+ITEM.durability = 200
 ITEM.price = 950
 ITEM.magSize = 180 --how many times it can be used before reloading is necessary
 
 ITEM.weight = 1
 ITEM.weapondual = false
-ITEM.ammo = ".22LR"
-ITEM.critC = 15
+ITEM.ammo = ".32"
+ITEM.critC = 5
 
 ITEM.dmg = {
-	[".22LR"] = 12
+	[".32"] = 5
 }
 
 ITEM.multi = 1 --how many hits it does, dont need to put it here if it's just 1
@@ -54,11 +54,11 @@ ITEM.partMod = {
 }
 
 ITEM.skillScaleDmg = {
-    ["guns"] = 0.15,
+    ["guns"] = 0,
 }
 
 ITEM.skillScaleAcc = {
-["guns"] = 1.5,
+["guns"] = 1.2,
 }
 
 ITEM.actions = {	

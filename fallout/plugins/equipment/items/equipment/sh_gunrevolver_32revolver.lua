@@ -1,27 +1,28 @@
-ITEM.name = "Bullpup LMG"
-ITEM.desc = "A bullpup machinegun with a bulky frame and handguard for stable fire at medium distances."
-ITEM.model = "models/kali/weapons/l86a2 lsw.mdl"
-ITEM.width = 4
+ITEM.name = ".32 Revolver"
+ITEM.desc = "A low caliber Smith and Wesson revolver."
+ITEM.model = "models/halokiller38/fallout/weapons/pistols/32pistol.mdl"
+ITEM.width = 2
 ITEM.height = 2
 ITEM.iconCam = {
-	pos = Vector(490.58874511719, 399.61447143555, 293.89999389648),
+	pos = Vector(119.26746368408, 103, 73.424003601074),
 	ang = Angle(25, 220, 0),
-	fov = 3.3,
+	fov = 3,
 }
 
-ITEM.specialSlot = "Primary"
+ITEM.specialSlot = {"Sidearm", "Primary"}
 ITEM.category = "Weapons"
-ITEM.weaponType = "LMG" -- Unarmed, Pistol, Rifle, Sniper, SMG, Shotgun, LMG, Energy, Melee
-ITEM.durability = 500
-ITEM.price = 2500
-ITEM.magSize = 30 --how many times it can be used before reloading is necessary
+ITEM.weaponType = "Pistol" -- Unarmed, Pistol, Rifle, Sniper, SMG, Shotgun, LMG, Energy, Melee
+ITEM.durability = 200
+ITEM.price = 400
+ITEM.magSize = 5 --how many times it can be used before reloading is necessary
 
 ITEM.weight = 1
 ITEM.weapondual = false
-ITEM.ammo = "5.56"
+ITEM.ammo = ".32"
+ITEM.critC = 12
 
 ITEM.dmg = {
-	["5.56"] = 27
+	[".32"] = 9
 }
 
 ITEM.multi = 1 --how many hits it does, dont need to put it here if it's just 1
@@ -32,15 +33,11 @@ ITEM.costAP = 1 --how much AP is used when using this weapon normally
 --the number in here determines the affects on accuracy at that range 
 -- -1 in the first spot will reduce accuracy at long range by 1
 -- 1 in the last spot will increase accuracy at close range by 1
-ITEM.range = {-15,1,0,-75}
-ITEM.class = "tfa_bozar"
+ITEM.range = {-75,-20,1,0}
+ITEM.class = "tfa_police_pistol"
 
 ITEM.reqStats = {
-  ["str"] = 6,
-}
-
-ITEM.skillScaleDmg = {
-    ["guns"] = 0.15,
+  ["str"] = 1,
 }
 
 ITEM.partMod = {
@@ -51,12 +48,17 @@ ITEM.partMod = {
 		},
 }
 
+ITEM.skillScaleDmg = {
+    ["guns"] = 0.15,
+}
+
 ITEM.skillScaleAcc = {
 ["guns"] = 1.5,
 }
 
-ITEM.actions = {	
-"suppression",
+ITEM.actions = {
+"doubletap_revolver",
 "aimedshot_precision",
-"burstfire_lmg",
+"suppressionpistol",
+
 }
