@@ -1039,9 +1039,9 @@ ACTS:Register(ACT)
 --
 
 local ACT = {}
-ACT.uid = "block"
-ACT.name = "Block"
-ACT.desc = "Prepares you to block the next two incoming hits, last one turn."
+ACT.uid = "block1"
+ACT.name = "Block Level 1"
+ACT.desc = "Provides a massive armor boost against the next 5 incoming hits, last one turn."
 ACT.attackString = "prepares to block"
 ACT.category = "Melee"
 ACT.costAP = 1
@@ -1058,10 +1058,71 @@ ACT.effects = {
         duration = 1,
         strength = 1,
 
-        res = {
-			["Kinetic"] = 50,
-			["Energy"] = -50,
-		},
+		armor = 200,
+
+		hitsDef = 5,
+		
+		selfApply = true,
+		buff = true,
+    }
+}
+ACTS:Register(ACT)
+--
+
+local ACT = {}
+ACT.uid = "block2"
+ACT.name = "Block Level 2"
+ACT.desc = "Provides a massive armor boost against the next 6 incoming hits, last one turn."
+ACT.attackString = "prepares to block"
+ACT.category = "Melee"
+ACT.costAP = 1
+ACT.CD = 1
+ACT.restrict = true
+ACT.selfOnly = true
+ACT.notarget = true
+ACT.effects = {
+    [1] = {
+        uid = ACT.uid,
+
+        name = "Blocking",
+        effect = "blocking",
+        duration = 1,
+        strength = 1,
+
+		armor = 200,
+
+		hitsDef = 6,
+		
+		selfApply = true,
+		buff = true,
+    }
+}
+ACTS:Register(ACT)
+--
+
+local ACT = {}
+ACT.uid = "block3"
+ACT.name = "Block Level 3"
+ACT.desc = "Provides a massive armor boost against the next 7 incoming hits, last one turn."
+ACT.attackString = "prepares to block"
+ACT.category = "Melee"
+ACT.costAP = 1
+ACT.CD = 1
+ACT.restrict = true
+ACT.selfOnly = true
+ACT.notarget = true
+ACT.effects = {
+    [1] = {
+        uid = ACT.uid,
+
+        name = "Blocking",
+        effect = "blocking",
+        duration = 1,
+        strength = 1,
+
+		armor = 200,
+
+		hitsDef = 7,
 		
 		selfApply = true,
 		buff = true,
