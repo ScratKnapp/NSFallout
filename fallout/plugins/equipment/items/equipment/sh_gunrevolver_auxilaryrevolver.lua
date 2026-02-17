@@ -22,6 +22,7 @@ ITEM.weight = 1
 ITEM.weapondual = false
 ITEM.ammo = ".38"
 ITEM.critC = 12
+ITEM.critM = 0.5
 
 ITEM.dmg = {
 	[".38"] = 9

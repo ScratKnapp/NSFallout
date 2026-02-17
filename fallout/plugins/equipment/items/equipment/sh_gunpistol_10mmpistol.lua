@@ -24,6 +24,7 @@ ITEM.dmg = {
 
 ITEM.ammo = "10mm"
 ITEM.critC = 20
+ITEM.critM = 0.5
 
 ITEM.multi = 1 --how many hits it does, dont need to put it here if it's just 1
 ITEM.ammoUse = 1 --how much ammo it should use per shot, will default to 0 if not set
