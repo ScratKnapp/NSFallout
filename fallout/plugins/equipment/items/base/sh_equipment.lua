@@ -1092,10 +1092,10 @@ function ITEM:getDesc(partial)
 				desc = desc.. "\n\n<color=50,200,50>Resistances</color>"
 				
 				local combatPlugin = nut.plugin.list["combat"]
-				
+
 				for k, v in pairs(res) do
 					if(v != 0) then
-						local dmgType = (combatPlugin and combatPlugin.dmgTypes[k])
+						local dmgType = (combatPlugin and combatPlugin.dmgTypes[k] or combatPlugin.broadTypes[k])
 						
 						local effect = EFFS.effects[k]
 						
@@ -1116,7 +1116,7 @@ function ITEM:getDesc(partial)
 				
 				for k, v in pairs(amp) do
 					if(v != 0) then
-						local dmgType = (combatPlugin and combatPlugin.dmgTypes[k])
+						local dmgType = (combatPlugin and combatPlugin.dmgTypes[k] or combatPlugin.broadTypes[k])
 						if(dmgType) then
 							desc = desc.. "\n " ..dmgType.name.. " Amplification: " ..v.. "%."
 						end

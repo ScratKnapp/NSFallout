@@ -58,36 +58,20 @@ if (SERVER) then
 			netstream.Start(activator, "nut_CraftWindow", activator, nil, self.PrintName, self)
 		end
 	end
-	
-	function ENT:OnRemove()
-		local index = self:getNetVar("id")
-
-		if (!nut.shuttingDown and !self.nutIsSafe and index) then
-			local item = nut.item.inventories[index]
-
-			if (item) then
-				nut.item.inventories[index] = nil
-
-				nut.db.query("DELETE FROM nut_items WHERE _invID = "..index)
-				nut.db.query("DELETE FROM nut_inventories WHERE _invID = "..index)
-
-				hook.Run("StorageItemRemoved", self, item)
-			end
-		end
-	end
 
 	function ENT:getInv()
 		return nut.item.inventories[self:getNetVar("id", 0)]
 	end	
 	
 	function ENT:OnRemove()
-		if (not self.nutForceDelete) then
-			if (not nut.entityDataLoaded or not PLUGIN.loadedData) then return end
+		if (!self.nutForceDelete) then
+			if (!nut.entityDataLoaded) then return end
 			if (self.nutIsSafe) then return end
 			if (nut.shuttingDown) then return end
 		end
 		
 		self:deleteInventory()
+		PLUGIN:saveTables()
 	end
 	
 	function ENT:deleteInventory()

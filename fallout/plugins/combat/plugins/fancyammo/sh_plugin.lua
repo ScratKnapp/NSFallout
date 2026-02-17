@@ -151,6 +151,8 @@ nut.command.add("reloadadmin", {
 			end
 		end
 		
+		client:clearCooldowns()
+		
 		client:notify("Weapons reloaded.")
 	end
 })

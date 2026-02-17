@@ -448,6 +448,16 @@ PLUGIN.dmgTypes = {
 	},
 }
 
+--just storage so it can be more easily accessed by other things
+PLUGIN.broadTypes = {
+	["Energy"] = {
+		name = "Energy",
+	},
+	["Kinetic"] = {
+		name = "Kinetic",
+	},
+}
+
 --checks if things are considered broader types
 --such as being "kinetic" or "energy"
 --PLUGIN:IsBroadType("9mm", "kinetic")
