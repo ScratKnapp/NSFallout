@@ -21,7 +21,7 @@ ITEM.weapondual = false
 ITEM.ammo = ".50 MG"
 
 ITEM.dmg = {
-	[".50 MG"] = 115
+	[".50 MG"] = 75
 }
 
 ITEM.multi = 1 --how many hits it does, dont need to put it here if it's just 1
@@ -49,7 +49,7 @@ ITEM.upgradeSlots = {
 
 ITEM.partMod = {
 	["Head"] = { --only affects this spot
-		accuracy = 0, --this is added
+		accuracy = 20, --this is added
 		accuracyMult = 0, --this is a multiplier
 		dmg = 0.4, --this adds to the existing multiplier
 	},

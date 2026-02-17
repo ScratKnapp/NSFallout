@@ -11,7 +11,7 @@ ITEM.iconCam = {
 
 ITEM.specialSlot = "Primary"
 ITEM.category = "Weapons"
-ITEM.durability = 500
+ITEM.durability = 600
 ITEM.price = 5000
 ITEM.magSize = 100 --how many times it can be used before reloading is necessary
 

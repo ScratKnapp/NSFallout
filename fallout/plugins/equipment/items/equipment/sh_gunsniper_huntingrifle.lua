@@ -21,7 +21,7 @@ ITEM.weapondual = false
 ITEM.ammo = ".308"
 
 ITEM.dmg = {
-	[".308"] = 55
+	[".308"] = 40
 }
 
 ITEM.multi = 1 --how many hits it does, dont need to put it here if it's just 1
@@ -37,7 +37,7 @@ ITEM.class = "aus_w_huntingrifle"
 
 ITEM.partMod = {
 	["Head"] = { --only affects this spot
-		accuracy = 0, --this is added
+		accuracy = 20, --this is added
 		accuracyMult = 0, --this is a multiplier
 		dmg = 0.4, --this adds to the existing multiplier
 	},
@@ -55,7 +55,7 @@ ITEM.upgradeSlots = {
 }
 
 ITEM.skillScaleDmg = {
-    ["guns"] = 0.15,
+    ["guns"] = 0,
 }
 
 ITEM.skillScaleAcc = {

@@ -14,7 +14,7 @@ ITEM.iconCam = {
 ITEM.specialSlot = "Primary"
 ITEM.category = "Weapons"
 ITEM.weaponType = "Rifle" -- Unarmed, Pistol, Rifle, Sniper, SMG, Shotgun, LMG, Energy, Melee
-ITEM.durability = 200
+ITEM.durability = 400
 ITEM.price = 900
 ITEM.magSize = 20 --how many times it can be used before reloading is necessary
 
@@ -24,7 +24,7 @@ ITEM.ammo = ".45 Auto"
 
 ITEM.dmg = {
 	[".45 Auto"] = 10,
-	["Radiation"] = 8
+	["Radiation"] = 10
 }
 
 ITEM.multi = 1 --how many hits it does, dont need to put it here if it's just 1
@@ -55,7 +55,8 @@ ITEM.skillScaleDmg = {
 }
 
 ITEM.skillScaleAcc = {
-["guns"] = 1.2,}
+["guns"] = 1.35,
+}
 
 ITEM.actions = {	
 "burstfire_rifle",
