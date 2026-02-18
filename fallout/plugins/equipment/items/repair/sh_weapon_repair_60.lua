@@ -8,4 +8,4 @@ ITEM.category = "Repair"
 ITEM.repair = 60
 ITEM.repairSkill = 12
 
-ITEM.armorOnly = true
+ITEM.weaponOnly = true
