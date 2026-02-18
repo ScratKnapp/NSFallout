@@ -15,10 +15,7 @@ ITEM.res = { --percentage based armor
   ["Energy"] = 0, 
 }
 
-ITEM.armor = {
-	["Left Arm"] = 10,
-	["Right Arm"] = 10,
-}
+ITEM.armor = 10
 
 ITEM.specialSlot = "Arms" --what slot it goes in
 ITEM.attrib = { --gives the player stats on equip

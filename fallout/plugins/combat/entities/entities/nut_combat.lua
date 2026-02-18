@@ -145,6 +145,7 @@ function ENT:MoveTo(pos, options, endFunc)
 			end
 			
 			self.loco:FaceTowards(pos)
+			path:Update(self)
 			
 			if (self.loco:IsStuck()) then
 				self:StuckTeleport(pos)

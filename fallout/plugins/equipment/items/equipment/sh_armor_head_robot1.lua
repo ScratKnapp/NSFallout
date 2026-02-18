@@ -15,9 +15,7 @@ ITEM.durability = 250
 ITEM.faction = FACTION_ROBOT -- FACTION_MUTANT or FACTION_ROBOT
 ITEM.category = "Equipment - Special"
 
-ITEM.armor = {
-	["Head"] = 8,
-}
+ITEM.armor = 8
 
 ITEM.upgradeSlots = {
 ["Inserts"] = true,

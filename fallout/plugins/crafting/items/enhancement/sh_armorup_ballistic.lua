@@ -13,7 +13,7 @@ ITEM.slot = "Inserts"
 ITEM.combiner = true
 ITEM.armorOnly = true
 
---ITEM.armor = 0 --DT based armor (FOR REF COMBAT MK2 (THE BEST ARMOR) HAS 15 ARMOR)
+ITEM.armor = 0 --DT based armor (FOR REF COMBAT MK2 (THE BEST ARMOR) HAS 15 ARMOR)
 ITEM.res = { --percentage based armor (FOR REF COMBAT MK2 (THE BEST ARMOR) HAS 15 RES OF BOTH)
   ["Kinetic"] = 3,
   ["Energy"] = 0, 

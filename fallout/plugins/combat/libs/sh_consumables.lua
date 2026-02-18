@@ -1,6 +1,8 @@
 local PLUGIN = PLUGIN
 
-hook.Add("nut_ActionAttackDataPre", "nut_consumableUse", function(action, attacker, info)
+hook.Add("nut_ActionAttackDataPre", "nut_consumableUse", function(action, attacker, info, fakeAttack)
+	if(fakeAttack) then return end
+	
 	local weapon = info.weapon or (info.action and info.action.weapon)
 	if(!weapon) then return end
 

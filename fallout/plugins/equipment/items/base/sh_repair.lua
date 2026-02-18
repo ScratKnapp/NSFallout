@@ -22,6 +22,13 @@ ITEM.functions.Repair = {
 		for k, v in pairs(inventory:getItems()) do
 			if(!v:getData("dura")) then continue end
 			
+			local armor = v:getData("armor", v.armor)
+			local res = v:getData("res", v.res)
+			if(item.armorOnly and (!armor and !res)) then continue end
+			
+			local dmg = v:getData("dmg", v.dmg)
+			if(item.weaponOnly and !dmg) then continue end
+			
 			local dura = v:getData("dura", v.durability)
 			local maxDura = v.durability
 			local percent = dura/maxDura

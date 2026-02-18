@@ -114,6 +114,13 @@ function PLUGIN:getCustomFields(item, entity)
 			},
 		},
 		{
+			["armor"] = {
+				weight = 7, 
+				name = "Armor", 
+				category = "Combat Stats",
+				value = saveData.armor,
+				numeric = true,
+			},
 			["accuracy"] = {
 				weight = 8, 
 				name = "Accuracy (Bonus)", 
@@ -154,23 +161,6 @@ function PLUGIN:getCustomFields(item, entity)
 				name = "Crit Multiplier (Bonus)", 
 				category = "Combat Stats",
 				value = saveData.critBM or item.critBM,
-				numeric = true,
-			},
-		},
-		{
-			["armor"] = {
-				weight = 8, 
-				name = "Armor", 
-				category = "Armor",
-				value = saveData.armor or item.armor,
-				extra = {
-					["Body"] = {name = "Body"},
-					["Head"] = {name = "Head"},
-					["Left Arm"] = {name = "Left Arm"},
-					["Right Arm"] = {name = "Right Arm"},
-					["Left Leg"] = {name = "Left Leg"},
-					["Right Leg"] = {name = "Right Leg"},
-				},
 				numeric = true,
 			},
 		},

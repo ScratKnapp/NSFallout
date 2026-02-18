@@ -7,3 +7,5 @@ ITEM.flag = "v"
 ITEM.category = "Repair"
 ITEM.repair = 100
 ITEM.repairSkill = 20
+
+ITEM.armorOnly = true
