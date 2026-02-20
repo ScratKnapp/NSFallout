@@ -1,23 +1,43 @@
 ENT.Type = "nextbot"
 ENT.Base = "nut_combat"
-ENT.PrintName = "NCR Combat Medic"
+ENT.PrintName = "Provisional Medic"
 ENT.Category = "NutScript - Combat (New California Republic)"
 ENT.Spawnable = true
 ENT.AdminOnly = true
 
-ENT.name = "NCR Combat Medic"
+ENT.name = "Provisional Medic"
 
-ENT.model = "models/gore/ncr remake/ncr/medicanton.mdl"
-ENT.hp = 100
-ENT.dmg = {
-	["5.56"] = 30,
+ENT.StepData = {
+	0.25,
+	0.75,
 }
-ENT.accuracy = 10
+
+ENT.FootstepSounds = {
+	"npc/footsteps/hardboot_generic1.wav",
+	"npc/footsteps/hardboot_generic2.wav",
+	"npc/footsteps/hardboot_generic3.wav",
+	"npc/footsteps/hardboot_generic4.wav",
+	"npc/footsteps/hardboot_generic5.wav",
+	"npc/footsteps/hardboot_generic6.wav",
+}
+
+ENT.models = {
+    "models/ntr/trooper/medic/damwar.mdl",
+	"models/ntr/trooper/medic/female02.mdl",
+	"models/ntr/trooper/medic/male01.mdl",
+
+}
+
+ENT.hp = 110
+ENT.dmg = {
+	["5.56"] = 18,
+}
+ENT.accuracy = 15
 ENT.evasion = 5
 
 ENT.armor = {
 	["Head"] = 10,
-	["Body"] = 14,
+	["Body"] = 10,
 	["Left Arm"] = 8,
 	["Right Arm"] = 8,
 	["Left Leg"] = 8,
@@ -52,10 +72,15 @@ ENT.res = {
 ENT.actions = {
 "dodge",
 "charge",
+"burstfire_smg",
+"runngun",
 "burstfire_rifle",
+"suppression1",
 "doubletap_pistol",
+"doubletap_precision",
 "aimedshot_precision",
 "med_aid",
+"grenade_frag",
 
 }
 
@@ -64,21 +89,6 @@ ENT.tags = {
 	["Humanoid"] = true,
 	["Living"] = true,
 	["Authoriity"] = true,
-}
-
-ENT.models = {
-    "models/gore/ncr remake/ncr/medicboone.mdl",
-    "models/gore/ncr remake/ncr/medicboyd.mdl",
-    "models/gore/ncr remake/ncr/medicfrank.mdl",
-    "models/gore/ncr remake/ncr/medicghoul(female).mdl",
-    "models/gore/ncr remake/ncr/medicghoul.mdl",
-    "models/gore/ncr remake/ncr/medichorst.mdl",
-    "models/gore/ncr remake/ncr/medicjensk.mdl",
-    "models/gore/ncr remake/ncr/medickingsley.mdl",
-    "models/gore/ncr remake/ncr/medicmoore.mdl",
-    "models/gore/ncr remake/ncr/medicnils.mdl",
-    "models/gore/ncr remake/ncr/medictorv.mdl",
-    "models/gore/ncr remake/ncr/medicwilhem.mdl",
 }
 
 function ENT:Initialize()

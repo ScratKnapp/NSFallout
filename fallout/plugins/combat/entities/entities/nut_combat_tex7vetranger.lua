@@ -1,18 +1,39 @@
 ENT.Type = "nextbot"
 ENT.Base = "nut_combat"
-ENT.PrintName = "NCR Veteran Ranger"
+ENT.PrintName = "Veteran Ranger"
 ENT.Category = "NutScript - Combat (New California Republic)"
 ENT.Spawnable = true
 ENT.AdminOnly = true
 
-ENT.name = "NCR Veteran Ranger"
+ENT.name = "Veteran Ranger"
 
-ENT.model = "models/player/falloutnewvegas/ncr/ncr_ranger_playermodel.mdl"
-ENT.hp = 100
-ENT.dmg = {
-	[".308"] = 45,
+
+ENT.StepData = {
+	0.25,
+	0.75,
 }
-ENT.accuracy = 10
+
+ENT.FootstepSounds = {
+	"npc/footsteps/hardboot_generic1.wav",
+	"npc/footsteps/hardboot_generic2.wav",
+	"npc/footsteps/hardboot_generic3.wav",
+	"npc/footsteps/hardboot_generic4.wav",
+	"npc/footsteps/hardboot_generic5.wav",
+	"npc/footsteps/hardboot_generic6.wav",
+}
+
+ ENT.models = {
+    "models/gore/ncr/desertrangerm.mdl",
+	"models/gore/ncr/desert_rangerf.mdl",
+
+}
+
+
+ENT.hp = 150
+ENT.dmg = {
+	[".308"] = 30,
+}
+ENT.accuracy = 50
 ENT.evasion = 5
 
 ENT.armor = {
@@ -51,9 +72,14 @@ ENT.res = {
 ENT.actions = {
 "dodge",
 "charge",
+"burstfire_smg",
+"runngun",
 "burstfire_rifle",
+"suppression1",
 "doubletap_pistol",
+"doubletap_precision",
 "aimedshot_precision",
+"grenade_frag",
 
 }
 

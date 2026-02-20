@@ -707,7 +707,7 @@ ACT.effects = {
         effect = "dazed",
         duration = 1,
         strength = 1,
-		accuracyMult = 0.75, --multiplies accuracy by this number
+		accuracy = -25, --multiplies accuracy by this number
 
         debuff = true,
     }
@@ -715,6 +715,36 @@ ACT.effects = {
 ACTS:Register(ACT)
 
 --
+
+local ACT
+ACT = {}
+ACT.uid = "pommel"
+ACT.name = "Pommel Strike"
+ACT.desc = "Swing with the pommel/grip of your weapon to knock someone off balance."
+ACT.category = "Melee"
+ACT.restrict = true
+ACT.attackString = "attempts to daze"
+ACT.CD = 2
+ACT.dmg = 0
+ACT.weaponMult = 1
+ACT.effects = {
+    [1] = {
+        uid = ACT.uid,
+
+        name = "Off Balance",
+        effect = "offbalance",
+        duration = 1,
+        strength = 1,
+		evasion = -25,
+
+        debuff = true,
+    },
+
+}
+ACTS:Register(ACT)
+
+--
+
 local ACT
 ACT = {}
 ACT.uid = "sweep"
