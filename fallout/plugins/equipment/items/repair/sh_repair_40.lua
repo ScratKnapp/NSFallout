@@ -1,9 +1,0 @@
-ITEM.name = "Small Tool Bag"
-ITEM.desc = "A small bag with a set of bristles, oils, wipes, and small hand tools for maintaining weapons and armor. Requires 8 Repair skill to use. (Repairs up to 40% Durability)"
-ITEM.model = "models/mosi/fnv/props/health/repairkit.mdl"
-ITEM.width = 1
-ITEM.height = 1
-ITEM.flag = "v"
-ITEM.category = "Repair"
-ITEM.repair = 40
-ITEM.repairSkill = 8

@@ -1,0 +1,10 @@
+ITEM.name = "Master Armorer's Kit"
+ITEM.desc = "A full case of electric tools, presses, and spare materials and parts for replacing plates and pieces of armor. Requires 20 Repair to use. (Repairs up to 100% Durability.)"
+ITEM.model = "models/mosi/fnv/props/health/repairkit.mdl"
+ITEM.width = 1
+ITEM.height = 1
+ITEM.flag = "v"
+ITEM.category = "Repair"
+ITEM.repair = 100
+ITEM.repairSkill = 20
+ITEM.armorOnly = true 

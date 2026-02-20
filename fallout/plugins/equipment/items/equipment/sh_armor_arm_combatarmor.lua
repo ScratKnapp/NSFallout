@@ -6,10 +6,7 @@ ITEM.width = 1
 ITEM.price = 1500
 ITEM.durability = 250
 
-ITEM.armor = {
-	["Left Arm"] = 12,
-	["Right Arm"] = 12,
-}
+ITEM.armor = 12
 
 ITEM.upgradeSlots = {
 	["Inserts"] = true,

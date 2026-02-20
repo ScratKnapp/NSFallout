@@ -13,9 +13,7 @@ ITEM.iconCam = {
 ITEM.price = 3000
 ITEM.durability = 250
 
-ITEM.armor = {
-	["Body"] = 24,
-}
+ITEM.armor = 24
 
 ITEM.upgradeSlots = {
 ["Inserts"] = true,

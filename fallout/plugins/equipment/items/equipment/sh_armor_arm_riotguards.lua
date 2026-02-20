@@ -6,14 +6,10 @@ ITEM.width = 1
 ITEM.price = 5000
 ITEM.durability = 250
 
-ITEM.armor = {
-	["Left Arm"] = 20,
-	["Right Arm"] = 20,
-}
+ITEM.armor = 20
 
 ITEM.upgradeSlots = {
-["Inserts"] = true,
-
+	["Inserts"] = true,
 }
 
 ITEM.res = { --percentage based armor

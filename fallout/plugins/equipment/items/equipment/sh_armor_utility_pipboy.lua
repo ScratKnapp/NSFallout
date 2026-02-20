@@ -7,10 +7,12 @@ ITEM.price = 5000
 ITEM.armor = 1 --DT based armor
 ITEM.durability = 250
 
+--[[
 ITEM.res = { --percentage based armor
   ["Damage"] = 0,
   ["Energy"] = 0, 
 }
+--]]
 ITEM.specialSlot = "Utility"
 ITEM.attrib = { --gives the player stats on equip
 

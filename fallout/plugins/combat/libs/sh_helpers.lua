@@ -203,30 +203,27 @@ PLUGIN.helperFuncs["getRes"] = function(self, part)
 		res[k] = v * 0.01
 	end
 	
-	local equipment = {}
-	
-	for slot, itemID in pairs(self:getEquip()) do
-		local item = nut.item.instances[itemID]
-		
-		if(item) then
-			if(part and string.lower(part) != string.lower(slot)) then continue end
-
-			equipment[#equipment+1] = item
-		end
-	end
-	
-	for k, item in pairs(char:getInv():getItems()) do
-		if(item:getData("equip")) then
-			local itemSlot = item:getData("customSlot", item.specialSlot or item.slot)
-			if(part and part != itemSlot) then continue end
-		
-			equipment[#equipment+1] = item
-		end
-	end
+	--all the character's equipped items
+	local equipment = nut.plugin.list["equipment"]:getEquippedItems(self, true)
 	
 	--resist from items
-	for k, v in pairs(equipment) do
-		for k2, v2 in pairs(v:getData("res", {})) do
+	for k, item in pairs(equipment) do
+		local itemSlot = item:getData("customSlot", item.specialSlot or item.slot)
+		local resSlots = nut.plugin.list["equipment"]:slotToParts(itemSlot)
+
+		--if a part is targeted, get the res for the equipment equipped to it
+		--uncomment to enable
+		--[[
+		if(part and part != itemSlot) then  
+			if(!resSlots[itemSlot] or !resSlots[itemSlot][part]) then
+				continue
+			end
+		end
+		--]]
+	
+		--dimishing returns, makes bigger res sources worth more
+		--also makes it harder to fully reach 100% resistance
+		for k2, v2 in pairs(item:getData("res", {})) do
 			if(res[k2]) then --lets round it to stop any funny business
 				res[k2] = 1 - (1 - res[k2]) * (1 - v2 * 0.01)
 			else
@@ -268,9 +265,8 @@ PLUGIN.helperFuncs["getArmor"] = function(self, part)
 	if(char) then
 		local inv = char:getInv()
 		
-		local equipment = {}
-		
 		local equipment = nut.plugin.list["equipment"]:getEquippedItems(self, true)
+		local resSlots = nut.plugin.list["equipment"]:slotToParts(itemSlot)
 
 		for k, v in pairs(equipment) do
 			local itemArmor = v:getData("armor", v.armor)

@@ -155,6 +155,30 @@ function playerMeta:getMaxLoad()
 	return maxLoad
 end
 
+--translates slots to the body parts they cover
+	--eg arms slots provide protection for the right and left arms
+local resSlots = {
+	["Arms"] = {
+		["Right Arm"] = true,
+		["Left Arm"] = true,
+	},
+	["Legs"] = {
+		["Right Leg"] = true,
+		["Left Leg"] = true,
+	},
+	["Headgear"] = {
+		["Head"] = true,
+	},
+	["Body"] = {
+		["Body"] = true,
+	},
+}
+
+--helper function for figuring out which equipped item applies to targeted body parts
+function PLUGIN:slotToParts(slot)
+	return resSlots[slot]
+end
+
 if SERVER then
 	function PLUGIN:PlayerLoadedChar(client)
 		local equipTbl = client:getEquip()
