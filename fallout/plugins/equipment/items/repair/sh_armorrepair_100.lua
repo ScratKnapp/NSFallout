@@ -7,4 +7,9 @@ ITEM.flag = "v"
 ITEM.category = "Repair"
 ITEM.repair = 100
 ITEM.repairSkill = 20
+<<<<<<<< HEAD:fallout/plugins/equipment/items/repair/sh_armorrepair_100.lua
 ITEM.armorOnly = true 
+========
+
+ITEM.armorOnly = true
+>>>>>>>> 4d04dc8c545b962af7f0eb603774c8f2f59abc0c:fallout/plugins/equipment/items/repair/sh_armor_repair_100.lua
