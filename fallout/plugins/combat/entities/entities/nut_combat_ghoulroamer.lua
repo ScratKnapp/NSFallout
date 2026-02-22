@@ -17,9 +17,9 @@ ENT.evasion = 15
 
 ENT.armor = {
 	["Head"] = 0,
-	["Body"] = 5,
-	["Left Arm"] = 5,
-	["Right Arm"] = 5,
+	["Body"] = 0,
+	["Left Arm"] = 0,
+	["Right Arm"] = 0,
 	["Left Leg"] = 0,
 	["Right Leg"] = 0,
 }

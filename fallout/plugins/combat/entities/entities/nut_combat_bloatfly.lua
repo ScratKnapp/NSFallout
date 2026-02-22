@@ -8,7 +8,7 @@ ENT.AdminOnly = true
 ENT.name = "Bloatfly"
 
 ENT.model = "models/fallout/blowfly.mdl"
-ENT.hp = 80
+ENT.hp = 30
 ENT.dmg = {
 	["Acid"] = 10,
 }

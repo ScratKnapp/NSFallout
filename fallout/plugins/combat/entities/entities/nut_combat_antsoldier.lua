@@ -1,6 +1,6 @@
 ENT.Type = "nextbot"
 ENT.Base = "nut_combat"
-ENT.PrintName = "Ant Soldier"
+ENT.PrintName = "Forager Ant Soldier"
 ENT.Category = "NutScript - Combat (Mutants and Animals)"
 ENT.Spawnable = true
 ENT.AdminOnly = true
@@ -14,6 +14,7 @@ ENT.dmg = {
 }
 ENT.accuracy = 15
 ENT.evasion = 10
+ENT.modelScale = 0.8
 
 ENT.armor = {
 	["Head"] = 10,
@@ -22,6 +23,16 @@ ENT.armor = {
 	["Right Arm"] = 10,
 	["Left Leg"] = 10,
 	["Right Leg"] = 10,
+}
+
+--the amount of hits the part can take before armor is broken (reduced to 0)
+ENT.armorBreak = {
+	["Head"] = 30,
+	["Body"] = 30,
+	["Left Arm"] = 30,
+	["Right Arm"] = 30,
+	["Left Leg"] = 30,
+	["Right Leg"] = 30,
 }
 
 --all attributes

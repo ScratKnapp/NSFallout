@@ -8,14 +8,13 @@ ENT.AdminOnly = true
 ENT.name = "Gecko"
 
 ENT.model = "models/fallout/gecko.mdl"
-ENT.hp = 75
-ENT.dmg = 25
-ENT.dmgT = "Slash"
+ENT.hp = 40
 ENT.dmg = {
-	["Fire"] = 25,
+	["Slash"] = 15,
 }
 ENT.accuracy = 10
 ENT.evasion = 10
+
 
 ENT.armor = {
 	["Head"] = 0,

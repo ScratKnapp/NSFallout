@@ -8,9 +8,10 @@ ENT.AdminOnly = true
 ENT.name = "Fire Ant"
 
 ENT.model = "models/fallout/giantant.mdl"
-ENT.hp = 100
+ENT.hp = 75
 ENT.dmg = {
 	["Fire"] = 25,
+
 }
 ENT.accuracy = 10
 ENT.evasion = 10
@@ -26,12 +27,12 @@ ENT.armor = {
 
 --the amount of hits the part can take before armor is broken (reduced to 0)
 ENT.armorBreak = {
-	["Head"] = 2,
-	["Body"] = 2,
-	["Left Arm"] = 2,
-	["Right Arm"] = 2,
-	["Left Leg"] = 2,
-	["Right Leg"] = 2,
+	["Head"] = 30,
+	["Body"] = 30,
+	["Left Arm"] = 30,
+	["Right Arm"] = 30,
+	["Left Leg"] = 30,
+	["Right Leg"] = 30,
 }
 
 --all attributes
@@ -68,4 +69,6 @@ ENT.tags = {
 
 function ENT:Initialize()
 	self:basicSetup()
+    self:SetSkin(1)
+
 end

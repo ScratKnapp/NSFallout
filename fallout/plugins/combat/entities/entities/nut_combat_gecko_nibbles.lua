@@ -8,7 +8,7 @@ ENT.AdminOnly = true
 ENT.name = "Nibbles"
 
 ENT.model = "models/fallout/gecko.mdl"
-ENT.hp = 75
+ENT.hp = 150
 ENT.dmg = {
 	["Slash"] = 30,
 }

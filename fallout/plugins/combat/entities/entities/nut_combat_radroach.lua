@@ -8,7 +8,7 @@ ENT.AdminOnly = true
 ENT.name = "Radroach"
 
 ENT.model = "models/fallout/radroach.mdl"
-ENT.hp = 30
+ENT.hp = 15
 ENT.dmg = {
 	["Slash"] = 10,
 }

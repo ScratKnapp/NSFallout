@@ -8,7 +8,7 @@ ENT.AdminOnly = true
 ENT.name = "Centaur"
 
 ENT.model = "models/fallout/centaur.mdl"
-ENT.hp = 150
+ENT.hp = 100
 
 ENT.dmg = {
 	["Slash"] = 25,

@@ -8,7 +8,7 @@ ENT.AdminOnly = true
 ENT.name = "Radscorpion"
 
 ENT.model = "models/fallout/radscorpion.mdl"
-ENT.hp = 200
+ENT.hp = 300
 ENT.dmg = {
 	["Slash"] = 30,
 	["Acid"] = 10
@@ -23,6 +23,16 @@ ENT.armor = {
 	["Right Arm"] = 15,
 	["Left Leg"] = 15,
 	["Right Leg"] = 15,
+}
+
+
+ENT.armorBreak = {
+	["Head"] = 50,
+	["Body"] = 50,
+	["Left Arm"] = 50,
+	["Right Arm"] = 50,
+	["Left Leg"] = 50,
+	["Right Leg"] = 50,
 }
 
 --all attributes

@@ -1,31 +1,39 @@
 ENT.Type = "nextbot"
 ENT.Base = "nut_combat"
-ENT.PrintName = "Legion Deserter Scavver"
+ENT.PrintName = "Dust Devil Scavenger"
 ENT.Category = "NutScript - Combat (Raiders)"
 ENT.Spawnable = true
 ENT.AdminOnly = true
 
-ENT.name = "Legion Deserter Scavver"
+ENT.name = "Dust Devil Scavenger"
 
 ENT.models = {
-	"models/gore/legion remake/recruit/deserter boyd.mdl",
-	"models/gore/legion remake/recruit/deserter frank.mdl",
-	"models/gore/legion remake/recruit/deserter ghoul.mdl",
-	"models/gore/legion remake/recruit/deserter horst.mdl",
-	"models/gore/legion remake/recruit/deserter torv.mdl",
+	"models/player/h&h/classic/leatherarmor/male01.mdl",
+	"models/player/h&h/classic/leatherarmor/lightweight/male01.mdl",
+	"models/player/h&h/classic/leatherarmor/reinforced/male01.mdl",
 
 }
 ENT.hp = 100
-ENT.accuracy = 10
+ENT.accuracy = 30
 ENT.evasion = 8
 
 ENT.dmg = {
-	["Slash"] = 36
+	["Slash"] = 20
 }
 
 ENT.armor = {
-	["Head"] = 5,
-	["Body"] = 8,
+	["Head"] = 20,
+	["Body"] = 20,
+	["Left Arm"] = 20,
+	["Right Arm"] = 20,
+	["Left Leg"] = 20,
+	["Right Leg"] = 20,
+}
+
+
+ENT.armorBreak = {
+	["Head"] = 4,
+	["Body"] = 4,
 	["Left Arm"] = 4,
 	["Right Arm"] = 4,
 	["Left Leg"] = 4,
@@ -73,5 +81,9 @@ ENT.tags = {
 }
 
 function ENT:Initialize()
-	self:basicSetup()
+    self:basicSetup()
+    
+    for k, v in pairs(self:GetBodyGroups()) do
+        self:SetBodygroup(v.id, math.random(0, v.num))
+    end
 end

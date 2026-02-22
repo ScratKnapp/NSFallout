@@ -17,13 +17,24 @@ ENT.evasion = 15
 
 
 ENT.armor = {
-	["Head"] = 15,
-	["Body"] = 18,
-	["Left Arm"] = 18,
-	["Right Arm"] = 18,
-	["Left Leg"] = 18,
-	["Right Leg"] = 18,
+	["Head"] = 20,
+	["Body"] = 20,
+	["Left Arm"] = 20,
+	["Right Arm"] = 20,
+	["Left Leg"] = 20,
+	["Right Leg"] = 20,
 }
+
+
+ENT.armorBreak = {
+	["Head"] = 5,
+	["Body"] = 5,
+	["Left Arm"] = 5,
+	["Right Arm"] = 5,
+	["Left Leg"] = 5,
+	["Right Leg"] = 5,
+}
+
 
 --all attributes
 ENT.attribs = {

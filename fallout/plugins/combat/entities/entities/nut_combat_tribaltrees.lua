@@ -1,30 +1,39 @@
 ENT.Type = "nextbot"
 ENT.Base = "nut_combat"
-ENT.PrintName = "Auxiliary"
-ENT.Category = "NutScript - Combat (Townspeople)"
+ENT.PrintName = "TREEHUGGERS RENAME"
+ENT.Category = "NutScript - Combat (Tribals)"
 ENT.Spawnable = true
 ENT.AdminOnly = true
 
-ENT.name = "Auxiliary"
+ENT.name = "TREEHUGGERS RENAME"
 
 ENT.models = {
-    "models/gore/neutrals/auxiliary/Auxiliary Torv.mdl",
-    "models/gore/neutrals/auxiliary/Auxiliary Horst.mdl",
-    "models/gore/neutrals/auxiliary/Auxiliary Ghoul.mdl",
-    "models/gore/neutrals/auxiliary/Auxiliary Frank.mdl",
-    "models/gore/neutrals/auxiliary/Auxiliary Boyd.mdl",
+    "models/kaesar/falloutnewvegas/deadhorse/deadhorse.mdl",
+    "models/kaesar/falloutnewvegas/deadhorse/deadhorsef.mdl",
+
 }
 
-ENT.hp = 100
+ENT.hp = 125
+ENT.accuracy = 12
+ENT.evasion = 8
+
 ENT.dmg = {
-	[".357"] = 30,
+	["12 Gauge"] = 38
 }
-ENT.accuracy = 10
-ENT.evasion = 5
 
 ENT.armor = {
 	["Head"] = 10,
 	["Body"] = 14,
+	["Left Arm"] = 8,
+	["Right Arm"] = 8,
+	["Left Leg"] = 8,
+	["Right Leg"] = 8,
+}
+
+
+ENT.armorBreak = {
+	["Head"] = 8,
+	["Body"] = 8,
 	["Left Arm"] = 8,
 	["Right Arm"] = 8,
 	["Left Leg"] = 8,
@@ -36,8 +45,8 @@ ENT.attribs = {
 	["str"] = 0,
 	["per"] = 0,
 	["end"] = 0,
-	["cha"] = 2,
-	["int"] = 0,
+	["cha"] = 0,
+	["int"] = 2,
 	["agi"] = 0,
 	["luck"] = 4,
 

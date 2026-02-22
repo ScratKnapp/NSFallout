@@ -8,7 +8,7 @@ ENT.AdminOnly = true
 ENT.name = "Glowing One"
 
 ENT.model = "models/fallout/ghoulferal_jumpsuit.mdl"
-ENT.hp = 100
+ENT.hp = 200
 ENT.dmg = {
 	["Blunt"] = 20,
 	["Radiation"] = 15,
@@ -18,12 +18,12 @@ ENT.evasion = 18
 
 
 ENT.armor = {
-	["Head"] = 20,
-	["Body"] = 20,
-	["Left Arm"] = 20,
-	["Right Arm"] = 20,
-	["Left Leg"] = 20,
-	["Right Leg"] = 20,
+	["Head"] = 0,
+	["Body"] = 0,
+	["Left Arm"] = 0,
+	["Right Arm"] = 0,
+	["Left Leg"] = 0,
+	["Right Leg"] = 0,
 }
 
 --all attributes

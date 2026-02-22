@@ -1,20 +1,19 @@
 ENT.Type = "nextbot"
 ENT.Base = "nut_combat"
-ENT.PrintName = "Nightstalker"
+ENT.PrintName = "Fire Gecko"
 ENT.Category = "NutScript - Combat (Mutants and Animals)"
 ENT.Spawnable = true
 ENT.AdminOnly = true
 
-ENT.name = "Nightstalker"
+ENT.name = "Fire Gecko"
 
-ENT.model = "models/fallout/nightstalker.mdl"
-ENT.hp = 120
+ENT.model = "models/fallout/gecko.mdl"
+ENT.hp = 60
 ENT.dmg = {
-	["Slash"] = 30,
-	["Acid"] = 15,
+	["Fire"] = 25,
 }
-ENT.accuracy = 15
-ENT.evasion = 20
+ENT.accuracy = 10
+ENT.evasion = 10
 
 ENT.armor = {
 	["Head"] = 0,
@@ -47,7 +46,6 @@ ENT.res = {
 ENT.actions = {
 "charge",
 "dodge",
-"sting",
 
 }
 
@@ -60,4 +58,6 @@ ENT.tags = {
 
 function ENT:Initialize()
 	self:basicSetup()
+    self:SetSkin(1)
+
 end

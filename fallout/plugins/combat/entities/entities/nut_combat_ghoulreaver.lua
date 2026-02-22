@@ -8,9 +8,9 @@ ENT.AdminOnly = true
 ENT.name = "Ghoul Mutant"
 
 ENT.model = "models/fallout/ghoulferal_mutated.mdl"
-ENT.hp = 100
+ENT.hp = 150
 ENT.dmg = {
-	["Blunt"] = 25,
+	["Blunt"] = 30,
 }
 ENT.accuracy = 10
 ENT.evasion = 15
@@ -18,12 +18,22 @@ ENT.evasion = 15
 
 ENT.armor = {
 	["Head"] = 15,
-	["Body"] = 18,
-	["Left Arm"] = 18,
-	["Right Arm"] = 18,
-	["Left Leg"] = 18,
-	["Right Leg"] = 18,
+	["Body"] = 15,
+	["Left Arm"] = 15,
+	["Right Arm"] = 15,
+	["Left Leg"] = 15,
+	["Right Leg"] = 15,
 }
+
+ENT.armorBreak = {
+	["Head"] = 5,
+	["Body"] = 5,
+	["Left Arm"] = 5,
+	["Right Arm"] = 5,
+	["Left Leg"] = 5,
+	["Right Leg"] = 5,
+}
+
 
 --all attributes
 ENT.attribs = {

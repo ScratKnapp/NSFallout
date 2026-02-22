@@ -8,7 +8,7 @@ ENT.AdminOnly = true
 ENT.name = "Cazadore"
 
 ENT.model = "models/fallout/cazadore.mdl"
-ENT.hp = 150
+ENT.hp = 80
 ENT.dmg = {
 	["Slash"] = 15,
 	["Acid"] = 20
@@ -24,6 +24,16 @@ ENT.armor = {
 	["Left Leg"] = 5,
 	["Right Leg"] = 5,
 }
+
+ENT.armorBreak = {
+	["Head"] = 2,
+	["Body"] = 2,
+	["Left Arm"] = 2,
+	["Right Arm"] = 2,
+	["Left Leg"] = 2,
+	["Right Leg"] = 2,
+}
+
 
 --all attributes
 ENT.attribs = {

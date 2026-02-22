@@ -1,19 +1,16 @@
 ENT.Type = "nextbot"
 ENT.Base = "nut_combat"
-ENT.PrintName = "Legion Deserter"
+ENT.PrintName = "Thrasher Survivor"
 ENT.Category = "NutScript - Combat (Raiders)"
 ENT.Spawnable = true
 ENT.AdminOnly = true
 
-ENT.name = "Legion Deserter"
+ENT.name = "Thrasher Survivor"
 
 ENT.models = {
-	"models/gore/subfactions/legion_nomad13.mdl",
-	"models/gore/subfactions/legion_nomad14.mdl",
-	"models/gore/subfactions/legion_nomad15.mdl",
-	"models/gore/subfactions/legion_nomad20.mdl",
-	"models/gore/subfactions/legion_nomad38.mdl",
-	"models/gore/subfactions/legion_nomad39.mdl",
+	"models/asais10/f3npcs/raiderarmor01_f.mdl",
+	"models/asais10/f3npcs/raiderarmor02_f.mdl",
+	"models/asais10/f3npcs/raiderarmor03_f.mdl",
 
 }
 ENT.hp = 100
@@ -24,12 +21,21 @@ ENT.accuracy = 10
 ENT.evasion = 5
 
 ENT.armor = {
+	["Head"] = 10,
+	["Body"] = 10,
+	["Left Arm"] = 10,
+	["Right Arm"] = 10,
+	["Left Leg"] = 10,
+	["Right Leg"] = 10,
+}
+
+ENT.armorBreak = {
 	["Head"] = 5,
-	["Body"] = 8,
-	["Left Arm"] = 4,
-	["Right Arm"] = 4,
-	["Left Leg"] = 4,
-	["Right Leg"] = 4,
+	["Body"] = 5,
+	["Left Arm"] = 5,
+	["Right Arm"] = 5,
+	["Left Leg"] = 5,
+	["Right Leg"] = 5,
 }
 
 --all attributes

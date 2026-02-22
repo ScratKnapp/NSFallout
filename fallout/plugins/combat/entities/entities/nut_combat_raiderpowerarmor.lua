@@ -1,14 +1,14 @@
 ENT.Type = "nextbot"
 ENT.Base = "nut_combat"
-ENT.PrintName = "Legion Deserter Gladiator"
+ENT.PrintName = "Power Armor Rattler"
 ENT.Category = "NutScript - Combat (Raiders)"
 ENT.Spawnable = true
 ENT.AdminOnly = true
 
-ENT.name = "Legion Deserter Gladiator"
+ENT.name = "Power Armor Rattler"
 
-ENT.model = "models/gore/subfactions/gladiator_otho.mdl"
-ENT.hp = 150
+ENT.model = "models/skipp/powerarmor_raider/powerarmor_raider.mdl"
+ENT.hp = 200
 ENT.dmg = {
 	["Slash"] = 30,
 }
@@ -16,13 +16,23 @@ ENT.accuracy = 10
 ENT.evasion = 5
 
 ENT.armor = {
-	["Head"] = 20,
-	["Body"] = 8,
-	["Left Arm"] = 4,
-	["Right Arm"] = 4,
-	["Left Leg"] = 4,
-	["Right Leg"] = 4,
+	["Head"] = 30,
+	["Body"] = 30,
+	["Left Arm"] = 30,
+	["Right Arm"] = 30,
+	["Left Leg"] = 30,
+	["Right Leg"] = 30,
 }
+
+ENT.armorBreak = {
+	["Head"] = 40,
+	["Body"] = 40,
+	["Left Arm"] = 40,
+	["Right Arm"] = 40,
+	["Left Leg"] = 40,
+	["Right Leg"] = 40,
+}
+
 
 --all attributes
 ENT.attribs = {

@@ -26,7 +26,7 @@ ENT.models = {
 
 }
 
-ENT.hp = 165
+ENT.hp = 200
 ENT.accuracy = 40
 ENT.evasion = 5
 
@@ -35,12 +35,21 @@ ENT.dmg = {
 }
 
 ENT.armor = {
-	["Head"] = 25,
-	["Body"] = 25,
-	["Left Arm"] = 15,
-	["Right Arm"] = 15,
-	["Left Leg"] = 15,
-	["Right Leg"] = 15,
+	["Head"] = 40,
+	["Body"] = 40,
+	["Left Arm"] = 40,
+	["Right Arm"] = 40,
+	["Left Leg"] = 40,
+	["Right Leg"] = 40,
+}
+
+ENT.armorBreak = {
+	["Head"] = 10,
+	["Body"] = 10,
+	["Left Arm"] = 10,
+	["Right Arm"] = 10,
+	["Left Leg"] = 10,
+	["Right Leg"] = 10,
 }
 
 --all attributes

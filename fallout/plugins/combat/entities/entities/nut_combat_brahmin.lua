@@ -8,7 +8,7 @@ ENT.AdminOnly = true
 ENT.name = "Brahmin"
 
 ENT.model = "models/fallout/brahmin.mdl"
-ENT.hp = 100
+ENT.hp = 50
 ENT.dmg = {
 	["Blunt"] = 10,
 }

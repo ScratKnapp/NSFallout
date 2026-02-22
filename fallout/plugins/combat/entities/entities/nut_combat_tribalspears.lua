@@ -1,14 +1,15 @@
 ENT.Type = "nextbot"
 ENT.Base = "nut_combat"
-ENT.PrintName = "Cult of Mars Priestess"
-ENT.Category = "NutScript - Combat (Caeser's Legion)"
+ENT.PrintName = "SPEAR CHUCKER RENAME PLEASE"
+ENT.Category = "NutScript - Combat (Tribals)"
 ENT.Spawnable = true
 ENT.AdminOnly = true
 
-ENT.name = "Cult of Mars Priestess"
+ENT.name = "SPEAR CHUCKER RENAME PLESAE"
 
 ENT.models = {
-	"models/gore/neutrals/cult of mars/priestess boyd.mdl",
+	"models/kaesar/falloutnewvegas/whiteleg/whiteleg.mdl",
+	"models/kaesar/falloutnewvegas/whiteleg/whitelegf.mdl",
 }
 ENT.hp = 100
 ENT.accuracy = 3
@@ -27,13 +28,23 @@ ENT.armor = {
 	["Right Leg"] = 0,
 }
 
+
+ENT.armorBreak = {
+	["Head"] = 8,
+	["Body"] = 8,
+	["Left Arm"] = 8,
+	["Right Arm"] = 8,
+	["Left Leg"] = 8,
+	["Right Leg"] = 8,
+}
+
 --all attributes
 ENT.attribs = {
-	["str"] = 4,
-	["per"] = 4,
-	["end"] = 4,
-	["cha"] = 10,
-	["int"] = 10,
+	["str"] = 0,
+	["per"] = 0,
+	["end"] = 0,
+	["cha"] = 0,
+	["int"] = 0,
 	["agi"] = 0,
 	["luck"] = 4,
 

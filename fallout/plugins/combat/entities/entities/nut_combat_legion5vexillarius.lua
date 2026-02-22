@@ -35,14 +35,22 @@ ENT.dmg = {
 }
 
 ENT.armor = {
-	["Head"] = 14,
-	["Body"] = 14,
+	["Head"] = 18,
+	["Body"] = 18,
+	["Left Arm"] = 18,
+	["Right Arm"] = 18,
+	["Left Leg"] = 18,
+	["Right Leg"] = 18,
+}
+
+ENT.armorBreak = {
+	["Head"] = 8,
+	["Body"] = 8,
 	["Left Arm"] = 8,
 	["Right Arm"] = 8,
 	["Left Leg"] = 8,
 	["Right Leg"] = 8,
 }
-
 --all attributes
 ENT.attribs = {
 	["str"] = 0,

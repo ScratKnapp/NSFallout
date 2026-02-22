@@ -1,48 +1,49 @@
 ENT.Type = "nextbot"
 ENT.Base = "nut_combat"
-ENT.PrintName = "Deathclaw"
+ENT.PrintName = "Fire Ant Queen"
 ENT.Category = "NutScript - Combat (Mutants and Animals)"
 ENT.Spawnable = true
 ENT.AdminOnly = true
 
-ENT.name = "Deathclaw"
+ENT.name = "Fire Ant Queen"
 
-ENT.model = "models/fallout/deathclaw.mdl"
-ENT.hp = 1000
+ENT.model = "models/fallout/giantantqueen.mdl"
+ENT.hp = 1500
 ENT.dmg = {
-	["Slash"] = 50,
+	["Fire"] = 40,
+
 }
-ENT.accuracy = 60
+ENT.accuracy = 40
 ENT.evasion = 0
 
 ENT.armor = {
-	["Head"] = 20,
-	["Body"] = 20,
-	["Left Arm"] = 20,
-	["Right Arm"] = 20,
-	["Left Leg"] = 20,
-	["Right Leg"] = 20,
+	["Head"] = 10,
+	["Body"] = 10,
+	["Left Arm"] = 10,
+	["Right Arm"] = 10,
+	["Left Leg"] = 10,
+	["Right Leg"] = 10,
 }
 
+--the amount of hits the part can take before armor is broken (reduced to 0)
 ENT.armorBreak = {
-	["Head"] = 50,
-	["Body"] = 50,
-	["Left Arm"] = 50,
-	["Right Arm"] = 50,
-	["Left Leg"] = 50,
-	["Right Leg"] = 50,
+	["Head"] = 30,
+	["Body"] = 30,
+	["Left Arm"] = 30,
+	["Right Arm"] = 30,
+	["Left Leg"] = 30,
+	["Right Leg"] = 30,
 }
-
 
 --all attributes
 ENT.attribs = {
 	["str"] = 0,
 	["per"] = 0,
 	["end"] = 0,
-	["cha"] = 1,
+	["cha"] = 0,
 	["int"] = 0,
 	["agi"] = 0,
-	["luck"] = 5,
+	["luck"] = 0,
 
 }
 
@@ -68,4 +69,6 @@ ENT.tags = {
 
 function ENT:Initialize()
 	self:basicSetup()
+    self:SetSkin(1)
+
 end

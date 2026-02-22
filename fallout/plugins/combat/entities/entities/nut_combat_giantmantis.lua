@@ -8,7 +8,7 @@ ENT.AdminOnly = true
 ENT.name = "Giant Mantis"
 
 ENT.model = "models/fallout/mantis.mdl"
-ENT.hp = 50
+ENT.hp = 20
 ENT.dmg = {
 	["Slash"] = 15,
 }

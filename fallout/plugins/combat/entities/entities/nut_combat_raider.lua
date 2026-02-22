@@ -1,11 +1,11 @@
 ENT.Type = "nextbot"
 ENT.Base = "nut_combat"
-ENT.PrintName = "Black Khans Nomad"
+ENT.PrintName = "Rattler"
 ENT.Category = "NutScript - Combat (Raiders)"
 ENT.Spawnable = true
 ENT.AdminOnly = true
 
-ENT.name = "Black Khans Nomad"
+ENT.name = "Rattler"
 
 ENT.models = {
 	"models/gore/nomads/nomadf_01.mdl",
@@ -27,14 +27,22 @@ ENT.accuracy = 10
 ENT.evasion = 5
 
 ENT.armor = {
-	["Head"] = 5,
-	["Body"] = 8,
-	["Left Arm"] = 4,
-	["Right Arm"] = 4,
-	["Left Leg"] = 4,
-	["Right Leg"] = 4,
+	["Head"] = 0,
+	["Body"] = 0,
+	["Left Arm"] = 0,
+	["Right Arm"] = 0,
+	["Left Leg"] = 0,
+	["Right Leg"] = 0,
 }
 
+ENT.armorBreak = {
+	["Head"] = 0,
+	["Body"] = 0,
+	["Left Arm"] = 0,
+	["Right Arm"] = 0,
+	["Left Leg"] = 0,
+	["Right Leg"] = 0,
+}
 --all attributes
 ENT.attribs = {
 	["str"] = 0,

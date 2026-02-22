@@ -8,22 +8,33 @@ ENT.AdminOnly = true
 ENT.name = "Ghoul Stalker"
 
 ENT.model = "models/fallout/ghoularmored.mdl"
-ENT.hp = 100
+ENT.hp = 200
 ENT.dmg = {
-	["Blunt"] = 25,
+	["Blunt"] = 30,
 }
 ENT.accuracy = 18
-ENT.evasion = 15
+ENT.evasion = 25
 
 
 ENT.armor = {
-	["Head"] = 2,
-	["Body"] = 18,
-	["Left Arm"] = 18,
-	["Right Arm"] = 18,
-	["Left Leg"] = 18,
-	["Right Leg"] = 18,
+	["Head"] = 0,
+	["Body"] = 20,
+	["Left Arm"] = 0,
+	["Right Arm"] = 0,
+	["Left Leg"] = 0,
+	["Right Leg"] = 0,
 }
+
+
+ENT.armorBreak = {
+	["Head"] = 5,
+	["Body"] = 5,
+	["Left Arm"] = 5,
+	["Right Arm"] = 5,
+	["Left Leg"] = 5,
+	["Right Leg"] = 5,
+}
+
 
 --all attributes
 ENT.attribs = {

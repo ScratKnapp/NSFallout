@@ -8,7 +8,7 @@ ENT.AdminOnly = true
 ENT.name = "Mirelurk"
 
 ENT.model = "models/fallout/mirelurk.mdl"
-ENT.hp = 100
+ENT.hp = 150
 ENT.dmg = {
 	["Slash"] = 25,
 }
@@ -16,12 +16,21 @@ ENT.accuracy = 10
 ENT.evasion = 10
 
 ENT.armor = {
-	["Head"] = 3,
-	["Body"] = 15,
-	["Left Arm"] = 15,
-	["Right Arm"] = 15,
-	["Left Leg"] = 15,
-	["Right Leg"] = 15,
+	["Head"] = 15,
+	["Body"] = 30,
+	["Left Arm"] = 30,
+	["Right Arm"] = 30,
+	["Left Leg"] = 30,
+	["Right Leg"] = 30,
+}
+
+ENT.armorBreak = {
+	["Head"] = 30,
+	["Body"] = 30,
+	["Left Arm"] = 30,
+	["Right Arm"] = 30,
+	["Left Leg"] = 30,
+	["Right Leg"] = 30,
 }
 
 --all attributes

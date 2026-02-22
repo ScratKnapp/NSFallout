@@ -8,9 +8,9 @@ ENT.AdminOnly = true
 ENT.name = "Dog (Coyote)"
 
 ENT.model = "models/fallout/coyote.mdl"
-ENT.hp = 60
+ENT.hp = 50
 ENT.dmg = {
-	["Slash"] = 20,
+	["Slash"] = 15,
 }
 ENT.accuracy = 10
 ENT.evasion = 10
