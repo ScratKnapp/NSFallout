@@ -47,6 +47,19 @@ PLUGIN.helperFuncs["durabilityDefense"] = function(self, part)
 			end
 		end
 	end
+	
+	local armor = self:getNetVar("armor", self.armor) or {}
+	local armorBreak = self:getNetVar("armorBreak", self.armorBreak)
+	if(armorBreak and part and armorBreak[part]) then
+		armorBreak[part] = armorBreak[part] - 1
+		
+		if(armorBreak[part] < 1) then
+			armor[part] = 0
+		end
+		
+		self:setNetVar("armorBreak", armorBreak)
+		self:setNetVar("armor", armor)
+	end
 end
 
 hook.Add("nut_OnCombatAttack", "nut_durabilityOffense", function(action, attacker, info, fakeAttack)

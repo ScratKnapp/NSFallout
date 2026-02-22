@@ -453,10 +453,28 @@ function ENT:getDataFields()
 		},
 		{
 			["armor"] = {
-				weight = 8, 
+				weight = 1, 
 				name = "Armor", 
 				category = "Armor",
 				value = saveData.armor,
+				extra = {
+					["Body"] = {name = "Body"},
+					["Head"] = {name = "Head"},
+					["Left Arm"] = {name = "Left Arm"},
+					["Right Arm"] = {name = "Right Arm"},
+					["Left Leg"] = {name = "Left Leg"},
+					["Right Leg"] = {name = "Right Leg"},
+				},
+				updateType = "netVar",
+				numeric = true,
+			},
+		},
+		{
+			["armorBreak"] = {
+				weight = 1, 
+				name = "Armor Break", 
+				category = "Armor Break",
+				value = saveData.armorBreak,
 				extra = {
 					["Body"] = {name = "Body"},
 					["Head"] = {name = "Head"},

@@ -24,6 +24,16 @@ ENT.armor = {
 	["Right Leg"] = 10,
 }
 
+--the amount of hits the part can take before armor is broken (reduced to 0)
+ENT.armorBreak = {
+	["Head"] = 2,
+	["Body"] = 2,
+	["Left Arm"] = 2,
+	["Right Arm"] = 2,
+	["Left Leg"] = 2,
+	["Right Leg"] = 2,
+}
+
 --all attributes
 ENT.attribs = {
 	["str"] = 0,

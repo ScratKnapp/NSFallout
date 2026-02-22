@@ -273,6 +273,7 @@ function ENT:getSaveData()
 		mpMax = self:getMaxMP(),
 		
 		armor = self:getNetVar("armor", self.armor),
+		armorBreak = self:getNetVar("armorBreak", self.armorBreak),
 		evasion = self:getNetVar("evasion", self.evasion),
 		accuracy = self:getNetVar("accuracy", self.accuracy),
 		
@@ -349,6 +350,7 @@ function ENT:loadSaveData(data)
 	self:setNetVar("desc", data.desc or self:Desc())
 	
 	self:setNetVar("armor", data.armor or self.armor)
+	self:setNetVar("armorBreak", data.armor or self.armorBreak)
 	self:setNetVar("evasion", data.evasion or self.evasion)
 	self:setNetVar("accuracy", data.accuracy or self.accuracy)
 	
