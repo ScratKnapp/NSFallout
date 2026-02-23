@@ -1,11 +1,11 @@
 ENT.Type = "nextbot"
 ENT.Base = "nut_combat"
-ENT.PrintName = "Rattlesnakes Enforcer"
+ENT.PrintName = "Bandidos Enforcer"
 ENT.Category = "NutScript - Combat (Raiders)"
 ENT.Spawnable = true
 ENT.AdminOnly = true
 
-ENT.name = "Rattlesnakes Enforcer"
+ENT.name = "Bandidos Enforcer"
 
 ENT.models = {
     "models/gore/nomads/nomadm_armored.mdl",
@@ -17,18 +17,25 @@ ENT.models = {
 
 }
 
-ENT.hp = 100
-ENT.dmg = 32
-ENT.dmgT = "12 Gauge"
+ENT.hp = 125
 ENT.dmg = {
-	["Fire"] = 25,
+	["12 Gauge"] = 30,
 }
 ENT.accuracy = 15
 ENT.evasion = 12
 
 ENT.armor = {
-	["Head"] = 10,
-	["Body"] = 14,
+	["Head"] = 15,
+	["Body"] = 15,
+	["Left Arm"] = 15,
+	["Right Arm"] = 15,
+	["Left Leg"] = 15,
+	["Right Leg"] = 15,
+}
+
+ENT.armorBreak = {
+	["Head"] = 8,
+	["Body"] = 8,
 	["Left Arm"] = 8,
 	["Right Arm"] = 8,
 	["Left Leg"] = 8,
@@ -62,9 +69,14 @@ ENT.res = {
 ENT.actions = {
 "dodge",
 "charge",
+"burstfire_smg",
+"runngun",
 "burstfire_rifle",
+"suppression1",
 "doubletap_pistol",
+"doubletap_precision",
 "aimedshot_precision",
+"grenade_firebomb",
 
 }
 

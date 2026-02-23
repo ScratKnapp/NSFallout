@@ -8,20 +8,20 @@ ENT.AdminOnly = true
 ENT.name = "Yao Guai"
 
 ENT.model = "models/fallout/yaoguai.mdl"
-ENT.hp = 300
+ENT.hp = 1000
 ENT.dmg = {
 	["Slash"] = 45,
 }
-ENT.accuracy = 10
+ENT.accuracy = 40
 ENT.evasion = 0
 
 ENT.armor = {
-	["Head"] = 5,
-	["Body"] = 5,
-	["Left Arm"] = 5,
-	["Right Arm"] = 5,
-	["Left Leg"] = 5,
-	["Right Leg"] = 5,
+	["Head"] = 0,
+	["Body"] = 0,
+	["Left Arm"] = 0,
+	["Right Arm"] = 0,
+	["Left Leg"] = 0,
+	["Right Leg"] = 0,
 }
 
 --all attributes

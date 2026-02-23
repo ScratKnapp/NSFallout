@@ -36,8 +36,17 @@ ENT.accuracy = 30
 ENT.evasion = 5
 
 ENT.armor = {
-	["Head"] = 12,
-	["Body"] = 12,
+	["Head"] = 15,
+	["Body"] = 15,
+	["Left Arm"] = 15,
+	["Right Arm"] = 15,
+	["Left Leg"] = 15,
+	["Right Leg"] = 15,
+}
+
+ENT.armorBreak = {
+	["Head"] = 10,
+	["Body"] = 10,
 	["Left Arm"] = 10,
 	["Right Arm"] = 10,
 	["Left Leg"] = 10,

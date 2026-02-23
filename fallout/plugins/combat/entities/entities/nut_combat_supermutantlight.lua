@@ -8,7 +8,7 @@ ENT.AdminOnly = true
 ENT.name = "Supermutant Skirmisher"
 
 ENT.model = "models/cpthazama/fallout/supermutant_light.mdl"
-ENT.hp = 120
+ENT.hp = 220
 ENT.dmg = 22
 ENT.dmgT = ".45 Auto"
 ENT.dmg = {
@@ -18,12 +18,21 @@ ENT.accuracy = 10
 ENT.evasion = -5
 
 ENT.armor = {
-	["Head"] = 3,
+	["Head"] = 10,
 	["Body"] = 10,
-	["Left Arm"] = 6,
-	["Right Arm"] = 6,
-	["Left Leg"] = 6,
-	["Right Leg"] = 6,
+	["Left Arm"] = 10,
+	["Right Arm"] = 10,
+	["Left Leg"] = 10,
+	["Right Leg"] = 10,
+}
+
+ENT.armorBreak = {
+	["Head"] = 10,
+	["Body"] = 10,
+	["Left Arm"] = 10,
+	["Right Arm"] = 10,
+	["Left Leg"] = 10,
+	["Right Leg"] = 10,
 }
 
 --all attributes
@@ -45,7 +54,16 @@ ENT.res = {
 }
 
 ENT.actions = {
+"dodge",
+"charge",
+"burstfire_smg",
+"runngun",
 "burstfire_rifle",
+"suppression1",
+"doubletap_pistol",
+"doubletap_precision",
+"aimedshot_precision",
+"grenade_firebomb",
 
 }
 

@@ -28,12 +28,21 @@ ENT.dmg = {
 }
 
 ENT.armor = {
+	["Head"] = 10,
+	["Body"] = 10,
+	["Left Arm"] = 10,
+	["Right Arm"] = 10,
+	["Left Leg"] = 10,
+	["Right Leg"] = 10,
+}
+
+ENT.armorBreak = {
 	["Head"] = 8,
 	["Body"] = 8,
-	["Left Arm"] = 6,
-	["Right Arm"] = 6,
-	["Left Leg"] = 6,
-	["Right Leg"] = 6,
+	["Left Arm"] = 8,
+	["Right Arm"] = 8,
+	["Left Leg"] = 8,
+	["Right Leg"] = 8,
 }
 
 --all attributes

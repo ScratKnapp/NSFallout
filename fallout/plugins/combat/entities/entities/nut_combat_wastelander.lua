@@ -78,9 +78,14 @@ ENT.res = {
 ENT.actions = {
 "dodge",
 "charge",
+"burstfire_smg",
+"runngun",
 "burstfire_rifle",
+"suppression1",
 "doubletap_pistol",
+"doubletap_precision",
 "aimedshot_precision",
+"grenade_frag",
 
 }
 

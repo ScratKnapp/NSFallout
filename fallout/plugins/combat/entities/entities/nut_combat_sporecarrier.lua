@@ -11,17 +11,18 @@ ENT.model = "models/fallout/sporecarrier.mdl"
 ENT.hp = 100
 ENT.dmg = {
 	["Blunt"] = 25,
+	["Acid"] = 10,
 }
-ENT.accuracy = 10
+ENT.accuracy = 20
 ENT.evasion = 5
 
 ENT.armor = {
-	["Head"] = 5,
-	["Body"] = 5,
-	["Left Arm"] = 5,
-	["Right Arm"] = 5,
-	["Left Leg"] = 5,
-	["Right Leg"] = 5,
+	["Head"] = 0,
+	["Body"] = 0,
+	["Left Arm"] = 0,
+	["Right Arm"] = 0,
+	["Left Leg"] = 0,
+	["Right Leg"] = 0,
 }
 
 --all attributes

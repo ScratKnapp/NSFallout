@@ -1,48 +1,82 @@
 ENT.Type = "nextbot"
 ENT.Base = "nut_combat"
-ENT.PrintName = "Rogue Desert Ranger"
+ENT.PrintName = "Rogue Ranger"
 ENT.Category = "NutScript - Combat (Raiders)"
 ENT.Spawnable = true
 ENT.AdminOnly = true
 
-ENT.name = "Rogue Desert Ranger"
+ENT.name = "Rogue Ranger"
 
-ENT.model = "models/gore/rangers/arizona_veteran_ranger.mdl"
-ENT.hp = 150
-ENT.accuracy = 16
-ENT.evasion = 12
-
-ENT.dmg = {
-	[".308"] = 26
+ENT.StepData = {
+	0.25,
+	0.75,
 }
 
+ENT.FootstepSounds = {
+	"npc/footsteps/hardboot_generic1.wav",
+	"npc/footsteps/hardboot_generic2.wav",
+	"npc/footsteps/hardboot_generic3.wav",
+	"npc/footsteps/hardboot_generic4.wav",
+	"npc/footsteps/hardboot_generic5.wav",
+	"npc/footsteps/hardboot_generic6.wav",
+}
+
+ ENT.models = {
+    "models/gore/ncr remake/desert ranger/dranton.mdl",
+	"models/gore/ncr remake/desert ranger/drboone.mdl",
+	"models/gore/ncr remake/desert ranger/drboyd.mdl",
+	"models/gore/ncr remake/desert ranger/drfrank.mdl",
+	"models/gore/ncr remake/desert ranger/drghoul.mdl",
+	"models/gore/ncr remake/desert ranger/drjensk.mdl",
+	"models/gore/ncr remake/desert ranger/drkingsley.mdl",
+	"models/gore/ncr remake/desert ranger/drmoore.mdl",
+	"models/gore/ncr remake/desert ranger/drwilhem.mdl",
+
+}
+
+ENT.hp = 150
+ENT.dmg = {
+	[".308"] = 30,
+}
+ENT.accuracy = 50
+ENT.evasion = 5
+
 ENT.armor = {
-	["Head"] = 15,
-	["Body"] = 18,
-	["Left Arm"] = 14,
-	["Right Arm"] = 14,
-	["Left Leg"] = 14,
-	["Right Leg"] = 14,
+	["Head"] = 25,
+	["Body"] = 25,
+	["Left Arm"] = 25,
+	["Right Arm"] = 25,
+	["Left Leg"] = 25,
+	["Right Leg"] = 25,
+}
+
+ENT.armorBreak = {
+	["Head"] = 20,
+	["Body"] = 20,
+	["Left Arm"] = 20,
+	["Right Arm"] = 20,
+	["Left Leg"] = 20,
+	["Right Leg"] = 20,
 }
 
 --all attributes
 ENT.attribs = {
-	["str"] = 6,
-	["per"] = 7,
-	["end"] = 6,
-	["cha"] = 8,
-	["int"] = 2,
+	["str"] = 0,
+	["per"] = 0,
+	["end"] = 0,
+	["cha"] = 2,
+	["int"] = 0,
 	["agi"] = 0,
-	["luck"] = 8,
+	["luck"] = 6,
 
 }
 
 ENT.skills = {
 	["evasion"] = 0,
-	["guns"] = 20,
-	["energyweapons"] = 20,
-	["melee"] = 20,
-	["throwing"] = 20,
+	["guns"] = 17,
+	["energyweapons"] = 0,
+	["melee"] = 17,
+	["throwing"] = 12,
 
 }
 
@@ -52,11 +86,17 @@ ENT.res = {
 ENT.actions = {
 "dodge",
 "charge",
+"burstfire_smg",
+"runngun",
 "burstfire_rifle",
+"suppression1",
 "doubletap_pistol",
+"doubletap_precision",
 "aimedshot_precision",
+"grenade_frag",
 
 }
+
 
 ENT.tags = {
 	["Biological"] = true,

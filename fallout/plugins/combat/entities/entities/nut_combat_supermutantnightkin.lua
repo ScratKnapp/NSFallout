@@ -8,21 +8,31 @@ ENT.AdminOnly = true
 ENT.name = "Nightkin"
 
 ENT.model = "models/cpthazama/fallout/supermutant_nightkin.mdl"
-ENT.hp = 220
+ENT.hp = 250
 ENT.dmg = {
-	["Blunt"] = 35,
+	["12 Gauge"] = 45,
 }
-ENT.accuracy = 10
+ENT.accuracy = 20
 ENT.evasion = -5
 
 ENT.armor = {
-	["Head"] = 18,
-	["Body"] = 22,
-	["Left Arm"] = 12,
-	["Right Arm"] = 12,
-	["Left Leg"] = 12,
-	["Right Leg"] = 12,
+	["Head"] = 20,
+	["Body"] = 20,
+	["Left Arm"] = 20,
+	["Right Arm"] = 20,
+	["Left Leg"] = 20,
+	["Right Leg"] = 20,
 }
+
+ENT.armorBreak = {
+	["Head"] = 10,
+	["Body"] = 10,
+	["Left Arm"] = 10,
+	["Right Arm"] = 10,
+	["Left Leg"] = 10,
+	["Right Leg"] = 10,
+}
+
 
 
 --all attributes

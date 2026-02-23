@@ -8,7 +8,7 @@ ENT.AdminOnly = true
 ENT.name = "Supermutant Brute"
 
 ENT.model = "models/cpthazama/fallout/supermutant_medium.mdl"
-ENT.hp = 120
+ENT.hp = 240
 ENT.dmg = {
 	["5.56"] = 35,
 }
@@ -16,14 +16,22 @@ ENT.accuracy = 10
 ENT.evasion = -5
 
 ENT.armor = {
-	["Head"] = 12,
-	["Body"] = 14,
-	["Left Arm"] = 8,
-	["Right Arm"] = 8,
-	["Left Leg"] = 8,
-	["Right Leg"] = 8,
+	["Head"] = 15,
+	["Body"] = 15,
+	["Left Arm"] = 15,
+	["Right Arm"] = 15,
+	["Left Leg"] = 15,
+	["Right Leg"] = 15,
 }
 
+ENT.armorBreak = {
+	["Head"] = 10,
+	["Body"] = 10,
+	["Left Arm"] = 10,
+	["Right Arm"] = 10,
+	["Left Leg"] = 10,
+	["Right Leg"] = 10,
+}
 
 --all attributes
 ENT.attribs = {
@@ -44,7 +52,16 @@ ENT.res = {
 }
 
 ENT.actions = {
+"dodge",
+"charge",
+"burstfire_smg",
+"runngun",
 "burstfire_rifle",
+"suppression1",
+"doubletap_pistol",
+"doubletap_precision",
+"aimedshot_precision",
+"grenade_firebomb",
 
 }
 
