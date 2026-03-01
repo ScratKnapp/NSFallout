@@ -12,7 +12,7 @@ ITEM.iconCam = {
 ITEM.specialSlot = "Primary"
 ITEM.category = "Weapons"
 ITEM.durability = 600
-ITEM.price = 5000
+ITEM.price = 600
 ITEM.magSize = 100 --how many times it can be used before reloading is necessary
 
 ITEM.weight = 1
@@ -37,7 +37,7 @@ ITEM.class = "tfa_grenade_rifle"
 
 
 ITEM.reqStats = {
-  ["str"] = 3,
+  ["str"] = 5,
 }
 
 ITEM.partMod = {

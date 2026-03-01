@@ -13,7 +13,7 @@ ITEM.specialSlot = {"Sidearm", "Primary"}
 ITEM.category = "Weapons"
 ITEM.weaponType = "Energy" -- Unarmed, Pistol, Rifle, Sniper, SMG, Shotgun, LMG, Energy, Melee
 ITEM.durability = 200
-ITEM.price = 2500
+ITEM.price = 2200
 ITEM.magSize = 16 --how many times it can be used before reloading is necessary
 
 ITEM.weight = 1

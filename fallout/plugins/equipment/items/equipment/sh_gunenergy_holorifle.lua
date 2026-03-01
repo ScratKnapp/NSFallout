@@ -13,7 +13,7 @@ ITEM.specialSlot = "Primary"
 ITEM.category = "Weapons"
 ITEM.weaponType = "Energy" -- Unarmed, Pistol, Rifle, Sniper, SMG, Shotgun, LMG, Energy, Melee
 ITEM.durability = 500
-ITEM.price = 25500
+ITEM.price = 20000
 ITEM.magSize = 4 --how many times it can be used before reloading is necessary
 
 ITEM.weight = 1
@@ -52,11 +52,11 @@ ITEM.upgradeSlots = {
 }
 
 ITEM.skillScaleDmg = {
-    ["energy"] = 1.2,
+    ["energy"] = 0,
 }
 
 ITEM.skillScaleAcc = {
-["energy"] = 1.5,}
+["energy"] = 2.5,}
 ITEM.actions = {	
 
 }

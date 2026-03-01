@@ -12,8 +12,8 @@ ITEM.iconCam = {
 ITEM.specialSlot = "Primary"
 ITEM.category = "Weapons"
 ITEM.weaponType = "Energy" -- Unarmed, Pistol, Rifle, Sniper, SMG, Shotgun, LMG, Energy, Melee
-ITEM.durability = 300
-ITEM.price = 3400
+ITEM.durability = 600
+ITEM.price = 10000
 ITEM.magSize = 12 --how many times it can be used before reloading is necessary
 
 ITEM.weight = 1
