@@ -13,7 +13,7 @@ ITEM.iconCam = {
 ITEM.specialSlot = "Sidearm"
 ITEM.category = "Weapon - Melee"
 ITEM.durability = 400
-ITEM.price = 500
+ITEM.price = 300
  
 
 ITEM.weight = 1
@@ -31,7 +31,7 @@ ITEM.multi = 3 --how many hits it does, dont need to put it here if it's just 1
 --the number in here determines the affects on accuracy at that range 
 -- -1 in the first spot will reduce accuracy at long range by 1
 -- 1 in the last spot will increase accuracy at close range by 1
-ITEM.range = {-100,-100,-100,1}-- arccw_bo1_makarov
+ITEM.range = {-500,-500,-500,1}-- arccw_bo1_makarov
 
 ITEM.reqStats = {
   ["str"] = 3,

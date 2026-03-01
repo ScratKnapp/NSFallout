@@ -61,7 +61,15 @@ ENT.actions = {
 "doubletap_pistol",
 "doubletap_precision",
 "aimedshot_precision",
+"overcharge",
 "grenade_firebomb",
+"charisma1",
+"charisma2",
+"charisma3",
+"charisma4",
+"charisma5",
+"charisma5accdebuff",
+"charisma6",
 
 }
 

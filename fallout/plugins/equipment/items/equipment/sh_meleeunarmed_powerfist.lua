@@ -30,7 +30,7 @@ ITEM.dmg = {
 --the number in here determines the affects on accuracy at that range 
 -- -1 in the first spot will reduce accuracy at long range by 1
 -- 1 in the last spot will increase accuracy at close range by 1
-ITEM.range = {-100,-100,-100,1}-- arccw_bo1_makarov
+ITEM.range = {-500,-500,-500,1}-- arccw_bo1_makarov
 
 ITEM.partMod = {
 	["Head"] = { --only affects this spot

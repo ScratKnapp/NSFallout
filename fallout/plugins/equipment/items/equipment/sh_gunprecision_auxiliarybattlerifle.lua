@@ -1,5 +1,5 @@
-ITEM.name = "Auxiliary's Battle Rifle"
-ITEM.desc = "Chambered in .308, this battle rifle is commissioned by the Auxilia to eventually become it's main rifle."
+ITEM.name = "Arizona Battle Rifle"
+ITEM.desc = "Chambered in .308, this battle rifle was commissioned by militias in the Arizona and has slowly proliferated across the midwest."
 ITEM.model = "models/weapons/w_mauser_selbstlader_1916.mdl"
 ITEM.width = 4
 ITEM.height = 2
@@ -8,7 +8,7 @@ ITEM.specialSlot = "Primary"
 ITEM.category = "Weapons"
 ITEM.weaponType = "Rifle" -- Unarmed, Pistol, Rifle, Sniper, SMG, Shotgun, LMG, Energy, Melee
 ITEM.durability = 200
-ITEM.price = 1000
+ITEM.price = 400
 ITEM.magSize = 15 --how many times it can be used before reloading is necessary
 
 ITEM.weight = 1
@@ -16,7 +16,7 @@ ITEM.weapondual = false
 ITEM.ammo = ".308"
 
 ITEM.dmg = {
-	[".308"] = 17
+	[".308"] = 21
 }
 
 ITEM.multi = 1 --how many hits it does, dont need to put it here if it's just 1

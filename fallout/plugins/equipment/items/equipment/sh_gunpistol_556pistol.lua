@@ -13,7 +13,7 @@ ITEM.specialSlot = {"Sidearm", "Primary"}
 ITEM.category = "Weapons"
 ITEM.weaponType = "Pistol" -- Unarmed, Pistol, Rifle, Sniper, SMG, Shotgun, LMG, Energy, Melee
 ITEM.durability = 200
-ITEM.price = 250
+ITEM.price = 10000
 ITEM.magSize = 12 --how many times it can be used before reloading is necessary
 
 ITEM.weight = 1
@@ -54,7 +54,7 @@ ITEM.skillScaleDmg = {
 }
 
 ITEM.skillScaleAcc = {
-["guns"] = 1.5,
+["guns"] = 1.75,
 }
 
 ITEM.actions = {

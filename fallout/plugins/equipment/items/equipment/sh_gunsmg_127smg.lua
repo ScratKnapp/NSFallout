@@ -13,7 +13,7 @@ ITEM.specialSlot = "Primary"
 ITEM.category = "Weapons"
 ITEM.weaponType = "SMG" -- Unarmed, Pistol, Rifle, Sniper, SMG, Shotgun, LMG, Energy, Melee
 ITEM.durability = 500
-ITEM.price = 600
+ITEM.price = 7000
 ITEM.magSize = 20 --how many times it can be used before reloading is necessary
 
 ITEM.weight = 1

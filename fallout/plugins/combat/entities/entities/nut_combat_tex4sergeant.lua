@@ -1,7 +1,7 @@
 ENT.Type = "nextbot"
 ENT.Base = "nut_combat"
 ENT.PrintName = "Provisional Sergeant"
-ENT.Category = "NutScript - Combat (New California Republic)"
+ENT.Category = "NutScript - Combat (Texans)"
 ENT.Spawnable = true
 ENT.AdminOnly = true
 

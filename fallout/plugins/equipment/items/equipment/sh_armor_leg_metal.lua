@@ -4,9 +4,9 @@ ITEM.model = "models/mosi/fallout4/props/junk/ammobag.mdl"
 ITEM.height = 1
 ITEM.width = 1
 ITEM.price = 250
-ITEM.durability = 250
+ITEM.durability = 18
 
-ITEM.armor = 8
+ITEM.armor = 30
 
 ITEM.upgradeSlots = {
 ["Inserts"] = true,
@@ -15,7 +15,7 @@ ITEM.upgradeSlots = {
 
 ITEM.res = { --percentage based armor
   ["Kinetic"] = 0,
-  ["Energy"] = -3, 
+  ["Energy"] = -25, 
 }
 ITEM.specialSlot = "Legs" --what slot it goes in
 ITEM.attrib = { --gives the player stats on equip

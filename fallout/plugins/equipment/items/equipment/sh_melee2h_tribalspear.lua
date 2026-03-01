@@ -1,5 +1,5 @@
-ITEM.name = "Legionary Spear and Shield"
-ITEM.desc = "A Legionary's spear paired together with a shield."
+ITEM.name = "Tribal Spear"
+ITEM.desc = "The most iconic weapon of humanity."
 ITEM.model = "models/props/spear.mdl"
 ITEM.width = 3
 ITEM.height = 1
@@ -12,15 +12,15 @@ ITEM.iconCam = {
 }
 ITEM.specialSlot = "Primary"
 ITEM.category = "Weapon - Melee"
-ITEM.durability = 500
-ITEM.price = 350
+ITEM.durability = 200
+ITEM.price = 60
  
 
 ITEM.weight = 1
 ITEM.weapondual = false
 ITEM.costAP = 1 --how much AP is used when using this weapon normally
-ITEM.accuracy = 1 --bonus accuracy, can also go negative. defaults to 0 if not setITEM.costAP = 1 --how much AP is used when using this weapon normally
-ITEM.class = "aus_m_spear_poolcue_shielded"
+ITEM.accuracy = 1 --bonus accuracy, can also go negative. defaults to 0 if not set
+ITEM.class = "aus_m_spear_poolcue"
 
 ITEM.dmg = {
 	["Slash"] = 20
@@ -30,26 +30,25 @@ ITEM.dmg = {
 --the number in here determines the affects on accuracy at that range 
 -- -1 in the first spot will reduce accuracy at long range by 1
 -- 1 in the last spot will increase accuracy at close range by 1
-ITEM.range = {-100,-100,-100,1}-- arccw_bo1_makarov
+ITEM.range = {-500,-500,-500,1}-- arccw_bo1_makarov
 -- arccw_bo1_makarov
 
 ITEM.reqStats = {
-  ["str"] = 3,
+	["str"] = 2,
 }
 
 ITEM.skillScaleAcc = {
-	["melee"] = 2,}
+	["melee"] = 2,
+}
 
 ITEM.skillScaleDmg = {
-["melee"] = 1.5,}
+	["melee"] = 0.4,
+}
 
 ITEM.actions = {	
-"charge",
-"stun",
-"heavyattack",
-"block2",
-"wideswing",
-
+	"charge",
+	"heavyattack",
+	"wideswing",
 
 }
 

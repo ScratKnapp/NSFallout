@@ -13,7 +13,7 @@ ITEM.iconCam = {
 ITEM.specialSlot = "Sidearm"
 ITEM.category = "Weapon - Melee"
 ITEM.durability = 200
-ITEM.price = 250
+ITEM.price = 150
  
 
 ITEM.weight = 1
@@ -23,14 +23,14 @@ ITEM.accuracy = 1 --bonus accuracy, can also go negative. defaults to 0 if not s
 ITEM.class = "aus_m_fists_deathclawgauntlet"
 
 ITEM.dmg = {
-	["Slash"] = 12
+	["Slash"] = 15
 }
 
 --long, medium, close
 --the number in here determines the affects on accuracy at that range 
 -- -1 in the first spot will reduce accuracy at long range by 1
 -- 1 in the last spot will increase accuracy at close range by 1
-ITEM.range = {-100,-100,-100,1}-- arccw_bo1_makarov
+ITEM.range = {-500,-500,-500,1}-- arccw_bo1_makarov
 -- arccw_bo1_makarov
 
 ITEM.reqStats = {

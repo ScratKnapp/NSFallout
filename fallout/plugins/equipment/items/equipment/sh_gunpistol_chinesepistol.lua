@@ -60,7 +60,7 @@ ITEM.upgradeSlots = {
 }
 
 ITEM.skillScaleAcc = {
-["guns"] = 1.2,
+["guns"] = 1.75,
 }
 
 ITEM.actions = {	

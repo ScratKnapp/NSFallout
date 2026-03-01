@@ -15,7 +15,7 @@ ITEM.specialSlot = "Primary"
 ITEM.category = "Weapons"
 ITEM.weaponType = "Rifle" -- Unarmed, Pistol, Rifle, Sniper, SMG, Shotgun, LMG, Energy, Melee
 ITEM.durability = 400
-ITEM.price = 250
+ITEM.price = 100
 ITEM.magSize = 30 --how many times it can be used before reloading is necessary
 
 ITEM.weight = 1
@@ -23,7 +23,7 @@ ITEM.weapondual = false
 ITEM.ammo = ".38"
 
 ITEM.dmg = {
-	[".38"] = 13
+	[".38"] = 11
 }
 
 ITEM.multi = 1 --how many hits it does, dont need to put it here if it's just 1

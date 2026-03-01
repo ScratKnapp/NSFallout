@@ -1,4 +1,4 @@
-ITEM.name = "Baton"
+ITEM.name = "Police Baton"
 ITEM.desc = "A collapsible baton that can be retracted or extended at the press of a button."
 ITEM.model = "models/halokiller38/fallout/weapons/melee/baton.mdl"
 ITEM.width = 3
@@ -13,7 +13,7 @@ ITEM.iconCam = {
 ITEM.specialSlot = "Sidearm"
 ITEM.category = "Weapon - Melee"
 ITEM.durability = 200
-ITEM.price = 200
+ITEM.price = 105
  
 
 ITEM.weight = 1
@@ -30,7 +30,7 @@ ITEM.dmg = {
 --the number in here determines the affects on accuracy at that range 
 -- -1 in the first spot will reduce accuracy at long range by 1
 -- 1 in the last spot will increase accuracy at close range by 1
-ITEM.range = {-100,-100,-100,1}-- arccw_bo1_makarov
+ITEM.range = {-500,-500,-500,1}-- arccw_bo1_makarov
 -- arccw_bo1_makarov
 
 ITEM.reqStats = {
