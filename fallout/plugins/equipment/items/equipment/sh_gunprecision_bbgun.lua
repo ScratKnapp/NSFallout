@@ -36,7 +36,7 @@ ITEM.range = {-10,1,0,-75}
 ITEM.class = "aus_w_varmintrifle"
 
 ITEM.reqStats = {
-  ["str"] = 2,
+  ["str"] = 1,
 }
 
 ITEM.partMod = {

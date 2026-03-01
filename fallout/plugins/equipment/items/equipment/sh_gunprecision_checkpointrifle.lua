@@ -44,7 +44,7 @@ ITEM.partMod = {
 }
 
 ITEM.reqStats = {
-  ["str"] = 6,
+  ["str"] = 5,
 }
 
 ITEM.upgradeSlots = {
