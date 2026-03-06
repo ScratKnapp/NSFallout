@@ -474,6 +474,7 @@ TRAIT.uid = "gunsmith"
 TRAIT.name = "Gunsmith"
 TRAIT.desc = "Can repair, modify, or design firearms."
 TRAIT.category = "Professions"
+TRAIT.hidden = true
 TRAIT.icon = "fonvui/hud/icons/perks/Weapon Master.png"
 TRAITS:Register(TRAIT)
 //
@@ -482,6 +483,7 @@ TRAIT.uid = "armorsmith"
 TRAIT.name = "Armorsmith"
 TRAIT.desc = "Can repair, modify, or design armor."
 TRAIT.category = "Professions"
+TRAIT.hidden = true
 TRAIT.icon = "fonvui/hud/icons/perks/Weapon Master.png"
 TRAITS:Register(TRAIT)
 //
@@ -490,6 +492,7 @@ TRAIT.uid = "science"
 TRAIT.name = "Science!"
 TRAIT.desc = "Can utilize Energy Weapons, Robotics, and Chem Workbenches."
 TRAIT.category = "Professions"
+TRAIT.hidden = true
 TRAIT.icon = "fonvui/hud/icons/perks/Science!.png"
 TRAITS:Register(TRAIT)
 //
@@ -498,6 +501,7 @@ TRAIT.uid = "chef"
 TRAIT.name = "Wasteland Chef"
 TRAIT.desc = "Can utilize cooking workbench."
 TRAIT.category = "Professions"
+TRAIT.hidden = true
 TRAIT.icon = "fonvui/hud/icons/perks/Wasteland Chef.png"
 TRAITS:Register(TRAIT)
 //
@@ -506,6 +510,7 @@ TRAIT.uid = "ammosmith"
 TRAIT.name = "Ammo Smith"
 TRAIT.desc = "Can create ammo using the Ammo Bench."
 TRAIT.category = "Professions"
+TRAIT.hidden = true
 TRAIT.icon = "fonvui/hud/icons/perks/Weapon Master.png"
 TRAITS:Register(TRAIT)
 //
@@ -522,6 +527,7 @@ TRAIT.uid = "blacksmith"
 TRAIT.name = "Blacksmith"
 TRAIT.desc = "Can repair, modify, or design melee weapons."
 TRAIT.category = "Professions"
+TRAIT.hidden = true
 TRAIT.icon = "fonvui/hud/icons/perks/Weapon Master.png"
 TRAITS:Register(TRAIT)
 //

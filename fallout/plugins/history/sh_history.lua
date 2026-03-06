@@ -1,14 +1,14 @@
 local PLUGIN = PLUGIN
 //
 local HISTORY = {}
-HISTORY.uid = "exlegion" 
+HISTORY.uid = "military" 
 HISTORY.name = "Ex-Military"
 HISTORY.desc = "At one point, you fought for a cause. Now you've left that life, but your training yet remains.\n+1 Strength.\nYou are not required to roleplay this background if you select it."
 HISTORY.category = "History"
 
 HISTORY.func = function(client, character)
 	character:setData("history", HISTORY.uid)
-	
+	character:updateSkill("athletics", 2)
 	character:updateAttrib("str", 1)
 end
 --[[
@@ -20,8 +20,8 @@ HISTORIES:Register(HISTORY)
 
 //
 local HISTORY = {}
-HISTORY.uid = "bos_exile" 
-HISTORY.name = "Former Prospector"
+HISTORY.uid = "prospector" 
+HISTORY.name = "Prospector"
 HISTORY.desc = "You scoured the wastes in search of goods and salvage, and you've trained your eye to spot trouble before it spots you.\n+1 Perception.\nYou are not required to roleplay this background if you select it."
 HISTORY.category = "History"
 --[[
@@ -31,7 +31,7 @@ HISTORY.items = {
 --]]
 HISTORY.func = function(client, character)
 	character:setData("history", HISTORY.uid)
-
+	character:updateSkill("sneak", 2)
 	character:updateAttrib("per", 1)
 end
 HISTORIES:Register(HISTORY)
@@ -49,7 +49,7 @@ HISTORY.items = {
 --]]
 HISTORY.func = function(client, character)
 	character:setData("history", HISTORY.uid)
-
+	character:updateSkill("throwing", 2)
 	character:updateAttrib("end", 1)
 end
 HISTORIES:Register(HISTORY)
@@ -62,7 +62,7 @@ HISTORY.desc = "You know how to make a deal, a sharp tongue and quick wit have h
 HISTORY.category = "History"
 HISTORY.func = function(client, character)
 	character:setData("history", HISTORY.uid)
-
+	character:updateSkill("speech", 4)
 	character:updateAttrib("cha", 1)
 	character:giveMoney(50)
 end
@@ -81,7 +81,7 @@ HISTORY.items = {
 --]]
 HISTORY.func = function(client, character)
 	character:setData("history", HISTORY.uid)
-
+	character:updateSkill("medicine", 4)
 	character:updateAttrib("int", 1)
 end
 HISTORIES:Register(HISTORY)
@@ -99,7 +99,7 @@ HISTORY.items = {
 --]]
 HISTORY.func = function(client, character)
 	character:setData("history", HISTORY.uid)
-
+	character:updateSkill("evasion", 2)
 	character:updateAttrib("agi", 1)
 end
 
@@ -118,7 +118,83 @@ HISTORY.items = {
 --]]
 HISTORY.func = function(client, character)
 	character:setData("history", HISTORY.uid)
-
+	character:updateSkill("lockpicking", 2)
 	character:updateAttrib("luck", 1)
+end
+HISTORIES:Register(HISTORY)
+
+//
+local HISTORY = {}
+HISTORY.uid = "blacksmithhistory" 
+HISTORY.name = "Blacksmith"
+HISTORY.desc = "You learned the art of forging melee weapons and armor from metal and hide alike.\nGives access to Blacksmithing recipes.\nYou are not required to roleplay this background if you select it."
+HISTORY.category = "History"
+--[[
+HISTORY.items = {
+	["drug_jet"] = 1,
+	["drug_psycho"] = 1,
+}
+--]]
+HISTORY.func = function(client, character)
+	character:setData("history", HISTORY.uid)
+    client:giveTrait("blacksmith")
+	character:updateSkill("repair", 4)
+end
+HISTORIES:Register(HISTORY)
+
+//
+local HISTORY = {}
+HISTORY.uid = "gunsmithhistory" 
+HISTORY.name = "Gunsmith"
+HISTORY.desc = "You learned complex machining, metalworking, and woodworking to maintain and build firearms and ammunition.\nGives you access to Gunsmithing and Ammosmithing recipes.\nYou are not required to roleplay this background if you select it."
+HISTORY.category = "History"
+--[[
+HISTORY.items = {
+	["drug_jet"] = 1,
+	["drug_psycho"] = 1,
+}
+--]]
+HISTORY.func = function(client, character)
+	character:setData("history", HISTORY.uid)
+    client:giveTrait("gunsmith")
+	character:updateSkill("repair", 4)
+end
+HISTORIES:Register(HISTORY)
+
+//
+local HISTORY = {}
+HISTORY.uid = "scientisthistory" 
+HISTORY.name = "Scientist"
+HISTORY.desc = "You worked under a post-war organization that valued chemistry, engineering, and mathematics.\nGives you access to Science crafting recipes.\nYou are not required to roleplay this background if you select it."
+HISTORY.category = "History"
+--[[
+HISTORY.items = {
+	["drug_jet"] = 1,
+	["drug_psycho"] = 1,
+}
+--]]
+HISTORY.func = function(client, character)
+	character:setData("history", HISTORY.uid)
+    client:giveTrait("science")
+	character:updateSkill("science", 4)
+end
+HISTORIES:Register(HISTORY)
+
+//
+local HISTORY = {}
+HISTORY.uid = "chefhistory" 
+HISTORY.name = "Chef"
+HISTORY.desc = "You hold an expertise in dealing with all of the strange and irradiated food of the wasteland.\nGives you access to Chef recipes.\nYou are not required to roleplay this background if you select it."
+HISTORY.category = "History"
+--[[
+HISTORY.items = {
+	["drug_jet"] = 1,
+	["drug_psycho"] = 1,
+}
+--]]
+HISTORY.func = function(client, character)
+	character:setData("history", HISTORY.uid)
+    client:giveTrait("chef")
+	character:updateSkill("survival", 4)
 end
 HISTORIES:Register(HISTORY)
