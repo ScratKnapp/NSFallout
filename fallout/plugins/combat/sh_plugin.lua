@@ -73,6 +73,34 @@ function PLUGIN:Think()
 	end
 end
 
+--used to select things with the cmover and turn swep
+function PLUGIN:SetupMove(ply, mvd, cmd)
+	local dragMins = ply.dragMins
+
+	-- push attack
+	if(dragMins) then
+		local trace = ply:GetEyeTrace()
+	
+		ply.dragMaxs = trace.HitPos
+	
+		if(mvd:KeyReleased(IN_ATTACK)) then
+			local command = ply.selectSwep
+
+			if(IsValid(command)) then
+				command:BoxSelect(ply.dragMins, ply.dragMaxs)
+			end
+			
+			ply.dragMins = nil
+			ply.dragMaxs = nil
+			ply.selectSwep = nil
+		elseif(mvd:KeyReleased(IN_ATTACK2)) then
+			ply.dragMins = nil
+			ply.dragMaxs = nil
+			ply.selectSwep = nil
+		end
+	end
+end
+
 if(CLIENT) then
 	surface.CreateFont("nutCombatTarget", {
 		font = "Monofonto",
