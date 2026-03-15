@@ -36,6 +36,9 @@ PLUGIN.turns[2] = {
 PLUGIN.turns = PLUGIN.turns or {
 	{
 		name = "Combat 1",
+		controllers = {
+		
+		},
 		entities = {
 
 		},
@@ -80,21 +83,23 @@ PLUGIN.turns = PLUGIN.turns or {
 	},
 }
 
---gets the damage a player does with a reegular attack
+--gets turn ID of the turn system a player is in, if they are in one
 PLUGIN.helperFuncs["getTurnID"] = function(self)
-	if(self.turnOrder) then --cached value for convenience
-		return self.turnOrder
-	else
-		for k, v in pairs(PLUGIN.turns) do
-			if(v.entities and v.entities[self]) then
-				self.turnOrder = k
-				break
-			end
+	--checks if the player is in a turn system
+	--if they art, return the turn ID
+	for k, v in pairs(PLUGIN.turns) do
+		if(v.controllers and v.controllers[self]) then
+			return k
+		end
+		
+		if(v.entities and v.entities[self]) then
+			self.turnOrder = k
+			return k
 		end
 	end
 end
 
---gets the damage a player does with a reegular attack
+--gets turn table of a turn order that a player is in, if they are in one.
 PLUGIN.helperFuncs["getTurnData"] = function(self)
 	local turnID = self:getTurnID()
 	if(turnID) then
@@ -104,29 +109,100 @@ PLUGIN.helperFuncs["getTurnData"] = function(self)
 	end
 end
 
+--gets the teamID of the team the player is on, if any
+PLUGIN.helperFuncs["getTurnTeam"] = function(self)
+	local turnData = self:getTurnData()
+	if(turnData) then
+		local entities = turnData.entities or {}
+		
+		return entities[self]
+	end
+	
+	return -1
+end
+
+--determines if the player is a controller of the specified turn system
+PLUGIN.helperFuncs["isTurnController"] = function(self, id)
+	local controller = PLUGIN:turnGetController(id)
+	if(controller[self]) then
+		return true
+	else
+		return false
+	end
+end
+
+--finds the turn table the player is a controller of, if they are in control of one
+PLUGIN.helperFuncs["getTurnControlled"] = function(self, id)
+	for k, v in pairs(PLUGIN.turns) do
+		local controller = self:isTurnController(k)
+		if(controller) then
+			return k
+		end
+	end
+end
+
+--adds an entity to a turn table as a controller
+function PLUGIN:turnControlAdd(id, entity, team)
+	--only let people control one turn order at a time
+	--remove them from all others when added
+	for k, v in pairs(PLUGIN.turns) do
+		if(v.controllers) then
+			v.controllers[entity] = nil
+		end
+	end
+
+	PLUGIN.turns[id] = PLUGIN.turns[id] or {}
+	local controllers = PLUGIN.turns[id]["controllers"] or {}
+	
+	controllers[entity] = true
+	
+	--adds the entity to the table
+	PLUGIN.turns[id]["controllers"] = controllers
+end
+
 --adds an entity to a turn table
 function PLUGIN:turnAdd(id, entity, team)
+	--remove from all other turn tables
+	--just to keep things simple
+	for k, v in pairs(PLUGIN.turns) do
+		if(v.entities) then
+			v.entities[entity] = nil
+		end
+	end
+
 	PLUGIN.turns[id] = PLUGIN.turns[id] or {}
-	PLUGIN.turns[id]["entities"] = PLUGIN.turns[id]["entities"] or {}
+
+	local entities = PLUGIN.turns[id]["entities"] or {}
 	
-	PLUGIN.turns[id]["entities"][entity] = team --adds the entity to the table
+	entities[entity] = team
+	
+	--adds the entity to the table
+	PLUGIN.turns[id]["entities"] = entities
+end
+
+--creates a new turn table
+function PLUGIN:turnCreate(id, data)
+	PLUGIN.turns[id] = data
 end
 
 --adds a team to a turn table
 function PLUGIN:turnAddTeam(id, team)
 	PLUGIN.turns[id] = PLUGIN.turns[id] or {}
-	PLUGIN.turns[id]["order"] = PLUGIN.turns[id]["order"] or {}
+	local order = PLUGIN.turns[id]["order"] or {}
 	
-	PLUGIN.turns[id]["order"][#PLUGIN.turns[id]["order"] + 1] = team --adds the team to the ordering table
+	order[#order+1] = team
+
+	PLUGIN.turns[id]["order"] = order
 end
 
 --returns every member of the specified team in the table
 function PLUGIN:turnGetTeam(id, team)
 	PLUGIN.turns[id] = PLUGIN.turns[id] or {}
-	PLUGIN.turns[id]["order"] = PLUGIN.turns[id]["order"] or {}
+	
+	local entities = PLUGIN.turns[id]["entities"] or {}
 	
 	local members = {}
-	for k, v in pairs(PLUGIN.turns[id]["entities"]) do
+	for k, v in pairs(entities) do
 		if(string.lower(v) == string.lower(team)) then
 			members[k] = v
 		end
@@ -135,20 +211,43 @@ function PLUGIN:turnGetTeam(id, team)
 	return members
 end
 
+--returns every controller of the specified turn ID
+function PLUGIN:turnGetController(id)
+	PLUGIN.turns[id] = PLUGIN.turns[id] or {}
+	
+	local controllers = PLUGIN.turns[id]["controllers"] or {}
+	
+	return controllers
+end
+
 --removes an entity from a turn table
 function PLUGIN:turnRemove(id, entity)
 	PLUGIN.turns[id] = PLUGIN.turns[id] or {}
-	PLUGIN.turns[id]["entities"] = PLUGIN.turns[id]["entities"] or {}
+	local entities = PLUGIN.turns[id]["entities"] or {}
 
-	PLUGIN.turns[id]["entities"][entity] = nil
+	entities[entity] = nil
+
+	PLUGIN.turns[id]["entities"] = entities
+end
+
+--removes an entity from a turn table
+function PLUGIN:turnControlRemove(id, entity)
+	PLUGIN.turns[id] = PLUGIN.turns[id] or {}
+	local controllers = PLUGIN.turns[id]["controllers"] or {}
+
+	controllers[entity] = nil
+
+	PLUGIN.turns[id]["controllers"] = controllers
 end
 
 --removes a team from a turn table
 function PLUGIN:turnRemoveTeam(id, teamID)
 	PLUGIN.turns[id] = PLUGIN.turns[id] or {}
-	PLUGIN.turns[id]["order"] = PLUGIN.turns[id]["order"] or {}
+	local order = PLUGIN.turns[id]["order"] or {}
 	
-	PLUGIN.turns[id]["order"][teamID] = nil --adds the team to the ordering table
+	table.remove(order, teamID)
+	
+	PLUGIN.turns[id]["order"] = order
 end
 
 --advances the specified turn to the next team
@@ -224,6 +323,36 @@ function PLUGIN:turnCurrent(id)
 	return 1
 end
 
+--syncs a single turn table to a player
+function PLUGIN:turnSyncByID(client, id)
+	local data = PLUGIN.turns[id]
+
+	if(data) then
+		netstream.Start(client, "nut_turnSyncID", id, data)
+	end
+end
+
+--syncs every turn table to a client
+function PLUGIN:turnSyncAll(client)
+	local data = PLUGIN.turns
+
+	if(data) then
+		netstream.Start(client, "nut_turnSyncAll", data)
+	end
+end
+
+function PLUGIN:canSeeEntityName(client, id)
+	if(client:IsAdmin()) then
+		return true
+	end
+	
+	if(client:isTurnController(id)) then
+		return true
+	end
+
+	return false
+end
+
 PLUGIN.helperFuncs["turnProcess"] = function(self, turn, you)
 	if(you) then
 		if(self:GetMoveType() != MOVETYPE_NOCLIP) then
@@ -262,8 +391,9 @@ PLUGIN.helperFuncs["turnProcess"] = function(self, turn, you)
 				--nut.plugin.list["chatboxextra"]:ChatboxSend(self, "turnchat", "You have taken " ..dmg.. " {" ..dmgT.. "} damage from " ..(buff.name or "Unknown").. ".")
 			end
 
-			if(buff.duration) then --counts down the duration
-				if(buff.duration <= 0) then
+			if(buff.duration and tonumber(buff.duration)) then --counts down the duration
+				local duration = tonumber(buff.duration)
+				if(duration <= 0) then
 					self:removeBuff(buff, buff.uid)
 					
 					if(self:IsPlayer()) then
@@ -276,7 +406,7 @@ PLUGIN.helperFuncs["turnProcess"] = function(self, turn, you)
 					end
 					--nut.plugin.list["chatboxextra"]:ChatboxSend(self, "turnchat", "You are affected by " ..(buff.name or "Unknown").. " for " ..(buff.duration or "Unknown").. " more turns.")
 					
-					buff.duration = buff.duration - 1
+					buff.duration = duration - 1
 					
 					local netBuff = {
 						uid = buff.uid,
@@ -371,17 +501,23 @@ nut.command.add("endturnall", {
 })
 
 nut.command.add("turnnext", {
+	adminOnly = true,
 	onRun = function(client, arguments)	
-		local swep = client:GetWeapon("nut_turnswep")
+		local turnID = client:getTurnID()
 		
-		if(IsValid(swep)) then
-			local turnID = swep:getTurnID()
+		if(turnID) then
 			local team = PLUGIN:turnAdvance(turnID)
 			
 			if(team) then
 				client:notify(team.. "'s turn.")
 			end
 		end
+	end
+})
+
+nut.command.add("turnmenu", {
+	onRun = function(client, arguments)	
+		netstream.Start(client, "nut_turnOpen")
 	end
 })
 
@@ -426,7 +562,116 @@ nut.chat.register("turnchat", {
 	deadCanChat = true
 })
 
+--various networking hooks
+if(SERVER) then
+	netstream.Hook("nut_turnCreate", function(client, id, data)
+		--only admins can create turns
+		if(client:IsAdmin()) then
+			PLUGIN:turnCreate(id, data)
+		end
+		
+		PLUGIN:turnSyncByID(client, id)
+	end)
+	
+	netstream.Hook("nut_turnClear", function(client, id)
+		--only admins can create turns
+		if(client:IsAdmin()) then
+			PLUGIN.turns[id].entities = {}
+			PLUGIN.turns[id].controllers = {}
+			
+			PLUGIN:turnSyncByID(client, id)
+		end
+	end)
+	
+	netstream.Hook("nut_turnSwepAdd", function(client, swep, orderID, teamID)
+		if(!IsValid(swep)) then return end
+	
+		local selected = swep.selected
+
+		for entity, _ in pairs(selected) do
+			PLUGIN:turnAdd(orderID, entity, teamID)
+		end
+	end)
+	
+	netstream.Hook("nut_turnJoin", function(client, id, entity, team)
+		--only admins can add things other than self to combats
+		if(client != entity and !client:IsAdmin()) then return end
+	
+		PLUGIN:turnAdd(id, entity, team)
+		
+		PLUGIN:turnSyncByID(client, id)
+	end)
+	
+	netstream.Hook("nut_turnLeave", function(client, id, entity)
+		--only admins can remove things other than self from combats
+		if(client != entity and !client:IsAdmin()) then return end
+	
+		PLUGIN:turnRemove(id, entity)
+		
+		PLUGIN:turnSyncByID(client, id)
+	end)
+	
+	netstream.Hook("nut_turnControlJoin", function(client, id, entity, team)
+		--only admins can add things other than self to combats
+		if(client != entity and !client:IsAdmin()) then return end
+	
+		PLUGIN:turnControlAdd(id, entity, team)
+		
+		PLUGIN:turnSyncAll(client)
+	end)
+	
+	netstream.Hook("nut_turnControlLeave", function(client, id, entity, team)
+		--only admins can remove things other than self from combats
+		if(client != entity and !client:IsAdmin()) then return end
+	
+		PLUGIN:turnControlRemove(id, entity)
+		
+		PLUGIN:turnSyncAll(client)
+	end)
+	
+	netstream.Hook("nut_turnNext", function(client, turnID, entity)
+		local team = PLUGIN:turnAdvance(turnID)
+		
+		if(team) then
+			client:notify(team.. "'s turn.")
+		end
+	end)
+else
+	netstream.Hook("nut_turnSyncID", function(id, data)
+		if(id and data) then
+			PLUGIN.turns[id] = data
+		end
+		
+		if(IsValid(nut.gui.turnList)) then
+			nut.gui.turnList:Refresh()
+		end
+	end)
+	
+	netstream.Hook("nut_turnSyncAll", function(data)
+		PLUGIN.turns = data
+
+		if(IsValid(nut.gui.turnList)) then
+			nut.gui.turnList:Refresh()
+		end
+	end)
+	
+	netstream.Hook("nut_turnOpen", function()
+		local client = LocalPlayer()
+		
+		local turnList = vgui.Create("nutTurnList")
+			
+		local turnID = client:getTurnID()
+		if(turnID) then
+			turnList.turnID = turnID
+			turnList:Refresh()
+		end
+	end)
+end
+
 if CLIENT then
+	local matWhite = Material("models/debug/debugwhite")
+	matWhite:SetVector( "$color", Vector(0,1,0) )
+
 	local function drawTurnDone()
 		local textPosX = 0
 		local textPosY = 0
@@ -516,6 +761,32 @@ if CLIENT then
 					drawTurnDone(180)
 				cam.End3D2D()
 			end
+		end
+		
+		--highlights selected entities by drawing a green stencil on them
+		if(client.highlightEnts) then
+			render.SetStencilWriteMask(1)
+			render.SetStencilTestMask(1)
+			render.ClearStencil()
+			render.SetStencilEnable(true)
+			render.SetStencilFailOperation(STENCIL_REPLACE)
+			render.SetStencilPassOperation(STENCIL_REPLACE)
+			render.SetStencilZFailOperation(STENCIL_REPLACE)
+			render.SetStencilCompareFunction(STENCIL_ALWAYS)
+			render.SetStencilReferenceValue(1)
+
+			for entity, v in pairs(client.highlightEnts) do
+				if(!IsValid(entity)) then continue end
+				
+				entity:DrawModel()
+			end
+
+			render.SetStencilCompareFunction(STENCIL_EQUAL)
+			render.SetStencilReferenceValue(1)
+			render.SetMaterial(matWhite)
+			render.DrawScreenQuad()
+
+			render.SetStencilEnable(false)
 		end
 	end
 end

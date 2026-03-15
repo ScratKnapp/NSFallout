@@ -185,6 +185,7 @@ function SWEP:MultiSelect(trace)
 		local hitPos = trace.HitPos
 		if(!client.dragMins) then
 			client.dragMins = hitPos
+			client.selectSwep = self
 		end
 	end
 end
@@ -429,28 +430,4 @@ if(CLIENT) then
 			render.DrawWireframeBox(center, Angle(0,0,0), minActual, maxActual, Color(0, 255, 0))
 		end
 	end)
-end
-
-function PLUGIN:SetupMove(ply, mvd, cmd)
-	local dragMins = ply.dragMins
-
-	-- push attack
-	if(dragMins) then
-		local trace = ply:GetEyeTrace()
-	
-		ply.dragMaxs = trace.HitPos
-	
-		if(mvd:KeyReleased(IN_ATTACK)) then
-			local command = ply:GetWeapon("nut_cmover")
-			if(IsValid(command)) then
-				command:BoxSelect(ply.dragMins, ply.dragMaxs)
-			end
-			
-			ply.dragMins = nil
-			ply.dragMaxs = nil
-		elseif(mvd:KeyReleased(IN_ATTACK2)) then
-			ply.dragMins = nil
-			ply.dragMaxs = nil
-		end
-	end
 end

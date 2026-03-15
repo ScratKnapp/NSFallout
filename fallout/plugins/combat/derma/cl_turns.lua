@@ -6,89 +6,257 @@ local PANEL = {}
 			nut.gui.turnList:Remove()
 		end
 		
+		--for scaling sizes of things based on resolution
+		local scrModX, scrModY = ScrW()/1920, ScrH()/1080
+		
 		nut.gui.turnList = self
 		
-		self:SetSize(450, 600)
+		local sizeX = 450*scrModX
+		local sizeY = 600*scrModY
+		
+		self:SetSize(sizeX, sizeY)
 		self:Center()
 		self:SetTitle("Turns")
 		self:MakePopup()
 		self:ShowCloseButton(true)
 
+		self.elements = {}
+
+		self.Paint = function(panel, w, h)
+			--background image
+			surface.SetDrawColor(Color(40, 40, 40, 255))
+			surface.DrawRect(0, 0, w, h)
+		end
+		
+		self:Refresh()
+	end
+	
+	--clears all of the buttons and stuff so we can refresh them
+	function PANEL:ClearElements()
+		for k, v in pairs(self.elements or {}) do
+			if(IsValid(v)) then
+				v:Remove()
+			end
+		end
+	end
+	
+	function PANEL:OnRemove()
+		self:ClearElements()
+
+		if(IsValid(self.teamPopup)) then
+			self.teamPopup:Remove()
+		end
+	end
+	
+	function PANEL:CreateButton(name, parent, doClick, doRightClick)
+		--for scaling sizes of things based on resolution
+		local scrModX, scrModY = ScrW()/1920, ScrH()/1080
+	
+		local buttonY = 30 * scrModY
+	
+		local button = vgui.Create("DButton", parent)
+		button:SetText(name)
+		button:SetFont("nutChatFont")
+		button:SetTall(buttonY)
+		button:Dock(TOP)
+		button:DockMargin(0,0,0,4)
+		
+		button:SetTextColor(Color(255,255,255,255))
+		
+		button.Paint = function(panel, w, h)
+			surface.SetDrawColor(Color(0, 0, 0, 220))
+			surface.DrawRect(0, 0, w, h)
+		end
+		
+		button.DoClick = doClick
+		
+		button.DoRightClick = doRightClick
+		
+		table.insert(self.elements, button)
+	end
+	
+	function PANEL:TurnOrder(id)
+		local client = LocalPlayer()
+	
+		--for scaling sizes of things based on resolution
+		local scrModX, scrModY = ScrW()/1920, ScrH()/1080
+	
+		local scroll = self.scroll
+	
+		local data = PLUGIN.turns[id]
+		if(data) then
+			--panel showing the controllers of this turn based thing
+			local turnSwep = client:GetWeapon("nut_turnswep")
+			if(IsValid(turnSwep)) then
+				turnSwep.turnID = id
+			
+				local height = 60
+			
+				local subPanel = scroll:Add("DPanel")
+				subPanel:Dock(TOP)
+				subPanel:DockMargin(0,0,0,4)
+
+				--category header here
+				local header = subPanel:Add("DLabel")
+				header:SetText("CONTROLLERS")
+				header:SetFont("nutChatFont")
+				header:Dock(TOP)
+				
+				--leave/join buttons for controllers
+				local controllers = PLUGIN:turnGetController(id)
+				if(!controllers[client]) then
+					self:CreateButton("Join Controllers", subPanel, function(this)
+						netstream.Start("nut_turnControlJoin", id, client, teamID)
+					end)
+				else
+					self:CreateButton("Leave Controllers", subPanel, function(this)
+						netstream.Start("nut_turnControlLeave", id, client, teamID)
+					end)
+				end
+
+				for entity, _ in pairs(controllers) do
+					if(IsValid(entity)) then
+						height = height + 34
+					
+						self:CreateButton(entity:Name(), subPanel, function(this)
+							self:Refresh()
+						end)
+					end
+				end
+
+				height = height * scrModY
+				
+				subPanel:SetTall(height)
+			end
+
+			for teamID, teamName in pairs(data.order) do
+				local height = 60
+			
+				local subPanel = scroll:Add("DPanel")
+				subPanel:Dock(TOP)
+				subPanel:DockMargin(0,0,0,4)
+			
+				--team name header
+				local header = subPanel:Add("DLabel")
+				header:SetText(teamName)
+				header:SetFont("nutChatFont")
+				header:DockMargin(4,0,0,2)
+				header:Dock(TOP)
+
+				--leave/join buttons for teams
+				if(client:getTurnTeam() != teamID) then
+					self:CreateButton("Join " ..teamName, subPanel, function(this)
+						netstream.Start("nut_turnJoin", id, client, teamID)
+					end)
+				else
+					self:CreateButton("Leave " ..teamName, subPanel, function(this)
+						netstream.Start("nut_turnLeave", id, client, teamID)
+					end)
+				end
+
+				for entity, team in pairs(data.entities or {}) do
+					if(!IsValid(entity)) then continue end
+					if(teamID != team) then continue end
+					
+					--increase height of panel by how many buttons there are
+					height = height + 34
+					
+					local name = (PLUGIN:canSeeEntityName(client, id) and entity:Name()) or "Anonymous"
+					
+					self:CreateButton(name, subPanel, 
+					function(this) --left click
+						--open up a little menu here or something
+					end)
+				end
+				
+				height = height * scrModY
+				
+				subPanel:SetTall(height)
+			end
+		end
+	end
+	
+	function PANEL:TurnList()
+		local client = LocalPlayer()
+	
+		--for scaling sizes of things based on resolution
+		local scrModX, scrModY = ScrW()/1920, ScrH()/1080
+	
+		local scroll = self.scroll
+
+		for turnID, data in pairs(PLUGIN.turns or {}) do
+			self:CreateButton(data.name or "Unnamed Turn Table", scroll, function(this)
+				self.turnID = turnID
+				self:Refresh()
+			end)
+		end
+	end
+	
+	function PANEL:Refresh()
+		self:ClearElements()
+		
+		--scorll panel that holds most of the things
 		local scroll = vgui.Create("DScrollPanel", self)
 		scroll:Dock(FILL)
 		
-		--main stuff
-		local turnID
+		self.scroll = scroll
+
+		local vBar = scroll:GetVBar()
+		function vBar:Paint(w, h)
+			draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 100))
+		end
+		function vBar.btnUp:Paint(w, h)
+			draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0))
+		end
+		function vBar.btnDown:Paint(w, h)
+			draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0))
+		end
+		function vBar.btnGrip:Paint(w, h)
+			draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0))
+		end
 		
-		timer.Simple(0, function()
-			turnID = self.id
+		table.insert(self.elements, scroll)
 		
-			if(!turnID) then
-				self:turnChoose(scroll)
-			else
-				self:turnID(scroll, turnID)
-			end
-		end)
+		local turnID = self.turnID
+
+		if(turnID) then
+			self:TurnOrder(turnID)
+		else
+			self:TurnList()
+		end
 		
 		--side panel
-		local frame = vgui.Create("DFrame", self)
-		frame:SetSize(150, 300)
-		frame:Center()
-		frame:SetTitle("")
-		frame:MakePopup()
-		frame:ShowCloseButton(true)
-		frame:MoveRightOf(self, 50)
+		local side = vgui.Create("DFrame", self)
+		side:SetSize(150, 300)
+		side:Center()
+		side:SetTitle("")
+		side:MakePopup()
+		side:ShowCloseButton(true)
+		side:MoveRightOf(self, 50)
 		
-		local scroll2 = vgui.Create("DScrollPanel", frame)
+		table.insert(self.elements, side)
+		
+		local scroll2 = vgui.Create("DScrollPanel", side)
 		scroll2:Dock(FILL)
-		
-		local newB = vgui.Create("DButton", scroll2)
-		newB:SetText("New Turn Table")
-		newB:Dock(TOP)
-		
-		newB:SetTextColor(Color(255,255,255,255))
-		newB.Paint = function(panel, w, h)
-			surface.SetDrawColor(Color(70, 80, 100, 220))
-			surface.DrawRect(0, 0, w, h)
-		end
-		
-		newB.DoClick = function()
-			nut.util.notify("This isn't done yet.")
 
-			frame:Remove()
-		end
-		
-		local selectB = vgui.Create("DButton", scroll2)
-		selectB:SetText("Select Turn Table")
-		selectB:Dock(TOP)
-		
-		selectB:SetTextColor(Color(255,255,255,255))
-		selectB.Paint = function(panel, w, h)
-			surface.SetDrawColor(Color(70, 80, 100, 220))
-			surface.DrawRect(0, 0, w, h)
-		end
-		
-		selectB.DoClick = function()
-			self:turnChoose(scroll)
+		if(turnID) then
+			self:CreateButton("Back to List", scroll2, function(this)
+				self.turnID = nil
+				self:Refresh()
+			end)
 			
-			frame:Remove()
-		end
-		
-		local songB = vgui.Create("DButton", scroll2)
-		songB:SetText("Play Song")
-		songB:Dock(TOP)
-		
-		songB:SetTextColor(Color(255,255,255,255))
-		songB.Paint = function(panel, w, h)
-			surface.SetDrawColor(Color(70, 80, 100, 220))
-			surface.DrawRect(0, 0, w, h)
-		end
-		
-		songB.DoClick = function()
-			if(turnID) then
-				local entities = PLUGIN.turns[turnID].entities
+			self:CreateButton("Play Song", scroll2, function(this)
 				local targets = {}
+				
+				local entities = PLUGIN.turns[turnID].entities or {}
 				for k, v in pairs(entities) do 
+					if(IsValid(k) and k:IsPlayer()) then 
+						targets[#targets + 1] = k
+					end
+				end
+				
+				local controllers = PLUGIN.turns[turnID].controllers or {}
+				for k, v in pairs(controllers) do 
 					if(IsValid(k) and k:IsPlayer()) then 
 						targets[#targets + 1] = k
 					end
@@ -97,142 +265,118 @@ local PANEL = {}
 				Derma_StringRequest("URL", "URL", "", function(text)
 					netstream.Start("turn_mediaPlay", targets, text)
 				end)
-			else
-				nut.util.notify("Select a turn table.")
-			end
-		end
-		
-		local nextB = vgui.Create("DButton", scroll2)
-		nextB:SetText("Next Turn")
-		nextB:Dock(TOP)
-		
-		nextB:SetTextColor(Color(255,255,255,255))
-		nextB.Paint = function(panel, w, h)
-			surface.SetDrawColor(Color(70, 80, 100, 220))
-			surface.DrawRect(0, 0, w, h)
-		end
-		
-		nextB.DoClick = function()
-			netstream.Start("nutTurnNext", turnID)
-		end
-	end
-	
-	function PANEL:turnID(scroll, turnID)
-		local turnTable = PLUGIN.turns[turnID]
-	
-		if(turnTable) then
-			local entities = turnTable.entities
-			for entity, team in pairs(entities or {}) do
-				if(!IsValid(entity)) then continue end
+			end)
 			
-				local name = vgui.Create("DButton", scroll)
-				name:SetText(entity:Name().. ": " ..team)
-				name:SetToolTip("Click to remove.")
-				name:Dock(TOP)
-				name:SetHeight(32)
-				
-				name.DoClick = function() --remove from turns
-					PLUGIN:turnRemove(turnID, entity)
-					netstream.Start("nutTurnRemove", turnID, entity) --networks the removal
-					name:Remove()
-					
-					nut.util.notify(entity:Name().. " removed from turn system.")
-					--self:menuTurnDetails(scroll, client)
-				end
-				
-				name:SetTextColor(Color(255,255,255,255))
-				name.Paint = function(panel, w, h)
-					surface.SetDrawColor(Color(70, 80, 100, 220))
-					surface.DrawRect(0, 4, w, h-8)
-				end
-			end
+			self:CreateButton("Clear All", scroll2, function(this)
+				Derma_Query("Clear Turn List?", "Confirm", "Yes", function()
+					netstream.Start("nut_turnClear", turnID)
+				end, "No")
+			end)
+			
+			self:CreateButton("Add Team", scroll2, function(this)
+				Derma_StringRequest("Team Name", "Adding Team", "", function(text)
+					nut.util.notify("This isn't done yet.")
+					print(text)
+				end)
+			end)
+			
+			self:CreateButton("Add Players", scroll2, function(this)
+				self:TeamPopup()
+			end)
+			
+			self:CreateButton("Next Turn", scroll2, function(this)
+				netstream.Start("nut_turnNext", turnID)
+			end)
+		else
+			self:CreateButton("New Turn Table", scroll2, function(this)
+				nut.util.notify("This isn't done yet.")
+				--popup panel where you can input things and stuff
+			end)
 		end
 	end
 	
-	function PANEL:turnChoose(scroll)
-		local turns = PLUGIN.turns
-	
-		if(turns) then
-			for k, v in pairs(turns) do
-				local name = vgui.Create("DButton", scroll)
-				name:SetText(v.name)
-				name:SetToolTip((table.Count(v.entities) or 0).. " entities in this turn system.")
-				name:Dock(TOP)
-				name:SetHeight(32)
-				
-				name.DoClick = function()
-					nut.util.notify(v.name.. " selected.")
-					netstream.Start("nutTurnTblS", self.swep, k)
-					
-					self:Remove()
-				end
-				
-				name:SetTextColor(Color(255,255,255,255))
-				name.Paint = function(panel, w, h)
-					surface.SetDrawColor(Color(70, 80, 100, 220))
-					surface.DrawRect(0, 4, w, h-8)
-				end
-			end
-		end
-	end
-	
-	function PANEL:menuTurnDetails(panel, client)
-		--[[
+	function PANEL:TeamPopup(entities)
 		local frame = vgui.Create("DFrame")
-		frame:SetSize(300, 600)
+		frame:SetSize(400, 600)
 		frame:Center()
-		frame:SetTitle("Test")
+		frame:SetTitle("Player List")
 		frame:MakePopup()
 		frame:ShowCloseButton(true)
-		frame:MoveRightOf(panel, 324)
+		
+		self.teamPopup = frame
 		
 		local scroll = vgui.Create("DScrollPanel", frame)
 		scroll:Dock(FILL)
 		
-		local button = vgui.Create("DButton", scroll)
-		button:SetText("Add to Player")
-		button:Dock(TOP)
-		
-		button:SetTextColor(Color(255,255,255,255))
-		button.Paint = function(panel, w, h)
-			surface.SetDrawColor(Color(70, 80, 100, 220))
-			surface.DrawRect(0, 0, w, h)
-		end
-		
-		button.DoClick = function()
-			local data = {}
-			--data.id = spell._uid
-			
-			--netstream.Start("nutS_give", data)
-			frame:Remove()
-		end
+		local turnData = PLUGIN.turns[self.turnID]
 
-		local button = vgui.Create("DButton", scroll)
-		button:SetText("Edit Spell")
-		button:Dock(TOP)
+		for k, client in pairs(player.GetAll()) do
+			local teamID = client:getTurnTeam() or 0
 		
-		button:SetTextColor(Color(255,255,255,255))
-		button.Paint = function(panel, w, h)
-			surface.SetDrawColor(Color(70, 80, 100, 220))
-			surface.DrawRect(0, 0, w, h)
-		end
+			local team = turnData.order[teamID]
 		
-		button.DoClick = function()
-			local data = {}
-			data.id = spell._uid
+			local button = vgui.Create("DButton", scroll)
+			button:SetText(client:Name().. " " ..(team or "Unassigned"))
+			button:Dock(TOP)
+			button:DockMargin(2,2,2,2)
 			
-			--netstream.Start("nutS_editS", data)
-			frame:Remove()
+			button:SetFont("nutSmallFont")
+			button:SetTextColor(Color(255,255,255,255))
+			
+			button.Paint = function(panel, w, h)
+				surface.SetDrawColor(Color(0, 0, 0, 255))
+				surface.DrawRect(0, 0, w, h)
+			end
+			
+			button.DoClick = function(this)
+				teamID = teamID + 1
+				if(teamID > #turnData.order) then
+					teamID = 0
+				end
+			
+				if(teamID > 0) then
+					netstream.Start("nut_turnJoin", self.turnID, client, teamID)
+				else
+					netstream.Start("nut_turnLeave", self.turnID, client)
+				end
+				
+				team = turnData.order[teamID]
+				this:SetText(client:Name().. " " ..(team or "Unassigned"))
+			end	
 		end
-
-		--]]
-	end	
+	end
+	
+	function PANEL:CreateTurn(id, data)
+		netstream.Start("nut_turnCreate", id, data)
+	end
 vgui.Register("nutTurnList", PANEL, "DFrame")
 
---[[
-hook.Add("CreateMenuButtons", "nutTurnList", function(tabs)
-	tabs["Actions"] = function(panel)
-		panel:Add("nutSpellList")
-	end
-end)
---]]
+--context menu
+list.Set(
+	"DesktopWindows", 
+	"Turns",
+	{
+		title = "Turns",
+		icon = "icon16/arrow_refresh.png",
+		width = 300,
+		height = 170,
+		onewindow = true,
+		init = function(icon, panel)
+			local client = LocalPlayer()
+
+			local button = panel:Add("DButton")
+			button:Dock(FILL)
+			button:SetText("NEXT TURN")
+			
+			button.DoClick = function(this)
+				local turnID = client:getTurnControlled()
+
+				if(turnID) then
+					netstream.Start("nut_turnNext", turnID)
+				else
+					nut.util.notify("You are not a turn controller")
+				end
+			end
+		end
+	}
+)
