@@ -707,7 +707,7 @@ ACT.effects = {
         effect = "dazed",
         duration = 1,
         strength = 1,
-		accuracyMult = 0.5 --multiplies accuracy by this number
+		accuracyMult = 0.5, --multiplies accuracy by this number
 
         debuff = true,
     }

@@ -228,6 +228,16 @@ function SWEP:Reload()
 	end
 end
 
+function SWEP:Holster()
+	local client = self.Owner
+	
+	client.centMoverMins = nil
+	
+	self:Select()
+
+	return true
+end
+
 function SWEP:BoxSelect(mins, maxs)
 	local client = self.Owner
 

@@ -289,6 +289,8 @@ function SWEP:Holster()
 	
 	client.CSWEPHighlight = nil
 	client.centMoverMins = nil
+	
+	self:Select()
 
 	return true
 end
