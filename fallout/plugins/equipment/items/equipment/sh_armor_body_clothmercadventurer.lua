@@ -1,6 +1,6 @@
-ITEM.name = "Doctor's Coat"
-ITEM.desc = "A white labcoat over a dirty white blouse."
-ITEM.model = "models/thespireroleplay/items/clothes/group007.mdl"
+ITEM.name = "Merc Adventurer Outfit"
+ITEM.desc = "A leather jacket with torn sleeves, bandolier, and a red sweater underneath."
+ITEM.model = "models/thespireroleplay/items/clothes/group061.mdl"
 ITEM.width = 2
 ITEM.height = 2
 ITEM.iconCam = {
@@ -10,10 +10,10 @@ ITEM.iconCam = {
 	outline = true,
 	outlineColor = Color(15, 250, 0),
 }
-ITEM.price = 50
+ITEM.price = 30
 ITEM.durability = 200
 
-ITEM.armor = 0
+ITEM.armor = 1
 
 ITEM.upgradeSlots = {
 ["Inserts"] = true,
@@ -26,6 +26,7 @@ ITEM.res = { --percentage based armor
 }
 ITEM.specialSlot = "Body" --what slot it goes in
 ITEM.skill = { --gives the player stats on equip
-  ["medicine"] = 3,
+  ["guns"] = 3,
+  ["meleeweapons"] = 2,
 
 }

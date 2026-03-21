@@ -25,5 +25,3 @@ ITEM.res = { --percentage based armor
   ["Energy"] = 0, 
 }
 ITEM.specialSlot = "Body" --what slot it goes in
-ITEM.skill = { --gives the player stats on equip
-}

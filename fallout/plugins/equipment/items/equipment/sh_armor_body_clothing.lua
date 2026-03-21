@@ -1,6 +1,6 @@
-ITEM.name = "Torso Clothing Base"
-ITEM.desc = "Edit Me!"
-ITEM.model = "models/thespireroleplay/items/clothes/group013.mdl"
+ITEM.name = "Pre-War Clothing"
+ITEM.desc = "A set of old pre-war clothing."
+ITEM.model = "models/thespireroleplay/items/clothes/group059.mdl"
 ITEM.width = 2
 ITEM.height = 2
 ITEM.iconCam = {
@@ -11,9 +11,9 @@ ITEM.iconCam = {
 	outlineColor = Color(15, 250, 0),
 }
 ITEM.price = 10
-ITEM.durability = 5
+ITEM.durability = 200
 
-ITEM.armor = 1
+ITEM.armor = 0
 
 ITEM.upgradeSlots = {
 ["Inserts"] = true,

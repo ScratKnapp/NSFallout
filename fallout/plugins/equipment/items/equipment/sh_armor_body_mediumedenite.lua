@@ -1,6 +1,6 @@
-ITEM.name = "Doctor's Coat"
-ITEM.desc = "A white labcoat over a dirty white blouse."
-ITEM.model = "models/thespireroleplay/items/clothes/group007.mdl"
+ITEM.name = "Edenite Combat Armor"
+ITEM.desc = "An odd mix of modified pre-war US Army body armor, often coated with an arid camouflage paint."
+ITEM.model = "models/thespireroleplay/items/clothes/group012.mdl"
 ITEM.width = 2
 ITEM.height = 2
 ITEM.iconCam = {
@@ -10,10 +10,10 @@ ITEM.iconCam = {
 	outline = true,
 	outlineColor = Color(15, 250, 0),
 }
-ITEM.price = 50
-ITEM.durability = 200
+ITEM.price = 2000
+ITEM.durability = 12
 
-ITEM.armor = 0
+ITEM.armor = 18
 
 ITEM.upgradeSlots = {
 ["Inserts"] = true,
@@ -26,6 +26,4 @@ ITEM.res = { --percentage based armor
 }
 ITEM.specialSlot = "Body" --what slot it goes in
 ITEM.skill = { --gives the player stats on equip
-  ["medicine"] = 3,
-
 }

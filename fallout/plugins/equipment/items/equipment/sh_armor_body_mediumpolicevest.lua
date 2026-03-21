@@ -1,19 +1,19 @@
-ITEM.name = "Doctor's Coat"
-ITEM.desc = "A white labcoat over a dirty white blouse."
-ITEM.model = "models/thespireroleplay/items/clothes/group007.mdl"
+ITEM.name = "Police Vest"
+ITEM.desc = "An old pre-war police vest."
+ITEM.model = "models/fallout/apparel/vaultsecurity.mdl"
 ITEM.width = 2
 ITEM.height = 2
 ITEM.iconCam = {
-	pos = Vector(-200, 0, 1),
-	ang = Angle(0, -0, 0),
-	fov = 8,
+	pos = Vector(296.31988525391, 250.18536376953, 188.31330871582),
+	ang = Angle(25, 220, 0),
+	fov = 5.1441522421453,
 	outline = true,
 	outlineColor = Color(15, 250, 0),
 }
-ITEM.price = 50
-ITEM.durability = 200
+ITEM.price = 200
+ITEM.durability = 10
 
-ITEM.armor = 0
+ITEM.armor = 14
 
 ITEM.upgradeSlots = {
 ["Inserts"] = true,
@@ -26,6 +26,4 @@ ITEM.res = { --percentage based armor
 }
 ITEM.specialSlot = "Body" --what slot it goes in
 ITEM.skill = { --gives the player stats on equip
-  ["medicine"] = 3,
-
 }

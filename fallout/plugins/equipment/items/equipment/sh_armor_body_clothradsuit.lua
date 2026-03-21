@@ -1,19 +1,19 @@
-ITEM.name = "Vault Suit"
-ITEM.desc = "A fitted jumpsuit for use by Vault dwellers."
-ITEM.model = "models/fallout/apparel/vaultsuit.mdl"
-ITEM.width = 1
-ITEM.height = 1
+ITEM.name = "Protective Hazard Suit"
+ITEM.desc = "A sealed, insulated and padded suit."
+ITEM.model = "models/fallout/apparel/radsuit.mdl"
+ITEM.width = 2
+ITEM.height = 2
 ITEM.iconCam = {
-	pos = Vector(264.48916625977, 222, 163.5),
+	pos = Vector(257, 215, 155),
 	ang = Angle(25, 220, 0),
-	fov = 4.5,
+	fov = 4,
 	outline = true,
 	outlineColor = Color(15, 250, 0),
 }
-ITEM.price = 25
+ITEM.price = 300
 ITEM.durability = 200
 
-ITEM.armor = 0
+ITEM.armor = 1
 
 ITEM.upgradeSlots = {
 ["Inserts"] = true,
@@ -23,7 +23,7 @@ ITEM.upgradeSlots = {
 ITEM.res = { --percentage based armor
   ["Kinetic"] = 0,
   ["Energy"] = 0,
-  ["Radiation"] = 5,
+  ["Radiation"] = 100,
 }
 ITEM.specialSlot = "Body" --what slot it goes in
 ITEM.skill = { --gives the player stats on equip

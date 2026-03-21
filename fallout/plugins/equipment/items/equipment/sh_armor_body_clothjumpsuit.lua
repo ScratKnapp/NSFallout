@@ -1,6 +1,6 @@
-ITEM.name = "Vault Suit"
-ITEM.desc = "A fitted jumpsuit for use by Vault dwellers."
-ITEM.model = "models/fallout/apparel/vaultsuit.mdl"
+ITEM.name = "Jumpsuit"
+ITEM.desc = "A civilian use, generic engineer jumpsuit."
+ITEM.model = "models/thespireroleplay/items/clothes/group006.mdl"
 ITEM.width = 1
 ITEM.height = 1
 ITEM.iconCam = {
@@ -22,9 +22,10 @@ ITEM.upgradeSlots = {
 
 ITEM.res = { --percentage based armor
   ["Kinetic"] = 0,
-  ["Energy"] = 0,
-  ["Radiation"] = 5,
+  ["Energy"] = 0, 
 }
 ITEM.specialSlot = "Body" --what slot it goes in
 ITEM.skill = { --gives the player stats on equip
+  ["repair"] = 5,
+
 }

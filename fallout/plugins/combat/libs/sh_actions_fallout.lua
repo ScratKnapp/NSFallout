@@ -484,7 +484,7 @@ ACTS:Register(ACT)
 --
 local ACT = {}
 ACT.uid = "aimedshot_sniper"
-ACT.name = "Aimed Shot (Precision Rifle)"
+ACT.name = "Aimed Shot (Sniper Rifle)"
 ACT.desc = "Fire a single aimed shot at increased accuracy."
 ACT.attackString = "fires an aimed shot at"
 ACT.category = "Gun"

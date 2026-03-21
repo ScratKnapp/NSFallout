@@ -1,6 +1,6 @@
-ITEM.name = "Doctor's Coat"
-ITEM.desc = "A white labcoat over a dirty white blouse."
-ITEM.model = "models/thespireroleplay/items/clothes/group007.mdl"
+ITEM.name = "Leather Vest"
+ITEM.desc = "A protective leather vest."
+ITEM.model = "models/thespireroleplay/items/clothes/group052.mdl"
 ITEM.width = 2
 ITEM.height = 2
 ITEM.iconCam = {
@@ -10,10 +10,10 @@ ITEM.iconCam = {
 	outline = true,
 	outlineColor = Color(15, 250, 0),
 }
-ITEM.price = 50
-ITEM.durability = 200
+ITEM.price = 100
+ITEM.durability = 7
 
-ITEM.armor = 0
+ITEM.armor = 6
 
 ITEM.upgradeSlots = {
 ["Inserts"] = true,
@@ -22,10 +22,8 @@ ITEM.upgradeSlots = {
 
 ITEM.res = { --percentage based armor
   ["Kinetic"] = 0,
-  ["Energy"] = 0, 
+  ["Energy"] = 10, 
 }
 ITEM.specialSlot = "Body" --what slot it goes in
 ITEM.skill = { --gives the player stats on equip
-  ["medicine"] = 3,
-
 }

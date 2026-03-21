@@ -384,13 +384,13 @@ TRAITS:Register(TRAIT)
 local TRAIT = {}
 TRAIT.uid = "ranger" 
 TRAIT.name = "Ranger"
-TRAIT.desc = "You're supposed to be the best, but the road has worn you down. Old dogs don't forget their tricks though. +5% damage, +3 global evasion."
+TRAIT.desc = "You're supposed to be the best, but the road has worn you down. Old dogs don't forget their tricks though. +10% damage, +15 global evasion."
 TRAIT.category = "Perks (Passive)"
 TRAIT.hidden = true
 TRAIT.icon = "fonvui/hud/icons/unsortedicons/cowboy.png"
 TRAIT.OnAttackData = function(self, action, attacker, info)
 	if(action.dmg) then
-		action.dmg = action.dmg * 1.05
+		action.dmg = action.dmg * 1.1
 	end
 end
 TRAIT.onLoaded = function(client)
@@ -398,7 +398,7 @@ TRAIT.onLoaded = function(client)
 		uid = TRAIT.uid,
 		name = TRAIT.name,
 		
-		evasion = 5,
+		evasion = 15,
 		
 		hidden = true
 	}

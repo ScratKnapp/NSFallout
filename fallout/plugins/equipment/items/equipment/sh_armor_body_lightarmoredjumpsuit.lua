@@ -1,19 +1,19 @@
-ITEM.name = "Doctor's Coat"
-ITEM.desc = "A white labcoat over a dirty white blouse."
-ITEM.model = "models/thespireroleplay/items/clothes/group007.mdl"
+ITEM.name = "Armored Jumpsuit"
+ITEM.desc = "A very simple mechanic jumpsuit modified to have protective leather padding."
+ITEM.model = "models/fallout/apparel/leatherarmor.mdl"
 ITEM.width = 2
 ITEM.height = 2
 ITEM.iconCam = {
-	pos = Vector(-200, 0, 1),
+	pos = Vector(-200, 0, 0),
 	ang = Angle(0, -0, 0),
 	fov = 8,
 	outline = true,
 	outlineColor = Color(15, 250, 0),
 }
-ITEM.price = 50
-ITEM.durability = 200
+ITEM.price = 100
+ITEM.durability = 7
 
-ITEM.armor = 0
+ITEM.armor = 7
 
 ITEM.upgradeSlots = {
 ["Inserts"] = true,
@@ -26,6 +26,6 @@ ITEM.res = { --percentage based armor
 }
 ITEM.specialSlot = "Body" --what slot it goes in
 ITEM.skill = { --gives the player stats on equip
-  ["medicine"] = 3,
+  ["Repair"] = 5,
 
 }
