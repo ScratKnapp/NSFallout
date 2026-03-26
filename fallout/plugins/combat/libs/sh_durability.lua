@@ -55,6 +55,19 @@ PLUGIN.helperFuncs["durabilityDefense"] = function(self, part)
 		
 		if(armorBreak[part] < 1) then
 			armor[part] = 0
+			
+			local debuff = {
+				uid = "armorBreak"..part,
+
+				name = "Armor Broken (" ..part.. ")",
+				effect = "armorBreak",
+				duration = 99,
+				strength = 1,
+
+				debuff = true,
+			}
+			
+			self:addBuff(debuff)
 		end
 		
 		self:setNetVar("armorBreak", armorBreak)

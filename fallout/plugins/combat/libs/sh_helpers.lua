@@ -111,7 +111,8 @@ PLUGIN.helperFuncs["getDamage"] = function(self, partString, weapon)
 				totalDam[#totalDam + 1] = {
 					dmg = dmg, 
 					dmgT = dmgT,
-					accuracy = self:getAccuracy()
+					accuracy = self:getAccuracy(),
+					part = partString
 				}
 			end
 		end

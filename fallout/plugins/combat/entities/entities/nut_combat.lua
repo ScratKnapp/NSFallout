@@ -204,6 +204,28 @@ function ENT:basicSetup()
 		--self.attribs = self.savedAttribs or self.attribs or {}
 		self.inv = self.inv or {}
 	
+		if(self.weapons) then
+			local weapon = table.Random(self.weapons)
+			if(weapon) then
+				local item = nut.item.list[weapon]
+				if(item) then
+					self:EquipWeapon(item.modelCEnt or item.model, item.material)
+					
+					if(item.dmg) then
+						self:setNetVar("dmg", item.dmg)
+					end
+					
+					if(item.actions) then
+						table.Add(self.actions, item.actions)
+					end
+
+					self:setNetVar("name", self.name.. " (" ..item.name.. ")")
+				else
+					print("No item found", randomWeapon)
+				end
+			end
+		end
+	
 		local model
 		if(self.models) then
 			model = table.Random(self.models)

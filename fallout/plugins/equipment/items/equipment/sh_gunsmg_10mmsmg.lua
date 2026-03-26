@@ -1,6 +1,7 @@
 ITEM.name = "10mm SMG"
 ITEM.desc = "A fully automatic submachine gun that is intended for use with a single hand."
 ITEM.model = "models/halokiller38/fallout/weapons/smgs/10mmsmg.mdl"
+ITEM.modelCEnt = "models/weapons/w_smg1.mdl"
 ITEM.width = 2
 ITEM.height = 2
 ITEM.iconCam = {

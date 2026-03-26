@@ -7,6 +7,7 @@ ENT.AdminOnly = true
 
 ENT.name = "Rattler"
 
+--[[
 ENT.models = {
 	"models/gore/nomads/nomadf_01.mdl",
 	"models/gore/nomads/nomadf_02.mdl",
@@ -17,14 +18,22 @@ ENT.models = {
   	"models/gore/nomads/nomadm_06.mdl",
 	"models/gore/nomads/nomadm_07.mdl",
 	"models/gore/nomads/nomadm_09.mdl",
-
 }
+--]]
+ENT.models = {
+	"models/player/odessa.mdl",
+}
+
 ENT.hp = 100
 ENT.dmg = {
 	["9mm"] = 25,
 }
 ENT.accuracy = 10
 ENT.evasion = 5
+
+ENT.weapons = {
+	"gunsmg_10mmsmg",
+}
 
 ENT.armor = {
 	["Head"] = 0,
