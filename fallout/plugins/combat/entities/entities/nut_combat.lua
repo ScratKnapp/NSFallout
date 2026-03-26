@@ -221,7 +221,7 @@ function ENT:basicSetup()
 
 					self:setNetVar("name", self.name.. " (" ..item.name.. ")")
 				else
-					print("No item found", randomWeapon)
+					print("No item found", weapon)
 				end
 			end
 		end
