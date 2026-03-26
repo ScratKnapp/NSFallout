@@ -1,6 +1,8 @@
 ITEM.name = "N-99 10mm Pistol"
 ITEM.desc = "A semi-automatic pistol designed before the Great War, featuring a large frame and a long barrel for the most extreme conditions."
 ITEM.model = "models/halokiller38/fallout/weapons/pistols/10mmpistol.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/pistols/bm_10mmpistol.mdl"
+
 ITEM.width = 2
 ITEM.height = 2
 ITEM.iconCam = {

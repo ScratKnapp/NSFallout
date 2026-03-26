@@ -1,40 +1,37 @@
 ENT.Type = "nextbot"
 ENT.Base = "nut_combat"
 ENT.PrintName = "Settler"
-ENT.Category = "NutScript - Combat (Townspeople)"
+ENT.Category = "NutScript - Combat (Wastelanders)"
 ENT.Spawnable = true
 ENT.AdminOnly = true
 
 ENT.name = "Settler"
 
 ENT.models = {
-	"models/gore/neutrals/auxiliary/Civilian Boyd.mdl",
-	"models/gore/neutrals/auxiliary/Civilian Frank.mdl",
-	"models/gore/neutrals/auxiliary/Civilian Ghoul.mdl",
-	"models/gore/neutrals/auxiliary/Civilian Horst.mdl",
-	"models/gore/neutrals/auxiliary/Civilian Torv.mdl",
-	"models/adi/westernfolk/male_01.mdl",
-	"models/adi/westernfolk/male_02.mdl",
-	"models/adi/westernfolk/male_03.mdl",
-	"models/adi/westernfolk/male_04.mdl",
-	"models/adi/westernfolk/male_05.mdl",
-	"models/adi/westernfolk/male_06.mdl",
-	"models/adi/westernfolk/male_07.mdl",
-	"models/adi/westernfolk/male_08.mdl",
-	"models/adi/westernfolk/male_09.mdl",
-	"models/adi/westernfolk/male_10.mdl",
-	"models/old_jimmy/western/cowboy_female2_00.mdl",
-	"models/old_jimmy/western/cowboy_female2_01.mdl",
-	"models/old_jimmy/western/cowboy_female2_02.mdl",
-	"models/old_jimmy/western/cowboy_female2_03.mdl",
-	"models/old_jimmy/western/cowboy_female2_04.mdl",
-	"models/old_jimmy/western/cowboy_female2_05.mdl",
-	"models/old_jimmy/western/cowboy_female3_00.mdl",
-	"models/old_jimmy/western/cowboy_female3_01.mdl",
-	"models/old_jimmy/western/cowboy_female3_02.mdl",
-	"models/old_jimmy/western/cowboy_female3_03.mdl",
-	"models/old_jimmy/western/cowboy_female3_04.mdl",
-	"models/old_jimmy/western/cowboy_female3_05.mdl",
+	"models/kaesar/falloutnewvegas/brahmin/brahmin.mdl",
+	"models/kaesar/falloutnewvegas/brahmin/brahminf.mdl",
+	"models/kaesar/falloutnewvegas/merc_grunt/merc_grunt.mdl",
+	"models/kaesar/falloutnewvegas/merc_grunt/merc_gruntf.mdl",
+	"models/kaesar/falloutnewvegas/powder/powder.mdl",
+	"models/kaesar/falloutnewvegas/powder/powderf.mdl",
+	"models/kaesar/falloutnewvegas/robcojumpsuit/robcojumpsuit.mdl",
+	"models/kaesar/falloutnewvegas/robcojumpsuit/robcojumpsuitf.mdl",
+	"models/kaesar/falloutnewvegas/settler/settler.mdl",
+	"models/kaesar/falloutnewvegas/settler/settlerf.mdl",
+	"models/kaesar/falloutnewvegas/slaverag/slaverag.mdl",
+	"models/kaesar/falloutnewvegas/slaverag/slaveragf.mdl",
+	"models/kaesar/falloutnewvegas/wanderer/wanderer.mdl",
+	"models/kaesar/falloutnewvegas/wanderer/wandererf.mdl",
+	"models/thespireroleplay/humans/group060/male_14.mdl",
+	"models/thespireroleplay/humans/group061/female_11.mdl",
+	"models/thespireroleplay/humans/group061/male_18.mdl",
+	"models/thespireroleplay/humans/group060/female_05.mdl",
+	"models/kaesar/falloutnewvegas/caravaneer/caravaneer.mdl",
+	"models/kaesar/falloutnewvegas/caravaneer/caravaneerf.mdl",
+	"models/kaesar/falloutnewvegas/dirtyprewar/dirtyprewar.mdl",
+	"models/kaesar/falloutnewvegas/fieldhand/fieldhand.mdl",
+	"models/kaesar/falloutnewvegas/fieldhand/fieldhandf.mdl",
+
 
 
 }

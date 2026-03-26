@@ -1,6 +1,8 @@
 ITEM.name = "Varmint Rifle"
 ITEM.desc = "A low powered bolt aciton rifle designed for hunting small game."
 ITEM.model = "models/illusion/fwp/w_varmintrifle.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/rifles/bm_varmintrifle.mdl"
+
 ITEM.width = 4
 ITEM.height = 2
 ITEM.iconCam = {

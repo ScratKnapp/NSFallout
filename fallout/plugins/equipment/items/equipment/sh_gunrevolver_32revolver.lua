@@ -1,6 +1,8 @@
 ITEM.name = ".32 Revolver"
 ITEM.desc = "A low caliber Smith and Wesson revolver."
 ITEM.model = "models/halokiller38/fallout/weapons/pistols/32pistol.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/pistols/bm_32pistol.mdl"
+
 ITEM.width = 2
 ITEM.height = 2
 ITEM.iconCam = {

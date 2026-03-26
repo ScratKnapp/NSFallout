@@ -1,6 +1,8 @@
 ITEM.name = "Ranger Sequoia"
 ITEM.desc = "A special, ornate double-action revolver with a cylinder holding .45-70 Gov't rounds. Issued only to Rangers who've earned it."
 ITEM.model = "models/halokiller38/fallout/weapons/pistols/rangersequoia.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/pistols/bm_rangersequoia.mdl"
+
 ITEM.width = 2
 ITEM.height = 2
 ITEM.iconCam = {

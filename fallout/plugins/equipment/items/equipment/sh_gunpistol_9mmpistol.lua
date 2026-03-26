@@ -1,6 +1,8 @@
 ITEM.name = "9mm Pistol"
 ITEM.desc = "A semi-automatic handgun often mass-produced by the gun manufacturers post-war."
 ITEM.model = "models/halokiller38/fallout/weapons/pistols/9mmpistol.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/pistols/bm_9mmpistol.mdl"
+
 ITEM.width = 2
 ITEM.height = 2
 ITEM.iconCam = {

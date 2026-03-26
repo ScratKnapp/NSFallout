@@ -1,6 +1,8 @@
 ITEM.name = "P-94 Plasma Rifle"
 ITEM.desc = "A high tech plasma slinging weapon possibly hundreds of years old."
 ITEM.model = "models/fallout/fonv/plasmarifle/w_fallout_plasmarifle.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/plasma weapons/bm_plasmarifle.mdl"
+
 ITEM.width = 4
 ITEM.height = 2
 ITEM.iconCam = {

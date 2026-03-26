@@ -1,6 +1,7 @@
 ITEM.name = "Laser RCW"
 ITEM.desc = "A rapid firing laser rifle designed to mimic the famous 'Tommy Gun', and even has a drum magazine that is just six capacitors around an electron charge pack."
 ITEM.model = "models/halokiller38/fallout/weapons/energy weapons/laserpdw.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/energy weapons/bm_laserpdw.mdl"
 ITEM.width = 4
 ITEM.height = 2
 ITEM.iconCam = {

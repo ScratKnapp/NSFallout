@@ -1,6 +1,8 @@
 ITEM.name = "Anti-Material Rifle"
 ITEM.desc = "A bolt-action, high caliber precision weapon intended for hard targets."
 ITEM.model = "models/halokiller38/fallout/weapons/sniperrifles/antimaterielrifle.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/sniperrifles/bm_antimaterielrifle.mdl"
+
 ITEM.width = 6
 ITEM.height = 2
 ITEM.iconCam = {

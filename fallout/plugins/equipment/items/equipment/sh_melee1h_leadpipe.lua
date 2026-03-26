@@ -1,6 +1,8 @@
 ITEM.name = "Lead Pipe"
 ITEM.desc = "A rusty pipe."
 ITEM.model = "models/mosi/fallout4/props/weapons/melee/leadpipe.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/melee/bm_leadpipe.mdl"
+
 ITEM.width = 1
 ITEM.height = 1
 ITEM.iconCam = {

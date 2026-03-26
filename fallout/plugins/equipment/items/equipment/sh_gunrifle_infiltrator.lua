@@ -1,6 +1,7 @@
 ITEM.name = "R91 'Infiltrator'"
 ITEM.desc = "A pre-war stockless variant of the R91 that comes with a suppressor and scope."
 ITEM.model = "models/halokiller38/fallout/weapons/assaultrifles/infiltrator.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/assaultrifles/bm_infiltrator.mdl"
 ITEM.width = 4
 ITEM.height = 2
 ITEM.iconCam = {

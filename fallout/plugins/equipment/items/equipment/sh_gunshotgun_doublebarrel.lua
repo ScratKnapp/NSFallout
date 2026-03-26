@@ -1,6 +1,8 @@
 ITEM.name = "Double Barrel Shotgun"
 ITEM.desc = "A dual barrel 12 gauge shotgun."
 ITEM.model = "models/halokiller38/fallout/weapons/shotguns/doublebarrelshotgun.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/shotguns/bm_doublebarrelshotgun.mdl"
+
 ITEM.width = 4
 ITEM.height = 2
 ITEM.iconCam = {

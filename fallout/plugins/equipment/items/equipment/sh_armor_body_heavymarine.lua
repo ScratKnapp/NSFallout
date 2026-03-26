@@ -1,6 +1,6 @@
-ITEM.name = "Marked Vest"
-ITEM.desc = "A tattered mash of NCR breastplate, legion padding, and old pieces and parts."
-ITEM.model = "models/thespireroleplay/items/clothes/group057.mdl"
+ITEM.name = "Marine Combat Armor"
+ITEM.desc = "A very heavy set of pre-war Marine combat armor."
+ITEM.model = "models/thespireroleplay/items/clothes/group106.mdl"
 ITEM.width = 2
 ITEM.height = 2
 ITEM.iconCam = {
@@ -10,11 +10,15 @@ ITEM.iconCam = {
 	outline = true,
 	outlineColor = Color(15, 250, 0),
 }
-ITEM.price = 400
-ITEM.durability = 5
+ITEM.price = 4000
+ITEM.durability = 18
 
-ITEM.armor = 15
+ITEM.armor = 22
+ITEM.evasion = -35
 
+ITEM.reqStats = {
+  ["str"] = 6,
+}
 ITEM.upgradeSlots = {
 ["Inserts"] = true,
 

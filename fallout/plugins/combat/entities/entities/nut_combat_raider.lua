@@ -27,6 +27,21 @@ ENT.accuracy = 10
 ENT.evasion = 5
 
 ENT.weapons = {
+	"gunpistol_9mmpistol",
+	"gunpistol_10mmpistol",
+	"gunpistol_22lrpistol",
+	"gunrevolver_32revolver",
+	"gunpistol_chinesepistol",
+	"gunprecision_varmintrifle",
+	"gunshotgun_caravanshotgun",
+	"gunshotgun_singleshotgun",
+	"gunsmg_9mmsmg",
+	"gunsmg_22lrsmg",
+	"melee1h_combatknife",
+	"melee1h_leadpipe",
+	"melee1h_machete",
+	"gunenergy_lasermusket",
+	"gunenergy_laserpistol",
 	"gunsmg_10mmsmg",
 }
 

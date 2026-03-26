@@ -1,6 +1,8 @@
 ITEM.name = "Combat Rifle"
 ITEM.desc = "A pre-war rifle that is chambered in .45 ACP."
 ITEM.model = "models/bf1/weapons/farquhar-hill m1918.mdl"
+ITEM.modelCEnt = "models/weapons/bm_combatrifle_unscoped.mdl"
+
 ITEM.width = 4
 ITEM.height = 2
 ITEM.iconCam = {

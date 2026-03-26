@@ -1,6 +1,8 @@
 ITEM.name = "5.56 Pistol"
 ITEM.desc = "A genuine reproduction of cut and modified .223 revolving rifle."
 ITEM.model = "models/weapons/tfa_fallout/w_fallout_556_pistol.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/pistols/bm_556pistol.mdl"
+
 ITEM.width = 2
 ITEM.height = 2
 ITEM.iconCam = {

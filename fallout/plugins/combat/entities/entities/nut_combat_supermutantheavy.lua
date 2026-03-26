@@ -8,12 +8,26 @@ ENT.AdminOnly = true
 ENT.name = "Supermutant Enforcer"
 
 ENT.model = "models/cpthazama/fallout/supermutant_heavy.mdl"
-ENT.hp = 250
+ENT.hp = 350
 ENT.dmg = {
 	["12 Gauge"] = 45,
 }
 ENT.accuracy = 20
 ENT.evasion = -5
+
+ENT.weapons = {
+	"gunpistol_45pistol",
+	"gunpistol_10mmpistol",
+	"gunprecision_cowboyrepeater",
+	"gunrevolver_357magnum",
+	"gunrifle_combatrifle",
+	"gunshotgun_huntingshotgun",
+	"gunsmg_45smg",
+	"gunsniper_huntingrifle",
+	"gunenergy_laserrifle",
+	"gunenergy_laserrcw",
+	"gunsmg_10mmsmg",
+}
 
 ENT.armor = {
 	["Head"] = 20,
@@ -25,12 +39,12 @@ ENT.armor = {
 }
 
 ENT.armorBreak = {
-	["Head"] = 10,
-	["Body"] = 10,
-	["Left Arm"] = 10,
-	["Right Arm"] = 10,
-	["Left Leg"] = 10,
-	["Right Leg"] = 10,
+	["Head"] = 4,
+	["Body"] = 4,
+	["Left Arm"] = 4,
+	["Right Arm"] = 4,
+	["Left Leg"] = 4,
+	["Right Leg"] = 4,
 }
 
 --all attributes

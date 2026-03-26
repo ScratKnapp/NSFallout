@@ -1,6 +1,7 @@
 ITEM.name = "Type 93 Assault Rifle"
 ITEM.desc = "A general purpose 5.56 rifle which features ease of disassembly and maintenance, but a lower fire rate than most rifles."
 ITEM.model = "models/halokiller38/fallout/weapons/assaultrifles/chineseassaultrifle.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/assaultrifles/bm_chineseassaultrifle.mdl"
 ITEM.width = 4
 ITEM.height = 2
 ITEM.iconCam = {

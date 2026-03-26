@@ -1,6 +1,8 @@
 ITEM.name = "CZ75 Minigun"
 ITEM.desc = "It's a minigun."
 ITEM.model = "models/halokiller38/fallout/weapons/heavy weapons/minigun.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/heavy weapons/bm_minigun.mdl"
+
 ITEM.width = 5
 ITEM.height = 2
 ITEM.iconCam = {

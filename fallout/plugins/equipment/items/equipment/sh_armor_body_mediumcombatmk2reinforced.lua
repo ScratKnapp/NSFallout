@@ -1,5 +1,5 @@
-ITEM.name = "Combat Armor Mk2 Reinforced"
-ITEM.desc = "An armor vest fashioned together with scrap metal, spikes, and bits and pieces."
+ITEM.name = "Combat Armor Mk2"
+ITEM.desc = "A set of pre-war body armor designed for the US Army, reinforced with heavier, more protective armor padding."
 ITEM.model = "models/thespireroleplay/items/clothes/group053.mdl"
 ITEM.width = 2
 ITEM.height = 2
@@ -11,10 +11,12 @@ ITEM.iconCam = {
 	outlineColor = Color(15, 250, 0),
 }
 ITEM.price = 4000
-ITEM.durability = 5
+ITEM.durability = 13
 
-ITEM.armor = 27
-
+ITEM.armor = 22
+ITEM.reqStats = {
+  ["str"] = 5,
+}
 ITEM.upgradeSlots = {
 ["Inserts"] = true,
 

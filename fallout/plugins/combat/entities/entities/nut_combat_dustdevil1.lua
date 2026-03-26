@@ -16,7 +16,24 @@ ENT.models = {
 ENT.hp = 100
 ENT.accuracy = 30
 ENT.evasion = 8
-
+ENT.weapons = {
+	"gunpistol_9mmpistol",
+	"gunpistol_10mmpistol",
+	"gunpistol_22lrpistol",
+	"gunrevolver_32revolver",
+	"gunpistol_chinesepistol",
+	"gunprecision_varmintrifle",
+	"gunshotgun_caravanshotgun",
+	"gunshotgun_singleshotgun",
+	"gunsmg_9mmsmg",
+	"gunsmg_22lrsmg",
+	"melee1h_combatknife",
+	"melee1h_leadpipe",
+	"melee1h_machete",
+	"gunenergy_lasermusket",
+	"gunenergy_laserpistol",
+	"gunsmg_10mmsmg",
+}
 ENT.dmg = {
 	["Slash"] = 20
 }
@@ -32,12 +49,12 @@ ENT.armor = {
 
 
 ENT.armorBreak = {
-	["Head"] = 4,
-	["Body"] = 4,
-	["Left Arm"] = 4,
-	["Right Arm"] = 4,
-	["Left Leg"] = 4,
-	["Right Leg"] = 4,
+	["Head"] = 3,
+	["Body"] = 3,
+	["Left Arm"] = 3,
+	["Right Arm"] = 3,
+	["Left Leg"] = 3,
+	["Right Leg"] = 3,
 }
 
 --all attributes

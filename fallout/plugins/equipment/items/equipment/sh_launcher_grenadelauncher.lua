@@ -1,6 +1,8 @@
 ITEM.name = "Grenade Launcher"
 ITEM.desc = "A pump action 40mm launcher that fires from a tubular magazine."
 ITEM.model = "models/weapons/tfa_fallout/w_fallout_grenade_launcher.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/explosives/bm_grenadelauncher.mdl"
+
 ITEM.width = 4
 ITEM.height = 2
 ITEM.iconCam = {

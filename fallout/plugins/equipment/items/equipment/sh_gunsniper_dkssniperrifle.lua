@@ -1,6 +1,8 @@
 ITEM.name = "DKS-501 Sniper Rifle"
 ITEM.desc = "A scoped high powered rifle chambered in .308, with a long weighted barrel."
 ITEM.model = "models/halokiller38/fallout/weapons/sniperrifles/sniperrifle.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/sniperrifles/bm_sniperriflecarbonfiber.mdl"
+
 ITEM.width = 5
 ITEM.height = 2
 ITEM.iconCam = {

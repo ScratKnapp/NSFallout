@@ -1,6 +1,8 @@
 ITEM.name = ".44 Magnum"
 ITEM.desc = "A .44 magnum double-action revolver with a swing out cylinder."
 ITEM.model = "models/weapons/tfa_fallout/w_fallout_44_magnum.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/pistols/bm_44magnumrevolver.mdl"
+
 ITEM.width = 2
 ITEM.height = 2
 ITEM.iconCam = {

@@ -1,5 +1,5 @@
-ITEM.name = "NCR Salvaged Power Armor"
-ITEM.desc = "A set of lightened, modified T-45d power armor which has had the joint servos removed to allow anyone to wear without training."
+ITEM.name = "Salvaged Power Armor"
+ITEM.desc = "A set of lightened, modified T-45d power armor which has had the joint servos and some plating removed to allow anyone to wear without training."
 ITEM.model = "models/fallout/apparel/power_armor.mdl"
 ITEM.width = 2
 ITEM.height = 2
@@ -11,10 +11,14 @@ ITEM.iconCam = {
 	outlineColor = Color(15, 250, 0),
 }
 ITEM.price = 5000
-ITEM.durability = 5
+ITEM.durability = 20
 
 ITEM.armor = 30
+ITEM.evasion = -40
 
+ITEM.reqStats = {
+  ["str"] = 8,
+}
 ITEM.upgradeSlots = {
 ["Inserts"] = true,
 
@@ -26,6 +30,4 @@ ITEM.res = { --percentage based armor
 }
 ITEM.specialSlot = "Body" --what slot it goes in
 ITEM.skill = { --gives the player stats on equip
-  ["evasion"] = -10,
-
 }

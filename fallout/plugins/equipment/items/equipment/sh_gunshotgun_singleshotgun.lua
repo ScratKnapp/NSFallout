@@ -1,6 +1,8 @@
 ITEM.name = "Single Shotgun"
 ITEM.desc = "A single barrel shotgun designed with a break-action to load each shell."
 ITEM.model = "models/halokiller38/fallout/weapons/rifles/scattergun.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/rifles/bm_scattergun.mdl"
+
 ITEM.width = 4
 ITEM.height = 2
 ITEM.iconCam = {

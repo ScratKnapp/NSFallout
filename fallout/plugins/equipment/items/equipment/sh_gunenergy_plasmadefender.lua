@@ -1,6 +1,8 @@
 ITEM.name = "Plasma Defender"
 ITEM.desc = "An advanced prototype plasma pistol designed to fire plasma at a higher rate of fire with less spread than other plasma pistols."
 ITEM.model = "models/halokiller38/fallout/weapons/plasma weapons/plasmadefender.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/plasma weapons/bm_plasmadefender.mdl"
+
 ITEM.width = 2
 ITEM.height = 2
 ITEM.iconCam = {

@@ -1,6 +1,8 @@
 ITEM.name = "12.7mm SMG"
 ITEM.desc = "A bulky 12.7mm submachine gun."
 ITEM.model = "models/halokiller38/fallout/weapons/smgs/127smg.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/smgs/bm_127smg.mdl"
+
 ITEM.width = 3
 ITEM.height = 2
 ITEM.iconCam = {

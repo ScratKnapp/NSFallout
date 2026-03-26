@@ -1,21 +1,23 @@
-ITEM.name = "Ranger Combat Armor Vest"
-ITEM.desc = "An armored pre-war riot armor vest repurposed for Texas rangers."
-ITEM.model = "models/thespireroleplay/items/combatranger_go.mdl"
+ITEM.name = "Trench Raider Armor"
+ITEM.desc = "A set of heavy steel plates layered over leather padding to provide the heaviest amount of armor plating possible outside of flat out power armor."
+ITEM.model = "models/thespireroleplay/items/clothes/group106.mdl"
 ITEM.width = 2
 ITEM.height = 2
 ITEM.iconCam = {
-	pos = Vector(177.21347045898, 148.60562133789, 107),
-	ang = Angle(25, 220, 0),
-	fov = 4.6802378562107,
+	pos = Vector(-200, 0, 1),
+	ang = Angle(0, -0, 0),
+	fov = 8,
 	outline = true,
 	outlineColor = Color(15, 250, 0),
 }
 ITEM.price = 4000
-ITEM.durability = 14
+ITEM.durability = 18
 
 ITEM.armor = 25
+ITEM.evasion = -35
+
 ITEM.reqStats = {
-  ["str"] = 6,
+  ["str"] = 7,
 }
 ITEM.upgradeSlots = {
 ["Inserts"] = true,

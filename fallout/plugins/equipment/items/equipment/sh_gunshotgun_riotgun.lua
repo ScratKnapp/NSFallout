@@ -1,6 +1,8 @@
 ITEM.name = "M37 Riot Shotgun"
 ITEM.desc = "A drum mag fed, semi-automatic shotgun."
 ITEM.model = "models/weapons/tfa_fallout/w_fallout_riot_shotgun.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/shotguns/bm_riotshotgun.mdl"
+
 ITEM.width = 4
 ITEM.height = 2
 ITEM.iconCam = {

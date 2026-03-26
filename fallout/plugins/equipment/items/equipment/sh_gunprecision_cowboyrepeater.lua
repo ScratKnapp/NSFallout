@@ -1,6 +1,8 @@
 ITEM.name = "Cowboy Repeater"
 ITEM.desc = "A lever action rifle designed to fire .357 magnum rounds."
 ITEM.model = "models/halokiller38/fallout/weapons/rifles/cowboyrepeater.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/rifles/bm_cowboyrepeater.mdl"
+
 ITEM.width = 4
 ITEM.height = 2
 ITEM.iconCam = {

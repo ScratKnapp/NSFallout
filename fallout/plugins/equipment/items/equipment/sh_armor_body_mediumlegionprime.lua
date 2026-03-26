@@ -1,5 +1,5 @@
-ITEM.name = "Legion Prime Armor"
-ITEM.desc = "A reinforced set of armor meant for Legionaries that have proved they can survive in combat."
+ITEM.name = "Legion Veteran Armor Vest"
+ITEM.desc = "A reinforced set of armor meant for Legionaries that have proven they can survive in combat."
 ITEM.model = "models/thespireroleplay/items/clothes/group057.mdl"
 ITEM.width = 2
 ITEM.height = 2
@@ -11,10 +11,12 @@ ITEM.iconCam = {
 	outlineColor = Color(15, 250, 0),
 }
 ITEM.price = 400
-ITEM.durability = 5
+ITEM.durability = 11
 
 ITEM.armor = 16
-
+ITEM.reqStats = {
+  ["str"] = 4,
+}
 ITEM.upgradeSlots = {
 ["Inserts"] = true,
 

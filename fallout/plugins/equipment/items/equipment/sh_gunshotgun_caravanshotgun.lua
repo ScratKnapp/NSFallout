@@ -1,6 +1,8 @@
 ITEM.name = "Caravan Shotgun"
 ITEM.desc = "A double barrel shotgun designed with a break-action and barrels mounted in an over-and-under configuration."
 ITEM.model = "models/weapons/tfa_fallout/w_fallout_caravan_shotgun.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/shotguns/bm_caravanshotgun.mdl"
+
 ITEM.width = 4
 ITEM.height = 2
 ITEM.iconCam = {

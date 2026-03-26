@@ -1,6 +1,8 @@
 ITEM.name = "Combat Shotgun"
 ITEM.desc = "A semi-automatic shotgun designed for close range combat."
 ITEM.model = "models/halokiller38/fallout/weapons/shotguns/combatshotgun.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/shotguns/bm_combatshotgun.mdl"
+
 ITEM.width = 4
 ITEM.height = 2
 ITEM.iconCam = {

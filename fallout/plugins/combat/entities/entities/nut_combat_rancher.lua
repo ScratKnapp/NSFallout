@@ -1,21 +1,60 @@
 ENT.Type = "nextbot"
 ENT.Base = "nut_combat"
 ENT.PrintName = "Rancher"
-ENT.Category = "NutScript - Combat (Townspeople)"
+ENT.Category = "NutScript - Combat (Wastelanders)"
 ENT.Spawnable = true
 ENT.AdminOnly = true
 
 ENT.name = "Rancher"
 
 ENT.models = {
-	"models/player/h&h/western/wastelander03/male01.mdl",
-	"models/player/h&h/western/wastelander03/ghoul01.mdl",
-	"models/old_jimmy/western/cowboy_female3_05.mdl",
-	"models/old_jimmy/western/cowboy_female3_04.mdl",
-	"models/old_jimmy/western/cowboy_female2_03.mdl",
-	"models/old_jimmy/western/cowboy_female2_03.mdl",
-	"models/old_jimmy/western/cowboy_female2_00.mdl",
-	"models/old_jimmy/western/cowboy_male3_01.mdl",
+	"models/thespireroleplay/humans/group004/female_01.mdl",
+	"models/thespireroleplay/humans/group004/female_01g.mdl",
+	"models/thespireroleplay/humans/group004/female_02.mdl",
+	"models/thespireroleplay/humans/group004/female_03.mdl",
+	"models/thespireroleplay/humans/group004/female_04.mdl",
+	"models/thespireroleplay/humans/group004/female_05.mdl",
+	"models/thespireroleplay/humans/group004/female_06.mdl",
+	"models/thespireroleplay/humans/group004/female_07.mdl",
+	"models/thespireroleplay/humans/group004/female_08.mdl",
+	"models/thespireroleplay/humans/group004/female_09.mdl",
+	"models/thespireroleplay/humans/group004/female_10.mdl",
+	"models/thespireroleplay/humans/group004/female_11.mdl",
+	"models/thespireroleplay/humans/group004/female_12.mdl",
+	"models/thespireroleplay/humans/group004/male_01.mdl",
+	"models/thespireroleplay/humans/group004/male_01g.mdl",
+	"models/thespireroleplay/humans/group004/male_02.mdl",
+	"models/thespireroleplay/humans/group004/male_03.mdl",
+	"models/thespireroleplay/humans/group004/male_04.mdl",
+	"models/thespireroleplay/humans/group004/male_05.mdl",
+	"models/thespireroleplay/humans/group004/male_06.mdl",
+	"models/thespireroleplay/humans/group004/male_07.mdl",
+	"models/thespireroleplay/humans/group004/male_08.mdl",
+	"models/thespireroleplay/humans/group004/male_09.mdl",
+	"models/thespireroleplay/humans/group004/male_10.mdl",
+	"models/kaesar/falloutnewvegas/brahmin/brahmin.mdl",
+	"models/kaesar/falloutnewvegas/brahmin/brahminf.mdl",
+	"models/kaesar/falloutnewvegas/merc_grunt/merc_grunt.mdl",
+	"models/kaesar/falloutnewvegas/merc_grunt/merc_gruntf.mdl",
+	"models/kaesar/falloutnewvegas/powder/powder.mdl",
+	"models/kaesar/falloutnewvegas/powder/powderf.mdl",
+	"models/kaesar/falloutnewvegas/robcojumpsuit/robcojumpsuit.mdl",
+	"models/kaesar/falloutnewvegas/robcojumpsuit/robcojumpsuitf.mdl",
+	"models/kaesar/falloutnewvegas/settler/settler.mdl",
+	"models/kaesar/falloutnewvegas/settler/settlerf.mdl",
+	"models/kaesar/falloutnewvegas/slaverag/slaverag.mdl",
+	"models/kaesar/falloutnewvegas/slaverag/slaveragf.mdl",
+	"models/kaesar/falloutnewvegas/wanderer/wanderer.mdl",
+	"models/kaesar/falloutnewvegas/wanderer/wandererf.mdl",
+	"models/thespireroleplay/humans/group060/male_14.mdl",
+	"models/thespireroleplay/humans/group061/female_11.mdl",
+	"models/thespireroleplay/humans/group061/male_18.mdl",
+	"models/thespireroleplay/humans/group060/female_05.mdl",
+	"models/kaesar/falloutnewvegas/caravaneer/caravaneer.mdl",
+	"models/kaesar/falloutnewvegas/caravaneer/caravaneerf.mdl",
+	"models/kaesar/falloutnewvegas/dirtyprewar/dirtyprewar.mdl",
+	"models/kaesar/falloutnewvegas/fieldhand/fieldhand.mdl",
+	"models/kaesar/falloutnewvegas/fieldhand/fieldhandf.mdl",
 
 }
 ENT.hp = 100

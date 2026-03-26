@@ -1,6 +1,8 @@
 ITEM.name = "9mm SMG"
 ITEM.desc = "A small submachinegun developed to utilize stamped and cheaper metals in the post-war wastes, based on the M3 Submachine Gun."
 ITEM.model = "models/khrcw2/doipack/w_m3greasegun.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/smgs/bm_9mmsmg.mdl"
+
 ITEM.width = 2
 ITEM.height = 2
 ITEM.iconCam = {

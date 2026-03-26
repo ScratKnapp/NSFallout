@@ -8,7 +8,7 @@ ENT.AdminOnly = true
 ENT.name = "Supermutant Skirmisher"
 
 ENT.model = "models/cpthazama/fallout/supermutant_light.mdl"
-ENT.hp = 220
+ENT.hp = 320
 ENT.dmg = 22
 ENT.dmgT = ".45 Auto"
 ENT.dmg = {
@@ -16,6 +16,27 @@ ENT.dmg = {
 }
 ENT.accuracy = 10
 ENT.evasion = -5
+
+ENT.weapons = {
+	"gunpistol_9mmpistol",
+	"gunpistol_10mmpistol",
+	"gunpistol_22lrpistol",
+	"gunrevolver_32revolver",
+	"gunpistol_chinesepistol",
+	"gunprecision_varmintrifle",
+	"gunshotgun_caravanshotgun",
+	"gunshotgun_singleshotgun",
+	"gunsmg_9mmsmg",
+	"gunsmg_22lrsmg",
+	"melee1h_combatknife",
+	"melee1h_leadpipe",
+	"melee1h_machete",
+	"gunenergy_lasermusket",
+	"gunenergy_laserpistol",
+	"gunsmg_10mmsmg",
+	"melee2h_fireaxe",
+}
+
 
 ENT.armor = {
 	["Head"] = 10,
@@ -27,12 +48,12 @@ ENT.armor = {
 }
 
 ENT.armorBreak = {
-	["Head"] = 10,
-	["Body"] = 10,
-	["Left Arm"] = 10,
-	["Right Arm"] = 10,
-	["Left Leg"] = 10,
-	["Right Leg"] = 10,
+	["Head"] = 3,
+	["Body"] = 3,
+	["Left Arm"] = 3,
+	["Right Arm"] = 3,
+	["Left Leg"] = 3,
+	["Right Leg"] = 3,
 }
 
 --all attributes

@@ -1,6 +1,8 @@
 ITEM.name = "Hunting Rifle"
 ITEM.desc = "A wooden furnished, bolt action .308 rifle."
 ITEM.model = "models/weapons/tfa_fallout/w_fallout_hunting_rifle.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/rifles/bm_huntingrifle.mdl"
+
 ITEM.width = 4
 ITEM.height = 2
 ITEM.iconCam = {

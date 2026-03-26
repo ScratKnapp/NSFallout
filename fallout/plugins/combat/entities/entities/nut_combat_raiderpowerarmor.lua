@@ -15,6 +15,17 @@ ENT.dmg = {
 ENT.accuracy = 10
 ENT.evasion = 5
 
+ENT.weapons = {
+	"gunrifle_chinesear",
+	"gunrifle_assaultrifler91",
+	"gunrifle_automaticrifle",
+	"gunshotgun_riotgun",
+	"launcher_missilelauncher",
+	"launcher_grenadelauncher",
+	"melee2h_bumpersword",
+	"melee2h_fireaxe",
+}
+
 ENT.armor = {
 	["Head"] = 30,
 	["Body"] = 30,

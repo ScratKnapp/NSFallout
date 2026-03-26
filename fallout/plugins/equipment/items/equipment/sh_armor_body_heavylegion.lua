@@ -1,19 +1,21 @@
-ITEM.name = "Ranger Combat Armor Vest"
-ITEM.desc = "An armored pre-war riot armor vest repurposed for Texas rangers."
-ITEM.model = "models/thespireroleplay/items/combatranger_go.mdl"
+ITEM.name = "Legion Praetor Armor"
+ITEM.desc = "A set of treated and fashioned legion armor with forged plating and pads, as well as a short red cape and cowl.."
+ITEM.model = "models/thespireroleplay/items/clothes/group106.mdl"
 ITEM.width = 2
 ITEM.height = 2
 ITEM.iconCam = {
-	pos = Vector(177.21347045898, 148.60562133789, 107),
-	ang = Angle(25, 220, 0),
-	fov = 4.6802378562107,
+	pos = Vector(-200, 0, 1),
+	ang = Angle(0, -0, 0),
+	fov = 8,
 	outline = true,
 	outlineColor = Color(15, 250, 0),
 }
 ITEM.price = 4000
-ITEM.durability = 14
+ITEM.durability = 18
 
-ITEM.armor = 25
+ITEM.armor = 21
+ITEM.evasion = -30
+
 ITEM.reqStats = {
   ["str"] = 6,
 }

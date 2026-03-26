@@ -8,12 +8,25 @@ ENT.AdminOnly = true
 ENT.name = "Supermutant Captain"
 
 ENT.model = "models/cpthazama/fallout/supermutant_captain.mdl"
-ENT.hp = 250
+ENT.hp = 350
 ENT.dmg = {
 	["5.56"] = 30,
 }
 ENT.accuracy = 20
 ENT.evasion = -5
+
+ENT.weapons = {
+	"gunshotgun_combatshotgun",
+	"gunrifle_chinesear",
+	"gunrifle_assaultrifler91",
+	"gunrifle_automaticrifle",
+	"gunshotgun_riotgun",
+	"gunsniper_dkssniperrifle",
+	"launcher_missilelauncher",
+	"launcher_grenadelauncher",
+	"melee2h_bumpersword",
+	"melee2h_fireaxe",
+}
 
 ENT.armor = {
 	["Head"] = 20,
@@ -25,12 +38,12 @@ ENT.armor = {
 }
 
 ENT.armorBreak = {
-	["Head"] = 10,
-	["Body"] = 10,
-	["Left Arm"] = 10,
-	["Right Arm"] = 10,
-	["Left Leg"] = 10,
-	["Right Leg"] = 10,
+	["Head"] = 4,
+	["Body"] = 4,
+	["Left Arm"] = 4,
+	["Right Arm"] = 4,
+	["Left Leg"] = 4,
+	["Right Leg"] = 4,
 }
 
 --all attributes

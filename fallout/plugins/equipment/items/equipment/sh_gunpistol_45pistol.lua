@@ -1,6 +1,8 @@
 ITEM.name = ".45 Auto Pistol"
 ITEM.desc = "A single action, semi-automatic handgun."
 ITEM.model = "models/halokiller38/fallout/weapons/pistols/45pistol.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/pistols/bm_45pistol.mdl"
+
 ITEM.width = 2
 ITEM.height = 2
 ITEM.iconCam = {

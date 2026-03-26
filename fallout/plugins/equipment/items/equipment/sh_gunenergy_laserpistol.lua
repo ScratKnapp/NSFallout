@@ -1,6 +1,8 @@
 ITEM.name = "AEP-9 Laser Pistol"
 ITEM.desc = "The AER-9 laser gun, modified to a pistol form with a lack of stock and a short barrel."
 ITEM.model = "models/halokiller38/fallout/weapons/energy weapons/laserpistol.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/energy weapons/bm_laserpistol.mdl"
+
 ITEM.width = 2
 ITEM.height = 2
 ITEM.iconCam = {

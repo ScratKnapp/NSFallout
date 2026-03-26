@@ -1,6 +1,8 @@
 ITEM.name = "Trail Carbine"
 ITEM.desc = "A lever action rifle designed to fire .44 magnum rounds."
 ITEM.model = "models/weapons/tfa_fallout/w_fallout_trail_carbine.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/rifles/bm_trailcarbine.mdl"
+
 ITEM.width = 4
 ITEM.height = 2
 ITEM.iconCam = {

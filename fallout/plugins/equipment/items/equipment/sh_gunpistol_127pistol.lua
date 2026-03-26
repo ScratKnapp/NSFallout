@@ -1,6 +1,8 @@
 ITEM.name = "12.7mm Pistol"
 ITEM.desc = "The Sig-Saur 14mm Autopistol is an old pre-war firearm that has a more powerful round, but is generally an uncommon firearm in the wastes."
 ITEM.model = "models/weapons/tfa_fallout/w_fallout_12mm_pistol.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/pistols/bm_127mmpistol.mdl"
+
 ITEM.width = 2
 ITEM.height = 2
 ITEM.iconCam = {

@@ -11,10 +11,14 @@ ITEM.iconCam = {
 	outlineColor = Color(15, 250, 0),
 }
 ITEM.price = 500
-ITEM.durability = 5
+ITEM.durability = 15
 
-ITEM.armor = 15
+ITEM.armor = 18
+ITEM.evasion = -30
 
+ITEM.reqStats = {
+  ["str"] = 5,
+}
 ITEM.upgradeSlots = {
 ["Inserts"] = true,
 

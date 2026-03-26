@@ -1,6 +1,8 @@
 ITEM.name = ".45 Submachinegun"
 ITEM.desc = "A .45 Submachinegun popularly utilized in New Reno and criminals in larger settlements."
 ITEM.model = "models/khrcw2/doipack/w_thompsonm1a1.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/smgs/bm_45smg.mdl"
+
 ITEM.width = 3
 ITEM.height = 2
 ITEM.iconCam = {

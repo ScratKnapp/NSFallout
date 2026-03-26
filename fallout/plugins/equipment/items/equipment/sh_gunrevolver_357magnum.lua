@@ -1,6 +1,8 @@
 ITEM.name = ".357 Magnum"
 ITEM.desc = "A .357 magnum double-action revolver with a swing out cylinder."
 ITEM.model = "models/weapons/tfa_fallout/w_fallout_357_revolver.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/pistols/bm_357revolver.mdl"
+
 ITEM.width = 2
 ITEM.height = 2
 ITEM.iconCam = {

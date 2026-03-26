@@ -1,6 +1,8 @@
 ITEM.name = "Fireaxe"
 ITEM.desc = "A long wooden handled rescue axe for a sharpened front blade and sharp pick point."
 ITEM.model = "models/halokiller38/fallout/weapons/melee/fireaxe.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/melee/bm_fireaxe.mdl"
+
 ITEM.width = 3
 ITEM.height = 1
 ITEM.iconCam = {

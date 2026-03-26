@@ -1,6 +1,8 @@
 ITEM.name = "Hunting Shotgun"
 ITEM.desc = "A bottom-loading pump-action shotrgun built for greater range and power."
 ITEM.model = "models/halokiller38/fallout/weapons/shotguns/huntingshotgun.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/shotguns/bm_huntingshotgunextchoke.mdl"
+
 ITEM.width = 4
 ITEM.height = 2
 ITEM.iconCam = {

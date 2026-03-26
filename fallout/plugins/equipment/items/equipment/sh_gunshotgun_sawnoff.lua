@@ -1,6 +1,8 @@
 ITEM.name = "Sawn Off Shotgun"
 ITEM.desc = "A sawn off shotgun designed to fire 12 gauge shells."
 ITEM.model = "models/halokiller38/fallout/weapons/shotguns/sawedoffshotgun.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/shotguns/bm_sawedoffshotgun.mdl"
+
 ITEM.width = 4
 ITEM.height = 2
 ITEM.iconCam = {

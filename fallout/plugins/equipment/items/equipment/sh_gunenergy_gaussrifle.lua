@@ -1,6 +1,8 @@
 ITEM.name = "Gauss Rifle"
 ITEM.desc = "A prototype rifle set with capacitors and wiring to charge and release a 2mm EC charge and launch a projectile at extremely high speed."
 ITEM.model = "models/halokiller38/fallout/weapons/energy weapons/gaussrifle.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/energy weapons/bm_gaussrifle.mdl"
+
 ITEM.width = 4
 ITEM.height = 2
 ITEM.iconCam = {

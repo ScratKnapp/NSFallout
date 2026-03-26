@@ -20,6 +20,22 @@ ENT.dmg = {
 ENT.accuracy = 40
 ENT.evasion = 14
 
+ENT.weapons = {
+	"gunshotgun_combatshotgun",
+	"gunrifle_chinesear",
+	"gunrifle_assaultrifler91",
+	"gunrifle_automaticrifle",
+	"gunenergy_plasmadefender",
+	"gunenergy_laserrcw",
+	"gunenergy_plasmarifle",
+	"gunshotgun_riotgun",
+	"gunsniper_dkssniperrifle",
+	"launcher_missilelauncher",
+	"launcher_grenadelauncher",
+	"melee2h_bumpersword",
+	"melee2h_fireaxe",
+	"melee1h_shishkebab",
+}
 ENT.armor = {
 	["Head"] = 20,
 	["Body"] = 20,
@@ -30,12 +46,12 @@ ENT.armor = {
 }
 
 ENT.armorBreak = {
-	["Head"] = 10,
-	["Body"] = 10,
-	["Left Arm"] = 10,
-	["Right Arm"] = 10,
-	["Left Leg"] = 10,
-	["Right Leg"] = 10,
+	["Head"] = 5,
+	["Body"] = 5,
+	["Left Arm"] = 5,
+	["Right Arm"] = 5,
+	["Left Leg"] = 5,
+	["Right Leg"] = 5,
 }
 
 --all attributes

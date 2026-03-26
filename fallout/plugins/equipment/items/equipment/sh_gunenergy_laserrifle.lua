@@ -1,6 +1,8 @@
 ITEM.name = "AER-9 Laser Rifle"
 ITEM.desc = "The AER-9 laser gun houses a crystal array in titanium to fire energy beams powered by microfusion cells."
 ITEM.model = "models/halokiller38/fallout/weapons/energy weapons/laserrifle.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/energy weapons/bm_laserrifle.mdl"
+
 ITEM.width = 4
 ITEM.height = 2
 ITEM.iconCam = {

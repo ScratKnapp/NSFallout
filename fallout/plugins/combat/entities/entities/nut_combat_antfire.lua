@@ -17,22 +17,22 @@ ENT.accuracy = 10
 ENT.evasion = 10
 
 ENT.armor = {
+	["Head"] = 5,
+	["Body"] = 5,
+	["Left Arm"] = 5,
+	["Right Arm"] = 5,
+	["Left Leg"] = 5,
+	["Right Leg"] = 5,
+}
+
+--the amount of hits the part can take before armor is broken (reduced to 0)
+ENT.armorBreak = {
 	["Head"] = 10,
 	["Body"] = 10,
 	["Left Arm"] = 10,
 	["Right Arm"] = 10,
 	["Left Leg"] = 10,
 	["Right Leg"] = 10,
-}
-
---the amount of hits the part can take before armor is broken (reduced to 0)
-ENT.armorBreak = {
-	["Head"] = 30,
-	["Body"] = 30,
-	["Left Arm"] = 30,
-	["Right Arm"] = 30,
-	["Left Leg"] = 30,
-	["Right Leg"] = 30,
 }
 
 --all attributes

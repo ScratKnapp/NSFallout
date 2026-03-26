@@ -8,12 +8,25 @@ ENT.AdminOnly = true
 ENT.name = "Supermutant Overlord"
 
 ENT.model = "models/cpthazama/fallout/supermutant_overlord.mdl"
-ENT.hp = 300
+ENT.hp = 400
 ENT.dmg = {
 	["Laser"] = 40,
 }
 ENT.accuracy = 20
 ENT.evasion = 0
+
+ENT.weapons = {
+	"gunshotgun_combatshotgun",
+	"gunrifle_chinesear",
+	"gunrifle_assaultrifler91",
+	"gunrifle_automaticrifle",
+	"gunshotgun_riotgun",
+	"gunsniper_dkssniperrifle",
+	"launcher_missilelauncher",
+	"launcher_grenadelauncher",
+	"melee2h_bumpersword",
+	"melee2h_fireaxe",
+}
 
 ENT.armor = {
 	["Head"] = 30,
@@ -25,12 +38,12 @@ ENT.armor = {
 }
 
 ENT.armorBreak = {
-	["Head"] = 10,
-	["Body"] = 10,
-	["Left Arm"] = 10,
-	["Right Arm"] = 10,
-	["Left Leg"] = 10,
-	["Right Leg"] = 10,
+	["Head"] = 5,
+	["Body"] = 5,
+	["Left Arm"] = 5,
+	["Right Arm"] = 5,
+	["Left Leg"] = 5,
+	["Right Leg"] = 3,
 }
 
 --all attributes

@@ -1,5 +1,5 @@
 ITEM.name = "Combat Armor Vest"
-ITEM.desc = "An advanced set of Combat Armor designed for the US Army."
+ITEM.desc = "An advanced set of Combat Armor designed pre-war for the US Army."
 ITEM.model = "models/thespireroleplay/items/clothes/group053.mdl"
 ITEM.width = 2
 ITEM.height = 2
@@ -11,10 +11,12 @@ ITEM.iconCam = {
 	outlineColor = Color(15, 250, 0),
 }
 ITEM.price = 3000
-ITEM.durability = 5
+ITEM.durability = 11
 
-ITEM.armor = 25
-
+ITEM.armor = 16
+ITEM.reqStats = {
+  ["str"] = 4,
+}
 ITEM.upgradeSlots = {
 ["Inserts"] = true,
 

@@ -1,6 +1,8 @@
 ITEM.name = "Lever Action Shotgun"
 ITEM.desc = "A lever action shotgun designed to fire 12 gauge shells."
 ITEM.model = "models/halokiller38/fallout/weapons/rifles/leveractionrifle.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/shotguns/bm_leveractionshotgun.mdl"
+
 ITEM.width = 4
 ITEM.height = 2
 ITEM.iconCam = {

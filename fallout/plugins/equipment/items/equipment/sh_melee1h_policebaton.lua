@@ -1,6 +1,8 @@
 ITEM.name = "Police Baton"
 ITEM.desc = "A collapsible baton that can be retracted or extended at the press of a button."
 ITEM.model = "models/halokiller38/fallout/weapons/melee/baton.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/melee/bm_baton.mdl"
+
 ITEM.width = 3
 ITEM.height = 1
 ITEM.iconCam = {

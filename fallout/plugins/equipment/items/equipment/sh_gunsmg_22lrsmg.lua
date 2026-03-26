@@ -1,6 +1,8 @@
 ITEM.name = ".22LR SMG"
 ITEM.desc = "A pan-magazine fed, internally suppressed submachine gun chambered in .22LR."
 ITEM.model = "models/halokiller38/fallout/weapons/smgs/22smg.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/smgs/bm_22smgext.mdl"
+
 ITEM.width = 3
 ITEM.height = 2
 ITEM.iconCam = {

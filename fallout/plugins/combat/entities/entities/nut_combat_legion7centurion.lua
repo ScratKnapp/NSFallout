@@ -30,6 +30,15 @@ ENT.hp = 200
 ENT.accuracy = 40
 ENT.evasion = 5
 
+ENT.weapons = {
+	"gunrevolver_huntingrevolver",
+	"gunsmg_127smg",
+	"gunsniper_dkssniperrifle",
+	"gunrifle_infiltrator",
+	"melee2h_bumpersword",
+
+}
+
 ENT.dmg = {
 	["Slash"] = 25
 }

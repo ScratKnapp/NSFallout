@@ -8,12 +8,25 @@ ENT.AdminOnly = true
 ENT.name = "Nightkin"
 
 ENT.model = "models/cpthazama/fallout/supermutant_nightkin.mdl"
-ENT.hp = 250
+ENT.hp = 450
 ENT.dmg = {
 	["12 Gauge"] = 45,
 }
 ENT.accuracy = 20
 ENT.evasion = -5
+
+ENT.weapons = {
+	"gunshotgun_combatshotgun",
+	"gunrifle_chinesear",
+	"gunrifle_assaultrifler91",
+	"gunrifle_automaticrifle",
+	"gunshotgun_riotgun",
+	"gunsniper_dkssniperrifle",
+	"launcher_missilelauncher",
+	"launcher_grenadelauncher",
+	"melee2h_bumpersword",
+	"melee2h_fireaxe",
+}
 
 ENT.armor = {
 	["Head"] = 20,
@@ -25,12 +38,12 @@ ENT.armor = {
 }
 
 ENT.armorBreak = {
-	["Head"] = 10,
-	["Body"] = 10,
-	["Left Arm"] = 10,
-	["Right Arm"] = 10,
-	["Left Leg"] = 10,
-	["Right Leg"] = 10,
+	["Head"] = 3,
+	["Body"] = 3,
+	["Left Arm"] = 3,
+	["Right Arm"] = 3,
+	["Left Leg"] = 3,
+	["Right Leg"] = 3,
 }
 
 

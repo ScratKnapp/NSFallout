@@ -1,6 +1,8 @@
 ITEM.name = "Hunting Revolver"
 ITEM.desc = "A large, double-action revolver with a cylinder holding .45-70 Gov't rounds."
 ITEM.model = "models/weapons/tfa_fallout/w_fallout_hunting_revolver.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/pistols/bm_huntingrevolver.mdl"
+
 ITEM.width = 2
 ITEM.height = 2
 ITEM.iconCam = {

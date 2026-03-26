@@ -1,7 +1,7 @@
 ENT.Type = "nextbot"
 ENT.Base = "nut_combat"
 ENT.PrintName = "Local Militia"
-ENT.Category = "NutScript - Combat (Townspeople)"
+ENT.Category = "NutScript - Combat (Wastelanders)"
 ENT.Spawnable = true
 ENT.AdminOnly = true
 
@@ -21,6 +21,13 @@ ENT.models = {
     "models/thespireroleplay/humans/group052/female_10.mdl",
     "models/thespireroleplay/humans/group052/male_15.mdl",
     "models/thespireroleplay/humans/group052/male_10.mdl",
+    "models/kaesar/falloutnewvegas/sheriff/sheriff.mdl",
+    "models/kaesar/falloutnewvegas/sheriff/sherifff.mdl",
+    "models/kaesar/falloutnewvegas/merc_grunt/merc_grunt.mdl",
+    "models/kaesar/falloutnewvegas/merc_grunt/merc_gruntf.mdl",
+    "models/kaesar/falloutnewvegas/reinforced/reinforced.mdl",
+    "models/kaesar/falloutnewvegas/wanderer/wanderer.mdl",
+    "models/kaesar/falloutnewvegas/wanderer/wandererf.mdl",
 
 
 }
@@ -31,6 +38,15 @@ ENT.dmg = {
 }
 ENT.accuracy = 10
 ENT.evasion = 8
+
+ENT.weapons = {
+	"gunshotgun_caravanshotgun",
+	"gunsmg_9mmsmg",
+	"gunrevolver_357magnum",
+	"gunprecision_cowboyrepeater",
+	"gunprecision_trailcarbine",
+
+}
 
 ENT.armor = {
 	["Head"] = 0,

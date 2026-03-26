@@ -23,6 +23,13 @@ ENT.models = {
 	"models/gore/nomads/nomad_scavenger.mdl",
 	"models/gore/nomads/combatarmor_female.mdl",
 	"models/gore/nomads/combatarmor_male.mdl",
+    "models/kaesar/falloutnewvegas/sheriff/sheriff.mdl",
+    "models/kaesar/falloutnewvegas/sheriff/sherifff.mdl",
+    "models/kaesar/falloutnewvegas/merc_grunt/merc_grunt.mdl",
+    "models/kaesar/falloutnewvegas/merc_grunt/merc_gruntf.mdl",
+    "models/kaesar/falloutnewvegas/reinforced/reinforced.mdl",
+    "models/kaesar/falloutnewvegas/wanderer/wanderer.mdl",
+    "models/kaesar/falloutnewvegas/wanderer/wandererf.mdl",
 
 
 }
@@ -33,6 +40,15 @@ ENT.dmg = {
 }
 ENT.accuracy = 10
 ENT.evasion = 5
+
+ENT.weapons = {
+	"gunshotgun_caravanshotgun",
+	"gunsmg_9mmsmg",
+	"gunrevolver_357magnum",
+	"gunprecision_cowboyrepeater",
+	"gunprecision_trailcarbine",
+
+}
 
 ENT.armor = {
 	["Head"] = 25,

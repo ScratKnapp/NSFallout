@@ -32,6 +32,29 @@ ENT.models = {
 	"models/thespireroleplay/humans/group004/male_08.mdl",
 	"models/thespireroleplay/humans/group004/male_09.mdl",
 	"models/thespireroleplay/humans/group004/male_10.mdl",
+	"models/kaesar/falloutnewvegas/brahmin/brahmin.mdl",
+	"models/kaesar/falloutnewvegas/brahmin/brahminf.mdl",
+	"models/kaesar/falloutnewvegas/merc_grunt/merc_grunt.mdl",
+	"models/kaesar/falloutnewvegas/merc_grunt/merc_gruntf.mdl",
+	"models/kaesar/falloutnewvegas/powder/powder.mdl",
+	"models/kaesar/falloutnewvegas/powder/powderf.mdl",
+	"models/kaesar/falloutnewvegas/robcojumpsuit/robcojumpsuit.mdl",
+	"models/kaesar/falloutnewvegas/robcojumpsuit/robcojumpsuitf.mdl",
+	"models/kaesar/falloutnewvegas/settler/settler.mdl",
+	"models/kaesar/falloutnewvegas/settler/settlerf.mdl",
+	"models/kaesar/falloutnewvegas/slaverag/slaverag.mdl",
+	"models/kaesar/falloutnewvegas/slaverag/slaveragf.mdl",
+	"models/kaesar/falloutnewvegas/wanderer/wanderer.mdl",
+	"models/kaesar/falloutnewvegas/wanderer/wandererf.mdl",
+	"models/thespireroleplay/humans/group060/male_14.mdl",
+	"models/thespireroleplay/humans/group061/female_11.mdl",
+	"models/thespireroleplay/humans/group061/male_18.mdl",
+	"models/thespireroleplay/humans/group060/female_05.mdl",
+	"models/kaesar/falloutnewvegas/caravaneer/caravaneer.mdl",
+	"models/kaesar/falloutnewvegas/caravaneer/caravaneerf.mdl",
+	"models/kaesar/falloutnewvegas/dirtyprewar/dirtyprewar.mdl",
+	"models/kaesar/falloutnewvegas/fieldhand/fieldhand.mdl",
+	"models/kaesar/falloutnewvegas/fieldhand/fieldhandf.mdl",
 
 
 }
@@ -41,6 +64,26 @@ ENT.dmg = {
 }
 ENT.accuracy = 1
 ENT.evasion = 1
+
+
+ENT.weapons = {
+	"gunpistol_9mmpistol",
+	"gunpistol_10mmpistol",
+	"gunpistol_22lrpistol",
+	"gunrevolver_32revolver",
+	"gunpistol_chinesepistol",
+	"gunprecision_varmintrifle",
+	"gunshotgun_caravanshotgun",
+	"gunshotgun_singleshotgun",
+	"gunsmg_9mmsmg",
+	"gunsmg_22lrsmg",
+	"melee1h_combatknife",
+	"melee1h_leadpipe",
+	"melee1h_machete",
+	"gunenergy_lasermusket",
+	"gunenergy_laserpistol",
+	"gunsmg_10mmsmg",
+}
 
 ENT.armor = {
 	["Head"] = 0,

@@ -1,6 +1,7 @@
 ITEM.name = "Laser Musket"
 ITEM.desc = "A homemade laser rifle of electronic parts mounted on a wooden rifle stock."
 ITEM.model = "models/illusion/fwp/w_lasermusket.mdl"
+ITEM.modelCEnt = "models/gun/fallout4/bm_laser_musket.mdl"
 ITEM.width = 4
 ITEM.height = 2
 ITEM.iconCam = {

@@ -38,6 +38,14 @@ ENT.dmg = {
 ENT.accuracy = 15
 ENT.evasion = 5
 
+ENT.weapons = {
+	"gunprecision_servicerifle",
+	"gunprecision_cowboyrepeater",
+	"gunsmg_45smg",
+	"gunshotgun_huntingshotgun",
+
+}
+
 ENT.armor = {
 	["Head"] = 15,
 	["Body"] = 15,
@@ -48,12 +56,12 @@ ENT.armor = {
 }
 
 ENT.armorBreak = {
-	["Head"] = 10,
-	["Body"] = 10,
-	["Left Arm"] = 10,
-	["Right Arm"] = 10,
-	["Left Leg"] = 10,
-	["Right Leg"] = 10,
+	["Head"] = 3,
+	["Body"] = 3,
+	["Left Arm"] = 3,
+	["Right Arm"] = 3,
+	["Left Leg"] = 3,
+	["Right Leg"] = 3,
 }
 
 --all attributes

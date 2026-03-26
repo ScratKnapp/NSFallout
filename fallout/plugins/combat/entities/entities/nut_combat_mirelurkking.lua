@@ -25,12 +25,12 @@ ENT.armor = {
 }
 
 ENT.armorBreak = {
-	["Head"] = 30,
-	["Body"] = 30,
-	["Left Arm"] = 30,
-	["Right Arm"] = 30,
-	["Left Leg"] = 30,
-	["Right Leg"] = 30,
+	["Head"] = 10,
+	["Body"] = 10,
+	["Left Arm"] = 10,
+	["Right Arm"] = 10,
+	["Left Leg"] = 10,
+	["Right Leg"] = 10,
 }
 
 --all attributes

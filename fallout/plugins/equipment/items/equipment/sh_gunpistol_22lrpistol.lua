@@ -1,6 +1,8 @@
 ITEM.name = ".22LR Pistol"
 ITEM.desc = "A small handgun with an integrated suppressor that takes .22LR ammunition."
 ITEM.model = "models/halokiller38/fallout/weapons/pistols/silenced22pistol.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/pistols/bm_silenced22pistol.mdl"
+
 ITEM.width = 2
 ITEM.height = 2
 ITEM.iconCam = {

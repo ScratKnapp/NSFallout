@@ -1,6 +1,8 @@
 ITEM.name = "Bumper Sword"
 ITEM.desc = "A massive two handed blade made out of a sharpened chrome car bumper."
 ITEM.model = "models/halokiller38/fallout/weapons/melee/bumpersword.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/melee/bm_bumpersword.mdl"
+
 ITEM.width = 3
 ITEM.height = 1
 ITEM.iconCam = {

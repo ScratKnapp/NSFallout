@@ -1,6 +1,8 @@
 ITEM.name = "Tribal Spear"
 ITEM.desc = "The most iconic weapon of humanity."
 ITEM.model = "models/props/spear.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/melee/bm_spear.mdl"
+
 ITEM.width = 3
 ITEM.height = 1
 ITEM.iconCam = {

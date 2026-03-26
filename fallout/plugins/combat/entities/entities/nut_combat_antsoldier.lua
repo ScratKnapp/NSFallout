@@ -17,22 +17,22 @@ ENT.evasion = 10
 ENT.modelScale = 0.8
 
 ENT.armor = {
-	["Head"] = 10,
-	["Body"] = 10,
-	["Left Arm"] = 10,
-	["Right Arm"] = 10,
-	["Left Leg"] = 10,
-	["Right Leg"] = 10,
+	["Head"] = 5,
+	["Body"] = 5,
+	["Left Arm"] = 5,
+	["Right Arm"] = 5,
+	["Left Leg"] = 5,
+	["Right Leg"] = 5,
 }
 
 --the amount of hits the part can take before armor is broken (reduced to 0)
 ENT.armorBreak = {
-	["Head"] = 30,
-	["Body"] = 30,
-	["Left Arm"] = 30,
-	["Right Arm"] = 30,
-	["Left Leg"] = 30,
-	["Right Leg"] = 30,
+	["Head"] = 15,
+	["Body"] = 15,
+	["Left Arm"] = 15,
+	["Right Arm"] = 15,
+	["Left Leg"] = 15,
+	["Right Leg"] = 15,
 }
 
 --all attributes

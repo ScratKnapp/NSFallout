@@ -1,6 +1,8 @@
 ITEM.name = "Automatic Rifle"
 ITEM.desc = "A rare pre-war, air cooled automatic rifle from the United States."
 ITEM.model = "models/halokiller38/fallout/weapons/heavy weapons/automaticrifle.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/heavy weapons/bm_automaticrifle.mdl"
+
 ITEM.width = 4
 ITEM.height = 2
 ITEM.iconCam = {

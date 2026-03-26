@@ -1,6 +1,8 @@
 ITEM.name = "Recharger Rifle"
 ITEM.desc = "A self-charging energy rifle with a limitless capacity through its built-in microfusion breeder."
 ITEM.model = "models/fallout/weapons/w_rechargerrifle.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/energy weapons/bm_rechargerrifle.mdl"
+
 ITEM.width = 4
 ITEM.height = 2
 ITEM.iconCam = {

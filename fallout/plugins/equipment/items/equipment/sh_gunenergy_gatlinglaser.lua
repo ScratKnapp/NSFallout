@@ -1,6 +1,8 @@
 ITEM.name = "L30P Gatling Laser"
 ITEM.desc = "A large platform consisting of four AER9 barrels that fire pulses through two lenses."
 ITEM.model = "models/weapons/gatlinglaser/w_fallout_gatling_laser.mdl"
+ITEM.modelCEnt = "models/weapons/bm_gatlinglaser.mdl"
+
 ITEM.width = 6
 ITEM.height = 2
 ITEM.iconCam = {

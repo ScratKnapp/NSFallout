@@ -1,6 +1,8 @@
 ITEM.name = "Chinese Pistol"
 ITEM.desc = "A pre-war semi automatic handgun made with cheap stamped metals."
 ITEM.model = "models/halokiller38/fallout/weapons/pistols/chinesepistol.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/pistols/bm_chinesepistol.mdl"
+
 ITEM.width = 2
 ITEM.height = 2
 ITEM.iconCam = {

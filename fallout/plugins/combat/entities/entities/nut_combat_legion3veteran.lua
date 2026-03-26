@@ -30,6 +30,16 @@ ENT.hp = 120
 ENT.accuracy = 15
 ENT.evasion = 5
 
+ENT.weapons = {
+	"melee1h_machete",
+	"melee2h_tribalspear",
+	"gunsmg_10mmsmg",
+	"gunrevolver_357magnum",
+	"gunprecision_cowboyrepeater",
+	"gunprecision_trailcarbine",
+
+}
+
 ENT.dmg = {
 	["Slash"] = 15
 }
@@ -44,12 +54,12 @@ ENT.armor = {
 }
 
 ENT.armorBreak = {
-	["Head"] = 8,
-	["Body"] = 8,
-	["Left Arm"] = 8,
-	["Right Arm"] = 8,
-	["Left Leg"] = 8,
-	["Right Leg"] = 8,
+	["Head"] = 3,
+	["Body"] = 3,
+	["Left Arm"] = 3,
+	["Right Arm"] = 3,
+	["Left Leg"] = 3,
+	["Right Leg"] = 3,
 }
 
 --all attributes

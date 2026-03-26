@@ -42,6 +42,15 @@ ENT.dmg = {
 ENT.accuracy = 40
 ENT.evasion = 5
 
+ENT.weapons = {
+	"gunrevolver_rangersequoia",
+	"gunrifle_automaticrifle",
+	"gunprecision_brushgun",
+	"gunshotgun_riotgun",
+	"gunsniper_dkssniperrifle",
+
+}
+
 ENT.armor = {
 	["Head"] = 25,
 	["Body"] = 25,
@@ -52,12 +61,12 @@ ENT.armor = {
 }
 
 ENT.armorBreak = {
-	["Head"] = 20,
-	["Body"] = 20,
-	["Left Arm"] = 20,
-	["Right Arm"] = 20,
-	["Left Leg"] = 20,
-	["Right Leg"] = 20,
+	["Head"] = 8,
+	["Body"] = 8,
+	["Left Arm"] = 8,
+	["Right Arm"] = 8,
+	["Left Leg"] = 8,
+	["Right Leg"] = 8,
 }
 
 

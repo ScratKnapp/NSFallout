@@ -1,6 +1,8 @@
 ITEM.name = "Combat Knife"
 ITEM.desc = "A large combat knife with a clip-point blade."
 ITEM.model = "models/mosi/fallout4/props/weapons/melee/knife.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/melee/bm_combatknife.mdl"
+
 ITEM.width = 1
 ITEM.height = 1
 ITEM.iconCam = {

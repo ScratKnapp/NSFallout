@@ -37,6 +37,11 @@ ENT.dmg = {
 ENT.accuracy = 10
 ENT.evasion = 1
 
+ENT.weapons = {
+	"gunprecision_servicerifle",
+
+}
+
 ENT.armor = {
 	["Head"] = 10,
 	["Body"] = 10,
@@ -48,12 +53,12 @@ ENT.armor = {
 }
 
 ENT.armorBreak = {
-	["Head"] = 10,
-	["Body"] = 10,
-	["Left Arm"] = 10,
-	["Right Arm"] = 10,
-	["Left Leg"] = 10,
-	["Right Leg"] = 10,
+	["Head"] = 3,
+	["Body"] = 3,
+	["Left Arm"] = 3,
+	["Right Arm"] = 3,
+	["Left Leg"] = 3,
+	["Right Leg"] = 3,
 }
 
 

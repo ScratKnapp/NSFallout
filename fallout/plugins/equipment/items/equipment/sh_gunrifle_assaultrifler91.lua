@@ -1,6 +1,8 @@
 ITEM.name = "R91 Assault Rifle"
 ITEM.desc = "A pre-war series of rifles that served as the national guard's standard issue rifle."
 ITEM.model = "models/halokiller38/fallout/weapons/assaultrifles/r91assaultrifle.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/assaultrifles/bm_r91assaultrifle.mdl"
+
 ITEM.width = 4
 ITEM.height = 2
 ITEM.iconCam = {

@@ -1,6 +1,8 @@
 ITEM.name = "Missile Launcher"
 ITEM.desc = "A shoulder mounted missile launcher."
 ITEM.model = "models/halokiller38/fallout/weapons/rocketlaunchers/missilelauncher.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/rocketlaunchers/bm_missilelauncher.mdl"
+
 ITEM.width = 4
 ITEM.height = 2
 ITEM.iconCam = {

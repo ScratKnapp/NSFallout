@@ -30,6 +30,13 @@ ENT.hp = 150
 ENT.accuracy = 25
 ENT.evasion = 15
 
+ENT.weapons = {
+	"gunrevolver_357magnum",
+	"gunprecision_trailcarbine",
+	"gunsniper_huntingrifle",
+
+}
+
 ENT.dmg = {
 	["Slash"] = 18
 }
@@ -44,12 +51,12 @@ ENT.armor = {
 }
 
 ENT.armorBreak = {
-	["Head"] = 8,
-	["Body"] = 8,
-	["Left Arm"] = 8,
-	["Right Arm"] = 8,
-	["Left Leg"] = 8,
-	["Right Leg"] = 8,
+	["Head"] = 3,
+	["Body"] = 3,
+	["Left Arm"] = 3,
+	["Right Arm"] = 3,
+	["Left Leg"] = 3,
+	["Right Leg"] = 3,
 }
 --all attributes
 ENT.attribs = {

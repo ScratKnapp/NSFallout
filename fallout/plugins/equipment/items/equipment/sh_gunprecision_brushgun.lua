@@ -1,6 +1,8 @@
 ITEM.name = "Brush Gun"
 ITEM.desc = "A lever action rifle designed to fire .45-70 Gov't rounds."
 ITEM.model = "models/halokiller38/fallout/weapons/rifles/brushgun.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/rifles/bm_brushgun.mdl"
+
 ITEM.width = 4
 ITEM.height = 2
 ITEM.iconCam = {

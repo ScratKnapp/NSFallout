@@ -30,6 +30,14 @@ ENT.hp = 165
 ENT.accuracy = 40
 ENT.evasion = 5
 
+ENT.weapons = {
+	"gunrevolver_huntingrevolver",
+	"gunsmg_127smg",
+	"gunsniper_dkssniperrifle",
+	"gunrifle_infiltrator",
+
+}
+
 ENT.dmg = {
 	["Slash"] = 25
 }
@@ -44,12 +52,12 @@ ENT.armor = {
 }
 
 ENT.armorBreak = {
-	["Head"] = 8,
-	["Body"] = 8,
-	["Left Arm"] = 8,
-	["Right Arm"] = 8,
-	["Left Leg"] = 8,
-	["Right Leg"] = 8,
+	["Head"] = 3,
+	["Body"] = 3,
+	["Left Arm"] = 3,
+	["Right Arm"] = 3,
+	["Left Leg"] = 3,
+	["Right Leg"] = 3,
 }
 --all attributes
 ENT.attribs = {

@@ -1,6 +1,7 @@
 ITEM.name = "Marksman Carbine"
 ITEM.desc = "A highly modified assault carbine, equipped with a 2x magnification scope and modified stock."
 ITEM.model = "models/halokiller38/fallout/weapons/assaultrifles/marksmancarbine.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/assaultrifles/bm_marksmancarbineext.mdl"
 ITEM.width = 4
 ITEM.height = 2
 ITEM.iconCam = {

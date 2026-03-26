@@ -1,6 +1,7 @@
 ITEM.name = "Service Rifle"
 ITEM.desc = "A west-coast designed, lightweight, air-cooled, gas-operated rifle meant for as simple of use as possible."
 ITEM.model = "models/suetafrontieres/service_rifle/servicerifle.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/assaultrifles/bm_battleriflebayo.mdl"
 ITEM.width = 4
 ITEM.height = 2
 ITEM.iconCam = {

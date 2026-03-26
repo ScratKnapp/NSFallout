@@ -1,6 +1,8 @@
 ITEM.name = "Shishkebab"
 ITEM.desc = "A katana strapped a fuel canister and nozzle to ignite foes."
 ITEM.model = "models/mosi/fallout4/props/weapons/melee/shishkebab.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/melee/bm_shishkebab.mdl"
+
 ITEM.width = 3
 ITEM.height = 1
 ITEM.iconCam = {

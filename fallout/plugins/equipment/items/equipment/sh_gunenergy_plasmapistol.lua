@@ -1,6 +1,8 @@
 ITEM.name = "P-94 Plasma Pistol"
 ITEM.desc = "A prototype plasma weapon recreated after the Great War, highly difficult to get ones hands on and very powerful."
 ITEM.model = "models/halokiller38/fallout/weapons/plasma weapons/plasmapistol.mdl"
+ITEM.modelCEnt = "models/halokiller38/fallout/weapons/plasma weapons/bm_plasmapistol.mdl"
+
 ITEM.width = 2
 ITEM.height = 2
 ITEM.iconCam = {

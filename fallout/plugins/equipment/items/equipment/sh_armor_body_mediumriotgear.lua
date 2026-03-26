@@ -1,4 +1,4 @@
-ITEM.name = "Riot Gear"
+ITEM.name = "Elite Riot Gear"
 ITEM.desc = "An advanced design of specialized combat armor for the US Marine Corps and select Law Enforcement agencies."
 ITEM.model = "models/fallout/apparel/combatranger.mdl"
 ITEM.width = 2
@@ -11,10 +11,12 @@ ITEM.iconCam = {
 	outlineColor = Color(15, 250, 0),
 }
 ITEM.price = 5000
-ITEM.durability = 5
+ITEM.durability = 20
 
-ITEM.armor = 30
-
+ITEM.armor = 35
+ITEM.reqStats = {
+  ["str"] = 7,
+}
 ITEM.upgradeSlots = {
 ["Inserts"] = true,
 
