@@ -12,7 +12,7 @@ ENT.hp = 150
 ENT.dmg = {
 	["Slash"] = 30,
 }
-ENT.accuracy = 20
+ENT.accuracy = 140
 ENT.evasion = 20
 
 function ENT:Initialize()

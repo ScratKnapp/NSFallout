@@ -13,7 +13,7 @@ ENT.dmg = {
 	["Fire"] = 25,
 
 }
-ENT.accuracy = 10
+ENT.accuracy = 60
 ENT.evasion = 10
 
 ENT.armor = {

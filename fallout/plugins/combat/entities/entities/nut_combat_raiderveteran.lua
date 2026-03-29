@@ -5,14 +5,14 @@ ENT.Category = "NutScript - Combat (Raiders)"
 ENT.Spawnable = true
 ENT.AdminOnly = true
 
-ENT.name = "Black Khans Veteran"
+ENT.name = "Rattler Veteran"
 
 ENT.model = "models/gore/nomads/nomadm_04.mdl"
 ENT.hp = 100
 ENT.dmg = {
 	[".357 Magnum"] = 35,
 }
-ENT.accuracy = 10
+ENT.accuracy = 60
 ENT.evasion = 5
 
 ENT.weapons = {

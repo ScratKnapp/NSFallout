@@ -13,7 +13,7 @@ ENT.dmg = {
 	["Blunt"] = 20,
 	["Radiation"] = 15,
 }
-ENT.accuracy = 15
+ENT.accuracy = 100
 ENT.evasion = 18
 
 

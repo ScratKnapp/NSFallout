@@ -20,7 +20,7 @@ ENT.models = {
 }
 
 ENT.hp = 100
-ENT.accuracy = 10
+ENT.accuracy = 80
 ENT.evasion = 8
 
 ENT.dmg = {

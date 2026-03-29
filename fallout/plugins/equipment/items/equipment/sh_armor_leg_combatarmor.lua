@@ -4,10 +4,13 @@ ITEM.model = "models/mosi/fallout4/props/junk/ammobag.mdl"
 ITEM.height = 1
 ITEM.width = 1
 ITEM.price = 1500
-ITEM.durability = 5
+ITEM.durability = 6
 
-ITEM.armor = 30
+ITEM.armor = 14
 
+ITEM.reqStats = {
+  ["str"] = 4,
+}
 ITEM.upgradeSlots = {
 ["Inserts"] = true,
 

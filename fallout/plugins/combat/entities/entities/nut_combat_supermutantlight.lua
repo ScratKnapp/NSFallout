@@ -14,7 +14,7 @@ ENT.dmgT = ".45 Auto"
 ENT.dmg = {
 	[".45 Auto"] = 22,
 }
-ENT.accuracy = 10
+ENT.accuracy = 70
 ENT.evasion = -5
 
 ENT.weapons = {

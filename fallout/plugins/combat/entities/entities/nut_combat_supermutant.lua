@@ -12,7 +12,7 @@ ENT.hp = 250
 ENT.dmg = {
 	[".38"] = 18,
 }
-ENT.accuracy = 15
+ENT.accuracy = 70
 ENT.evasion = -5
 
 

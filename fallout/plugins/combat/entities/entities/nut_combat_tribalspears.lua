@@ -12,7 +12,7 @@ ENT.models = {
 	"models/kaesar/falloutnewvegas/whiteleg/whitelegf.mdl",
 }
 ENT.hp = 100
-ENT.accuracy = 3
+ENT.accuracy = 80
 ENT.evasion = 3
 
 ENT.dmg = {

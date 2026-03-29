@@ -12,7 +12,7 @@ ENT.hp = 400
 ENT.dmg = {
 	["Laser"] = 40,
 }
-ENT.accuracy = 20
+ENT.accuracy = 160
 ENT.evasion = 0
 
 ENT.weapons = {

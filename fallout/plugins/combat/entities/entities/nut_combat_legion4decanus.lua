@@ -27,7 +27,7 @@ ENT.models = {
 }
 
 ENT.hp = 140
-ENT.accuracy = 25
+ENT.accuracy = 85
 ENT.evasion = 5
 
 ENT.weapons = {

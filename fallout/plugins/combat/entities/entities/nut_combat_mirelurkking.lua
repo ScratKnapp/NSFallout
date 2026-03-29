@@ -12,7 +12,7 @@ ENT.hp = 500
 ENT.dmg = {
 	["Sonic"] = 40,
 }
-ENT.accuracy = 10
+ENT.accuracy = 100
 ENT.evasion = 10
 
 ENT.armor = {

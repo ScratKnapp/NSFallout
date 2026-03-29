@@ -12,7 +12,7 @@ ENT.hp = 15
 ENT.dmg = {
 	["Slash"] = 10,
 }
-ENT.accuracy = 1
+ENT.accuracy = 50
 ENT.evasion = 1
 
 ENT.armor = {

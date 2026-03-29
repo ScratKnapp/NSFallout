@@ -1,15 +1,15 @@
-ITEM.name = "Metal Armguard"
-ITEM.desc = "An iron metal armguard."
+ITEM.name = "Association Armguard"
+ITEM.desc = "TAA-Produced armguards meant for their security details."
 ITEM.model = "models/mosi/fallout4/props/junk/ammobag.mdl"
 ITEM.height = 1
 ITEM.width = 1
-ITEM.price = 250
-ITEM.durability = 5
+ITEM.price = 1500
+ITEM.durability = 4
 
-ITEM.armor = 12
+ITEM.armor = 10
 
 ITEM.reqStats = {
-  ["str"] = 3,
+  ["str"] = 2,
 }
 ITEM.upgradeSlots = {
 	["Inserts"] = true,
@@ -17,7 +17,7 @@ ITEM.upgradeSlots = {
 
 ITEM.res = { --percentage based armor
   ["Kinetic"] = 0,
-  ["Energy"] = -3, 
+  ["Energy"] = 0, 
 }
 ITEM.specialSlot = "Arms" --what slot it goes in
 ITEM.attrib = { --gives the player stats on equip

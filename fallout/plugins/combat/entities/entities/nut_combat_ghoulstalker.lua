@@ -12,7 +12,7 @@ ENT.hp = 200
 ENT.dmg = {
 	["Blunt"] = 30,
 }
-ENT.accuracy = 18
+ENT.accuracy = 100
 ENT.evasion = 25
 
 

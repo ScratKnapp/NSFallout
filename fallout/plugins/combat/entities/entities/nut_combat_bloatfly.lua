@@ -12,8 +12,8 @@ ENT.hp = 30
 ENT.dmg = {
 	["Acid"] = 10,
 }
-ENT.accuracy = 10
-ENT.evasion = 10
+ENT.accuracy = 50
+ENT.evasion = 50
 
 ENT.armor = {
 	["Head"] = 0,

@@ -12,7 +12,7 @@ ENT.hp = 200
 ENT.dmg = {
 	["Slash"] = 30,
 }
-ENT.accuracy = 10
+ENT.accuracy = 90
 ENT.evasion = 5
 
 ENT.weapons = {
@@ -27,12 +27,12 @@ ENT.weapons = {
 }
 
 ENT.armor = {
-	["Head"] = 30,
-	["Body"] = 30,
-	["Left Arm"] = 30,
-	["Right Arm"] = 30,
-	["Left Leg"] = 30,
-	["Right Leg"] = 30,
+	["Head"] = 40,
+	["Body"] = 40,
+	["Left Arm"] = 40,
+	["Right Arm"] = 40,
+	["Left Leg"] = 40,
+	["Right Leg"] = 40,
 }
 
 ENT.armorBreak = {

@@ -36,7 +36,7 @@ ENT.hp = 100
 ENT.dmg = {
 	[".357 Magnum"] = 28,
 }
-ENT.accuracy = 10
+ENT.accuracy = 70
 ENT.evasion = 8
 
 ENT.weapons = {

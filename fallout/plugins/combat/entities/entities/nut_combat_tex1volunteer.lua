@@ -34,7 +34,7 @@ ENT.hp = 100
 ENT.dmg = {
 	["5.56"] = 15,
 }
-ENT.accuracy = 10
+ENT.accuracy = 60
 ENT.evasion = 1
 
 ENT.weapons = {

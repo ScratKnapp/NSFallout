@@ -12,7 +12,7 @@ ENT.hp = 30
 ENT.dmg = {
 	["Slash"] = 15,
 }
-ENT.accuracy = 10
+ENT.accuracy = 50
 ENT.evasion = 10
 ENT.modelScale = 0.5
 

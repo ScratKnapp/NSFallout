@@ -1,16 +1,16 @@
-ITEM.name = "Metal Legguard"
-ITEM.desc = "An iron metal legguard."
+ITEM.name = "Trench Raider Legguards"
+ITEM.desc = "Heavy plate metal armor that protects the stretch of the leg from heavy calibers."
 ITEM.model = "models/mosi/fallout4/props/junk/ammobag.mdl"
 ITEM.height = 1
 ITEM.width = 1
-ITEM.price = 250
-ITEM.durability = 5
+ITEM.price = 2500
+ITEM.durability = 10
 
-ITEM.armor = 12
-ITEM.evasion = -5
+ITEM.armor = 20
+ITEM.evasion = -10
 
 ITEM.reqStats = {
-  ["str"] = 2,
+  ["str"] = 6,
 }
 ITEM.upgradeSlots = {
 ["Inserts"] = true,
@@ -19,7 +19,7 @@ ITEM.upgradeSlots = {
 
 ITEM.res = { --percentage based armor
   ["Kinetic"] = 0,
-  ["Energy"] = -25, 
+  ["Energy"] = 0, 
 }
 ITEM.specialSlot = "Legs" --what slot it goes in
 ITEM.attrib = { --gives the player stats on equip

@@ -1,13 +1,16 @@
-ITEM.name = "NCR Trooper Armpad"
-ITEM.desc = "Leather armpad to be placed over standard NCR fatigues."
+ITEM.name = "Provisional Armpad"
+ITEM.desc = "Leather armpad to be placed over standard Texan fatigues."
 ITEM.model = "models/mosi/fallout4/props/junk/ammobag.mdl"
 ITEM.height = 1
 ITEM.width = 1
 ITEM.price = 250
 ITEM.durability = 5
 
-ITEM.armor = 8
+ITEM.armor = 12
 
+ITEM.reqStats = {
+  ["str"] = 4,
+}
 ITEM.upgradeSlots = {
 ["Inserts"] = true,
 

@@ -6,8 +6,11 @@ ITEM.width = 1
 ITEM.price = 1500
 ITEM.durability = 5
 
-ITEM.armor = 12
+ITEM.armor = 14
 
+ITEM.reqStats = {
+  ["str"] = 4,
+}
 ITEM.upgradeSlots = {
 	["Inserts"] = true,
 }
