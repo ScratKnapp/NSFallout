@@ -12,7 +12,7 @@ function PANEL:Init()
 
 	self.specialSkills = self:getSpecialSkills()
 
-	self.max = nut.config.get("maxSkills", 20)
+	self.max = nut.config.get("maxSkills", 100)
 
 	self.total = hook.Run(
 		"GetStartSkillPoints",

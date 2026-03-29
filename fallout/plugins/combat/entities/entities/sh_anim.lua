@@ -24,7 +24,11 @@ function ENT:walkAnims(distance, walk)
 		local RunAnim = self:getNetVar("RunAnim", self.RunAnim)
 	
 		if(RunAnim) then
-			seq = self:LookupSequence(RunAnim)
+			if(isnumber(RunAnim)) then
+				act = RunAnim
+			else
+				seq = self:LookupSequence(RunAnim)
+			end
 		else
 			for k, v in pairs(runAnims) do
 				seq = self:SelectWeightedSequence(v)
@@ -36,7 +40,11 @@ function ENT:walkAnims(distance, walk)
 	else
 		local WalkAnim = self:getNetVar("WalkAnim", self.WalkAnim)
 		if(WalkAnim) then
-			seq = self:LookupSequence(WalkAnim)
+			if(isnumber(WalkAnim)) then
+				act = WalkAnim
+			else
+				seq = self:LookupSequence(WalkAnim)
+			end
 		else
 			for k, v in pairs(walkAnims) do
 				seq = self:SelectWeightedSequence(v)
@@ -57,14 +65,12 @@ function ENT:walkAnims(distance, walk)
 	
 		if(act) then
 			self:StartActivity(act)
-		end
-		
-		if(seq) then
+		elseif(seq) then
 			self:ResetSequence(seq)
 		end
 		
 		--this tries to set the speed based on how fast the anim is
-		groundSpeed = self:GetSequenceGroundSpeed(seq)
+		groundSpeed = self:GetSequenceGroundSpeed(self:GetSequence())
 		if(groundSpeed < 1) then
 			if(run) then --this is just a default value if the animation fails
 				groundSpeed = 200
@@ -73,59 +79,39 @@ function ENT:walkAnims(distance, walk)
 			end
 		end
 	end
-	
+
 	self.loco:SetDesiredSpeed(groundSpeed)
-	self:SetPlaybackRate(1)
-	self:SetPoseParameter("move_x", 1)
 end
 
 function ENT:resetAnim()
-	local prevAnim = self.prevAnim or self.idle
-	
-	self:SetSequence(prevAnim)
-	
-	self.prevAnim = nil
-end
+	self:ResetSequenceInfo()
 
-function ENT:setAnim()
-	local anim = self:getNetVar("anim", self.savedAnim)
-	if(anim) then
-		local savedAnim = tonumber(anim)
-		
-		local IdleAnim = self:getNetVar("IdleAnim", self.IdleAnim)
-		
-		timer.Simple(1, function()
-			if(IsValid(self)) then
-				self:ResetSequence(savedAnim)
-
-				if(IdleAnim) then
-					self.idle = self:LookupSequence(IdleAnim) or 4
-				else
-					for k, v in ipairs(self:GetSequenceList()) do
-						if (v:lower():find("idle") and v != "idlenoise") then
-							self.idle = k
-							return
-						end
-					end
-					
-					self.idle = 4
+	--the anim it was doing before
+	local anim = self.prevAnim
+	if(!anim) then
+		--configured idle animation
+		local IdleAnim = self:getNetVar("IdleAnim")
+		if(IdleAnim) then
+			anim = self:LookupSequence(IdleAnim)
+		else --if no preset idle, then try to find one
+			for k, v in ipairs(self:GetSequenceList()) do
+				if (v:lower():find("idle") and v != "idlenoise") then
+					anim = k
+					break
 				end
 			end
-		end)
-	elseif(IdleAnim) then
-		self.idle = self:LookupSequence(IdleAnim)
-		self:ResetSequence(self:LookupSequence(IdleAnim))
-	else
-		for k, v in ipairs(self:GetSequenceList()) do
-			if (v:lower():find("idle") and v != "idlenoise") then
-				self.idle = k
-				return self:ResetSequence(k)
+			
+			--if we still don't have anything
+			--just give up and go with 4
+			if(!anim) then
+				anim = 4
 			end
 		end
-
-		self.idle = 4
-		self:ResetSequence(4)
 	end
+	
+	self:ResetSequence(anim)
+	
+	self.prevAnim = nil
 end
 
 function ENT:attackAnimStart()

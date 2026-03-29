@@ -230,7 +230,7 @@ function PANEL:Init()
 			bar:setValue(skillValue)
 		end
 
-		local maximum = v.maxValue or nut.config.get("maxSkills", 30)
+		local maximum = v.maxValue or nut.config.get("maxSkills", 100)
 		bar:setMax(maximum)
 		
 		if (levelSkill < 1) then
@@ -536,7 +536,7 @@ function PANEL:UpdateSkills()
 		local skillTbl = nut.skills.list[bar.skill]
 		if(!skillTbl) then continue end
 		
-		local maximum = skillTbl.maxValue or nut.config.get("maxSkills", 30)
+		local maximum = skillTbl.maxValue or nut.config.get("maxSkills", 100)
 		bar:setMax(maximum)
 		
 		local skillBoost = 0

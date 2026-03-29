@@ -108,12 +108,17 @@ PLUGIN.helperFuncs["getDamage"] = function(self, partString, weapon)
 				--direct dmg buffs
 				dmg = dmg + self:getBuffAttribute("dmg")
 
-				totalDam[#totalDam + 1] = {
-					dmg = dmg, 
-					dmgT = dmgT,
-					accuracy = self:getAccuracy(),
-					part = partString
-				}
+				--multiple hits
+				local multi = self:getNetVar("multi", self.multi) or 1
+
+				for i = 1, multi do
+					totalDam[#totalDam + 1] = {
+						dmg = dmg, 
+						dmgT = dmgT,
+						accuracy = self:getAccuracy(),
+						part = partString
+					}
+				end
 			end
 		end
 		
@@ -505,7 +510,7 @@ PLUGIN.helperFuncs["getActions"] = function(self)
 			name = "Attack",
 			category = "Default",
 			dmg = self:getDamage(),
-		}	
+		}
 
 		local CEntActions = self:getNetVar("actions", self.actions) or {}
 		for k, v in pairs(CEntActions) do

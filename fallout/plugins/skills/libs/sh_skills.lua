@@ -10,7 +10,7 @@ local function createSkillCheck(skillID, commandName)
 			local d20 = math.random(1,20)
 			local skill = char:getSkill(skillID, 0)
 
-			local roll = d20+skill*0.5
+			local roll = d20+skill*0.1
 			
 			local critText = ""
 			local crit = client:rollCrit()
@@ -33,7 +33,7 @@ local function createSkillCheck(skillID, commandName)
 				crit = 1
 			end
 
-			local rollText = "rolls " ..d20*crit.. " + " ..math.Round(skill*0.5*crit) .. " Stat Bonus "..critText..((bonus and (" + Bonus Of " ..bonus.. " ")) or " ").. " = " ..roll.. " for " ..name.. "."
+			local rollText = "rolls " ..d20*crit.. " + " ..math.Round(skill*0.1*crit).. " Stat Bonus "..critText..((bonus and (" + Bonus Of " ..bonus.. " ")) or " ").. " = " ..roll.. " for " ..name.. "."
 
 			if(nut.plugin.list["chatboxextra"]) then
 				nut.plugin.list["chatboxextra"]:ChatboxSend(client, "skillcheck", client:Name().. " " ..rollText)
@@ -89,7 +89,7 @@ do
 				local skills = self:getSkills()
 				local client = self:getPlayer()
 
-				skills[key] = math.min((skills[key] or 0) + value, skill.maxValue or nut.config.get("maxSkills", 20))
+				skills[key] = math.min((skills[key] or 0) + value, skill.maxValue or nut.config.get("maxSkills", 100))
 
 				if (IsValid(client)) then
 					netstream.Start(client, "skill", self:getID(), key, skills[key])
@@ -183,7 +183,7 @@ do
 
 			bonus = bonus + attrib*bonusMult*attribSkillMult[attribID]
 
-			--skill = math.min(skill + bonus, nut.config.get("maxSkills", 20))
+			--skill = math.min(skill + bonus, nut.config.get("maxSkills", 100))
 		end
 		
 		bonus = math.Round(bonus)
@@ -207,7 +207,7 @@ do
 			local specialBonus = skillTbl.specialBonus
 			if(specialBonus) then
 				local bonus = self:getSpecialBonus(key)
-				skill = math.min(skill + bonus, nut.config.get("maxSkills", 20))
+				skill = math.min(skill + bonus, nut.config.get("maxSkills", 100))
 			
 				--[[
 				for attribID, bonusMult in pairs(specialBonus) do

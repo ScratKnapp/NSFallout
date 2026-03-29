@@ -32,6 +32,14 @@ do
 	end
 
 	function PLUGIN:IsCharRecognized(char, id)
+		--admins already recognize everybody
+		local client = char:getPlayer()
+		if(IsValid(client)) then
+			if(client:IsAdmin()) then
+				return true
+			end
+		end
+
 		local other = nut.char.loaded[id]
 
 		if (other) then

@@ -22,6 +22,10 @@ ITEM.weight = 1
 ITEM.weapondual = false
 ITEM.ammo = "12 Gauge"
 
+ITEM.IdleAnim = "idle_shotgun"
+ITEM.WalkAnim = "walk_shotgun"
+ITEM.RunAnim = "run_shotgun"
+
 ITEM.dmg = {
 	["12 Gauge"] = 5
 }

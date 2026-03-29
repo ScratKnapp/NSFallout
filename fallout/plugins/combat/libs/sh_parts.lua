@@ -59,6 +59,8 @@ function PLUGIN:PartAttackModifyDamage(dmg, partMod)
 end
 
 function PLUGIN:PartAttackModifyAccuracy(accuracy, partMod)
+	if(!accuracy) then return end
+
 	--prevents multipliers from reversing effectiveness with negative values
 	if(accuracy > 0) then
 		accuracy = accuracy * (partMod.accuracyMult or 1)

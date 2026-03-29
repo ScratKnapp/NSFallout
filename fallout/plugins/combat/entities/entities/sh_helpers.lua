@@ -423,17 +423,14 @@ function ENT:getDataFields()
 				updateType = "netVar",
 				numeric = true,
 			},
-			--[[
-			["armor"] = {
+			["multi"] = {
 				weight = 7, 
-				name = "Armor (Bonus)", 
+				name = "Attack Count", 
 				category = "Combat Stats",
-				value = saveData.armor,
-				extra = PLUGIN:getPartsModifiers(),
+				value = saveData.multi or 1,
 				updateType = "netVar",
 				numeric = true,
 			},
-			--]]
 			["accuracy"] = {
 				weight = 8, 
 				name = "Accuracy (Bonus)", 

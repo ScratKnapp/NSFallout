@@ -99,6 +99,12 @@ function ENT:MoveTo(pos, options, endFunc)
 	local dist = self:GetPos():Distance2D(pos)
 	local estimation = dist / self:GetSequenceGroundSpeed(self:GetSequence())
 
+	--if already close, face towards it
+	if(dist < 3600) then
+		self.loco:FaceTowards(pos)
+		self.loco:FaceTowards(pos)
+	end
+
 	local startMove = CurTime()
 	
 	self.desiredPos = pos
@@ -144,7 +150,8 @@ function ENT:MoveTo(pos, options, endFunc)
 				return 
 			end
 			
-			self.loco:FaceTowards(pos)
+			self:SetPoseParameter("move_x", 1)
+
 			path:Update(self)
 			
 			if (self.loco:IsStuck()) then
@@ -177,8 +184,6 @@ function ENT:MoveTo(pos, options, endFunc)
 				return
 			end
 
-			self.loco:FaceTowards(pos)
-			self.loco:FaceTowards(pos)
 			self.loco:FaceTowards(pos)
 			self.loco:FaceTowards(pos)
 			self.loco:Approach(pos, 1)
@@ -232,8 +237,30 @@ function ENT:basicSetup()
 							self:setNetVar("dmg", item.dmg)
 						end
 						
+						if(item.multi) then
+							self:setNetVar("multi", item.multi)
+						end
+						
 						if(item.actions) then
 							table.Add(self.actions, item.actions)
+						end
+						
+						if(item.IdleAnim) then
+							self:setNetVar("IdleAnim", item.IdleAnim)
+							
+							self:resetAnim()
+						end
+						
+						if(item.WalkAnim) then
+							self:setNetVar("WalkAnim", item.WalkAnim)
+						end
+						
+						if(item.RunAnim) then
+							self:setNetVar("RunAnim", item.RunAnim)
+						end
+						
+						if(item.AttackAnim) then
+							self:setNetVar("AttackAnim", item.AttackAnim)
 						end
 
 						self:setNetVar("name", self.name.. " (" ..item.name.. ")")
@@ -252,9 +279,9 @@ function ENT:basicSetup()
 			self:SetModelScale(self.modelScale)
 			self:Activate()
 		end
+		
+		self:resetAnim()
 	end
-
-	self:setAnim()
 end
 
 function ENT:physicsSetup()
@@ -302,6 +329,7 @@ function ENT:getSaveData()
 		attribs = self:getNetVar("attribs", self.attribs),
 		actions = self:getNetVar("actions", self.actions),
 		dmg = self:getNetVar("dmg", self.dmg),
+		multi = self:getNetVar("multi", self.multi),
 		res = self:getNetVar("res", self.res),
 		amp = self:getNetVar("amp", self.amp),
 		
@@ -473,6 +501,10 @@ function ENT:Think()
 			self:StepThink()
 		end
 	end
+	
+	self:NextThink(CurTime())
+	
+	return true
 end
 
 --adds a weapon model to a CEnt's hands

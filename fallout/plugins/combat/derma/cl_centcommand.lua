@@ -248,6 +248,10 @@ local PANEL = {}
 				end
 			end
 			
+			if(data.value and isstring(data.value)) then
+				entry:SetValue(data.value)
+			end
+			
 			entry:Dock(LEFT)
 
 			fields[id] = entry

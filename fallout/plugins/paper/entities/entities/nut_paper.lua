@@ -1,3 +1,5 @@
+local PLUGIN = PLUGIN
+
 ENT.Type = "anim"
 ENT.PrintName = "Paper"
 ENT.Author = "Black Tea"
@@ -32,6 +34,17 @@ if (SERVER) then
 
 			nut.plugin.list["paper"]:SavePaper()
 		end
+	end
+	
+	function ENT:OnRemove()
+		if (!self.nutForceDelete) then
+			if (!nut.entityDataLoaded) then return end
+			if (self.nutIsSafe) then return end
+			if (nut.shuttingDown) then return end
+		end
+
+		print("Saving paper deletion")
+		PLUGIN:SavePaper()
 	end
 else
 	function ENT:Draw()

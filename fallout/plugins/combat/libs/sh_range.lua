@@ -1,18 +1,46 @@
 local PLUGIN = PLUGIN
 
+--long, medium, close, melee
+PLUGIN.ranges = {25,8,2,0}
+--if greater than 25, long
+--if greater than 8, medium
+--if greater than 2, close
+--if greater than 0, melee
+
+function PLUGIN:DistanceToRange(dist)
+	local toMeter = (dist/52) -- the distance in meters
+
+	local ranges = PLUGIN.ranges
+	local range
+	for k, v in ipairs(ranges) do
+		if(toMeter >= v) then
+			range = k
+			break
+		end
+	end
+	
+	if(range) then
+		local rangeName = {
+			"Long",
+			"Medium",
+			"Close",
+			"Melee",
+		}
+						
+		local rangeText = rangeName[range]
+		
+		return rangeText
+	end
+end
+
 function PLUGIN:RangeAccuracyModify(accuracy, weaponItem, dist)
 	local toMeter = (dist/52) -- the distance in meters
 
-	--long, medium, close, melee
-	local ranges = {25,8,2,0}
-	--if greater than 25, long
-	--if greater than 8, medium
-	--if greater than 2, close
-	--if greater than 0, melee
+	local ranges = PLUGIN.ranges
 
 	local range
 	for k, v in ipairs(ranges) do
-		if(toMeter > v) then
+		if(toMeter >= v) then
 			range = k
 			break
 		end
@@ -21,7 +49,9 @@ function PLUGIN:RangeAccuracyModify(accuracy, weaponItem, dist)
 	local rangeMod = 0
 	--gets the modifier for this age range
 	if(range) then
-		rangeMod = weaponItem.range[range]
+		if(weaponItem) then
+			rangeMod = weaponItem.range[range]
+		end
 		
 		local rangeName = {
 			"Long",

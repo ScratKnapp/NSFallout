@@ -220,11 +220,17 @@ function SWEP:SecondaryAttack()
 	end
 end
 
+local function nutTextShadow(text, posX, posY, color, font)
+	nut.util.drawText(text, posX+1, posY+1, Color(0,0,0,150), 1, 1, font)
+	nut.util.drawText(text, posX+2, posY+2, Color(0,0,0,100), 1, 1, font)
+	nut.util.drawText(text, posX, posY, color, 1, 1, font)
+end
+
 local schemaUI = nut.config.get("schemaUI", "fonvui")
 --local barLeft = Material("materials/fonvui/hud/hud_left_main.png")
 --local barRight = Material("materials/fonvui/hud/hud_right_main.png")
-local barLeft = Material("materials/" .. schemaUI .. "/hud/hud_left_main.png")
-local barRight = Material("materials/" .. schemaUI .. "/hud/hud_right_main.png")
+local barLeft = Material("materials/" ..schemaUI.. "/hud/hud_left_main.png")
+local barRight = Material("materials/" ..schemaUI.. "/hud/hud_right_main.png")
 function SWEP:DrawHUD()
 	if CLIENT then
 		local client = LocalPlayer()
@@ -430,7 +436,7 @@ function SWEP:DrawHUD()
 				local actionTbl = ACTS.actions[action.uid] or {}
 				local part = self.partString or "Body"
 				local weapon = action.weapon
-			
+
 				local info = {
 					attacker = user,
 					trace = trace,
@@ -453,9 +459,15 @@ function SWEP:DrawHUD()
 				part = "[" .. part .. "]"
 				local actionName = action.name or "Unknown Action"
 				local actionString = "Secondary Fire to " .. actionName .. part .. "."
+				
+				nutTextShadow(actionString, posX, posY, Color(0,238,0,150), "nutCombatTarget")
+				
+				--[[
 				nut.util.drawText(actionString, posX+1, posY+1, Color(0,0,0,150), 1, 1, "nutCombatTarget")
 				nut.util.drawText(actionString, posX+2, posY+2, Color(0,0,0,100), 1, 1, "nutCombatTarget")
 				nut.util.drawText(actionString, posX, posY, Color(0,238,0,150), 1, 1, "nutCombatTarget")
+				--]]
+				
 				--offset the text
 				textSizeX, textSizeY = surface.GetTextSize(actionString)
 				posY = posY + textSizeY
@@ -468,25 +480,27 @@ function SWEP:DrawHUD()
 
 					if hp <= 0 then
 						targetString = "Target: " .. name .. "(DEAD)"
-						nut.util.drawText(targetString, posX+1, posY+1, Color(0,0,0,150), 1, 1, "nutCombatTarget")
-						nut.util.drawText(targetString, posX+2, posY+2, Color(0,0,0,100), 1, 1, "nutCombatTarget")
-						nut.util.drawText(targetString, posX, posY, Color(255,100,100,150), 1, 1, "nutCombatTarget")
+						
+						nutTextShadow(targetString, posX, posY, Color(255,100,100,150), "nutCombatTarget")
 					else
 						targetString = "Target: " .. name .. " (HP:" ..hp.. ")"
-						nut.util.drawText(targetString, posX+1, posY+1, Color(0,0,0,150), 1, 1, "nutCombatTarget")
-						nut.util.drawText(targetString, posX+2, posY+2, Color(0,0,0,100), 1, 1, "nutCombatTarget")
-						nut.util.drawText(targetString, posX, posY, Color(0,238,0,150), 1, 1, "nutCombatTarget")
+
+						nutTextShadow(targetString, posX, posY, Color(0,238,0,150), "nutCombatTarget")
 					end 
 
 					--offset the text
 					textSizeX, textSizeY = surface.GetTextSize(targetString)
 					posY = posY + textSizeY
+					
+					local dist = self.viewed:GetPos():Distance(user:GetPos())
+
+					local rangeText = PLUGIN:DistanceToRange(dist)
+					
 					if rangeText then
 						--string that tells you your chance to hit your target
 						local rangeString = "Range: " .. rangeText
-						nut.util.drawText(rangeString, posX+1, posY+1, Color(0,0,0,150), 1, 1, "nutCombatTarget")
-						nut.util.drawText(rangeString, posX+2, posY+2, Color(0,0,0,100), 1, 1, "nutCombatTarget")
-						nut.util.drawText(rangeString, posX, posY, Color(0,238,0,150), 1, 1, "nutCombatTarget")
+
+						nutTextShadow(rangeString, posX, posY, Color(0,238,0,150), "nutCombatTarget")
 						--offset the text
 						textSizeX, textSizeY = surface.GetTextSize(rangeString)
 						posY = posY + textSizeY
@@ -494,9 +508,8 @@ function SWEP:DrawHUD()
 
 					--string that tells you your chance to hit your target
 					local chanceString = "Chance: " .. hitChance .. " %"
-					nut.util.drawText(chanceString, posX+1, posY+1, Color(0,0,0,150), 1, 1, "nutCombatTarget")
-					nut.util.drawText(chanceString, posX+2, posY+2, Color(0,0,0,100), 1, 1, "nutCombatTarget")
-					nut.util.drawText(chanceString, posX, posY, Color(0,238,0,150), 1, 1, "nutCombatTarget")
+
+					nutTextShadow(chanceString, posX, posY, Color(0,238,0,150), "nutCombatTarget")
 				end
 			end
 		end
