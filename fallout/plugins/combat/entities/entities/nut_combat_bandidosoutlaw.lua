@@ -8,22 +8,13 @@ ENT.AdminOnly = true
 ENT.name = "Bandidos Outlaw"
 
 ENT.models = {
-    "models/gore/rangers/arizona_cowboy.mdl",
-    "models/gore/rangers/arizona_cowboy02.mdl",
-    "models/gore/rangers/arizona_ranger.mdl",
-    "models/gore/rangers/arizona_ranger01.mdl",
-    "models/gore/rangers/arizona_rangerf02.mdl",
-    "models/gore/rangers/arizona_rangerf03.mdl",
-    "models/gore/rangers/arizona_smuggler.mdl",
-    "models/gore/rangers/arizona_veteran_ranger02.mdl",
-    "models/gore/nomads/lightarmor_male.mdl",
-    "models/gore/nomads/lightarmor_female.mdl",
-    "models/gore/nomads/mercenarym_02.mdl",
-    "models/gore/nomads/mercenarym_01.mdl",
-    "models/gore/nomads/mercenarym_03.mdl",
-    "models/gore/nomads/mercenarym_04.mdl",
     "models/gore/nomads/mercenaryf_01.mdl",
-    "models/gore/nomads/mercenaryf_02.mdl",
+	"models/gore/nomads/mercenaryf_02.mdl",
+	"models/gore/nomads/mercenarym_03.mdl",
+	"models/gore/nomads/mercenarym_04.mdl",
+	"models/gore/nomads/mercenarym_01.mdl",
+	"models/gore/nomads/mercenarym_02.mdl",
+
 
 }
 

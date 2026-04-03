@@ -8,7 +8,7 @@ ENT.AdminOnly = true
 ENT.name = "Bandidos Lieutenant"
 
 ENT.models = {
-    "models/gore/nomads/nomad_metal_armor.mdl",
+    "models/gore/nomads/nomadm_armored.mdl",
 
 
 }

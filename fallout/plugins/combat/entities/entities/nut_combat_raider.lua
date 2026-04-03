@@ -8,15 +8,16 @@ ENT.AdminOnly = true
 ENT.name = "Rattler"
 
 ENT.models = {
-	"models/gore/nomads/nomadf_01.mdl",
-	"models/gore/nomads/nomadf_02.mdl",
-	"models/gore/nomads/nomadm_01.mdl",
-	"models/gore/nomads/nomadm_02.mdl",
-	"models/gore/nomads/nomadm_03.mdl",
-	"models/gore/nomads/nomadm_05.mdl",
-  	"models/gore/nomads/nomadm_06.mdl",
-	"models/gore/nomads/nomadm_07.mdl",
+    "models/gore/nomads/nomadm_05.mdl",
+	"models/gore/nomads/nomadm_06.mdl",
 	"models/gore/nomads/nomadm_09.mdl",
+	"models/gore/nomads/nomadm_07.mdl",
+	"models/gore/nomads/nomadm_03.mdl",
+	"models/gore/nomads/nomadm_04.mdl",
+	"models/gore/nomads/nomadm_02.mdl",
+	"models/gore/nomads/nomadm_01.mdl",
+	"models/gore/nomads/nomadf_02.mdl",
+	"models/gore/nomads/nomadf_01.mdl",
 }
 
 ENT.hp = 100

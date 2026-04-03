@@ -1,25 +1,26 @@
 ENT.Type = "nextbot"
 ENT.Base = "nut_combat"
-ENT.PrintName = "Tribal Warrior"
-ENT.Category = "NutScript - Combat (Raiders)"
+ENT.PrintName = "War Dog"
+ENT.Category = "NutScript - Combat (Tribals)"
 ENT.Spawnable = true
 ENT.AdminOnly = true
 
-ENT.name = "Tribal Warrior"
+ENT.name = "War Dog"
 
 ENT.models = {
-    "models/gore/neutrals/tribals/tribal boyd.mdl",
-	"models/gore/neutrals/tribals/tribal frank.mdl",
-    "models/gore/neutrals/tribals/tribal horst.mdl",
-	"models/gore/neutrals/tribals/tribal torv.mdl",
-    "models/gore/neutrals/tribals/shaman torv.mdl",
-	"models/gore/neutrals/tribals/shaman horst.mdl",
-    "models/gore/neutrals/tribals/shaman frank.mdl",
-	"models/gore/neutrals/tribals/shaman boyd.mdl",
+	"models/gore/subfactions/libertaras_rangerm_01.mdl",
+	"models/gore/subfactions/libertaras_rangerf_01.mdl",
 
 }
 
-ENT.hp = 100
+ENT.weapons = {
+	"gunrevolver_huntingrevolver",
+	"gunsmg_127smg",
+	"gunsniper_dkssniperrifle",
+	"gunrifle_infiltrator",
+}
+
+ENT.hp = 150
 ENT.accuracy = 80
 ENT.evasion = 8
 
@@ -28,12 +29,12 @@ ENT.dmg = {
 }
 
 ENT.armor = {
-	["Head"] = 10,
-	["Body"] = 10,
-	["Left Arm"] = 10,
-	["Right Arm"] = 10,
-	["Left Leg"] = 10,
-	["Right Leg"] = 10,
+	["Head"] = 12,
+	["Body"] = 12,
+	["Left Arm"] = 12,
+	["Right Arm"] = 12,
+	["Left Leg"] = 12,
+	["Right Leg"] = 12,
 }
 
 ENT.armorBreak = {
@@ -87,4 +88,7 @@ ENT.tags = {
 
 function ENT:Initialize()
 	self:basicSetup()
+	    for k, v in pairs(self:GetBodyGroups()) do
+        self:SetBodygroup(v.id, math.random(0, v.num))
+    end
 end

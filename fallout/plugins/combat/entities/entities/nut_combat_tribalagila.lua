@@ -1,11 +1,11 @@
 ENT.Type = "nextbot"
 ENT.Base = "nut_combat"
-ENT.PrintName = "TREEHUGGERS RENAME"
+ENT.PrintName = "Agila Tribal"
 ENT.Category = "NutScript - Combat (Tribals)"
 ENT.Spawnable = true
 ENT.AdminOnly = true
 
-ENT.name = "TREEHUGGERS RENAME"
+ENT.name = "Agila Tribal"
 
 ENT.models = {
     "models/kaesar/falloutnewvegas/deadhorse/deadhorse.mdl",
@@ -81,4 +81,7 @@ ENT.tags = {
 
 function ENT:Initialize()
 	self:basicSetup()
+	    for k, v in pairs(self:GetBodyGroups()) do
+        self:SetBodygroup(v.id, math.random(0, v.num))
+    end
 end

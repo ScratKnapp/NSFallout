@@ -7,7 +7,7 @@ ENT.AdminOnly = true
 
 ENT.name = "Rattler Boss"
 
-ENT.model = "models/gore/nomads/nomadm_armored.mdl"
+ENT.model = "models/gore/nomads/nomad_metal_armor.mdl"
 ENT.hp = 150
 ENT.dmg = {
 	["12 Gauge"] = 35,

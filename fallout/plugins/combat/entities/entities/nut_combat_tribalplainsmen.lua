@@ -1,42 +1,44 @@
 ENT.Type = "nextbot"
 ENT.Base = "nut_combat"
-ENT.PrintName = "Rattler Veteran"
-ENT.Category = "NutScript - Combat (Raiders)"
+ENT.PrintName = "Plainsman Warrior"
+ENT.Category = "NutScript - Combat (Tribals)"
 ENT.Spawnable = true
 ENT.AdminOnly = true
 
-ENT.name = "Rattler Veteran"
+ENT.name = "Plainsman Warrior"
 
-ENT.model = "models/gore/nomads/nomad_iconoclast.mdl"
-ENT.hp = 100
-ENT.dmg = {
-	[".357 Magnum"] = 35,
+ENT.models = {
+	"models/kaesar/falloutnewvegas/whiteleg/whiteleg.mdl",
+	"models/kaesar/falloutnewvegas/whiteleg/whitelegf.mdl",
 }
-ENT.accuracy = 60
-ENT.evasion = 5
 
 ENT.weapons = {
+	"melee1h_machete",
+	"melee2h_tribalspear",
 	"gunpistol_45pistol",
-	"gunpistol_10mmpistol",
-	"gunprecision_cowboyrepeater",
 	"gunrevolver_357magnum",
-	"gunrifle_combatrifle",
-	"gunshotgun_huntingshotgun",
 	"gunsmg_45smg",
 	"gunsniper_huntingrifle",
-	"gunenergy_laserrifle",
-	"gunenergy_laserrcw",
 	"gunsmg_10mmsmg",
 }
 
-ENT.armor = {
-	["Head"] = 10,
-	["Body"] = 10,
-	["Left Arm"] = 10,
-	["Right Arm"] = 10,
-	["Left Leg"] = 10,
-	["Right Leg"] = 10,
+ENT.hp = 100
+ENT.accuracy = 80
+ENT.evasion = 3
+
+ENT.dmg = {
+	["Slash"] = 5
 }
+
+ENT.armor = {
+	["Head"] = 0,
+	["Body"] = 0,
+	["Left Arm"] = 0,
+	["Right Arm"] = 0,
+	["Left Leg"] = 0,
+	["Right Leg"] = 0,
+}
+
 
 ENT.armorBreak = {
 	["Head"] = 3,
@@ -52,19 +54,20 @@ ENT.attribs = {
 	["str"] = 0,
 	["per"] = 0,
 	["end"] = 0,
-	["cha"] = 2,
+	["cha"] = 0,
 	["int"] = 0,
 	["agi"] = 0,
-	["luck"] = 6,
+	["luck"] = 4,
 
 }
 
 ENT.skills = {
 	["evasion"] = 0,
-	["guns"] = 13,
-	["energyweapons"] = 13,
-	["melee"] = 13,
-	["throwing"] = 13,
+	["guns"] = 5,
+	["energyweapons"] = 5,
+	["melee"] = 5,
+	["throwing"] = 5,
+	["medicine"] = 20,
 
 }
 
@@ -77,6 +80,7 @@ ENT.actions = {
 "burstfire_rifle",
 "doubletap_pistol",
 "aimedshot_precision",
+"med_aid",
 
 }
 
@@ -89,7 +93,7 @@ ENT.tags = {
 
 function ENT:Initialize()
 	self:basicSetup()
-		    for k, v in pairs(self:GetBodyGroups()) do
+	    for k, v in pairs(self:GetBodyGroups()) do
         self:SetBodygroup(v.id, math.random(0, v.num))
     end
 end

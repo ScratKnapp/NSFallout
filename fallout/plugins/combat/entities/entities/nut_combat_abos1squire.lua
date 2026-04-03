@@ -1,37 +1,44 @@
 ENT.Type = "nextbot"
 ENT.Base = "nut_combat"
-ENT.PrintName = "Bandidos Enforcer"
-ENT.Category = "NutScript - Combat (Raiders)"
+ENT.PrintName = "Alamo Chapter Squire"
+ENT.Category = "NutScript - Combat (Brotherhood)"
 ENT.Spawnable = true
 ENT.AdminOnly = true
 
-ENT.name = "Bandidos Enforcer"
+ENT.name = "Alamo Chapter Squire"
 
-ENT.models = {
-    "models/gore/nomads/mercenary_armored.mdl",
-	"models/gore/nomads/mercenaryf_armored.mdl",
-
+ENT.StepData = {
+	0.25,
+	0.75,
 }
 
-ENT.hp = 125
+ENT.FootstepSounds = {
+	"npc/footsteps/hardboot_generic1.wav",
+	"npc/footsteps/hardboot_generic2.wav",
+	"npc/footsteps/hardboot_generic3.wav",
+	"npc/footsteps/hardboot_generic4.wav",
+	"npc/footsteps/hardboot_generic5.wav",
+	"npc/footsteps/hardboot_generic6.wav",
+}
+
+ ENT.models = {
+    "models/player/h&h/classic/combatarmor/bos/knight/male01.mdl",
+	
+}
+
+ENT.hp = 150
 ENT.dmg = {
-	["12 Gauge"] = 30,
+	["5.56"] = 20,
 }
 ENT.accuracy = 85
-ENT.evasion = 12
+ENT.evasion = 5
 
 ENT.weapons = {
-	"gunpistol_45pistol",
-	"gunpistol_10mmpistol",
-	"gunprecision_cowboyrepeater",
-	"gunrevolver_357magnum",
-	"gunrifle_combatrifle",
-	"gunshotgun_huntingshotgun",
-	"gunsmg_45smg",
-	"gunsniper_huntingrifle",
 	"gunenergy_laserrifle",
 	"gunenergy_laserrcw",
-	"gunsmg_10mmsmg",
+	"gunenergy_plasmadefender",
+	"gunenergy_rechargerrifle",
+
 }
 
 ENT.armor = {
@@ -66,10 +73,10 @@ ENT.attribs = {
 
 ENT.skills = {
 	["evasion"] = 0,
-	["guns"] = 14,
-	["energyweapons"] = 14,
-	["melee"] = 14,
-	["throwing"] = 14,
+	["guns"] = 10,
+	["energyweapons"] = 0,
+	["melee"] = 10,
+	["throwing"] = 8,
 
 }
 
@@ -86,7 +93,7 @@ ENT.actions = {
 "doubletap_pistol",
 "doubletap_precision",
 "aimedshot_precision",
-"grenade_firebomb",
+"grenade_frag",
 
 }
 
@@ -99,7 +106,4 @@ ENT.tags = {
 
 function ENT:Initialize()
 	self:basicSetup()
-	    for k, v in pairs(self:GetBodyGroups()) do
-        self:SetBodygroup(v.id, math.random(0, v.num))
-    end
 end

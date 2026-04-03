@@ -1,33 +1,40 @@
 ENT.Type = "nextbot"
 ENT.Base = "nut_combat"
-ENT.PrintName = "SPEAR CHUCKER RENAME PLEASE"
+ENT.PrintName = "Mosswalker Warden"
 ENT.Category = "NutScript - Combat (Tribals)"
 ENT.Spawnable = true
 ENT.AdminOnly = true
 
-ENT.name = "SPEAR CHUCKER RENAME PLESAE"
+ENT.name = "Mosswalker Warden"
 
 ENT.models = {
-	"models/kaesar/falloutnewvegas/whiteleg/whiteleg.mdl",
-	"models/kaesar/falloutnewvegas/whiteleg/whitelegf.mdl",
+    "models/player/h&h/tribal/male01.mdl",
+
 }
-ENT.hp = 100
+
+ENT.weapons = {
+	"gunrevolver_huntingrevolver",
+	"gunsmg_127smg",
+	"gunsniper_dkssniperrifle",
+	"gunrifle_infiltrator",
+}
+
+ENT.hp = 150
 ENT.accuracy = 80
-ENT.evasion = 3
+ENT.evasion = 8
 
 ENT.dmg = {
-	["Slash"] = 5
+	["Slash"] = 36
 }
 
 ENT.armor = {
-	["Head"] = 0,
-	["Body"] = 0,
-	["Left Arm"] = 0,
-	["Right Arm"] = 0,
-	["Left Leg"] = 0,
-	["Right Leg"] = 0,
+	["Head"] = 12,
+	["Body"] = 12,
+	["Left Arm"] = 12,
+	["Right Arm"] = 12,
+	["Left Leg"] = 12,
+	["Right Leg"] = 12,
 }
-
 
 ENT.armorBreak = {
 	["Head"] = 3,
@@ -40,23 +47,22 @@ ENT.armorBreak = {
 
 --all attributes
 ENT.attribs = {
-	["str"] = 0,
-	["per"] = 0,
-	["end"] = 0,
-	["cha"] = 0,
-	["int"] = 0,
+	["str"] = 9,
+	["per"] = 6,
+	["end"] = 8,
+	["cha"] = 2,
+	["int"] = 2,
 	["agi"] = 0,
-	["luck"] = 4,
+	["luck"] = 5,
 
 }
 
 ENT.skills = {
 	["evasion"] = 0,
-	["guns"] = 5,
-	["energyweapons"] = 5,
-	["melee"] = 5,
-	["throwing"] = 5,
-	["medicine"] = 20,
+	["guns"] = 15,
+	["energyweapons"] = 15,
+	["melee"] = 15,
+	["throwing"] = 15,
 
 }
 
@@ -69,7 +75,6 @@ ENT.actions = {
 "burstfire_rifle",
 "doubletap_pistol",
 "aimedshot_precision",
-"med_aid",
 
 }
 
@@ -82,4 +87,7 @@ ENT.tags = {
 
 function ENT:Initialize()
 	self:basicSetup()
+	    for k, v in pairs(self:GetBodyGroups()) do
+        self:SetBodygroup(v.id, math.random(0, v.num))
+    end
 end
