@@ -65,9 +65,17 @@ ITEM.partMod = {
 }
 
 ITEM.actions = {	
-"burstfire_smg",
-"runngun",
-"suppression1",
-
-
+	"burstfire_smg",
+	"runngun",
+	"suppression1",
 }
+
+
+--for CEnts
+ITEM.firearm = true
+
+ITEM.IdleAnim = "idle_smg1"
+ITEM.WalkAnim = "walk_smg1"
+ITEM.RunAnim = "run_smg1"
+
+ITEM.fireRange = 500

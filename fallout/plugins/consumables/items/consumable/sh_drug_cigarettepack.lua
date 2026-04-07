@@ -1,5 +1,5 @@
 ITEM.name = "Cigarette Pack"
-ITEM.desc = "A pack of Liberty Strikes nicotine sticks."
+ITEM.desc = "A pack of old nicotine sticks."
 ITEM.model = "models/mosi/fallout4/props/junk/cigarettecarton.mdl"
 ITEM.uniqueID = "drug_cigarettes"
 ITEM.quantity2 = 10

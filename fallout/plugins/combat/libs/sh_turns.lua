@@ -141,6 +141,11 @@ PLUGIN.helperFuncs["getTurnControlled"] = function(self, id)
 	end
 end
 
+--finds the turn table the player is a controller of, if they are in control of one
+PLUGIN.helperFuncs["getTurnAI"] = function(self, id)
+	return self:getNetVar("TurnAI")
+end
+
 --adds an entity to a turn table as a controller
 function PLUGIN:turnControlAdd(id, entity, team)
 	--only let people control one turn order at a time
@@ -437,12 +442,37 @@ PLUGIN.helperFuncs["turnProcess"] = function(self, turn, you)
 				nut.plugin.list["combat"]:cdNetworkAll(self, action, duration, data.weapon)
 			end
 		end
+		
+		local AI = self:getTurnAI()
+		print(AI)
+		
+		if(AI) then
+			local tree = PLUGIN.AITree[AI]
+
+			print(tree)
+
+			if(tree) then
+				print("Process the turn")
+				local turnData = self:getTurnData()
+
+				tree.turnProcess(self, turnData)
+			end
+		end
 	
-		nut.plugin.list["chatboxextra"]:ChatboxSend(self, "turnchat", "Turn Change: " ..turn.. "'s turns. (YOU)")
+		if(turn) then
+			if(self:IsPlayer()) then
+				nut.plugin.list["chatboxextra"]:ChatboxSend(self, "turnchat", "Turn Change: " ..turn.. "'s turns. (YOU)")
+			end
+		end
 	else
 		self:setNetVar("showAPCircle", nil)
+		self:setNetVar("turnOverIcon", nil)
 	
-		nut.plugin.list["chatboxextra"]:ChatboxSend(self, "turnchat", "Turn Change: " ..turn.. "'s turns.")
+		if(turn) then
+			if(self:IsPlayer()) then
+				nut.plugin.list["chatboxextra"]:ChatboxSend(self, "turnchat", "Turn Change: " ..turn.. "'s turns.")
+			end
+		end
 	end
 end
 
@@ -635,6 +665,10 @@ if(SERVER) then
 		if(team) then
 			client:notify(team.. "'s turn.")
 		end
+	end)
+	
+	netstream.Hook("nut_turnAISet", function(client, entity, id)
+		entity:setNetVar("TurnAI", id)
 	end)
 else
 	netstream.Hook("nut_turnSyncID", function(id, data)

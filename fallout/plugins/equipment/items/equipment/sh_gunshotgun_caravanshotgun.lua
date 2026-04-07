@@ -62,9 +62,17 @@ ITEM.skillScaleAcc = {
 }
 
 ITEM.actions = {	
-"slug1",
-"aimedshot_shotgun",
-"suppressionshotgun",
-"runngunshotgun",
-
+	"slug1",
+	"aimedshot_shotgun",
+	"suppressionshotgun",
+	"runngunshotgun",
 }
+
+--for CEnts
+ITEM.firearm = true
+
+ITEM.IdleAnim = "idle_shotgun"
+ITEM.WalkAnim = "walk_shotgun"
+ITEM.RunAnim = "run_shotgun"
+
+ITEM.fireRange = 500

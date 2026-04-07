@@ -479,10 +479,15 @@ PLUGIN.helperFuncs["getMaxWeight"] = function(self)
 end
 
 --creates a table for targeting data for the cswep
-local function actionFormat(actionTbl, item)
+function PLUGIN:actionFormat(actionTbl, item)
+	local itemName = ""
+	if(item) then
+		itemName = " (" ..item:getName().. ")"
+	end
+
 	local action = {
 		uid = actionTbl.uid,
-		name = actionTbl.name,
+		name = actionTbl.name..itemName,
 		category = actionTbl.category,
 		notarget = actionTbl.notarget,
 		radius = actionTbl.radius,
@@ -491,8 +496,7 @@ local function actionFormat(actionTbl, item)
 		box = actionTbl.box,
 		selfOnly = actionTbl.selfOnly,
 		itemUse = actionTbl.itemUse,
-		--attackOverwrite = actionTbl.attackOverwrite,
-		weapon = item, --ID of the weapon
+		weapon = item and item.id, --ID of the weapon
 	}
 
 	return action
@@ -516,7 +520,7 @@ PLUGIN.helperFuncs["getActions"] = function(self)
 		for k, v in pairs(CEntActions) do
 			local action = PLUGIN:actionFind(v)
 			if(action) then
-				actions[#actions+1] = actionFormat(action)
+				actions[#actions+1] = PLUGIN:actionFormat(action)
 			end
 		end
 	end
@@ -527,7 +531,7 @@ PLUGIN.helperFuncs["getActions"] = function(self)
 		-- Default actions
 		--[[
 		if(actionData.category == "Default") then
-			actions[#actions+1] = actionFormat(actionData)
+			actions[#actions+1] = PLUGIN:actionFormat(actionData)
 			continue
 		end
 		--]]
@@ -543,7 +547,7 @@ PLUGIN.helperFuncs["getActions"] = function(self)
 			if(!reqStats) then continue end
 		end
 
-		actions[#actions+1] = actionFormat(actionData)
+		actions[#actions+1] = PLUGIN:actionFormat(actionData)
 	end
 
 	local equipment = {}
@@ -569,7 +573,7 @@ PLUGIN.helperFuncs["getActions"] = function(self)
 			local actionData = table.Copy(ACTS.actions[v.uniqueID])
 
 			if(actionData) then
-				actions[#actions+1] = actionFormat(actionData, v.id)
+				actions[#actions+1] = PLUGIN:actionFormat(actionData, v)
 			end
 		end
 	
@@ -591,7 +595,7 @@ PLUGIN.helperFuncs["getActions"] = function(self)
 				end
 				if(!reqStats) then continue end
 
-				actions[#actions+1] = actionFormat(actionData, v.id)
+				actions[#actions+1] = PLUGIN:actionFormat(actionData, v)
 			end
 		elseif(v.action) then
 			local action = v.action
@@ -611,7 +615,7 @@ PLUGIN.helperFuncs["getActions"] = function(self)
 			end
 			if(!reqStats) then continue end
 
-			actions[#actions+1] = actionFormat(actionData, v.id)
+			actions[#actions+1] = PLUGIN:actionFormat(actionData, v)
 		end
 	end
 	
@@ -635,7 +639,7 @@ PLUGIN.helperFuncs["getActions"] = function(self)
 			end
 			if(!reqStats) then continue end
 
-			actions[#actions+1] = actionFormat(actionData, v.id)
+			actions[#actions+1] = PLUGIN:actionFormat(actionData, v)
 		end
 	end
 	

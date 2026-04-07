@@ -43,8 +43,12 @@ local PANEL = {}
 	function PANEL:OnRemove()
 		self:ClearElements()
 
-		if(IsValid(self.teamPopup)) then
-			self.teamPopup:Remove()
+		if(IsValid(self.TeamMenu)) then
+			self.TeamMenu:Remove()
+		end
+		
+		if(IsValid(self.AIMenu)) then
+			self.AIMenu:Remove()
 		end
 	end
 	
@@ -68,9 +72,13 @@ local PANEL = {}
 			surface.DrawRect(0, 0, w, h)
 		end
 		
-		button.DoClick = doClick
+		if(doClick) then
+			button.DoClick = doClick
+		end
 		
-		button.DoRightClick = doRightClick
+		if(doRightClick) then
+			button.DoRightClick = doRightClick
+		end
 		
 		table.insert(self.elements, button)
 	end
@@ -163,9 +171,11 @@ local PANEL = {}
 					
 					local name = (PLUGIN:canSeeEntityName(client, id) and entity:Name()) or "Anonymous"
 					
-					self:CreateButton(name, subPanel, 
-					function(this) --left click
-						--open up a little menu here or something
+					self:CreateButton(name, subPanel, function(this) --left click
+						if(!entity.combat) then return end
+						--only CEnts for now
+						
+						self:AIPopup(entity, this)
 					end)
 				end
 				
@@ -189,6 +199,47 @@ local PANEL = {}
 				self.turnID = turnID
 				self:Refresh()
 			end)
+		end
+	end
+	
+	function PANEL:AIPopup(entity, button)
+		if(IsValid(self.AIMenu)) then
+			self.AIMenu:Remove()
+		end
+	
+		--side panel
+		local menu = vgui.Create("DFrame", self)
+		menu:SetSize(200, 200)
+		menu:SetTitle("")
+		menu:MakePopup()
+		menu:Center()
+		menu:MoveLeftOf(self, 50)
+		menu:ShowCloseButton(true)
+		
+		self.AIMenu = menu
+		
+		table.insert(self.elements, menu)
+		
+		local scroll = vgui.Create("DScrollPanel", menu)
+		scroll:Dock(FILL)
+
+		local name = "None"
+		
+		local currentAI = entity:getNetVar("TurnAI")
+		if(currentAI) then
+			name = PLUGIN.AITree[currentAI].name
+		end
+		
+		local selection = vgui.Create("DComboBox", scroll)
+		selection:SetValue(name)
+		selection:Dock(TOP)
+
+		for k, v in pairs(PLUGIN.AITree) do
+			selection:AddChoice(v.name, k)
+		end
+		
+		selection.OnSelect = function(this, data, name, id)
+			netstream.Start("nut_turnAISet", entity, id)
 		end
 	end
 	
@@ -296,6 +347,10 @@ local PANEL = {}
 	end
 	
 	function PANEL:TeamPopup(entities)
+		if(IsValid(self.TeamMenu)) then
+			self.TeamMenu:Remove()
+		end
+	
 		local frame = vgui.Create("DFrame")
 		frame:SetSize(400, 600)
 		frame:Center()
@@ -303,7 +358,7 @@ local PANEL = {}
 		frame:MakePopup()
 		frame:ShowCloseButton(true)
 		
-		self.teamPopup = frame
+		self.TeamMenu = frame
 		
 		local scroll = vgui.Create("DScrollPanel", frame)
 		scroll:Dock(FILL)
@@ -354,9 +409,9 @@ vgui.Register("nutTurnList", PANEL, "DFrame")
 --context menu
 list.Set(
 	"DesktopWindows", 
-	"Turns",
+	"CombatTurns",
 	{
-		title = "Turns",
+		title = "CombatTurns",
 		icon = "icon16/arrow_refresh.png",
 		width = 300,
 		height = 170,

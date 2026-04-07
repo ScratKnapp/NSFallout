@@ -68,8 +68,16 @@ ITEM.skillScaleAcc = {
 
 
 ITEM.actions = {	
-"burstfire_rifle",
-"aimedshot_precision",
-"suppression1",
-
+	"burstfire_rifle",
+	"aimedshot_precision",
+	"suppression1",
 }
+
+--for CEnts
+ITEM.firearm = true
+
+ITEM.IdleAnim = "idle_ar2"
+ITEM.WalkAnim = "walk_ar2"
+ITEM.RunAnim = "run_ar2"
+
+ITEM.fireRange = 1500

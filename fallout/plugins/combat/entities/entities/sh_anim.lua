@@ -90,7 +90,7 @@ function ENT:resetAnim()
 	local anim = self.prevAnim
 	if(!anim) then
 		--configured idle animation
-		local IdleAnim = self:getNetVar("IdleAnim")
+		local IdleAnim = self:getNetVar("IdleAnim", self.IdleAnim)
 		if(IdleAnim) then
 			anim = self:LookupSequence(IdleAnim)
 		else --if no preset idle, then try to find one
@@ -110,6 +110,7 @@ function ENT:resetAnim()
 	end
 	
 	self:ResetSequence(anim)
+	self:SetPoseParameter("move_x", 0)
 	
 	self.prevAnim = nil
 end
@@ -117,15 +118,20 @@ end
 function ENT:attackAnimStart()
 	local AttackAnim = self:getNetVar("AttackAnim", self.AttackAnim)
 	if(AttackAnim) then
-		local sequence = self:LookupSequence(AttackAnim)
-		
-		self:ResetSequence(sequence)
-		self:SetCycle(0)
-		
-		timer.Simple(self:SequenceDuration(sequence), function()
-			if(IsValid(self)) then
-				self:setAnim()
-			end
-		end)
+		if(isnumber(AttackAnim)) then
+			--this does not work properly and i do not know why
+			self:RestartGesture(AttackAnim)
+		else
+			local sequence = self:LookupSequence(AttackAnim)
+
+			self:ResetSequence(sequence)
+			self:SetCycle(0)
+			
+			timer.Simple(self:SequenceDuration(sequence), function()
+				if(IsValid(self)) then
+					self:resetAnim()
+				end
+			end)
+		end
 	end
 end

@@ -197,6 +197,10 @@ function SWEP:PrimaryAttack()
 		else
 			actionTbl:attackOverwrite(attacker, trace, partString, weapon)
 		end
+		
+		if(attacker.combat) then
+			attacker:Attack(trace.Entity, actionTbl)
+		end
 
 		self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
 	end

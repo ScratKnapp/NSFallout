@@ -1314,7 +1314,53 @@ ACTS:Register(ACT)
 
 
 
+local ACT = {}
+ACT.uid = "npcminigun"
+ACT.name = "NPC Minigun"
+ACT.desc = "Fire a large spray of rounds at a target."
+ACT.attackString = "fires a minigun at"
+ACT.category = "Gun"
+ACT.costAP = 1
+ACT.CD = 0
+ACT.dmg = 0
+ACT.weaponMult = 1
+ACT.accuracy = -10
+--ACT.accuracyMult = 0.55
+ACT.multi = 8
+ACT.critC = -10
+ACT.restrict = true --if you don't put this anyone can use it
+ACTS:Register(ACT)
 
+--
+--
+local ACT = {}
+ACT.uid = "npcflamethrower"
+ACT.name = "NPC Flamethrower"
+ACT.desc = "Flamethrower attack."
+ACT.attackString = "fires a jet of flames, igniting"
+ACT.category = "Other"
+ACT.dmgT = "Fire"
+ACT.dmg = 15
+ACT.costAP = 1
+ACT.radius = 100
+ACT.restrict = true
+ACT.effects = {
+	[1] = {
+		uid = ACT.uid,
+		
+		name = "Burning",
+		effect = "DOT",
+		duration = 3,
+		dmg = 10,
+		dmgT = "Fire",
+		strength = 1,
+
+		debuff = true,
+	}
+}
+ACTS:Register(ACT)
+
+--
 
 --[[
 ACT.effects = {

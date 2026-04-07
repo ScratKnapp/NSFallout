@@ -3,7 +3,7 @@ local PLUGIN = PLUGIN
 nut.util.include("sh_anim.lua")
 nut.util.include("sh_buffs.lua")
 nut.util.include("sh_helpers.lua")
-nut.util.include("sh_hooks.lua")
+nut.util.include("sh_sounds.lua")
 
 ENT.Type = "nextbot"
 ENT.Base = "base_nextbot"
@@ -206,6 +206,8 @@ function ENT:basicSetup()
 	self:SetRenderMode(RENDERMODE_TRANSALPHA)
 
 	if (SERVER) then
+		self:SetBloodColor(self.BloodColor or BLOOD_COLOR_RED)
+	
 		--self.attribs = self.savedAttribs or self.attribs or {}
 		self.inv = self.inv or {}
 	
@@ -217,57 +219,58 @@ function ENT:basicSetup()
 		end
 
 		self:SetModel(model)
-		self:SetSkin(self.skin or 0)
 		self:SetMaterial(self.material or self:GetMaterial())
 		self:SetColor(self.color)
 		
 		self:SetUseType(SIMPLE_USE)
 		
-		if(!self.saveKey) then
-			self:DropToFloor()
-			
-			if(self.weapons) then
-				local weapon = table.Random(self.weapons)
-				if(weapon) then
-					local item = nut.item.list[weapon]
-					if(item) then
-						self:EquipWeapon(item.modelCEnt or item.model, item.material)
-						
-						if(item.dmg) then
-							self:setNetVar("dmg", item.dmg)
-						end
-						
-						if(item.multi) then
-							self:setNetVar("multi", item.multi)
-						end
-						
-						if(item.actions) then
-							table.Add(self.actions, item.actions)
-						end
-						
-						if(item.IdleAnim) then
-							self:setNetVar("IdleAnim", item.IdleAnim)
-							
-							self:resetAnim()
-						end
-						
-						if(item.WalkAnim) then
-							self:setNetVar("WalkAnim", item.WalkAnim)
-						end
-						
-						if(item.RunAnim) then
-							self:setNetVar("RunAnim", item.RunAnim)
-						end
-						
-						if(item.AttackAnim) then
-							self:setNetVar("AttackAnim", item.AttackAnim)
-						end
+		if(self.loco) then
+			self.loco:SetStepHeight(35)
+		end
+		
+		--bulk sets a bunch of variables to match the NPCs I have
+		--convenience so i dont have to copy paste 100 things
+		if(self.NPCReference) then
+			local classTbl = scripted_ents.GetStored(self.NPCReference) or {}
+			classTbl = classTbl.t or {}
 
-						self:setNetVar("name", self.name.. " (" ..item.name.. ")")
-					else
-						print("No item found", weapon)
-					end
-				end
+			if(!self.SoundPitch) then
+				local var = classTbl.pitchVar or 10
+				local pitch = classTbl.pitch or 100
+				
+				self.SoundPitch = {pitch-var, pitch+var}
+			end
+			
+			if(!self.SoundVolume) then
+				self.SoundVolume = classTbl.volume
+			end
+			
+			if(!self.SoundDSP) then
+				self.SoundDSP = classTbl.soundDSP
+			end
+			
+			if(!self.AttackSounds) then
+				self.AttackSounds = classTbl.attackSounds
+			end
+			
+			if(!self.IdleSounds) then
+				self.IdleSounds = classTbl.idleSounds
+			end
+			
+			if(!self.DeathSounds) then
+				self.DeathSounds = classTbl.deathSounds
+			end
+			
+			if(!self.PainSounds) then
+				self.PainSounds = classTbl.painSounds
+			end
+			
+			if(!self.HitSounds) then
+				self.HitSounds = classTbl.hitSounds
+			end
+			
+			if(!self.SelectSound) then
+				self.SelectSound = classTbl.alertSounds
 			end
 		end
 	end
@@ -306,9 +309,49 @@ function ENT:physicsSetup()
 			
 			self:SetGravity(0)
 		end
+		
+		if(!self.saveKey) then
+			self:DropToFloor()
+			
+			if(self.weapons) then
+				local weapon
+				
+				if(self.weapons.generated) then
+					local weaponData = self.weapons
+					local tags = weaponData.tags
+					local filter = weaponData.filter
+				
+					weapon = nut.plugin.list["equipment"]:randomItemByTags(tags, filter)
+
+					if(weapon) then
+						weapon = weapon.uniqueID
+					end
+				else
+					weapon = table.Random(self.weapons)
+				end
+				
+				if(weapon) then
+					self:EquipItem(weapon, true)
+				
+					local item = nut.item.list[weapon]
+					if(item) then
+						self:setNetVar("name", self.name.. " (" ..item.name.. ")")
+					else
+						print("No item found", weapon)
+					end
+				end
+			end
+		end
+		
+		if(self.collisionOverwrite) then
+			local collisionside = self.CollisionSide
+			local collisionheight = self.CollisionHeight
+
+			self:SetCollisionBounds(Vector(-collisionside,-collisionside,0), Vector(collisionside,collisionside,collisionheight))
+		end
 	end
 	
-	self:SetCollisionBounds(Vector(-20,-20,0), Vector(20,20,100))
+	--self:SetCollisionBounds(Vector(-20,-20,0), Vector(20,20,100))
 	self:SetCollisionGroup(COLLISION_GROUP_WORLD)
 end
 
@@ -332,6 +375,9 @@ function ENT:getSaveData()
 		multi = self:getNetVar("multi", self.multi),
 		res = self:getNetVar("res", self.res),
 		amp = self:getNetVar("amp", self.amp),
+		range = self:getRange(),
+		
+		GunEffects = self:getNetVar("GunEffects"),
 		
 		model = self:GetModel(),
 		modelScale = self:GetModelScale(),
@@ -344,6 +390,8 @@ function ENT:getSaveData()
 		RunAnim = self:getNetVar("RunAnim"),
 		AttackAnim = self:getNetVar("AttackAnim"),
 		CurAnim = self:GetSequence(),
+		
+		AttackSounds = self:getNetVar("AttackSounds"),
 	}
 	
 	if(IsValid(self.weapon)) then
@@ -392,6 +440,12 @@ function ENT:loadSaveData(data)
 	self:setNetVar("amp", data.amp)
 	self:setNetVar("dmg", data.dmg)
 	self:setNetVar("actions", data.actions)
+	
+	if(data.range and data.range != self:getRange()) then
+		self:setNetVar("range", data.range)
+	end
+	
+	self:setNetVar("GunEffects", data.GunEffects)
 
 	self:setMaxHP(data.hpMax or self.hpMax or self.hp)
 	self:setHP(data.hp or self.hp or 0)
@@ -423,6 +477,8 @@ function ENT:loadSaveData(data)
 	self:setNetVar("IdleAnim", data.IdleAnim)
 	self:setNetVar("AttackAnim", data.AttackAnim)
 	
+	self:setNetVar("AttackSounds", data.AttackSounds)
+	
 	self:physicsSetup()
 	
 	if(data.modelScale) then
@@ -435,11 +491,52 @@ function ENT:loadSaveData(data)
 	end
 end
 
+--runs a function 'delay' seconds after this is queued
+function ENT:queueAction(delay, func)
+	if(!self.actionQueue) then
+		self.actionQueue = {}
+	end
+
+	local time = CurTime()+delay
+
+	self.actionQueue[time] = func
+end
+
+--delays a function until all over queued functions are done
+function ENT:queueActionAfter(delay, func)
+	if(!self.actionQueue) then
+		self.actionQueue = {}
+	end
+	
+	local latest = CurTime()
+	
+	for k, v in pairs(self.actionQueue) do
+		if(k > latest) then
+			latest = k
+		end
+	end
+
+	local time = latest+delay
+
+	self.actionQueue[time] = func
+end
+
 function ENT:Think()
 	self:CustomThink()
 
 	if(SERVER) then	
-		if(!self.loco or !IsValid(self.loco)) then return end
+		local actionQueue = self.actionQueue or {}
+		local curTime = CurTime()
+		
+		for time, func in pairs(actionQueue) do
+			if(time <= curTime) then
+				actionQueue[time] = nil
+				
+				func()
+			end
+		end
+	
+		if(!self.loco) then return end
 	
 		if(self:IsPlayerHolding()) then
 			--if held with physgun while moving, will teleport to end when hold ends
@@ -463,6 +560,9 @@ function ENT:Think()
 			if(self.nudged and self.desiredPos) then
 				self:SetPos(self.desiredPos)
 				self.nudged = nil
+				self.desiredPos = nil
+				self.interruptPath = true
+				self:resetAnim()
 			end
 			
 			if(!self.desiredPos) then
@@ -472,7 +572,7 @@ function ENT:Think()
 				--self.desiredPos = nil
 			end
 		end
-		
+
 		if(IsValid(self.follow) and !self.desiredPos and !(self.follow and self.follow:InVehicle())) then
 			local followPos = self.follow:GetPos() + self.follow:GetRight() * -50
 		
@@ -497,14 +597,10 @@ function ENT:Think()
 			end
 		end
 		
-		if(self.loco and self.loco:GetDesiredSpeed() != 0) then
+		if(self.loco and self.desiredPos) then
 			self:StepThink()
 		end
 	end
-	
-	self:NextThink(CurTime())
-	
-	return true
 end
 
 --adds a weapon model to a CEnt's hands
@@ -675,10 +771,184 @@ function ENT:movementStart(position, walk)
 	if(SERVER) then
 		if(self.desiredPos) then self.interruptPath = true end
 		
+		self:IdleSound()
+		
 		self.desiredPos = position
 		self.patrol = nil
 		
-		self:walkAnims(self:GetPos():Distance(position), walk)
+		local dist = self:GetPos():Distance2D(position)
+		
+		self:walkAnims(dist, walk)
+
+		local estimation = 0
+
+		if(self.loco) then
+			--local speed = self:GetSequenceGroundSpeed(self:GetSequence())
+			local speed = self.loco:GetDesiredSpeed()
+			if(speed == 0) then --avoid dividing by 0
+				speed = 1
+			end
+
+			estimation = dist / speed
+		end
+		
+		return estimation
+	end
+end
+
+function ENT:Attack(target, action)
+	if(self.loco and IsValid(target)) then
+		self.loco:FaceTowards(target:GetPos())
+		self.loco:FaceTowards(target:GetPos())
+		self.loco:FaceTowards(target:GetPos())
+		self.loco:FaceTowards(target:GetPos())
+		self.loco:FaceTowards(target:GetPos())
+	end
+
+	local GunEffects = self:getNetVar("GunEffects", self.GunEffects)
+	if(GunEffects and IsValid(target)) then
+		local attachRH = self:LookupAttachment("anim_attachment_RH")
+		local attach = self:GetAttachment(attachRH)
+		local attachPos = attach.Pos
+	
+		local direction = (target:WorldSpaceCenter() - attachPos):GetNormalized()
+		
+		--estimates weapon length (poorly)
+		local weaponLength = 30
+		
+		local firePos = attachPos+direction*weaponLength
+	
+		local bullet = {}
+		bullet.Attacker = self
+		bullet.Damage = 0
+		--bullet.Force = 100
+		bullet.Num = 1
+		bullet.Tracer = 1
+		bullet.TracerName = "AR2Tracer"
+		bullet.Dir = direction
+		bullet.HullSize = 1
+		bullet.Src = firePos
+
+		bullet.Distance = 10000
+		bullet.IgnoreEntity = self
+	
+		self:FireBullets(bullet)
+
+		local effectData = EffectData()
+		effectData:SetOrigin(firePos)
+		effectData:SetNormal(direction)
+		effectData:SetMagnitude(1)
+		effectData:SetEntity(self)
+		util.Effect("combat_muzzleflash", effectData, true, true)
+		
+		local effectData = EffectData()
+		effectData:SetOrigin(firePos)
+		effectData:SetNormal(direction)
+		effectData:SetMagnitude(self:GetPos():Distance(target:GetPos()))
+		effectData:SetEntity(self)
+		util.Effect("combat_tracer", effectData, true, true)
+	end
+	
+	self:attackAnimStart(target, action)
+	self:AttackSound()
+end
+
+function ENT:DecalHit(attacker)
+	if(self:GetBloodColor() == BLOOD_COLOR_RED) then
+		local nearest = self:NearestPoint(attacker:EyePos())
+	
+		local trace = {}
+		trace.start = attacker:EyePos()
+		trace.endpos = self:GetPos()+self:GetUp()*20
+		trace.filter = {attacker}
+		local tr = util.TraceLine(trace)
+
+		local pos1 = tr.HitPos + tr.HitNormal*50
+		local pos2 = tr.HitPos - tr.HitNormal*50
+
+		util.Decal("blood", pos1, pos2, self)
+		
+		local direction = (nearest-attacker:EyePos()):GetNormalized()
+		
+		local trace2 = {}
+		trace2.start = attacker:EyePos()
+		trace2.endpos = attacker:EyePos() + direction*150
+		trace2.filter = {attacker, self}
+		local tr2 = util.TraceLine(trace2)
+		
+		pos1 = tr2.HitPos + tr2.HitNormal
+		pos2 = tr2.HitPos - tr2.HitNormal
+		
+		if(!IsValid(tr2.Entity) and !tr2.HitWorld) then
+			pos1 = self:GetPos()+self:GetUp()
+			pos2 = self:GetPos()-self:GetUp()
+		end
+		
+		util.Decal("blood", pos1, pos2, {attacker, self})
+	end
+end
+
+function ENT:DecalDeath()
+	if(self:GetBloodColor() == BLOOD_COLOR_RED) then
+		util.Decal("blood", self:GetPos() - self:GetUp()*1, self:GetPos() - self:GetUp()*5, self)
+	end
+end
+
+function ENT:Pain(attacker)
+	self:DecalHit(attacker)
+	
+	self:PainSound()
+end
+
+
+function ENT:EquipItem(itemID, model)
+	local item = nut.item.list[itemID]
+	if(!item) then return end
+
+	if(model) then
+		self:EquipWeapon(item.modelCEnt or item.model, item.material)
+	end
+
+	if(item.dmg) then
+		self:setNetVar("dmg", item.dmg)
+	end
+	
+	if(item.multi) then
+		self:setNetVar("multi", item.multi)
+	end
+	
+	if(item.range) then
+		self:setNetVar("range", item.range)
+	end
+	
+	if(item.actions) then
+		table.Add(self.actions, item.actions)
+	end
+	
+	if(item.IdleAnim) then
+		self:setNetVar("IdleAnim", item.IdleAnim)
+		
+		self:resetAnim()
+	end
+	
+	if(item.WalkAnim) then
+		self:setNetVar("WalkAnim", item.WalkAnim)
+	end
+	
+	if(item.RunAnim) then
+		self:setNetVar("RunAnim", item.RunAnim)
+	end
+	
+	if(item.AttackAnim) then
+		self:setNetVar("AttackAnim", item.AttackAnim)
+	end
+	
+	if(item.AttackSounds) then
+		self:setNetVar("AttackSounds", item.AttackSounds)
+	end
+	
+	if(item.firearm) then
+		self:setNetVar("GunEffects", true)
 	end
 end
 
@@ -733,6 +1003,22 @@ function ENT:FootstepSound()
 
 	self:EmitSound(sound, 75, self.pitch)
 end
+
+hook.Add("nut_OnCombatDamageProcessPost", "nut_CombatCEntDamage", function(target, damage, attackInfo)
+	if(!IsValid(target)) then return end
+	if(table.IsEmpty(damage)) then return end
+	
+	local attacker = attackInfo.attacker
+	if(!IsValid(attacker)) then return end
+	
+	if(target.combat) then
+		target:Pain(attacker)
+	end
+	
+	if(attacker.combat) then
+		attacker:HitSound(target)
+	end
+end)
 
 if (CLIENT) then
 	function ENT:Draw()

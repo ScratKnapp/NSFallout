@@ -52,26 +52,38 @@ ITEM.partMod = {
 		accuracy = 0, --this is added
 		accuracyMult = 0, --this is a multiplier
 		dmg = 0, --this adds to the existing multiplier
-		},
+	},
 }
 
 ITEM.skillScaleDmg = {
-    ["guns"] = 0,
+	["guns"] = 0,
 }
 
 ITEM.upgradeSlots = {
-["9mm Extended Magazine"] = true,
-["9mm Pistol Scope"] = true,
-
+	["9mm Extended Magazine"] = true,
+	["9mm Pistol Scope"] = true,
 }
 
 ITEM.skillScaleAcc = {
-["guns"] = 0.9,
+	["guns"] = 0.9,
 }
 
 ITEM.actions = {	
-"doubletap_pistol",
-"aimedshot_precision",
-"suppressionpistol",
+	"doubletap_pistol",
+	"aimedshot_precision",
+	"suppressionpistol",
+}
 
+--for CEnts
+ITEM.firearm = true
+
+ITEM.IdleAnim = "idle_revolver"
+ITEM.WalkAnim = "walk_revolver"
+ITEM.RunAnim = "run_revolver"
+
+ITEM.fireRange = 500
+
+ITEM.AttackSounds = {
+	"weapons/pistol/pistol_fire2.wav",
+	"weapons/pistol/pistol_fire3.wav",
 }

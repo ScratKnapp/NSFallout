@@ -8,6 +8,10 @@ function ENT:Desc()
 	return self:getNetVar("desc", self.desc)
 end
 
+function ENT:getFireRange()
+	return self:getNetVar("fireRange", self.fireRange) or 80
+end
+
 function ENT:getHP()
 	return self:getNetVar("hp", self:getMaxHP())
 end
