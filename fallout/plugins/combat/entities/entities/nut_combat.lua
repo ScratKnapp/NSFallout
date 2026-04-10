@@ -441,8 +441,8 @@ function ENT:loadSaveData(data)
 	self:setNetVar("dmg", data.dmg)
 	self:setNetVar("actions", data.actions)
 	
-	if(data.range and data.range != self:getRange()) then
-		self:setNetVar("range", data.range)
+	if(data.fireRange and data.fireRange != self:getRange()) then
+		self:setNetVar("fireRange", data.fireRange)
 	end
 	
 	self:setNetVar("GunEffects", data.GunEffects)
@@ -804,12 +804,40 @@ function ENT:Attack(target, action)
 		self.loco:FaceTowards(target:GetPos())
 		self.loco:FaceTowards(target:GetPos())
 	end
+	
+	local multi = (action and action.multi) or 1
 
+	self:attackAnimStart(target, action)
+	
+	for i = 1, multi do
+		timer.Simple(i*0.25, function()
+			if(IsValid(self)) then
+				self:AttackSound()
+			end
+		end)
+	end
+	
 	local GunEffects = self:getNetVar("GunEffects", self.GunEffects)
+	
+	--prevents gun effects for actions that deal no damage
+	if(action and !(action.dmg or action.weaponMult)) then
+		GunEffects = false
+	end
+	
+	if(action.noVisual or action.visual) then
+		GunEffects = false
+	end
+
 	if(GunEffects and IsValid(target)) then
 		local attachRH = self:LookupAttachment("anim_attachment_RH")
 		local attach = self:GetAttachment(attachRH)
-		local attachPos = attach.Pos
+		
+		local attachPos
+		if(attach) then
+			attachPos = attach.Pos
+		else
+			attachPos = self:GetPos()
+		end
 	
 		local direction = (target:WorldSpaceCenter() - attachPos):GetNormalized()
 		
@@ -818,39 +846,40 @@ function ENT:Attack(target, action)
 		
 		local firePos = attachPos+direction*weaponLength
 	
-		local bullet = {}
-		bullet.Attacker = self
-		bullet.Damage = 0
-		--bullet.Force = 100
-		bullet.Num = 1
-		bullet.Tracer = 1
-		bullet.TracerName = "AR2Tracer"
-		bullet.Dir = direction
-		bullet.HullSize = 1
-		bullet.Src = firePos
+		for i = 1, multi do
+			timer.Simple(i*0.25, function()
+				local bullet = {}
+				bullet.Attacker = self
+				bullet.Damage = 0
+				--bullet.Force = 100
+				bullet.Num = 1
+				bullet.Tracer = 1
+				bullet.TracerName = "AR2Tracer"
+				bullet.Dir = direction
+				bullet.HullSize = 1
+				bullet.Src = firePos
 
-		bullet.Distance = 10000
-		bullet.IgnoreEntity = self
-	
-		self:FireBullets(bullet)
+				bullet.Distance = 10000
+				bullet.IgnoreEntity = self
+			
+				self:FireBullets(bullet)
 
-		local effectData = EffectData()
-		effectData:SetOrigin(firePos)
-		effectData:SetNormal(direction)
-		effectData:SetMagnitude(1)
-		effectData:SetEntity(self)
-		util.Effect("combat_muzzleflash", effectData, true, true)
-		
-		local effectData = EffectData()
-		effectData:SetOrigin(firePos)
-		effectData:SetNormal(direction)
-		effectData:SetMagnitude(self:GetPos():Distance(target:GetPos()))
-		effectData:SetEntity(self)
-		util.Effect("combat_tracer", effectData, true, true)
+				local effectData = EffectData()
+				effectData:SetOrigin(firePos)
+				effectData:SetNormal(direction)
+				effectData:SetMagnitude(1)
+				effectData:SetEntity(self)
+				util.Effect("combat_muzzleflash", effectData, true, true)
+				
+				local effectData = EffectData()
+				effectData:SetOrigin(firePos)
+				effectData:SetNormal(direction)
+				effectData:SetMagnitude(self:GetPos():Distance(target:GetPos()))
+				effectData:SetEntity(self)
+				util.Effect("combat_tracer", effectData, true, true)
+			end)
+		end
 	end
-	
-	self:attackAnimStart(target, action)
-	self:AttackSound()
 end
 
 function ENT:DecalHit(attacker)
@@ -917,12 +946,20 @@ function ENT:EquipItem(itemID, model)
 		self:setNetVar("multi", item.multi)
 	end
 	
-	if(item.range) then
-		self:setNetVar("range", item.range)
+	if(item.fireRange) then
+		self:setNetVar("fireRange", item.fireRange)
 	end
 	
 	if(item.actions) then
+		if(!self.actions) then
+			self.actions = {}
+		end
+
 		table.Add(self.actions, item.actions)
+		
+		if(self.actionsAI) then
+			table.Add(self.actionsAI, item.actions)
+		end
 	end
 	
 	if(item.IdleAnim) then

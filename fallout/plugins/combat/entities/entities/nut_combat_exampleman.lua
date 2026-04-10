@@ -77,8 +77,6 @@ ENT.actions = {
 	"aimedshot_precision",
 }
 
-
-
 ENT.tags = {
 	["Biological"] = true,
 	["Humanoid"] = true,
@@ -96,8 +94,9 @@ ENT.SoundVolume = 1
 --left blank since weapons will give actions to it
 --if you add stuff like dodge or block it may just spam it
 ENT.actionsAI = {
-"dodge",
-
+	"burstfire_rifle",
+	"doubletap_pistol",
+	"aimedshot_precision",
 }
 
 --the range at which the CEnt will do its actions

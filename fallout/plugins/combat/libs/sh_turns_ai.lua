@@ -13,24 +13,25 @@ PLUGIN.helperFuncs["getTurnAIActions"] = function(self, id)
 	end
 end
 
-function PLUGIN:FindMovePosition(entity, target, test)
+function PLUGIN:FindMovePosition(entity, target, distance)
 	local destination
+	local range = entity:getFireRange()
+	
+	local distance = distance or range*0.7
 
 	--one ap circle (squared)
 	local circle = 400
+	local circleSqr = circle*circle
 
 	local entityPos = entity:GetPos()
 	local targetPos = target:GetPos()
 
 	local direction = (targetPos - entityPos):GetNormalized()
-	
-	local range = entity:getFireRange()
-	
+
 	--where we would ideally like to be
-	--AKA right in front of them
-	destination = targetPos - direction*range*0.7
-	
-	if(entityPos:Distance(destination) > circle) then
+	destination = targetPos - direction*distance
+
+	if(entityPos:DistToSqr(destination) > circleSqr) then
 		--if we cannot get right in front of them, then just move towards them
 		destination = entity:GetPos() + direction*circle
 	end
@@ -111,18 +112,17 @@ function PLUGIN:ChooseAttack(entity, target, delay)
 				possible[#possible+1] = PLUGIN:actionFormat(action)
 			end
 		end
-
-		local action = table.Random(possible)
 		
-		--if no other action possible, attempt default action
-		if(!action) then
-			if(dist <= range) then
-				--default attack
+		--basic attack
+		if(dist <= range) then
+			possible[#possible+1] = {
 				action = {
 					name = "Attack",
 				}
-			end
+			}
 		end
+
+		local action = table.Random(possible)
 
 		if(action) then
 			local data = {}
@@ -178,6 +178,42 @@ PLUGIN.AITree["simple"] = {
 		--replace with a function that better determines where to move
 		if(IsValid(target)) then
 			local movePos, delay = PLUGIN:FindMovePosition(entity, target)
+		
+			local distToSqr = entity:GetPos():DistToSqr(movePos)
+			local delay = 0
+			if(distToSqr > 25) then
+				delay = entity:movementStart(movePos)
+			end
+
+			PLUGIN:ChooseAttack(entity, target, delay)
+		end
+	end,
+}
+
+PLUGIN.AITree["ranged"] = {
+	name = "Ranged",
+	turnProcess = function(entity, turnData)
+		if(!entity.combat) then return end
+		if(!turnData) then return end
+
+		local ourTeam = entity:getTurnTeam()
+		
+		local enemies = {}
+		for target, teamName in pairs(turnData.entities) do
+			if(!IsValid(target)) then continue end
+			
+			if(teamName == ourTeam) then continue end --no same team
+			--may make an exception for if they have buffs or something
+			if(target:GetMoveType() == MOVETYPE_NOCLIP) then continue end --no noclipping admins
+			
+			enemies[#enemies+1] = target
+		end
+
+		local target = PLUGIN:GetClosestTarget(entity, enemies)
+
+		--replace with a function that better determines where to move
+		if(IsValid(target)) then
+			local movePos, delay = PLUGIN:FindMovePosition(entity, target, entity:getFireRange())
 		
 			local delay = entity:movementStart(movePos)
 
