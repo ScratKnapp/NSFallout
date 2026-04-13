@@ -666,11 +666,10 @@ PLUGIN.helperFuncs["traitModify"] = function(self, command, dmg)
 end
 
 --function for when a player receives damage, handles armor, resistance, etc
-PLUGIN.helperFuncs["receiveDamage"] = function(self, dmg, dmgT, part)
+PLUGIN.helperFuncs["receiveDamage"] = function(self, dmg, dmgT, part, evaReduct)
 	local res = self:getRes(part)
 
 	--physical damage reduction (DR) from armor
-	
 	if(PLUGIN:armorReduction(dmgT)) then
 		local armorThreshold = (self:getArmor(part) * 1 * PLUGIN:armorReduction(dmgT))
 
@@ -682,7 +681,7 @@ PLUGIN.helperFuncs["receiveDamage"] = function(self, dmg, dmgT, part)
 		end
 	end
 	
-	hook.Run("nut_OnReceiveDamage", self, dmg, dmgT, part)
+	hook.Run("nut_OnReceiveDamage", self, dmg, dmgT, part, evaReduct)
 	
 	dmg = dmg * math.max(1 - (res[dmgT] or 0), 0)
 	

@@ -259,7 +259,7 @@ function PLUGIN:damageProcess(target, attack, responseString)
 			v.dmg = v.dmg * (evaReduct or 1)
 			
 			--reduce damage by target's resistances
-			v.dmg = target:receiveDamage(v.dmg, v.dmgT, v.part) --resistances handled in here
+			v.dmg = target:receiveDamage(v.dmg, v.dmgT, v.part, evaReduct) --resistances handled in here
 
 			--round it so there's no crazy decimals
 			v.dmg = math.Round(math.max(v.dmg, 0), 2) 

@@ -94,8 +94,9 @@ hook.Add("nut_OnCombatAttack", "nut_durabilityOffense", function(action, attacke
 	attacker:durabilityOffense(info)
 end)
 
-hook.Add("nut_OnReceiveDamage", "nut_durabilityDamage", function(client, dmg, dmgT, part)
-	if(dmg > 0) then
+hook.Add("nut_OnReceiveDamage", "nut_durabilityDamage", function(client, dmg, dmgT, part, evaReduct)
+	--don't check on evasions
+	if(!evaReduct or (evaReduct and evaReduct > 0)) then
 		client:durabilityDefense(part)
 	end
 end)

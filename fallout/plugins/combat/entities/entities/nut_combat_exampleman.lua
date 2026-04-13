@@ -22,13 +22,10 @@ ENT.accuracy = 50
 ENT.evasion = 5
 
 ENT.weapons = {
-	--[[
 	"gunpistol_9mmpistol",
 	"gunrifle_ak112",
 	"gunshotgun_caravanshotgun",
 	"gunsmg_5mmsmg",
-	--]]
-	"gunshotgun_riotgun",
 }
 
 ENT.armor = {
