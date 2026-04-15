@@ -107,18 +107,13 @@ PLUGIN.helperFuncs["getDamage"] = function(self, partString, weapon)
 				
 				--direct dmg buffs
 				dmg = dmg + self:getBuffAttribute("dmg")
-
-				--multiple hits
-				local multi = self:getNetVar("multi", self.multi) or 1
-
-				for i = 1, multi do
-					totalDam[#totalDam + 1] = {
-						dmg = dmg, 
-						dmgT = dmgT,
-						accuracy = self:getAccuracy(),
-						part = partString
-					}
-				end
+				
+				totalDam[#totalDam + 1] = {
+					dmg = dmg, 
+					dmgT = dmgT,
+					accuracy = self:getAccuracy(),
+					part = partString
+				}
 			end
 		end
 		

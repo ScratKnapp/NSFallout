@@ -89,7 +89,7 @@ function PLUGIN:getAttackData(attacker, info, fakeAttack)
 					action.dmg = action.dmg + (attacker:getChar():getAttrib(attrib, 0) * mult)
 				end
 			end
-
+			
 			--damage from attributes
 			if(action.multSkill) then 
 				for skill, mult in pairs(action.multSkill) do
@@ -114,7 +114,7 @@ function PLUGIN:getAttackData(attacker, info, fakeAttack)
 
 				action.dmg = action.dmg + weaponDmg * action.weaponMult
 			end
-
+			
 			hook.Run("nut_ActionAttackData", action, attacker, info, fakeAttack)
 
 			--damage table
@@ -155,7 +155,14 @@ function PLUGIN:getAttackData(attacker, info, fakeAttack)
 	else
 		--basic attack
 		local dmgTbl = attacker:getDamage(partString, weapon)
-		
+
+		--basic attacks with multi hits
+		local multi = attacker:getNetVar("multi", attacker.multi) or 1
+
+		for i = 1, multi-1 do
+			dmgTbl[#dmgTbl+1] = dmgTbl[1]
+		end
+
 		for k, v in pairs(dmgTbl) do
 			hook.Run("nut_ActionAttackData", v, attacker, info, fakeAttack)
 			hook.Run("nut_OnCombatAttack", v, attacker, info, fakeAttack)
