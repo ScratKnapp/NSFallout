@@ -36,9 +36,9 @@ function ENT:AttackSound()
 	local volume = self.SoundVolume or 1
 
 	if(self.weapon) then
-		self:EmitSound(sound, 80, pitch, volume, CHAN_AUTO, 0, self.SoundDSP or 1)
+		self:EmitSound(sound, 120, pitch, volume, CHAN_AUTO, 0, self.SoundDSP or 1)
 	else
-		self:EmitSound(sound, 80, pitch, volume, CHAN_AUTO, 0, self.SoundDSP or 1)
+		self:EmitSound(sound, 90, pitch, volume, CHAN_AUTO, 0, self.SoundDSP or 1)
 	end
 end
 

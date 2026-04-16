@@ -1,50 +1,92 @@
 ENT.Type = "nextbot"
 ENT.Base = "nut_combat"
-ENT.PrintName = "Example Man"
-ENT.Category = "NutScript - Combat (Example)"
+ENT.PrintName = "Provisional Sapper"
+ENT.Category = "NutScript - Combat (Texans)"
 ENT.Spawnable = true
 ENT.AdminOnly = true
 
-ENT.name = "Jim"
+ENT.name = "Provisional Sapper"
 
-ENT.models = {
-    "models/player/odessa.mdl",
+ENT.StepData = {
+	0.25,
+	0.75,
 }
 
-ENT.WalkAnim = "walk_all"
-ENT.RunAnim = "run_all_01"
+ENT.FootstepSounds = {
+	"npc/footsteps/hardboot_generic1.wav",
+	"npc/footsteps/hardboot_generic2.wav",
+	"npc/footsteps/hardboot_generic3.wav",
+	"npc/footsteps/hardboot_generic4.wav",
+	"npc/footsteps/hardboot_generic5.wav",
+	"npc/footsteps/hardboot_generic6.wav",
+}
+
+ ENT.models = {
+    "models/thespireroleplay/humans/group006/female_01.mdl",
+    "models/thespireroleplay/humans/group006/female_02.mdl",
+    "models/thespireroleplay/humans/group006/female_03.mdl",
+    "models/thespireroleplay/humans/group006/female_04.mdl",
+    "models/thespireroleplay/humans/group006/female_05.mdl",
+    "models/thespireroleplay/humans/group006/female_06.mdl",
+    "models/thespireroleplay/humans/group006/female_07.mdl",
+    "models/thespireroleplay/humans/group006/female_08.mdl",
+    "models/thespireroleplay/humans/group006/female_09.mdl",
+    "models/thespireroleplay/humans/group006/female_10.mdl",
+    "models/thespireroleplay/humans/group006/female_11.mdl",
+    "models/thespireroleplay/humans/group006/male_01.mdl",
+    "models/thespireroleplay/humans/group006/male_02.mdl",
+    "models/thespireroleplay/humans/group006/male_03.mdl",
+    "models/thespireroleplay/humans/group006/male_04.mdl",
+    "models/thespireroleplay/humans/group006/male_05.mdl",
+    "models/thespireroleplay/humans/group006/male_06.mdl",
+    "models/thespireroleplay/humans/group006/male_07.mdl",
+    "models/thespireroleplay/humans/group006/male_08.mdl",
+    "models/thespireroleplay/humans/group006/male_09.mdl",
+    "models/thespireroleplay/humans/group006/male_10.mdl",
+    "models/thespireroleplay/humans/group006/male_11.mdl",
+    "models/thespireroleplay/humans/group006/male_12.mdl",
+    "models/thespireroleplay/humans/group006/male_13.mdl",
+    "models/thespireroleplay/humans/group006/male_14.mdl",
+    "models/thespireroleplay/humans/group006/male_15.mdl",
+    "models/thespireroleplay/humans/group006/male_16.mdl",
+    "models/thespireroleplay/humans/group006/male_17.mdl",
+    "models/thespireroleplay/humans/group006/male_18.mdl",
+
+
+
+}
 
 ENT.hp = 100
 ENT.dmg = {
-	["9mm"] = 25,
+	["5.56"] = 15,
 }
-ENT.accuracy = 50
-ENT.evasion = 5
+ENT.accuracy = 60
+ENT.evasion = 1
 
 ENT.weapons = {
-	"gunpistol_9mmpistol",
-	"gunrifle_ak112",
-	"gunshotgun_caravanshotgun",
-	"gunsmg_5mmsmg",
+
 }
 
 ENT.armor = {
-	["Head"] = 0,
-	["Body"] = 0,
-	["Left Arm"] = 0,
-	["Right Arm"] = 0,
-	["Left Leg"] = 0,
-	["Right Leg"] = 0,
+	["Head"] = 10,
+	["Body"] = 10,
+	["Left Arm"] = 10,
+	["Right Arm"] = 10,
+	["Left Leg"] = 10,
+	["Right Leg"] = 10,
+
 }
 
 ENT.armorBreak = {
-	["Head"] = 0,
-	["Body"] = 0,
-	["Left Arm"] = 0,
-	["Right Arm"] = 0,
-	["Left Leg"] = 0,
-	["Right Leg"] = 0,
+	["Head"] = 3,
+	["Body"] = 3,
+	["Left Arm"] = 3,
+	["Right Arm"] = 3,
+	["Left Leg"] = 3,
+	["Right Leg"] = 3,
 }
+
+
 --all attributes
 ENT.attribs = {
 	["str"] = 0,
@@ -60,9 +102,9 @@ ENT.attribs = {
 ENT.skills = {
 	["evasion"] = 0,
 	["guns"] = 8,
-	["energyweapons"] = 8,
+	["energyweapons"] = 0,
 	["melee"] = 8,
-	["throwing"] = 8,
+	["throwing"] = 5,
 
 }
 
@@ -72,9 +114,14 @@ ENT.res = {
 ENT.actions = {
 	"dodge",
 	"charge",
+	"burstfire_smg",
+	"runngun",
 	"burstfire_rifle",
+	"suppression1",
 	"doubletap_pistol",
+	"doubletap_precision",
 	"aimedshot_precision",
+	"grenade_frag",
 }
 
 ENT.tags = {
@@ -94,9 +141,8 @@ ENT.SoundVolume = 1
 --left blank since weapons will give actions to it
 --if you add stuff like dodge or block it may just spam it
 ENT.actionsAI = {
-	"burstfire_rifle",
-	"doubletap_pistol",
-	"aimedshot_precision",
+	"dodge",
+	"charge",
 }
 
 --the range at which the CEnt will do its actions
@@ -117,17 +163,31 @@ ENT.FootstepSounds = {
 --weapon attack sounds will overwrite these if they are set
 ENT.AttackSounds = {
  
-	"vj_fallout/human/maleadult03/fie_normaltocombat01.wav",
-	"vj_fallout/human/maleadult03/fie_normaltocombat02.wav",
-	"vj_fallout/human/maleadult03/fie_normaltocombat03.wav",
-	"vj_fallout/human/maleadult03/fiend_attack01.wav",
-	"vj_fallout/human/maleadult03/fiend_attack02.wav",
-	"vj_fallout/human/maleadult03/fiend_attack03.wav",
-	"vj_fallout/human/maleadult03/fiend_deathresponse01.wav",
-	"vj_fallout/human/maleadult03/fiend_deathresponse02.wav",
-	"vj_fallout/human/maleadult03/fiend_deathresponse04.wav",
-	"vj_fallout/human/maleadult03/fiend_deathresponse05.wav",
-	"vj_fallout/human/maleadult03/fiend_deathresponse06.wav",
+	
+	"vj_fallout/human/maleadult02/b_attack01.wav",
+	"vj_fallout/human/maleadult02/b_attack02.wav",
+	"vj_fallout/human/maleadult02/b_attack03.wav",
+	"vj_fallout/human/maleadult02/b_attack04.wav",
+	"vj_fallout/human/maleadult02/b_attack05.wav",
+	"vj_fallout/human/maleadult02/b_attack06.wav",
+	"vj_fallout/human/maleadult02/b_attack07.wav",
+	"vj_fallout/human/maleadult02/b_attack08.wav",
+	"vj_fallout/human/maleadult02/b_attack09.wav",
+	"vj_fallout/human/maleadult02/b_attack10.wav",
+	"vj_fallout/human/maleadult02/b_attack11.wav",
+	"vj_fallout/human/maleadult05/vdialogueg_alerttocombat_001751e3_1.wav",
+	"vj_fallout/human/maleadult05/vdialogueg_alerttocombat_001751e4_1.wav",
+	"vj_fallout/human/maleadult05/vdialogueg_alerttocombat_001751e2_1.wav",
+	"vj_fallout/human/maleadult05/vdialogueg_assault_0017510c_1.wav",
+	"vj_fallout/human/maleadult05/vdialogueg_assault_0017510b_1.wav",
+	"vj_fallout/human/maleadult05/vdialogueg_assault_0017510a_1.wav",
+	"vj_fallout/human/maleadult05/vdialogueg_attack_0014f00e_1.wav",
+	"vj_fallout/human/maleadult05/vdialogueg_attack_0014f010_1.wav",
+	"vj_fallout/human/maleadult05/vdialogueg_attack_0014f012_1.wav",
+	"vj_fallout/human/maleadult05/vdialogueg_attack_001751fa_1.wav",
+	"vj_fallout/human/maleadult05/vdialogueg_attack_001751fb_1.wav",
+	"vj_fallout/human/maleadult05/vdialogueg_attack_001751fc_1.wav",
+	
 	
 }
 
@@ -200,3 +260,7 @@ ENT.HitSounds = {
 	"vj_fallout/human/maleadult08/b_hit01.wav",
 	"vj_fallout/human/maleadult08/b_hit02.wav",
 }
+
+function ENT:Initialize()
+	self:basicSetup()
+end

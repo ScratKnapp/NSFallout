@@ -8,9 +8,11 @@ ENT.AdminOnly = true
 ENT.name = "Dust Devil Scavenger"
 
 ENT.models = {
-	"models/player/h&h/classic/leatherarmor/male01.mdl",
-	"models/player/h&h/classic/leatherarmor/lightweight/male01.mdl",
-	"models/player/h&h/classic/leatherarmor/reinforced/male01.mdl",
+	"models/player/h&h/drivejacket/quilted/female02.mdl",
+	"models/player/h&h/drivejacket/quilted/male01.mdl",
+	"models/player/h&h/drivejacket/scorpion/female02.mdl",
+	"models/player/h&h/drivejacket/scorpion/male01.mdl",
+	"models/player/h&h/drivejacket/scorpion/mcsmith.mdl",
 
 }
 ENT.hp = 100
@@ -39,12 +41,12 @@ ENT.dmg = {
 }
 
 ENT.armor = {
-	["Head"] = 20,
-	["Body"] = 20,
-	["Left Arm"] = 20,
-	["Right Arm"] = 20,
-	["Left Leg"] = 20,
-	["Right Leg"] = 20,
+	["Head"] = 5,
+	["Body"] = 5,
+	["Left Arm"] = 5,
+	["Right Arm"] = 5,
+	["Left Leg"] = 5,
+	["Right Leg"] = 5,
 }
 
 

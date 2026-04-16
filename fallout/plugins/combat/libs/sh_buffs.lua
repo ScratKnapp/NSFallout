@@ -65,12 +65,6 @@ function playerMeta:addBuff(buff, id)
 		end
 	end
 	
-	if(buff.skill) then
-		for k, v in pairs(buff.skill) do
-			char:addSkillBoost(buff.name or buff.uid, k, v)
-		end
-	end
-	
 	if(buff.hpMax or buff.maxHP) then
 		local buffHP = buff.hpMax or buff.maxHP
 	

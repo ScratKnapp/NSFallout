@@ -8,7 +8,7 @@ ENT.AdminOnly = true
 ENT.name = "Dust Devil Captain"
 
 ENT.models = {
-	"models/player/h&h/classic/metalarmor/male01.mdl",
+	"models/player/h&h/bos/lancer/male01.mdl",
 
 }
 ENT.hp = 125
@@ -34,12 +34,12 @@ ENT.dmg = {
 }
 
 ENT.armor = {
-	["Head"] = 30,
-	["Body"] = 30,
-	["Left Arm"] = 30,
-	["Right Arm"] = 30,
-	["Left Leg"] = 30,
-	["Right Leg"] = 30,
+	["Head"] = 10,
+	["Body"] = 10,
+	["Left Arm"] = 10,
+	["Right Arm"] = 10,
+	["Left Leg"] = 10,
+	["Right Leg"] = 10,
 }
 
 

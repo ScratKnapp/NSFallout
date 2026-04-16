@@ -107,13 +107,18 @@ PLUGIN.helperFuncs["getDamage"] = function(self, partString, weapon)
 				
 				--direct dmg buffs
 				dmg = dmg + self:getBuffAttribute("dmg")
-				
-				totalDam[#totalDam + 1] = {
-					dmg = dmg, 
-					dmgT = dmgT,
-					accuracy = self:getAccuracy(),
-					part = partString
-				}
+
+				--multiple hits
+				local multi = self:getNetVar("multi", self.multi) or 1
+
+				for i = 1, multi do
+					totalDam[#totalDam + 1] = {
+						dmg = dmg, 
+						dmgT = dmgT,
+						accuracy = self:getAccuracy(),
+						part = partString
+					}
+				end
 			end
 		end
 		
@@ -661,10 +666,11 @@ PLUGIN.helperFuncs["traitModify"] = function(self, command, dmg)
 end
 
 --function for when a player receives damage, handles armor, resistance, etc
-PLUGIN.helperFuncs["receiveDamage"] = function(self, dmg, dmgT, part, evaReduct)
+PLUGIN.helperFuncs["receiveDamage"] = function(self, dmg, dmgT, part)
 	local res = self:getRes(part)
 
 	--physical damage reduction (DR) from armor
+	
 	if(PLUGIN:armorReduction(dmgT)) then
 		local armorThreshold = (self:getArmor(part) * 1 * PLUGIN:armorReduction(dmgT))
 
@@ -676,7 +682,7 @@ PLUGIN.helperFuncs["receiveDamage"] = function(self, dmg, dmgT, part, evaReduct)
 		end
 	end
 	
-	hook.Run("nut_OnReceiveDamage", self, dmg, dmgT, part, evaReduct)
+	hook.Run("nut_OnReceiveDamage", self, dmg, dmgT, part)
 	
 	dmg = dmg * math.max(1 - (res[dmgT] or 0), 0)
 	

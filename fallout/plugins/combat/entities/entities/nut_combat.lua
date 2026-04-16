@@ -375,7 +375,7 @@ function ENT:getSaveData()
 		multi = self:getNetVar("multi", self.multi),
 		res = self:getNetVar("res", self.res),
 		amp = self:getNetVar("amp", self.amp),
-		range = self:getFireRange(),
+		range = self:getRange(),
 		
 		GunEffects = self:getNetVar("GunEffects"),
 		
