@@ -375,7 +375,7 @@ function ENT:getSaveData()
 		multi = self:getNetVar("multi", self.multi),
 		res = self:getNetVar("res", self.res),
 		amp = self:getNetVar("amp", self.amp),
-		range = self:getRange(),
+		range = self:getFireRange(),
 		
 		GunEffects = self:getNetVar("GunEffects"),
 		
@@ -441,7 +441,7 @@ function ENT:loadSaveData(data)
 	self:setNetVar("dmg", data.dmg)
 	self:setNetVar("actions", data.actions)
 	
-	if(data.fireRange and data.fireRange != self:getRange()) then
+	if(data.fireRange and data.fireRange != self:getFireRange()) then
 		self:setNetVar("fireRange", data.fireRange)
 	end
 	
