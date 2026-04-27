@@ -204,7 +204,4 @@ ENT.HitSounds = {
 
 function ENT:Initialize()
 	self:basicSetup()
-	    for k, v in pairs(self:GetBodyGroups()) do
-        self:SetBodygroup(v.id, math.random(0, v.num))
-    end
 end

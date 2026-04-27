@@ -1,6 +1,6 @@
 ENT.Type = "nextbot"
 ENT.Base = "nut_combat"
-ENT.PrintName = "Legion Centurion"
+ENT.PrintName = "Legion Assassin"
 ENT.Category = "NutScript - Combat (Lanius' Cohort)"
 ENT.Spawnable = true
 ENT.AdminOnly = true
