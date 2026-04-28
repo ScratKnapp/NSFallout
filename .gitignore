@@ -1,0 +1,15 @@
+/*
+!/garrysmod
+/garrysmod/*
+!/garrysmod/addons
+/garrysmod/addons/*
+!/garrysmod/addons/ADDON_NAME
+##include gamemodes
+!/garrysmod/gamemodes
+/garrysmod/gamemodes/*
+!/garrysmod/gamemodes/fallout
+!/garrysmod/gamemodes/nutscript
+*.DS_Store
+*.gitignore
+*.gitattributes
+/garrysmod/gamemodes/fallout/schema/sv_database.lua
