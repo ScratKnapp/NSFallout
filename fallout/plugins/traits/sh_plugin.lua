@@ -56,6 +56,10 @@ function PLUGIN:OnCharCreated(client, character)
 				client:giveTrait(v, character)
 			end
 		end
+		
+		for attribID, value in pairs(character:getAttribs()) do
+			PLUGIN:OnCharAttribUpdated(client, character, attribID, value)
+		end
 	end)
 end
 

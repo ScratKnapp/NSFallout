@@ -57,6 +57,8 @@ function playerMeta:addBuff(buff, id)
 	buffs[id or buff.uid] = buff
 	
 	local char = self:getChar()
+	if(!char) then return end
+	
 	char.buffs = buffs
 
 	if(buff.attrib) then
@@ -101,6 +103,8 @@ function playerMeta:removeBuff(buff, id)
 	local buffs = self:getBuffs()
 	
 	local char = self:getChar()
+	if(!char) then return end
+	
 	char.buffs = buffs
 	
 	local buff = buff or buffs[id or buff.uid] or {}

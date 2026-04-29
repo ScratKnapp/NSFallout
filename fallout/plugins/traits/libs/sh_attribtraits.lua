@@ -23,13 +23,11 @@ function PLUGIN:OnCharAttribUpdated(client, char, attribID, value)
 	
 	if(value <= 1) then
 		if(!client:hasTrait(traitID)) then
-			print("Giving the trait")
-			client:giveTrait(traitID)
+			client:giveTrait(traitID, char)
 		end
 	else
 		if(client:hasTrait(traitID)) then
-			print("Taking the trait")
-			client:removeTrait(traitID)
+			client:removeTrait(traitID, char)
 		end
 	end
 end
