@@ -1,0 +1,10 @@
+ITEM.name = "Armorer's Tool Bag"
+ITEM.desc = "A mid-sized bag with a set of tools, materials, adhesive and oils for maintaining armor. Requires 12 Repair skill to use. (Repairs up to 60% Durability)"
+ITEM.model = "models/mosi/fnv/props/health/repairkit.mdl"
+ITEM.width = 1
+ITEM.height = 1
+ITEM.flag = "v"
+ITEM.category = "Repair"
+ITEM.repair = 60
+ITEM.repairSkill = 12
+ITEM.armorOnly = true 

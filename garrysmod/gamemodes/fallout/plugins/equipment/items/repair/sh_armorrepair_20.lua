@@ -1,0 +1,10 @@
+ITEM.name = "Armorer's Tool Roll"
+ITEM.desc = "A small roll with a set of brushes, oils, wipes, and small hand tools for maintaining armor. Requires 4 Repair skill to use. (Repairs up to 20% Durability)"
+ITEM.model = "models/mosi/fnv/props/health/repairkit.mdl"
+ITEM.width = 1
+ITEM.height = 1
+ITEM.flag = "v"
+ITEM.category = "Repair"
+ITEM.repair = 20
+ITEM.repairSkill = 4
+ITEM.armorOnly = true 

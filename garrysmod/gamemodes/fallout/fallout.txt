@@ -1,0 +1,7 @@
+"fallout"
+{
+	"base"		"nutscript"
+	"title"		"Fallout"
+	"author"	"chancer"
+	"menusystem"	"1"
+}

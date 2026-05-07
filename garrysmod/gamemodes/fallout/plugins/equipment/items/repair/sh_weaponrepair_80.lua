@@ -1,0 +1,10 @@
+ITEM.name = "Smith's Field Repair Kit"
+ITEM.desc = "A mid sized bag, with a set of tools, adhesives, and small plates for weapon field repairs. Requires 16 Repair skill to use. (Repairs up to 80% Durability.)"
+ITEM.model = "models/mosi/fnv/props/health/repairkit.mdl"
+ITEM.width = 1
+ITEM.height = 1
+ITEM.flag = "v"
+ITEM.category = "Repair"
+ITEM.repair = 80
+ITEM.repairSkill = 16
+ITEM.weaponOnly = true
