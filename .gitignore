@@ -3,6 +3,7 @@
 /garrysmod/*
 !/garrysmod/addons
 /garrysmod/addons/*
+!/garrysmod/addons/YSHERA_PIPBOY
 !/garrysmod/addons/ADDON_NAME
 ##include gamemodes
 !/garrysmod/gamemodes
