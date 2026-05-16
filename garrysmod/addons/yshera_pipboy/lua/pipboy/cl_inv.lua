@@ -3,6 +3,15 @@ local categories = {"AID", "AMMO", "ARMOR", "FOOD", "WEAPONS"}
 table.sort(categories)
 table.insert(categories, 1, "ALL")
 table.insert(categories, "MISC")
+
+-- The pipboy was built against an older item schema with .MaxHP and a "HP"
+-- data field; fallout items use .durability and a "durability" data field.
+local function maxHp(it)
+    return it.MaxHP or it.durability or 100
+end
+local function curHp(it)
+    return it:getData("HP", it:getData("durability", maxHp(it)))
+end
 local cachedpos = {}
 local cachedsizes = {}
 local inventory = {}
@@ -526,10 +535,10 @@ local draw_repair = function(pip_color2)
     local inst = ITEM_REPAIRING
     local vb, fn = NzGUI:DrawTextButton("REPAIRING " .. ITEM_REPAIRING:getName(), "Morton Medium@48", 64 + offset[i], 64, offset2[i], 32, 1, v == SELECTED_HEADER and pip_color or pip_color_accent)
     surface.SetDrawColor(pip_color2)
-    draw.SimpleText("Weapon Decay: " .. (inst:getData("HP", 0) or 0), "Morton Medium@32", 64, 100, color_white, TEXT_ALIGN_LEFT)
+    draw.SimpleText("Weapon Decay: " .. curHp(inst), "Morton Medium@32", 64, 100, color_white, TEXT_ALIGN_LEFT)
     -- get repair group
     local repairValue = 0
-    local RPG = REPAIR_GROUP:Get(inst.repairGroup)
+    local RPG = REPAIR_GROUP:Get(inst.repairGroup or inst.weaponCategory or inst.uniqueID)
     local index = -1
     local charINV = LocalPlayer():getChar():getInv()
     for i, v in pairs(RPG.REPAIR_VALUE) do
@@ -565,8 +574,9 @@ local draw_repair = function(pip_color2)
             draw.SimpleText("CDN", "Morton Medium@64", 580, 64, color_white, TEXT_ALIGN_LEFT)
             local width_prod = 400
             local padd_ing = 6
-            local bar = 1 - (inst:getData("HP", 0) / inst.MaxHP)
-            local repair_bar = bar + (repairValue / inst.MaxHP)
+            local maxV = maxHp(inst)
+            local bar = 1 - (curHp(inst) / maxV)
+            local repair_bar = bar + (repairValue / maxV)
             repair_bar = math.Clamp(repair_bar, 0, 1)
             surface.DrawOutlinedRect(580 - padd_ing, 126 - padd_ing, width_prod + padd_ing + padd_ing, 42 + padd_ing + padd_ing, 2)
             surface.DrawRect(580, 126, width_prod * bar, 42, 2)

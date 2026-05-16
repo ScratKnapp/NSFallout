@@ -1,5 +1,8 @@
-
+-- If the gamemode ships its own HUD plugin (fallout/plugins/nshud), let it own
+-- the item info / ammo HUD / crosshair so we don't double-draw. The pipboy's
+-- notification & cursor system still works without this file.
 hook.Add("InitializedPlugins", "override_nut_notifcation", function()
+    if nut.plugin and nut.plugin.list and nut.plugin.list["nshud"] then return end
     hook.Add("ItemShowEntityMenu", "fallout_ent", function(client)
         local entity = LocalPlayer():GetEyeTrace().Entity
         netstream.Start("invAct", "take", entity)
@@ -138,44 +141,5 @@ hook.Add("ShouldHideBars", "hideBars", function() return true end)
 
 
 
-hook.Add("CanDrawAmmoHUD", "hideAmmo2", function() return true end)
-hook.Add("CanDrawAmmoHUD", "hideAmmo2", function() return false end) 
+hook.Add("CanDrawAmmoHUD", "hideAmmo2", function() return false end)
 hook.Add("ShouldDrawCrosshair", "hideCrosshair", function() return false end)
-    local ENT = scripted_ents.Get("nut_item")
-    local toScreen = FindMetaTable("Vector").ToScreen
-    local colorAlpha = ColorAlpha
-
-    function ENT:onDrawEntityInfo(alpha)
-        local itemTable = self.getItemTable(self)
-
-        if (itemTable) then
-           local name = itemTable.getName and itemTable:getName() or L(itemTable.name)
-            self.Interactable = {name, "Take"}
-        end
-  
-        if true then return end -- NZPATCH APPLIED USE INTERACTABLE CLASS INSTEAD :))
-
-        if (itemTable) then
-            local oldData = itemTable.data
-            itemTable.data = self.getNetVar(self, "data", {})
-            itemTable.entity = self
-            local position = toScreen(self.LocalToWorld(self, self.OBBCenter(self)))
-            local x, y = position.x, position.y
-            local description = itemTable.getDesc(itemTable)
-            cam.Start2D()
-            surface.SetFont("$MAIN_Font")
-            local name = itemTable.getName and itemTable:getName() or L(itemTable.name)
-            local txt_w, txt_h = surface.GetTextSize(name)
-            local txt_w2, txt_h2 = surface.GetTextSize("E) Take")
-            local XPos = ScrW() * 0.7
-            NzGUI.DrawShadowText(name, XPos - (txt_w / 2), ScrH() / 2 - 32)
-            NzGUI.DrawShadowText("E) Take", XPos - (txt_w2 / 2), ScrH() / 2 + 6)
-            -- nut.util.drawText(, , colorAlpha(nut.config.get("color"), alpha), 1, 1, nil, alpha * 0.65)
-            cam.End2D()
-            y = y + 12
-            itemTable.entity = nil
-            itemTable.data = oldData
-        end
-    end
- 
-    scripted_ents.Register(ENT, "nut_item")

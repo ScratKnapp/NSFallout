@@ -37,30 +37,30 @@ local DrawPly = {}
 function DrawPly.STATS()
     local ply = LocalPlayer()
     local character = ply:getChar()
+    local faction = nut.faction.indices[character:getFaction()]
+    local stomach = character:getData("stomach", 0) or 0
     --Draw Player Info
     formattedText("Name:", character:getName(), 64, 132)
-    formattedText("Desc:", character:getDesc(), 64, 500)
-    formattedText("Faction:", nut.faction.indices[character:getFaction()].name, 64, 128 + 258)
+    formattedText("Desc:", character:getDesc() or "", 64, 500)
+    formattedText("Faction:", faction and faction.name or "None", 64, 128 + 258)
     formattedText("HP:", LocalPlayer():Health() .. "/" .. LocalPlayer():GetMaxHealth(), 64, 128 + 64)
-    formattedText("Hunger:", ply:getLocalVar("hunger") .. "%", 64, 128 + 128)
-    formattedText("Thirst:", ply:getLocalVar("thirst") .. "%", 64, 256 + 64)
-    -- formattedText("AVO SYSTEM", "PAINKILLER", 64,128 + 96) 
-    --local krma = character:getNetVar("karma", karmaTbl)
-    --formattedText("KARMA", krma.title.. " "..krma.level, 64,2006
-    -- DRAW ATTRIBUTES  
-    --DRAW SEPERATORS
+    formattedText("Hunger:", stomach .. "%", 64, 128 + 128)
+
     surface.SetDrawColor(pip_color)
     surface.SetMaterial(error_mat)
     surface.DrawTexturedRect(600, 200, 200, 300)
-    DrawHPBar(685, 80, 1 - (character:getData("hp_head", 0) / 300))
-    DrawHPBar(800, 200, 1 - (character:getData("hp_arm_left", 0) / 300))
-    DrawHPBar(580, 200, 1 - (character:getData("hp_arm_right", 0) / 300))
-    DrawHPBar(800, 350, 1 - (character:getData("hp_leg_right", 0) / 300))
-    DrawHPBar(580, 350, 1 - (character:getData("hp_leg_left", 0) / 300))
+
+    if PIPBOY_SHOW_BODY_HP then
+        DrawHPBar(685, 80, 1 - (character:getData("hp_head", 0) / 300))
+        DrawHPBar(800, 200, 1 - (character:getData("hp_arm_left", 0) / 300))
+        DrawHPBar(580, 200, 1 - (character:getData("hp_arm_right", 0) / 300))
+        DrawHPBar(800, 350, 1 - (character:getData("hp_leg_right", 0) / 300))
+        DrawHPBar(580, 350, 1 - (character:getData("hp_leg_left", 0) / 300))
+    end
 end
 
 local attri = {"Strength", "Perception", "Endurance", "Charisma", "Intelligence", "Agility", "Luck"}
-local attri_a = {"str", "per", "end", "cha", "int", "agi", "luc"}
+local attri_a = {"str", "per", "end", "cha", "int", "agi", "luck"}
 local attri_desc = {"Strength is a measure of your raw physical power. It affects how much you can carry, and determines the effectiveness of all melee attacks.", 'Perception is your environmental awareness and "sixth sense," and allows you to see things other people may not see.', "Endurance is the measure of overall physical fitness. It affects your total health and the action point drain from sprinting", "Charisma is your ability to charm and convince others. It affects your success to persuade others in dialogue and prices when you barter. It also allows you to inspire people in your party increase everyones max health.", "Intelligence is the measure of your overall mental acuity, and increases the amount of experience points earned.", "Agility is a measure of your overall finesse and reflexes. It affects the number of Action Points and your ability to sneak. Decreases reload time.", "Luck is a measure of your general good fortune, and affects the recharge rates of critical hits."}
 for i, v in pairs(attri_desc) do
     attri_desc[i] = textWrap(v, "Morton Medium@24", 350)
@@ -90,7 +90,9 @@ function DrawPly.SPECIAL()
                     surface.DrawRect(64, 118 + (y * 44), (500 - 64) * p, 42)
                     if p == 1 then
                         IsReloadUse = false
-                        netstream.Start("perkIncrease", v[1])
+                        local attribKey = attri_a[y]
+                        local newVal = (LocalPlayer():getChar():getAttrib(attribKey, 0) or 0) + 1
+                        netstream.Start("statIncrease", attribKey, newVal)
                         deltSt = 0
                     end
                 else
@@ -118,8 +120,29 @@ function DrawPly.SPECIAL()
     end
 end
 
-local skill_def = {{"big_guns", "Big Guns"}, {"small_arms", "Small Guns"}, {"energy_weps", "Energy Weapons"}, {"explosives", "Explosives"}, {"melee", "Melee Weapons"}, {"unarmed", "Unarmed"}, {"science", "Science"}, {"medicine", "Medicine"}, {"survival", "Survival"}, {"barter", "Barter"},}
-local skill_desc = {"Increases damage you do with heavy weapons.", "Increases damage you do with small firearms.", "Energy Weapons increases damage you do with energy weapons.", "Explosives increases damage you do with explosives and their range whilst reducing damage you take from explosions.", "Melee Weapons increases damage you do with melee weapons.", "Unarmed increases damage you do with unarmed attacks.", "Science increases the effectiveness of hacking terminals and research.", "Medicine increases the effectiveness of healing items.", "Survival increases the effectiveness of food and drink.", "Barter increases sell prices and decreases buy prices."}
+local skill_def = {
+    {"guns", "Guns"},
+    {"energy", "Energy Weapons"},
+    {"explosives", "Explosives"},
+    {"throwing", "Throwing"},
+    {"melee", "Melee"},
+    {"unarmed", "Unarmed"},
+    {"science", "Science"},
+    {"medicine", "Medicine"},
+    {"repair", "Repair"},
+    {"lockpick", "Lockpicking"},
+    {"sneak", "Sneak"},
+    {"evasion", "Evasion"},
+    {"survival", "Survival"},
+    {"athletics", "Athletics"},
+    {"piloting", "Piloting"},
+    {"speech", "Speech"},
+}
+local skill_desc = {}
+for _i, _v in ipairs(skill_def) do
+    local def = nut.skills and nut.skills.list and nut.skills.list[_v[1]]
+    skill_desc[_i] = def and def.desc or ""
+end
 local SELECTED_HEADER
 local wth, ht = ScrW(), ScrH()
 hook.Add("pip_changepage", "SKILLS_", function(from, to)
@@ -256,7 +279,8 @@ function DrawPly.SKILLS()
                 surface.DrawRect(64, 118 + (y * height), ((width + 100) - 64) * p, height)
                 if p == 1 then
                     IsReloadUse = false
-                    netstream.Start("statIncrease", v[1])
+                    local newVal = (character:getSkillLevel(v[1]) or 0) + 1
+                    netstream.Start("skillIncrease", v[1], newVal)
                     deltSt = 0
                 end
             else
@@ -608,14 +632,16 @@ function CREATE_PERK_MENU()
         PERK_SELECTED_ID = v.id or 0
     end
 
-    Unlock.DoClick = function() netstream.Start("unlockPerk", PERK_SELECTED_ID) end
+    Unlock.DoClick = function()
+        if PERK_SELECTED_ID == 0 then return end
+        netstream.Start("perkAdd", PERK_SELECTED_ID)
+    end
     local doonce = true
     local PERKS_SORTED = table.Copy(PERKS)
     -- sort perks by level required
-    table.sort(PERKS_SORTED, function(a, b) return a.requirements.level < b.requirements.level end)
+    table.sort(PERKS_SORTED, function(a, b) return (a.requirements.level or 0) < (b.requirements.level or 0) end)
     for i, v in pairs(PERKS_SORTED) do
-        local values = LocalPlayer():getChar():getData("p" .. v:getBitmaskIndex()) or 0
-        local isOwned = bit.band(values, v:getBitmaskCalc()) == v:getBitmaskCalc()
+        local isOwned = LocalPlayer():hasTrait(v.uid) == true
         timer.Simple(isOwned and 0 or FrameTime() * 2, function()
             if doonce then
                 doonce = false
@@ -631,8 +657,7 @@ function CREATE_PERK_MENU()
             DButton:SetFont("Morton Medium@32")
             DButton:SetText("")
             DButton.PaintOver = function(self, w, h)
-                local values = LocalPlayer():getChar():getData("p" .. v:getBitmaskIndex()) or 0
-                local isOwned = bit.band(values, v:getBitmaskCalc()) == v:getBitmaskCalc()
+                local isOwned = LocalPlayer():hasTrait(v.uid) == true
                 if DButton.Calced == nil then
                     local weCanDoThis = true
                     for _c, _v in pairs(v.requirements) do

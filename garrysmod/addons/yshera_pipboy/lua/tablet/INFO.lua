@@ -160,33 +160,50 @@ end
 local questDesc = [[Robert and some members of the Calypso ordered me to do some bullshit dirty work in order to get my gear back. I need to find someone that goes by "The West" to learn more.]]
 questDesc = textWrap(questDesc,"Morton Medium@24",300)
 
+PIPBOY_FOCUSED_QUEST = PIPBOY_FOCUSED_QUEST or nil
+
 tablet.pages["QUESTS"] = function(color_main)
 	surface.SetDrawColor(pip_color)
-	 
-
-	draw.DrawText( "MAIN QUESTS",  "Morton Black@42",64,64)
+	draw.DrawText("QUESTS", "Morton Black@42", 64, 64)
 	surface.DrawRect(60, 106, 400, 8)
 
-	drawQuestFrame(false,true, 0,"OVER THE MOON")
- 	drawQuestFrame(true,true, 48,"NEAR WILD HEAVEN")
-	drawQuestFrame(false,false, 96,"IT NEVER ENDS")
+	local char = LocalPlayer():getChar()
+	if not char then return end
 
-	draw.DrawText( "DAILY QUESTS",  "Morton Black@42",64,350)
+	local active = char:getData("quests", {}) or {}
+	local registered = (QUESTS and QUESTS.quests) or {}
+
+	local list = {}
+	for uid, _ in pairs(active) do
+		local q = registered[uid]
+		if q then list[#list + 1] = q end
+	end
+
+	if #list == 0 then
+		draw.DrawText("No active quests.", "Morton Medium@32", 64, 140, color_white)
+		return
+	end
+
+	if not PIPBOY_FOCUSED_QUEST or not active[PIPBOY_FOCUSED_QUEST] then
+		PIPBOY_FOCUSED_QUEST = list[1].uid
+	end
+
+	for i, q in ipairs(list) do
+		local y = (i - 1) * 48
+		local focused = (q.uid == PIPBOY_FOCUSED_QUEST)
+		local isIn, clicked = AddUIButton(60, 130 + y, 400, 42)
+		if clicked then PIPBOY_FOCUSED_QUEST = q.uid end
+		drawQuestFrame(focused, focused, y, (q.name or q.uid):upper())
+	end
+
+	local focusedQuest = registered[PIPBOY_FOCUSED_QUEST]
+	if focusedQuest then
 		surface.SetDrawColor(pip_color)
-	
-		surface.DrawRect(60, 394, 400, 8)
-	drawQuestFrame(false,false, 280,"PROVING GROUNDS")
- 	drawQuestFrame(false,true, 328,"BREAK STUFF")
-
-
-
-
--- QUEST VIEW
-	surface.SetDrawColor(pip_color)
-	draw.DrawText( "NEAR WILD HEAVEN",  "Morton Black@42",650,120)
+		draw.DrawText((focusedQuest.name or focusedQuest.uid):upper(), "Morton Black@42", 650, 120)
 		surface.DrawRect(600, 125, 8, 400)
-		draw.DrawNonParsedText(questDesc, "Morton Medium@24", 650,166, color_white, 0)
-
+		local body = focusedQuest.reminder or focusedQuest.intro or ""
+		draw.DrawNonParsedText(textWrap(body, "Morton Medium@24", 300), "Morton Medium@24", 650, 166, color_white, 0)
+	end
 end
 
 hook.Add("Move", "keyLiwasten2", function()
