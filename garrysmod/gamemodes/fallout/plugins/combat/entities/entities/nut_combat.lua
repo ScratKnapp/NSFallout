@@ -805,7 +805,7 @@ function ENT:Attack(target, action)
 		self.loco:FaceTowards(target:GetPos())
 	end
 	
-	local multi = (action and action.multi) or 1
+	local multi = (action and (action.multiEffects or action.multi)) or 1
 
 	self:attackAnimStart(target, action)
 	

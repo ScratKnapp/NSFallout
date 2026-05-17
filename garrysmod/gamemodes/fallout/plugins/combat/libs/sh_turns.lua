@@ -263,7 +263,7 @@ function PLUGIN:turnAdvance(id, cur)
 	end
 	
 	if(!cur) then
-		cur = turn.current
+		cur = turn.current or 1
 	end
 	
 	local newTurnID = (cur + 1) 

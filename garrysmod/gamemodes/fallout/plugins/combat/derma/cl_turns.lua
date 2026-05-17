@@ -47,6 +47,10 @@ local PANEL = {}
 			self.TeamMenu:Remove()
 		end
 		
+		if(IsValid(self.TurnListMenu)) then
+			self.TurnListMenu:Remove()
+		end
+		
 		if(IsValid(self.AIMenu)) then
 			self.AIMenu:Remove()
 		end
@@ -326,8 +330,16 @@ local PANEL = {}
 			
 			self:CreateButton("Add Team", scroll2, function(this)
 				Derma_StringRequest("Team Name", "Adding Team", "", function(text)
-					nut.util.notify("This isn't done yet.")
-					print(text)
+					local data = {}
+					
+					local turnOrder = PLUGIN.turns[turnID]
+					local order = turnOrder.order or {}
+					
+					order[#order+1] = text
+					
+					data.order = order
+				
+					self:UpdateTurn(turnID, data)
 				end)
 			end)
 			
@@ -344,8 +356,7 @@ local PANEL = {}
 			end)
 		else
 			self:CreateButton("New Turn Table", scroll2, function(this)
-				nut.util.notify("This isn't done yet.")
-				--popup panel where you can input things and stuff
+				self:TurnListPopup()
 			end)
 		end
 	end
@@ -405,8 +416,105 @@ local PANEL = {}
 		end
 	end
 	
+	function PANEL:TurnListPopup()
+		if(IsValid(self.TurnListMenu)) then
+			self.TurnListMenu:Remove()
+		end
+	
+		local frame = vgui.Create("DFrame")
+		frame:SetSize(400, 600)
+		frame:Center()
+		frame:SetTitle("New Turn List")
+		frame:MakePopup()
+		frame:ShowCloseButton(true)
+		
+		self.TurnListMenu = frame
+		
+		local scroll = vgui.Create("DScrollPanel", frame)
+		scroll:Dock(FILL)
+		
+		local turnNameL = scroll:Add("DLabel")
+		turnNameL:Dock(TOP)
+		turnNameL:SetTall(30)
+		turnNameL:SetText("Turn List Name")
+		
+		local turnName = scroll:Add("DTextEntry")
+		turnName:Dock(TOP)
+		turnName:SetTall(30)
+		turnName:SetText("")
+		
+		local turnListTeamL = scroll:Add("DLabel")
+		turnListTeamL:Dock(TOP)
+		turnListTeamL:SetTall(30)
+		turnListTeamL:SetText("Teams")
+		
+		local turnTeam = scroll:Add("DPanel")
+		turnTeam:Dock(TOP)
+		turnTeam:SetTall(400)
+		
+		frame.teams = {}
+		
+		local teamButton = turnTeam:Add("DButton")
+		teamButton:Dock(TOP)
+		teamButton:SetText("Add Team")
+		teamButton:SetTextColor(Color(255,255,255))
+		teamButton.DoClick = function(this)
+			Derma_StringRequest("New Team", "Set Team Name", "Enemy", function(text)
+				if(text) then
+					local newTeam = turnTeam:Add("DButton")
+					newTeam:SetText(text)
+					newTeam:SetTextColor(Color(255,255,255))
+					newTeam:Dock(TOP)
+					newTeam.DoClick = function(this)
+						this:Remove()
+						
+						table.RemoveByValue(frame.teams, newTeam)
+					end
+					
+					table.insert(frame.teams, newTeam)
+				end
+			end)
+		end
+		
+		local doneButton = scroll:Add("DButton")
+		doneButton:Dock(BOTTOM)
+		doneButton:SetText("Done")
+		doneButton:SetTextColor(Color(255,255,255))
+		doneButton.DoClick = function(this)
+			local data = {}
+			
+			data.name = turnName:GetText()
+			
+			data.order = {}
+			
+			for k, v in pairs(frame.teams) do
+				data.order[#data.order+1] = v:GetText()
+			end
+
+			local id = #PLUGIN.turns+1
+
+			self:CreateTurn(id, data)
+			
+			frame:Remove()
+		end
+	end
+	
 	function PANEL:CreateTurn(id, data)
 		netstream.Start("nut_turnCreate", id, data)
+	end
+	
+	function PANEL:UpdateTurn(id, data)
+		local curData = PLUGIN.turns[id]
+		
+		if(data.order) then
+			curData.order = data.order
+		end
+		
+		if(data.name) then
+			curData.name = data.name
+		end
+	
+		netstream.Start("nut_turnCreate", id, curData)
 	end
 vgui.Register("nutTurnList", PANEL, "DFrame")
 

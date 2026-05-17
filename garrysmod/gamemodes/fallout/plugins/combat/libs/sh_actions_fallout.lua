@@ -391,6 +391,7 @@ ACT.accuracyMult = 1
 ACT.range = 2000
 ACT.weaponMult = 1
 ACT.multi = 8
+ACT.multiEffects = 1 --limits how many effects the visuals produce
 ACT.ammoUse = 1 --how much ammo it uses
 ACTS:Register(ACT)
 
