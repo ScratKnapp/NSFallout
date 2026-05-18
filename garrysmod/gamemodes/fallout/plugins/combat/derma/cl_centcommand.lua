@@ -44,6 +44,24 @@ local PANEL = {}
 			draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0))
 		end
 		
+		local searchEntry = vgui.Create("DTextEntry", self)
+		searchEntry:Dock(TOP)
+		searchEntry:DockMargin(0,0,0,8)
+		searchEntry:SetText("")
+		searchEntry:SetTall(28)
+		searchEntry:SetTextColor(Color(0,0,0))
+		searchEntry.OnValueChange = function(this, text)
+			local search
+		
+			if(text == "" or text == " ") then
+				search = nil
+			else
+				search = string.lower(text)
+			end
+			
+			self:Search(search)
+		end
+		
 		local saveButton = vgui.Create("DButton", self)
 		saveButton:Dock(BOTTOM)
 		saveButton:SetTextColor(Color(255,255,255))
@@ -60,7 +78,7 @@ local PANEL = {}
 	end
 	
 	--panel for selected entity
-	function PANEL:CEntConfig(entity, weapon, dataFields)
+	function PANEL:CEntConfig(entity, weapon, dataFields, search)
 		local client = LocalPlayer()
 		
 		self.entity = entity
@@ -70,6 +88,8 @@ local PANEL = {}
 		local fields = entity:getDataFields()
 
 		local inner = self.inner
+		
+		self.categories = {}
 
 		for _, data in pairs(fields) do
 			local catPanel = vgui.Create("DPanel", inner)
@@ -131,6 +151,7 @@ local PANEL = {}
 				end
 				
 				local name = catPanel.name or "Unnamed Category"
+				
 				sizeX, sizeY = surface.GetTextSize(name)
 				
 				surface.SetTextPos(w*0.5-sizeX*0.5, 0)
@@ -148,6 +169,61 @@ local PANEL = {}
 			
 			catPanel:InvalidateLayout(true)
 			catPanel:SizeToChildren(false, true)
+			
+			self.categories[_] = catPanel
+		end
+	end
+	
+	function PANEL:Search(search)
+		local innerChildren = self.inner:GetChildren()
+		
+		for uid, panel in pairs(self.fields) do
+			if(istable(panel)) then
+				for k, subPanel in pairs(panel) do
+					local label = subPanel.label
+					local box = subPanel.box
+				
+					if(!search) then
+						box:SetVisible(true)
+						continue
+					end
+
+					if(label) then
+						local name = label:GetText() or ""
+						name = string.lower(name)
+						
+						if(string.find(name, search)) then
+							box:SetVisible(true)
+						else
+							box:SetVisible(false)
+						end
+					end
+				end
+			else
+				local label = panel.label
+				local box = panel.box
+				
+				if(label) then
+					if(!search) then
+						box:SetVisible(true)
+						continue
+					end
+				
+					local name = label:GetText() or ""
+					name = string.lower(name)
+					
+					if(string.find(name, search)) then
+						box:SetVisible(true)
+					else
+						box:SetVisible(false)
+					end
+				end
+			end
+
+			for k, category in pairs(self.categories) do
+				category:InvalidateLayout(true)
+				category:SizeToChildren(false, true)
+			end
 		end
 	end
 	
@@ -174,6 +250,8 @@ local PANEL = {}
 					entry:SetTextColor(Color(200,200,200))
 					entry:SetCursorColor(Color(255,255,255))
 					entry:SetPaintBackground(false)
+					entry.label = label
+					entry.box = box
 					
 					if(data.numeric) then
 						entry:SetNumeric(true)
@@ -199,6 +277,8 @@ local PANEL = {}
 				entry:SetTextColor(Color(200,200,200))
 				entry:SetCursorColor(Color(255,255,255))
 				entry:SetPaintBackground(false)
+				entry.label = label
+				entry.box = box
 				
 				if(data.numeric) then
 					entry:SetNumeric(true)
@@ -223,6 +303,9 @@ local PANEL = {}
 			entry:SetColor(data.value or Color(255,255,255))
 			
 			entry.GetFunc = entry.GetColor
+			
+			entry.box = box
+			entry.label = label
 			
 			fields[id] = entry
 		end,
@@ -253,19 +336,30 @@ local PANEL = {}
 			end
 			
 			entry:Dock(LEFT)
+			
+			entry.box = box
+			entry.label = label
 
 			fields[id] = entry
 		end,
 	}
 	
-	function PANEL:CreateField(id, data, parent)
+	function PANEL:CreateField(id, data, parent, search)
 		local panelType = data.panelType
 		if(!panelType) then 
 			panelType = "DLabel"
 		end
 		
 		if(self.FieldFormat[panelType]) then
-			self.FieldFormat[panelType](id, data, parent, self.fields)
+			if(search and data.extra) then
+				for name, v in pairs(data.extra) do
+					if(string.find(string.lower(name), string.lower(search))) then
+						self.FieldFormat[panelType](id, data, parent, self.fields)
+					end
+				end
+			else
+				self.FieldFormat[panelType](id, data, parent, self.fields)
+			end
 		end
 	end
 	
