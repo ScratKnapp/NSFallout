@@ -21,11 +21,12 @@ if (SERVER) then
 			local itemTable = nut.item.list[k]
 
 			if (itemTable and hook.Run("CanPlayerUseBusiness", client, k)) then
-				local amount = math.Clamp(tonumber(v) or 0, 0, 10)
+				local amount = math.Clamp(tonumber(v) or 0, 0, 20)
 
 				if (amount == 0) then
 					items[k] = nil
 				else
+					items[k] = amount
 					cost = cost + (amount * (itemTable:getPrice()))
 				end
 			else

@@ -141,7 +141,7 @@ local skill_def = {
 local skill_desc = {}
 for _i, _v in ipairs(skill_def) do
     local def = nut.skills and nut.skills.list and nut.skills.list[_v[1]]
-    skill_desc[_i] = def and def.desc or ""
+    skill_desc[_i] = textWrap(def and def.desc or "", "Morton Medium@24", 400)
 end
 local SELECTED_HEADER
 local wth, ht = ScrW(), ScrH()
@@ -193,7 +193,7 @@ hook.Add("pip_changepage", "SKILLS_", function(from, to)
             elseif SELECTED_HEADER == "PERKS" and PIPBOY_ON_SCREEN then
                 render.SetViewPort(ScrW() * 0.2, ScrH() * 0.875, wth, ht)
                 local t = "[]"
-                local n = "R) OPEN PERK MENU (" .. amtss .. ") "
+                local n = "R [HOLD]) UNLOCK PERK (" .. amtss .. ") "
                 surface.SetFont("Morton Medium@48")
                 local tw, th = surface.GetTextSize(t)
                 t = "["
@@ -207,7 +207,6 @@ hook.Add("pip_changepage", "SKILLS_", function(from, to)
                 surface.SetFont("Morton Medium@42")
                 NzGUI.DrawShadowText(n, 12, 6, c)
                 render.SetViewPort(0, 0, wth, ht)
-                if IsReloadUse then CREATE_PERK_MENU() end
             end
         end)
     else
@@ -216,54 +215,144 @@ hook.Add("pip_changepage", "SKILLS_", function(from, to)
 end)
 
 local cached_desc = nil
+-- Maps perk requirement keys to human-readable labels for the requirement list.
+local perk_req_format = {
+    str = "Strength", agi = "Agility", per = "Perception", luc = "Luck",
+    luck = "Luck", int = "Intelligence", cha = "Charisma", ["end"] = "Endurance",
+    S = "Strength", P = "Perception", E = "Endurance", C = "Charisma",
+    I = "Intelligence", A = "Agility", L = "Luck", level = "Level",
+}
+local PERKS_SORTED = nil
+local perk_req_negative = Color(255, 35, 35)
+-- false = show all perks (locked + owned), true = show only owned perks.
+local PERK_FILTER_OWNED = false
 function DrawPly.PERKS()
-    local perks = {}
     local char = LocalPlayer():getChar()
+    if not char then return end
+
+    -- Build the sorted catalogue + wrapped descriptions once.
     if cached_desc == nil then
         cached_desc = {}
+        PERKS_SORTED = {}
         for i, v in pairs(PERKS) do
+            v._idx = i
             cached_desc[v.display] = textWrap(v.desc, "Morton Medium@32", 350)
+            table.insert(PERKS_SORTED, v)
+        end
+        table.sort(PERKS_SORTED, function(a, b)
+            return (a.requirements.level or 0) < (b.requirements.level or 0)
+        end)
+    end
+
+    local amtss = (char:getSkillLevel("perkpoints") or 1) - 1
+    local hovered = nil
+
+    -- Toggle between the full catalogue and an owned-only view. Centered at the
+    -- bottom of the 3-column list area (columns span x=64..560, 15 rows from
+    -- y=112 end at y=532), so it sits just below the last row.
+    local toggleTxt = "SHOW: " .. (PERK_FILTER_OWNED and "OWNED" or "ALL")
+    local toggleClick = NzGUI:DrawTextButton(toggleTxt, "Morton Medium@32", 172, 540, 280, 32, 0, pip_color)
+    if toggleClick then PERK_FILTER_OWNED = not PERK_FILTER_OWNED end
+
+    -- Build the visible list each frame: owned perks first (level order
+    -- preserved), then the locked ones unless we're filtering to owned only.
+    local display = {}
+    for _, v in ipairs(PERKS_SORTED) do
+        if char:isPerkOwned(v._idx) then display[#display + 1] = v end
+    end
+    if not PERK_FILTER_OWNED then
+        for _, v in ipairs(PERKS_SORTED) do
+            if not char:isPerkOwned(v._idx) then display[#display + 1] = v end
         end
     end
 
-    for i, v in pairs(PERKS) do
-        if char:isPerkOwned(i) then table.insert(perks, v) end
-    end
-
-    for i, v in pairs(perks) do
-        local i = i - 1
-        local y = math.floor(i / 2)
-        local x = i % 2 * 256
-        local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover(v.display:upper(), "Morton Medium@32", 64 + x, 116 + y * 32, 225, 32, 1, color_white)
-        local c = pip_color
+    -- Left side: perk list in three columns. The three columns occupy the same
+    -- total room the old two columns did: each new column is (240+240)/3 = 160
+    -- wide, with the same 8px gap, so the right edge still lands at x=560.
+    local PERK_COL_W = 160
+    local PERK_COL_STRIDE = 168
+    local PERK_ROWS = 15
+    for i, v in ipairs(display) do
+        local idx = i - 1
+        local row = idx % PERK_ROWS
+        local col = math.floor(idx / PERK_ROWS)
+        local px = 64 + col * PERK_COL_STRIDE
+        local py = 112 + row * 28
+        local owned = char:isPerkOwned(v._idx)
+        local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover(v.display:upper(), "Morton Medium@24", px, py, PERK_COL_W, 28, 1, color_white)
+        local base = owned and pip_color_accent or color_white
+        local c = base
         if fn then
+            hovered = v
             c = color_black
-            --  
-            deltSt = deltSt == 0 and CurTime() or deltSt
             surface.SetDrawColor(pip_color)
-            surface.DrawRect(64 + x, 120 + (y * 32), 225, 26)
-            surface.SetMaterial(v.image)
-            surface.SetDrawColor(pip_color)
-            draw.DrawNonParsedText(cached_desc[v.display], "Morton Medium@32", 600, 400, pip_color, 0)
-            surface.DrawTexturedRect(626, 128, 256, 256)
+            surface.DrawRect(px, py + 2, PERK_COL_W, 24)
+
+            -- Hold R to unlock, mirroring the SKILLS/SPECIAL spend flow.
+            local canUnlock = not owned and amtss > 0
+            if canUnlock then
+                for rk, rv in pairs(v.requirements) do
+                    if not CheckSkill({rk, rv}) then canUnlock = false break end
+                end
+            end
+
+            if IS_R_DOWN and canUnlock then
+                deltSt = deltSt == 0 and CurTime() or deltSt
+                local p = math.Clamp((CurTime() - deltSt) * 0.75, 0.01, 1)
+                surface.SetDrawColor(pip_color.r * 0.5, pip_color.g * 0.5, pip_color.b * 0.5)
+                surface.DrawRect(px, py + 2, 240 * p, 24)
+                if p == 1 then
+                    IsReloadUse = false
+                    netstream.Start("perkAdd", v.uid)
+                    deltSt = 0
+                end
+            else
+                deltSt = 0
+            end
         end
 
         draww(c)
     end
+
+    -- Right side: detail panel for the hovered perk (image, description,
+    -- requirement checklist).
+    if hovered then
+        if hovered.image then
+            surface.SetMaterial(hovered.image)
+            surface.SetDrawColor(pip_color)
+            surface.DrawTexturedRect(626, 128, 256, 256)
+        end
+
+        draw.DrawText(hovered.display:upper(), "Morton Medium@48", 600, 96, pip_color)
+        draw.DrawNonParsedText(cached_desc[hovered.display], "Morton Medium@32", 600, 400, pip_color, 0)
+
+        local ry = 540
+        if next(hovered.requirements) ~= nil then
+            draw.DrawText("REQUIREMENTS", "Morton Medium@42", 600, ry, pip_color)
+            ry = ry + 48
+            for rk, rv in pairs(hovered.requirements) do
+                local ok = CheckSkill({rk, rv})
+                local label = (ok and "+ " or "x ") .. (perk_req_format[rk] or rk) .. " " .. rv
+                draw.DrawText(label, "Morton Medium@32", 600, ry, ok and color_white or perk_req_negative)
+                ry = ry + 34
+            end
+        end
+    end
 end
 
 function DrawPly.SKILLS()
-    local height = 36
+    local height = 34
     local width = 400
+    local offset = 80
     local ply = LocalPlayer()
     local character = ply:getChar()
     for y, v in pairs(skill_def) do
-        local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover(v[2]:upper(), "Morton Medium@42", 64, 116 + (y * height), width, height, 1, color_white)
+        local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover(v[2]:upper(), "Morton Medium@42", 64, offset - 2 + (y * height), width, height, 1, color_white)
         local c = pip_color
         if fn then
             c = color_black
             surface.SetDrawColor(pip_color)
-            surface.DrawRect(64, 118 + (y * height), (width + 100) - 64, height)
+            surface.DrawRect(64, offset + (y * height), (width + 100) - 64, height)
             local amt = (LocalPlayer():getChar():getSkillLevel("skillpoints") or 1) - 1
             c = color_black
             --  
@@ -276,7 +365,7 @@ function DrawPly.SKILLS()
                 --  
                 local p = math.Clamp((CurTime() - deltSt) * 0.75, 0.01, 1)
                 surface.SetDrawColor(pip_color.r * 0.5, pip_color.g * 0.5, pip_color.b * 0.5)
-                surface.DrawRect(64, 118 + (y * height), ((width + 100) - 64) * p, height)
+                surface.DrawRect(64, offset + (y * height), ((width + 100) - 64) * p, height)
                 if p == 1 then
                     IsReloadUse = false
                     local newVal = (character:getSkillLevel(v[1]) or 0) + 1
@@ -288,7 +377,7 @@ function DrawPly.SKILLS()
             end
         end
 
-        draw.DrawText(character:getSkillLevel(v[1]), "Morton Medium@48", width + 100, 116 + (y * height), c, TEXT_ALIGN_RIGHT)
+        draw.DrawText(character:getSkillLevel(v[1]), "Morton Medium@48", width + 100, offset - 8 + (y * height), c, TEXT_ALIGN_RIGHT)
         draww(c)
     end
 end
@@ -319,6 +408,370 @@ local draw_overview = function(pip_color2)
 end
 
 pipboy:AddRenderPage("STATS", draw_overview)
+
+-- ===========================================================================
+-- BUSINESS page: the cyr_main F1 "Business" shop, reimplemented as a native
+-- pipboy page. Same data path as F1MenuHTML:ShowBusiness() -- items come from
+-- nut.item.list filtered by the CanPlayerUseBusiness hook, priced via
+-- item:getPrice()/nut.currency.get, and a cart is submitted with the exact
+-- same netstream the F1 menu uses: netstream.Start("bizBuy", { [uid] = qty }).
+-- ===========================================================================
+pipboy:AddHeader("BUSINESS")
+
+local biz_cart = {}            -- { [uniqueID] = qty }
+local biz_items = nil          -- cached filtered catalogue
+local biz_index = nil          -- uid -> {name, price}
+local biz_cats = nil           -- {"ALL", cat, cat, ...}
+local biz_cat_sel = 1
+local biz_cat_open = false     -- category dropdown expanded?
+local biz_page = 0
+local biz_next_build = 0
+local biz_perpage = 36         -- 2 columns * 15 rows
+local biz_rmb_down = false     -- right-mouse edge tracking (cart removal)
+local biz_paging_y = 690       -- Y of the PREV / PAGE X/X / NEXT row (tweak here)
+local biz_buy_t = 0
+
+-- Item model preview. This mirrors the inventory page's render-target
+-- pipeline (DModelPanel -> mask RT -> pp/colour blend -> unlit RT material)
+-- so the model picks up the same pip-boy green tint as the INV page.
+local biz_mv                                   -- DModelPanel (created on page enter)
+local biz_mv_model                             -- last model assigned (avoid re-set churn)
+local biz_rt_idx = math.random(1, 100000000)
+local biz_tex = GetRenderTargetEx("biz_modelrt" .. biz_rt_idx, 256, 256, RT_SIZE_OFFSCREEN, MATERIAL_RT_DEPTH_NONE, 0, 0, IMAGE_FORMAT_RGBA16161616)
+local biz_myMat = CreateMaterial("biz_modelmat" .. biz_rt_idx, "UnlitGeneric", {
+    ["$basetexture"] = biz_tex:GetName(),
+    ["$translucent"] = "1",
+    ["$vertexcolor"] = 1,
+})
+local biz_mask = GetRenderTargetEx("biz_modelmask" .. biz_rt_idx, 256, 256, RT_SIZE_OFFSCREEN, MATERIAL_RT_DEPTH_SEPARATE, 4096, 0, IMAGE_FORMAT_RGBA16161616)
+local biz_cmat = Material("pp/colour")
+biz_cmat:SetFloat("$translucent", "1")
+
+local function biz_color_blend()
+    local p = {
+        ["$pp_colour_addr"] = 0,
+        ["$pp_colour_addg"] = 0,
+        ["$pp_colour_addb"] = 0,
+        ["$pp_colour_brightness"] = -0.01,
+        ["$pp_colour_contrast"] = 5,
+        ["$pp_colour_colour"] = 0,
+        ["$pp_colour_mulr"] = 0,
+        ["$pp_colour_mulg"] = 0,
+        ["$pp_colour_mulb"] = 0,
+    }
+    for k, v in pairs(p) do biz_cmat:SetFloat(k, v) end
+    local pre = biz_cmat:GetTexture("$fbtexture")
+    biz_cmat:SetTexture("$fbtexture", biz_mask:GetName())
+    surface.SetMaterial(biz_cmat)
+    surface.DrawTexturedRect(0, 0, 400, 300)
+    biz_cmat:SetTexture("$fbtexture", pre)
+end
+
+local function biz_pop()
+    render.PushRenderTarget(biz_mask)
+    cam.Start2D()
+    render.ClearDepth()
+    render.Clear(0, 0, 0, 0, true, true)
+    render.SetWriteDepthToDestAlpha(false)
+    biz_mv:PaintManual()
+    render.SetWriteDepthToDestAlpha(true)
+    cam.End2D()
+    render.PopRenderTarget()
+    render.PushRenderTarget(biz_tex)
+    cam.Start2D()
+    biz_color_blend()
+    cam.End2D()
+    render.PopRenderTarget()
+end
+
+-- Draw the hovered item's model into a square at (x, y). Same call sequence
+-- as the inventory page's drawItem().
+local function biz_draw_model(model, ang, x, y, size)
+    if not (IsValid(biz_mv) and biz_mv.Entity) then return end
+    biz_mv.Angle = ang or angle_zero
+    local hp = biz_mv.Entity:GetPos()
+    biz_mv:SetLookAt(hp)
+    biz_mv:SetCamPos(hp - Vector(-15, 0, 0))
+    biz_pop()
+    local target = model or "models/props_junk/cardboard_box001a.mdl"
+    if target ~= biz_mv_model then
+        biz_mv:SetModel(target)
+        biz_mv_model = target
+    end
+    surface.SetMaterial(biz_myMat)
+    surface.SetDrawColor(255, 255, 255, 255)
+    surface.DrawTexturedRect(x, y, size, size)
+    draw.NoTexture()
+end
+
+-- Create/destroy the model panel alongside the BUSINESS page, exactly like
+-- the inventory page does for InventoryModelView.
+hook.Add("pip_changepage", "biz_modelview", function(from, to)
+    if to == "BUSINESS" then
+        if IsValid(biz_mv) then biz_mv:Remove() end
+        biz_mv = vgui.Create("DModelPanel")
+        biz_mv:SetSize(200, 200)
+        biz_mv:SetModel("models/props_junk/cardboard_box001a.mdl")
+        biz_mv:SetPaintedManually(true)
+        biz_mv.Angle = Angle(0, 0, 0)
+        biz_mv_model = "models/props_junk/cardboard_box001a.mdl"
+        function biz_mv:Guess() end
+    elseif from == "BUSINESS" then
+        if IsValid(biz_mv) then biz_mv:Remove() end
+        biz_mv = nil
+        biz_mv_model = nil
+    end
+end)
+
+local function biz_build()
+    biz_items = {}
+    biz_index = {}
+    local catset = {}
+    for uid, itemTable in SortedPairsByMemberValue(nut.item.list, "name") do
+        if hook.Run("CanPlayerUseBusiness", LocalPlayer(), uid) then
+            local cat = itemTable.category or "Misc"
+            local price = itemTable:getPrice() or 0
+            local name = L(itemTable.name or uid)
+            local model = itemTable.model
+            local ang = itemTable.Angle
+            catset[cat] = true
+            biz_items[#biz_items + 1] = {uid = uid, name = name, cat = cat, price = price, model = model, angle = ang}
+            biz_index[uid] = {name = name, price = price}
+        end
+    end
+    biz_cats = {"ALL"}
+    for cat in SortedPairs(catset) do biz_cats[#biz_cats + 1] = cat end
+    if biz_cat_sel > #biz_cats then biz_cat_sel = 1 end
+end
+
+netstream.Hook("bizResp", function()
+    biz_cart = {}
+    biz_next_build = 0 -- force a catalogue rebuild (permits/flags may differ)
+    surface.PlaySound("buttons/button3.wav")
+end)
+
+pipboy:AddRenderPage("BUSINESS", function()
+    local char = LocalPlayer():getChar()
+    if not char then return end
+
+    if biz_items == nil or CurTime() > biz_next_build then
+        biz_build()
+        biz_next_build = CurTime() + 2
+    end
+
+    local curCat = biz_cats[biz_cat_sel] or "ALL"
+
+    -- Category dropdown: a single header button showing the current
+    -- category; clicking it toggles an option list that overlays the grid.
+    local DD_X, DD_Y, DD_W, DD_H = 64, 56, 360, 32
+    if NzGUI:DrawTextButton((biz_cat_open and "v " or "> ") .. "CATEGORY: " .. curCat:upper(), "Morton Medium@32", DD_X, DD_Y, DD_W, DD_H, 0, pip_color) then
+        biz_cat_open = not biz_cat_open
+    end
+    surface.SetDrawColor(pip_color)
+    surface.DrawOutlinedRect(DD_X, DD_Y, DD_W, DD_H)
+
+    local gridTop = 112
+    local perpage = biz_perpage
+
+    -- Filter to the selected category.
+    local view = {}
+    for _, it in ipairs(biz_items) do
+        if curCat == "ALL" or it.cat == curCat then view[#view + 1] = it end
+    end
+
+    local pages = math.max(1, math.ceil(#view / perpage))
+    biz_page = math.Clamp(biz_page, 0, pages - 1)
+
+    local hovered = nil
+    local rmb = input.IsMouseDown(MOUSE_RIGHT)
+    local rmbPressed = rmb and not biz_rmb_down
+
+    if not biz_cat_open then
+        -- Empty state: the catalogue is permit-gated (CanPlayerUseBusiness), so
+        -- a character holding no permits sees nothing here -- explain that
+        -- instead of leaving a blank grid that looks broken.
+        if #view == 0 then
+            if #biz_items == 0 then
+                draw.DrawText("NO MERCHANDISE AVAILABLE", "Morton Medium@42", 64, gridTop + 28, perk_req_negative)
+                draw.DrawText("You need the relevant permit in your inventory", "Morton Medium@32", 64, gridTop + 84, pip_color)
+                draw.DrawText("before any goods can be requisitioned.", "Morton Medium@32", 64, gridTop + 118, pip_color)
+            else
+                draw.DrawText("NOTHING IN THIS CATEGORY", "Morton Medium@42", 64, gridTop + 28, pip_color)
+            end
+        end
+
+        -- Item grid: 2 columns x 15 rows. Left click cycles quantity, right
+        -- click removes a unit (edge-detected so it fires once per press).
+        local startIdx = biz_page * perpage
+        for slot = 0, perpage - 1 do
+            local it = view[startIdx + slot + 1]
+            if not it then break end
+            local col = slot % 2
+            local row = math.floor(slot / 2)
+            local px = 64 + col * 248
+            local py = gridTop + row * 28
+            local qty = biz_cart[it.uid] or 0
+            -- Shrink the font for names that would overflow the 230px slot so
+            -- they stay on one line (the qty marker eats the right ~30px).
+            local label = it.name:upper()
+            local nameFont = "Morton Medium@24"
+            surface.SetFont(nameFont)
+            if surface.GetTextSize(label) > (qty > 0 and 200 or 228) then
+                nameFont = "Morton Medium@19"
+            end
+            local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover(label, nameFont, px, py, 230, 28, 1, color_white)
+            local c = qty > 0 and pip_color_accent or color_white
+            if fn then
+                hovered = it
+                c = color_black
+                surface.SetDrawColor(pip_color)
+                surface.DrawRect(px, py + 2, 230, 24)
+                -- Left click adds one (capped at 20); use the cart [-]/[+] to
+                -- fine-tune from there.
+                if click then biz_cart[it.uid] = math.min(qty + 1, 20) end
+                -- Right click removes a single unit from the cart (nil at zero).
+                if rmbPressed then
+                    local n = qty - 1
+                    biz_cart[it.uid] = n > 0 and n or nil
+                end
+            end
+            draww(c)
+            if qty > 0 then
+                draw.DrawText("x" .. qty, "Morton Medium@24", px + 228, py, c, TEXT_ALIGN_RIGHT)
+            end
+        end
+
+        -- Paging controls under the grid.
+        if pages > 1 then
+            -- Centered text button (align 0) that underlines on hover.
+            local function pagingBtn(lbl, bx)
+                local click, hover = NzGUI:DrawTextButton(lbl, "Morton Medium@32", bx, biz_paging_y, 130, 32, 0, pip_color)
+                if hover then
+                    surface.SetFont("Morton Medium@32")
+                    local tw, th = surface.GetTextSize(lbl)
+                    surface.SetDrawColor(pip_color)
+                    surface.DrawRect(bx + (130 - tw) / 2, biz_paging_y + th, tw, 2)
+                end
+                return click
+            end
+            local prevC = pagingBtn("< PREV", 64)
+            draw.DrawText("PAGE " .. (biz_page + 1) .. " / " .. pages, "Morton Medium@32", 312, biz_paging_y, pip_color, TEXT_ALIGN_CENTER)
+            local nextC = pagingBtn("NEXT >", 430)
+            if prevC then biz_page = math.max(0, biz_page - 1) end
+            if nextC then biz_page = math.min(pages - 1, biz_page + 1) end
+        end
+    end
+    biz_rmb_down = rmb
+
+    -- Right panel: hovered item detail + spinning model preview (INV logic).
+    if hovered then
+        biz_draw_model(hovered.model, hovered.angle, 600, 96, 180)
+        draw.DrawText("CAT: " .. hovered.cat:upper(), "Morton Medium@24", 800, 110, pip_color)
+        draw.DrawText("PRICE: " .. nut.currency.get(hovered.price), "Morton Medium@24", 800, 150, pip_color)
+        draw.DrawText("IN CART: " .. (biz_cart[hovered.uid] or 0), "Morton Medium@24", 800, 190, pip_color)
+        -- Name sits just above the CART header (y=320) so it never collides
+        -- with the full-width category tab strip at the top.
+        draw.DrawText(hovered.name:upper(), "Morton Medium@32", 600, 284, pip_color)
+    end
+
+    -- Right panel: cart summary + total. The CRT is curved, so keep everything
+    -- inside the safe band: right edge at BIZ_R (not the 1024 RT edge) and the
+    -- purchase bar above BIZ_BOTTOM so the curve doesn't clip it.
+    local BIZ_L = 600          -- right-panel left edge
+    local BIZ_R = 940          -- safe right edge for right-aligned values
+    local total, lines = 0, 0
+    draw.DrawText("CART", "Morton Medium@42", BIZ_L, 320, pip_color)
+    local cy = 366
+    -- Quantity tweaks are deferred until after the loop: SortedPairs snapshots
+    -- the keys, but mutating biz_cart mid-iteration (esp. removing at zero) is
+    -- still cleaner to apply once we are done drawing.
+    local cartUid, cartDelta
+    for uid, qty in SortedPairs(biz_cart) do
+        local info = biz_index[uid]
+        if info and qty > 0 then
+            total = total + info.price * qty
+            if lines < 6 then
+                if NzGUI:DrawTextButton("[-]", "Morton Medium@24", BIZ_L, cy, 34, 26, 0, pip_color) then
+                    cartUid, cartDelta = uid, -1
+                end
+                if NzGUI:DrawTextButton("[+]", "Morton Medium@24", BIZ_L + 36, cy, 34, 26, 0, pip_color) then
+                    cartUid, cartDelta = uid, 1
+                end
+                draw.DrawText(info.name .. "  x" .. qty, "Morton Medium@24", BIZ_L + 78, cy, color_white)
+                draw.DrawText(nut.currency.get(info.price * qty), "Morton Medium@24", BIZ_R, cy, pip_color, TEXT_ALIGN_RIGHT)
+                cy = cy + 30
+            end
+            lines = lines + 1
+        end
+    end
+    if cartUid then
+        -- Cap at 20; zero removes the line.
+        local nv = math.Clamp((biz_cart[cartUid] or 0) + cartDelta, 0, 20)
+        biz_cart[cartUid] = nv > 0 and nv or nil
+    end
+    if lines > 6 then
+        draw.DrawText("+ " .. (lines - 6) .. " more...", "Morton Medium@24", BIZ_L, cy, pip_color)
+    end
+
+    local money = char.getMoney and char:getMoney() or 0
+    draw.DrawText("YOUR CAPS: " .. nut.currency.get(money), "Morton Medium@32", BIZ_L, 588, pip_color)
+    draw.DrawText("TOTAL: " .. nut.currency.get(total), "Morton Medium@42", BIZ_L, 626, total > money and perk_req_negative or pip_color)
+
+    -- Hold R to submit the cart (same netstream as the F1 checkout).
+    local boxY, boxW = 672, BIZ_R - BIZ_L
+    local canBuy = lines > 0 and total <= money
+    if IS_R_DOWN and canBuy then
+        biz_buy_t = biz_buy_t == 0 and CurTime() or biz_buy_t
+        local p = math.Clamp((CurTime() - biz_buy_t) * 0.75, 0.01, 1)
+        surface.SetDrawColor(pip_color.r * 0.5, pip_color.g * 0.5, pip_color.b * 0.5)
+        surface.DrawRect(BIZ_L, boxY, boxW * p, 34)
+        if p == 1 then
+            IsReloadUse = false
+            netstream.Start("bizBuy", biz_cart)
+            biz_buy_t = 0
+        end
+    else
+        biz_buy_t = 0
+    end
+    surface.SetDrawColor(pip_color)
+    surface.DrawOutlinedRect(BIZ_L, boxY, boxW, 34)
+    draw.DrawText(canBuy and "HOLD R TO REQUISITION" or (lines == 0 and "CART EMPTY" or "NOT ENOUGH CAPS"), "Morton Medium@32", BIZ_L + 20, boxY + 4, pip_color)
+
+    -- Open dropdown is drawn LAST so it overlays the grid and the right-hand
+    -- cart panel instead of rendering behind them. Each row selects a category
+    -- and closes the menu; the current one is highlighted. Past 19 entries the
+    -- list spills into additional columns so it never runs off the screen.
+    if biz_cat_open then
+        local DD_PERCOL = 19
+        local listY = DD_Y + DD_H + 4
+        local cols = math.ceil(#biz_cats / DD_PERCOL)
+        local rowsInCol = math.min(#biz_cats, DD_PERCOL)
+        local panelH = rowsInCol * 34 + 6
+        local colStride = DD_W + 12
+        local panelW = (cols - 1) * colStride + DD_W
+        surface.SetDrawColor(0, 0, 0, 230)
+        surface.DrawRect(DD_X, listY, panelW, panelH)
+        surface.SetDrawColor(pip_color)
+        surface.DrawOutlinedRect(DD_X, listY, panelW, panelH)
+        for i, cat in ipairs(biz_cats) do
+            local col = math.floor((i - 1) / DD_PERCOL)
+            local rowI = (i - 1) % DD_PERCOL
+            local ox = DD_X + col * colStride
+            local oy = listY + 4 + rowI * 34
+            local sel = i == biz_cat_sel
+            local cl, hv = NzGUI:DrawTextButton(cat:upper(), "Morton Medium@32", ox + 4, oy, DD_W - 8, 30, 0, sel and pip_color or pip_color_accent)
+            if hv then
+                surface.SetDrawColor(pip_color.r, pip_color.g, pip_color.b, 40)
+                surface.DrawRect(ox + 2, oy, DD_W - 4, 30)
+            end
+            if cl then
+                biz_cat_sel = i
+                biz_page = 0
+                biz_cat_open = false
+            end
+        end
+    end
+end)
 -- // local ply = LocalPlayer()
 -- // local JawScale = Vector(1, 1, 1)
 -- // local PlyPos = Vector(0, 0, 0)
@@ -401,7 +854,7 @@ local function Slides(str, colorIndex, x, y, width)
         volIndicator = math.Clamp((cursor.x - startX) / width, 0, 1)
         pipboyColor[colorIndex] = volIndicator * 255
         pip_color = Color(pipboyColor[1], pipboyColor[2], pipboyColor[3])
-        timer.Create("pipboyColor", 1, 1, function() LocalPlayer():ConCommand("fallout_flaska_pipboy_color " .. pipboyColor[1] .. " " .. pipboyColor[2] .. " " .. pipboyColor[3]) end)
+        timer.Create("pipboyColor", 1, 1, function() LocalPlayer():ConCommand("fallout_pipboy_color " .. pipboyColor[1] .. " " .. pipboyColor[2] .. " " .. pipboyColor[3]) end)
     end
 end
 
@@ -637,10 +1090,10 @@ function CREATE_PERK_MENU()
         netstream.Start("perkAdd", PERK_SELECTED_ID)
     end
     local doonce = true
-    local PERKS_SORTED = table.Copy(PERKS)
+    local perksSorted = table.Copy(PERKS)
     -- sort perks by level required
-    table.sort(PERKS_SORTED, function(a, b) return (a.requirements.level or 0) < (b.requirements.level or 0) end)
-    for i, v in pairs(PERKS_SORTED) do
+    table.sort(perksSorted, function(a, b) return (a.requirements.level or 0) < (b.requirements.level or 0) end)
+    for i, v in pairs(perksSorted) do
         local isOwned = LocalPlayer():hasTrait(v.uid) == true
         timer.Simple(isOwned and 0 or FrameTime() * 2, function()
             if doonce then

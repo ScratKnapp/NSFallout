@@ -35,3 +35,5 @@ function ENT:AttachToViewmodel( vm )
 	self:SetAngles( angle_zero )
 
 end
+
+print("FAKE BONES")

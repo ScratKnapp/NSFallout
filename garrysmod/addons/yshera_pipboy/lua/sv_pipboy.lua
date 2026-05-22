@@ -3,23 +3,10 @@ util.AddNetworkString("pipboy")
 util.AddNetworkString("pipboy_fix")
 util.AddNetworkString("pipboy_toggle")
 
-net.Receive("pipboy_toggle", function(len, ply) end)
+
 
 -- The client requests pipboy bone manipulation values on init; this only sends
 -- the visual layout strings the clientside viewmodel rig uses.
-net.Receive("pipboy", function(len, ply)
-    net.Start("pipboy")
-    net.WriteString("models/pipboy.mdl")
-    net.WriteString("!")
-    net.WriteString("ManipulateBonePosition")
-    net.WriteString("ManipulateBoneAngles")
-    net.WriteString("ValveBiped.Bip01_R_UpperArm")
-    net.WriteString("ValveBiped.Bip01_R_UpperArm")
-    net.WriteString("ValveBiped.Bip01_L_UpperArm")
-    net.WriteString("ValveBiped.Bip01_L_Forearm")
-    net.WriteString("ValveBiped.Bip01_L_Hand")
-    net.Send(ply)
-end)
 
 -- Tell the client to rebuild its pipboy UI after a character spawn, otherwise
 -- references to LocalPlayer():getChar() set up at file-load time go stale.
@@ -38,6 +25,12 @@ local function registerNUT()
         isLocal = true,
         noDisplay = true
     })
+
+    -- NutScript writes _trait into every character save once the var above is
+    -- registered, but the base nut_characters schema has no such column. Add it
+    -- the same way the skills/pac plugins add theirs. The ALTER is a harmless
+    -- no-op (errors out) if the column already exists.
+    nut.db.query("ALTER TABLE nut_characters ADD COLUMN _trait INTEGER DEFAULT 0")
 
     nut.command.add("charsettraitid", {
         adminOnly = true,

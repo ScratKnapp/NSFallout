@@ -1,11 +1,10 @@
 local newfunc = math.sin
 local songname = "NA"
-local middleY = 230
+local middleY = 310
 local length = 300
-local height = 200
+local height = 250
 local step = 2
 local speed = 150
-local slider = Material("pip_slid_O.png", "smooth noclamp")
 local radio_vol = GetConVar("aftermath_cl_radio_volume")
 local volIndicator = IsValid(radio_vol) and radio_vol:GetFloat() or 1
 local startTime = CurTime() - 1
@@ -14,14 +13,6 @@ local function video_killed_the_radio_star()
         radio_vol = GetConVar("aftermath_cl_radio_volume")
         volIndicator = radio_vol and radio_vol:GetFloat() or 1
     end
-
-    local volSlider = {
-        [0] = 15,
-        [75] = 15,
-        [150] = 15,
-        [225] = 15,
-        [300] = 15,
-    }
 
     if startTime < CurTime() then
         local theReturnedHTML = "" -- Blankness
@@ -48,12 +39,19 @@ local function video_killed_the_radio_star()
 
     local startX = 600
     local posOfBox = -6000
+
+    -- ===== Station list =====
     for i, v in pairs(StationName) do
         surface.SetDrawColor(pip_color)
         local exists = i == EV_RADIO_GETINDEX()
         if exists then
+            -- pulsing highlight bar for the tuned station
+            local pulse = 30 + math.abs(newfunc(CurTime() * 4)) * 35
+            surface.SetDrawColor(pip_color.r, pip_color.g, pip_color.b, pulse + 90)
+            surface.DrawRect(100, 105 + (48 * i), 420, 42)
             surface.SetDrawColor(pip_color)
-            surface.DrawRect(100, 105 + (48 * i), 420, 42, 42)
+            surface.DrawRect(100, 105 + (48 * i), 4, 42)
+            surface.DrawRect(516, 105 + (48 * i), 4, 42)
         end
 
         if NzGUI:DrawTextButton(string.upper(v), "Morton Medium" .. (exists and "!" or "@") .. "48", 100, 100 + (48 * i), 420, 42, 1, exists and pip_colorbb or color_white, not exists and pip_color or color_white, exists and pip_color) then
@@ -66,36 +64,156 @@ local function video_killed_the_radio_star()
         end
     end
 
-    local segmentWidth = radioFreq[EV_RADIO_GETINDEX()]
-    if not segmentWidth then return end
-    local time = CurTime()
-    surface.SetDrawColor(pip_color)
-    surface.DrawLine(startX + length, middleY - (height / 2), startX + length, middleY + (height / 2))
-    surface.DrawLine(startX - 5, middleY + (height / 2), startX + length, middleY + (height / 2))
-    -- draw.DrawText("Now Playing: ", "Morton Black@42", 100, 450)
-    -- draw.DrawText(songname, "Morton Medium@42", 100, 480)
-    draw.DrawText("Vol", "Morton Black@42", startX, 350)
-    surface.DrawLine(startX, 400, startX + 300, 400)
-    surface.SetMaterial(slider)
-    surface.DrawTexturedRect(startX + (volIndicator * 300) - 8, 400 - 16, 18, 16)
+    local idx = EV_RADIO_GETINDEX()
+    local segmentWidth = radioFreq[idx]
+
+    -- ===== Oscilloscope frame =====
+    local scopeX, scopeW = startX - 6, length + 12
+    local scopeTop = middleY - (height / 2) - 12
+    local scopeBot = middleY + (height / 2) + 12
+    local scopeH = scopeBot - scopeTop
+    local pc = pip_color
+
+    -- faint screen wash
+    surface.SetDrawColor(pc.r, pc.g, pc.b, 14)
+    surface.DrawRect(scopeX, scopeTop, scopeW, scopeH)
+
+    -- grid
+    surface.SetDrawColor(pc.r, pc.g, pc.b, 26)
+    for gx = scopeX, scopeX + scopeW, 40 do
+        surface.DrawLine(gx, scopeTop, gx, scopeBot)
+    end
+    for gy = scopeTop, scopeBot, 38 do
+        surface.DrawLine(scopeX, gy, scopeX + scopeW, gy)
+    end
+
+    -- center reference line (dashed)
+    surface.SetDrawColor(pc.r, pc.g, pc.b, 60)
+    for dx = scopeX, scopeX + scopeW, 14 do
+        surface.DrawLine(dx, middleY, dx + 7, middleY)
+    end
+
+    -- frame + corner brackets
+    surface.SetDrawColor(pc)
+    local cl = 22
+    surface.DrawRect(scopeX, scopeTop, cl, 2)
+    surface.DrawRect(scopeX, scopeTop, 2, cl)
+    surface.DrawRect(scopeX + scopeW - cl, scopeTop, cl, 2)
+    surface.DrawRect(scopeX + scopeW - 2, scopeTop, 2, cl)
+    surface.DrawRect(scopeX, scopeBot - 2, cl, 2)
+    surface.DrawRect(scopeX, scopeBot - cl, 2, cl)
+    surface.DrawRect(scopeX + scopeW - cl, scopeBot - 2, cl, 2)
+    surface.DrawRect(scopeX + scopeW - 2, scopeBot - cl, 2, cl)
+
+    -- ===== Frequency / status header =====
+    -- Stacked above the scope: title row, then status row, with even gaps.
+    local tuned = segmentWidth ~= nil
+    local freqMHz = 87.5 + ((idx or 0) * 7.3) % 20.5
+    local titleY = scopeTop - 138
+    local statusY = scopeTop - 70
+    draw.DrawText("FREQUENCY", "Morton Black@42", scopeX, titleY, pc, TEXT_ALIGN_LEFT)
+    draw.DrawText(string.format("%.1f", freqMHz) .. " MHz", "Morton Medium@48", scopeX + scopeW, titleY - 3, pc, TEXT_ALIGN_RIGHT)
+
+    -- LIVE / NO SIGNAL indicator (dot vertically centred on the text)
+    local blink = math.sin(CurTime() * 6) > 0
+    local statusColor = tuned and pc or (pip_color_negative or Color(255, 90, 90))
+    if blink then
+        surface.SetDrawColor(statusColor)
+        surface.DrawRect(scopeX + 2, statusY + 12, 16, 16)
+    end
+    draw.DrawText(tuned and "LIVE" or "NO SIGNAL", "Morton Black@42", scopeX + 28, statusY, statusColor, TEXT_ALIGN_LEFT)
+
+    -- ===== Volume slider =====
+    -- Sits well below the signal bars (scopeBot + ~24..46) so nothing overlaps.
+    local volTop = scopeBot + 132
+    draw.DrawText("VOL", "Morton Black@42", startX, volTop - 56, pc, TEXT_ALIGN_LEFT)
+    draw.DrawText(math.Round(volIndicator * 100) .. "%", "Morton Medium@42", startX + 300, volTop - 56, pc, TEXT_ALIGN_RIGHT)
+
+    -- track
+    surface.SetDrawColor(pc.r, pc.g, pc.b, 40)
+    surface.DrawRect(startX, volTop - 2, 300, 4)
+    -- filled portion
+    surface.SetDrawColor(pc)
+    surface.DrawRect(startX, volTop - 2, volIndicator * 300, 4)
+    -- ticks
     for i = 0, 300, 15 do
-        surface.DrawLine(startX + i, 400, startX + i, 400 + (volSlider[i] or 8))
+        local big = (i % 75 == 0)
+        surface.SetDrawColor(pc.r, pc.g, pc.b, big and 160 or 70)
+        surface.DrawLine(startX + i, volTop + 6, startX + i, volTop + 6 + (big and 14 or 7))
     end
+    -- knob (glow + core)
+    local knobX = startX + (volIndicator * 300)
+    surface.SetDrawColor(pc.r, pc.g, pc.b, 50)
+    surface.DrawRect(knobX - 7, volTop - 13, 14, 26)
+    surface.SetDrawColor(pc)
+    surface.DrawRect(knobX - 3, volTop - 16, 6, 32)
 
-    if CheckIfCursorInRange(startX + (volIndicator * 300) - 16, 385, 32, 30) and input.IsMouseDown(MOUSE_LEFT) then
+    if CheckIfCursorInRange(knobX - 16, volTop - 18, 32, 36) and input.IsMouseDown(MOUSE_LEFT) then
         volIndicator = math.Clamp((cursor.x - startX) / 300, 0, 1)
         radio_vol:SetFloat(volIndicator)
-    elseif CheckIfCursorInRange(startX, 397, 300, 6) and input.IsMouseDown(MOUSE_LEFT) then
+    elseif CheckIfCursorInRange(startX, volTop - 5, 300, 10) and input.IsMouseDown(MOUSE_LEFT) then
         volIndicator = math.Clamp((cursor.x - startX) / 300, 0, 1)
         radio_vol:SetFloat(volIndicator)
     end
 
-    local height = height * (radioHeight[EV_RADIO_GETINDEX()] or 1)
+    if not segmentWidth then
+        -- flat-line noise when nothing is tuned
+        surface.SetDrawColor(pc.r, pc.g, pc.b, 90)
+        local px, py = scopeX, middleY
+        for x = scopeX, scopeX + scopeW, step do
+            local ny = middleY + (math.random() - 0.5) * 10
+            surface.DrawLine(px, py, x, ny)
+            px, py = x, ny
+        end
+        return
+    end
+
+    -- ===== Waveform with glow trail =====
+    local time = CurTime()
+    local waveH = height * (radioHeight[idx] or 1) * volIndicator
+    local function waveAt(x, phaseOff)
+        return newfunc((x + time * speed + phaseOff) / segmentWidth) * waveH / 2 + middleY
+    end
+
+    -- ghost trails (older phase, faded) for a smear/CRT feel
+    for t = 3, 1, -1 do
+        surface.SetDrawColor(pc.r, pc.g, pc.b, 22 * t)
+        local off = -t * speed * 0.05 * segmentWidth
+        for x = startX, startX + length, step do
+            surface.DrawLine(x - step, waveAt(x - step, off), x, waveAt(x, off))
+        end
+    end
+
+    -- soft glow (thick, low alpha)
+    surface.SetDrawColor(pc.r, pc.g, pc.b, 55)
     for x = startX, startX + length, step do
-        local y = newfunc((x + time * speed) / segmentWidth) * height / 2 + middleY
-        local lastX = x - step
-        local lastY = newfunc((lastX + time * speed) / segmentWidth) * height / 2 + middleY
-        surface.DrawLine(lastX, lastY, x, y)
+        local y, ly = waveAt(x, 0), waveAt(x - step, 0)
+        surface.DrawLine(x - step, ly - 2, x, y - 2)
+        surface.DrawLine(x - step, ly + 2, x, y + 2)
+    end
+
+    -- core trace (bright)
+    surface.SetDrawColor(pc)
+    local headY
+    for x = startX, startX + length, step do
+        local y = waveAt(x, 0)
+        surface.DrawLine(x - step, waveAt(x - step, 0), x, y)
+        headY = y
+    end
+
+    -- scanning head dot
+    surface.SetDrawColor(255, 255, 255, 220)
+    surface.DrawRect(startX + length - 3, (headY or middleY) - 3, 6, 6)
+
+    -- ===== Animated signal-strength bars =====
+    local barX = scopeX
+    local barY = scopeBot + 26
+    for b = 1, 16 do
+        local lvl = (math.abs(newfunc(CurTime() * 3 + b * 0.6)) * 0.7 + 0.3)
+        local bh = 4 + lvl * 18
+        local slot = scopeW / 16
+        surface.SetDrawColor(pc.r, pc.g, pc.b, 60 + lvl * 160)
+        surface.DrawRect(barX + (b - 1) * slot + 2, barY + (22 - bh), slot - 4, bh)
     end
 end
 

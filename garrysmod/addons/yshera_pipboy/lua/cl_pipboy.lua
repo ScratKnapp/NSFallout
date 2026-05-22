@@ -1,76 +1,159 @@
+
+
+
 local function REFRESH_PIPBOY()
     PIPBOY_ON_SCREEN = false
     NzGUI = NzGUI or {}
-    -- Draws an arc on your screen.
-    -- startang and endang are in degrees, 
-    -- radius is the total radius of the outside edge to the center.
-    -- cx, cy are the x,y coordinates of the center of the arc.
-    -- roughness determines how many triangles are drawn. Number between 1-360; 2 or 3 is a good number.
-    function draw.Arc(cx, cy, radius, thickness, startang, endang, roughness, color)
-        surface.SetDrawColor(color)
-        surface.DrawArc(surface.PrecacheArc(cx, cy, radius, thickness, startang, endang, roughness))
-    end
-
-    function surface.PrecacheArc(cx, cy, radius, thickness, startang, endang, roughness)
-        local triarc = {}
-        -- local deg2rad = math.pi / 180
-        -- Define step
-        local roughness = math.max(roughness or 1, 1)
-        local step = roughness
-        -- Correct start/end ang
-        local startang, endang = startang or 0, endang or 0
-        if startang > endang then step = math.abs(step) * -1 end
-        -- Create the inner circle's points.
-        local inner = {}
-        local r = radius - thickness
-        for deg = startang, endang, step do
-            local rad = math.rad(deg)
-            -- local rad = deg2rad * deg
-            local ox, oy = cx + (math.cos(rad) * r), cy + (-math.sin(rad) * r)
-            table.insert(inner, {
-                x = ox,
-                y = oy,
-                u = (ox - cx) / radius + .5,
-                v = (oy - cy) / radius + .5,
-            })
+    concommand.Add("a", function()
+        --[[
+timer.Simple(1, function () vgui.GetHoveredPanel():Remove() end) 
+timer.Simple(2, function () vgui.GetHoveredPanel():Remove() end) 
+timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
+        local character = nut.char.loaded[nut.characters[2]]
+        local alsaka = Material("alaska.png")
+        local alsakalogo = Material("alaska_f1.png", "smooth")
+        if MAIN_MENU and IsValid(MAIN_MENU) then MAIN_MENU:Remove() end
+        MAIN_MENU = vgui.Create("DPanel")
+        MAIN_MENU:SetSize(ScrW(), ScrH())
+        MAIN_MENU:MakePopup()
+        MAIN_MENU:Center()
+        MAIN_MENU.Paint = function(s, w, h)
+            surface.SetDrawColor(color_white)
+            surface.SetMaterial(alsaka)
+            local x, y = input.GetCursorPos()
+            local paralax_x = math.Clamp(1 - (x / ScrW()), 0, 1)
+            local paralax_y = math.Clamp(1 - (y / ScrH()), 0, 1)
+            local size = 50
+            surface.DrawTexturedRect(-size + (paralax_x * size), -size + (paralax_y * size), w + (size * 2), h + (size * 2))
+            surface.SetMaterial(alsakalogo)
+            surface.DrawTexturedRect(16, 16, 512, 200)
         end
 
-        -- Create the outer circle's points.
-        local outer = {}
-        for deg = startang, endang, step do
-            local rad = math.rad(deg)
-            -- local rad = deg2rad * deg
-            local ox, oy = cx + (math.cos(rad) * radius), cy + (-math.sin(rad) * radius)
-            table.insert(outer, {
-                x = ox,
-                y = oy,
-                u = (ox - cx) / radius + .5,
-                v = (oy - cy) / radius + .5,
-            })
+        local icon = MAIN_MENU:Add("DModelPanel")
+        icon:Dock(FILL)
+        function icon:LayoutEntity(ent)
+            ent:SetAngles(Angle(0, 25, 0))
+            icon:RunAnimation()
+            return
         end
 
-        -- Triangulize the points.
-        for tri = 1, #inner * 2 do -- twice as many triangles as there are degrees.
-            local p1, p2, p3
-            p1 = outer[math.floor(tri / 2) + 1]
-            p3 = inner[math.floor((tri + 1) / 2) + 1]
-            if tri % 2 == 0 then --if the number is even use outer.
-                p2 = outer[math.floor((tri + 1) / 2)]
-            else
-                p2 = inner[math.floor((tri + 1) / 2)]
+        icon:SetFOV(45)
+        icon:SetCamPos(Vector(50, 50, 35))
+        function icon:PostDrawModel(m)
+            for i, v in pairs(m.parts or {}) do
+                if IsValid(v) then
+                    local c = v.col or Vector(1, 1, 1)
+                    render.SetColorModulation(c.r, c.g, c.b)
+                    v:DrawModel()
+                end
+            end
+        end
+
+        icon.angx = 0.5
+        icon.angy = 0.5
+        -- disables default rotation
+        function icon:LayoutEntity(Entity)
+            if input.IsMouseDown(MOUSE_LEFT) and self:IsHovered() then
+                icon.angx = Lerp(FrameTime() * 30, icon.angx, (gui.MouseX() / ScrW() - 0.5) + 0.5)
+                icon.angy = Lerp(FrameTime() * 30, icon.angy, (gui.MouseY() / ScrH() - 0.5) + 0.5)
             end
 
-            table.insert(triarc, {p1, p2, p3})
+            if input.IsMouseDown(MOUSE_LEFT) and input.IsMouseDown(MOUSE_RIGHT) and self:IsHovered() then CHARACTER_CREATION_PANEL:Remove() end
+            icon.Entity:ManipulateBoneAngles(icon.Entity:LookupBone("ValveBiped.Bip01_Head1"), Angle(0, Lerp(icon.angy, 22, -22), Lerp(icon.angx, -45, 45)))
+            return
         end
-        -- Return a table of triangles to draw.
-        return triarc
-    end
 
-    function surface.DrawArc(arc) --Draw a premade arc.
-        for k, v in ipairs(arc) do
-            surface.DrawPoly(v)
+        MAIN_MENU.FADE_SPEED = 0.3
+        function MAIN_MENU:setFadeToBlack(fade)
         end
-    end
+
+        function MAIN_MENU:onCharacterSelected(character)
+            if self.choosing then return end
+            if character == LocalPlayer():getChar() then return end
+            nutMultiChar:chooseCharacter(character)
+            MAIN_MENU:Remove()
+        end
+
+        local sidebar = MAIN_MENU:Add("DPanel")
+        sidebar:Dock(LEFT)
+        sidebar.Paint = function() end
+        sidebar:SetWide(ScrW() * 0.2)
+        local sidebar = MAIN_MENU:Add("DPanel")
+        sidebar:Dock(RIGHT)
+        sidebar:SetWide(ScrW() * 0.2)
+        local Label = sidebar:Add("DPanel")
+        Label:Dock(TOP)
+        Label:SetTall(128)
+        local Confirm = icon:Add("DButton")
+        Confirm:Dock(BOTTOM)
+        Confirm:DockMargin(386, 0, 386, 42)
+        Confirm:SetTall(42)
+        Confirm:SetText("")
+        Confirm.Paint = function(self, w, h)
+            surface.SetDrawColor(124, 167, 255, self:IsHovered() and 255 or 200)
+            surface.DrawRect(0, 0, w, h)
+            draw.SimpleText("PLAY", "Morton Medium@32", w / 2, 6, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+        end
+
+        function MAIN_MENU:fadeOut()
+            self:AlphaTo(0, 0.25, 0, function() self:Remove() end)
+        end
+
+        Confirm.DoClick = function(s)
+            if MAIN_MENU.choosing then return end
+            if s.id == LocalPlayer():getChar():getID() then
+                return MAIN_MENU:fadeOut()
+            else
+                MAIN_MENU:onCharacterSelected(s.id)
+            end
+        end
+
+        local Create = sidebar:Add("DButton")
+        Create:Dock(BOTTOM)
+        Create:SetTall(42)
+        Create:SetText("")
+        Create.Paint = function(self, w, h)
+            surface.SetDrawColor(124, 167, 255, self:IsHovered() and 255 or 200)
+            surface.DrawRect(0, 0, w, h)
+            draw.SimpleText("CREATE", "Morton Medium@32", w / 2, 6, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+        end
+
+        Create.DoClick = function(s) CL_CreateCharacterCreationMenu() end
+        for i, v in pairs(nut.characters) do
+            local Char = sidebar:Add("DButton")
+            Char:Dock(TOP)
+            Char:SetTall(64)
+            Char:SetText("")
+            Char.char = nut.char.loaded[v]
+            Char.id = v
+            function Char:Paint(w, h)
+                surface.SetDrawColor(255, 100, 100, self:IsHovered() and 100 or 255)
+                surface.DrawRect(0, 0, w, h)
+                draw.SimpleText(self.char:getName(), "Morton Medium@32", 8, 8, Color(255, 255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                draw.SimpleText("LEVEL " .. self.char:getSkillLevel("level"), "Morton Medium@24", 8, 34, Color(255, 255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+            end
+
+            function Char:DoClick()
+                Confirm.id = self.id
+                icon:SetModel(self.char:getModel())
+                icon.Entity:SetAngles(Angle(0, 0, 0))
+                icon.Entity:ApplyMorph(self.char.vars.apperance, true)
+                icon:SetLookAt(headpos - Vector(0, 0, 0))
+                icon:SetCamPos(headpos - Vector(-35, 0, 0)) -- Move cam in front of face
+                icon:SetFOV(45)
+            end
+
+            if i == 2 then Char:DoClick() end
+        end
+    end)
+
+    hook.Add("InitializedPlugins", "RemoveFogFromFOMP", function()
+        local GAMEMODE = GAMEMODE or GM
+        function GAMEMODE:SetupWorldFog()
+            render.FogMode(MATERIAL_FOG_NONE)
+            return true
+        end
+    end)
 
     local function charWrap(text, remainingWidth, maxWidth)
         local totalWidth = 0
@@ -149,7 +232,7 @@ local function REFRESH_PIPBOY()
     end
 
     local convarName = "flaska"
-    local falloutColor = CreateConVar("fallout_" .. convarName .. "_pipboy_color", "64 220 255", FCVAR_ARCHIVE)
+    local falloutColor = CreateConVar("fallout_pipboy_color", "255 182 66", FCVAR_ARCHIVE)
     local falloutnegativeColor = CreateConVar("fallout_" .. convarName .. "_pipboy_negt_color", "255 100 100", FCVAR_ARCHIVE)
     local function StringToColor(id)
         r = {}
@@ -163,7 +246,7 @@ local function REFRESH_PIPBOY()
 
     pip_color = pip_color or StringToColor()
     pip_color_negative = StringToColor(falloutnegativeColor)
-    cvars.AddChangeCallback("fallout_" .. convarName .. "_pipboy_color", function(convar_name, value_old, value_new)
+    cvars.AddChangeCallback("fallout_pipboy_color", function(convar_name, value_old, value_new)
         pip_color = StringToColor()
         pip_color_20 = Color(pip_color.r, pip_color.g, pip_color.b, 50)
         pip_color_accent = Color(pip_color.r * 0.8, pip_color.g * 0.8, pip_color.b * 0.8)
@@ -333,7 +416,8 @@ local function REFRESH_PIPBOY()
         y = 0
     }
 
-    local cursor_sens = 0.3
+    -- Pipboy cursor sensitivity, adjustable from the in-pipboy SETTINGS tab.
+    local cursor_sens_cv = CreateClientConVar("pipboy_mouse_sens", "0.3", true, false)
     cursor.Pressed = false
     cursor.WaitingForRelease = false
     function cursor:IsReady()
@@ -356,6 +440,7 @@ local function REFRESH_PIPBOY()
         local awep = lply:GetActiveWeapon()
         local left, right, bottom, top = 0, WIDTH, HEIGHT, 0
         if lply and PIPBOY_ON_SCREEN then
+            local cursor_sens = cursor_sens_cv:GetFloat()
             cursor.x, cursor.y = math.Clamp(cursor.x + (x * cursor_sens), left, right), math.Clamp(cursor.y + (y * cursor_sens), top, bottom)
             ccmd:SetViewAngles(angle)
             return true
@@ -426,9 +511,31 @@ local function REFRESH_PIPBOY()
     pipboy:AddHeader("INFO")
     pipboy:AddHeader("MAP")
     pipboy:AddHeader("CHARACTERS")
-    pipboy:AddHeader("OPTIONS")
+    pipboy:AddHeader("SETTINGS")
     hook.Run("pipboy_headers")
     pipboy.SelectedHeader = "STATS"
+
+    -- SETTINGS page: rendered inside the pipboy RT like the other pages.
+    -- Single mouse-sensitivity slider bound to the pipboy_mouse_sens ConVar.
+    pipboy:AddRenderPage("SETTINGS", function()
+        local minS, maxS = 0.05, 1.5
+        local x, y, w = 120, 200, 700
+        surface.SetDrawColor(pip_color.r, pip_color.g, pip_color.b, 255)
+        draw.DrawText("MOUSE SENSITIVITY", "Morton Medium@48", x, y - 70, pip_color)
+
+        local cur = math.Clamp(cursor_sens_cv:GetFloat(), minS, maxS)
+        local frac = (cur - minS) / (maxS - minS)
+
+        surface.DrawLine(x, y + 25, x + w, y + 25)
+        surface.DrawRect(x + (frac * w) - 9, y + 25 - 9, 18, 18)
+        draw.DrawText(string.format("%.2f", cur), "Morton Medium@42", x + w + 40, y - 5, pip_color)
+
+        if CheckIfCursorInRange(x, y - 10, w, 70) and input.IsMouseDown(MOUSE_LEFT) then
+            local nf = math.Clamp((cursor.x - x) / w, 0, 1)
+            local nv = math.Round(minS + nf * (maxS - minS), 2)
+            cursor_sens_cv:SetFloat(nv)
+        end
+    end)
     hook.Add("HUDPaint", "mute", function()
         local player = LocalPlayer()
         player:StopSound("items/flashlight1.wav")
@@ -449,6 +556,7 @@ local function REFRESH_PIPBOY()
             drawHeader("STATS")
             vgui.Create("nutCharacter")
         end
+
 
         --if nexttime > CurTime() then return end
         --nexttime = CurTime() + framerate
@@ -550,13 +658,28 @@ local function REFRESH_PIPBOY()
         draw.NoTexture()
         -- draw.DrawText("12:00", "Morton Medium@72", 432, 274, pip_color, TEXT_ALIGN_RIGHT)
         draw.DrawText("WEIGHT :", "Morton Medium@64", 630, 695, pip_color, TEXT_ALIGN_RIGHT)
-        draw.DrawText(math.floor(inventory:getWeight()) .. "/" .. math.floor(inventory:getMaxWeight()), "Morton Medium@64", 900, 695, pip_color, TEXT_ALIGN_RIGHT)
+        draw.DrawText(inventory:getWeight() .. "/" .. inventory:getMaxWeight(), "Morton Medium@64", 900, 695, pip_color, TEXT_ALIGN_RIGHT)
         draw.NoTexture()
-    end 
+    end
 
-    --hook.Add("PostRender", "drawinterface", function() end) 
+    --hook.Add("PostRender", "drawinterface", function() end)
     local offsetView = 0
     local offsetDT = 0
+    -- Equip/unequip animation: instead of a framerate-dependent exponential
+    -- lerp, drive offsetDT from a fixed 0.2s timeline so the arm/pipboy
+    -- rotations ease in and out consistently and feel alive.
+    local PIP_ANIM_TIME = 0.2
+    local pipAnimStart = 0
+    local pipAnimFrom = 0
+    -- Single source of truth for the equip animation value. Computed from
+    -- the elapsed time since the last toggle so it's correct no matter which
+    -- hook (or frame) asks for it, instead of relying on another hook having
+    -- already advanced offsetDT this frame.
+    function PipAnimValue()
+        local f = math.Clamp((CurTime() - pipAnimStart) / PIP_ANIM_TIME, 0, 1)
+        f = f * f * (3 - 2 * f) -- smoothstep ease in/out
+        return Lerp(f, pipAnimFrom, offsetView)
+    end
     function pip_init()
         cs_vm = IsValid(cs_vm) and cs_vm or ents.CreateClientside("cl_fakeVM")
         print("CS_VM", cs_vm)
@@ -567,21 +690,41 @@ local function REFRESH_PIPBOY()
             return LocalPlayer():GetPlayerColor()
         end
 
-        net.Start("pipboy")
-        net.SendToServer()
-        net.Receive("pipboy", function()
-            cs_pip:SetModel(net.ReadString())
-            cs_pip:SetSubMaterial(1, net.ReadString() .. mat_name)
-            local a, b = net.ReadString(), net.ReadString()
-            local vm = cs_vm
-            vm[a](vm, vm:LookupBone(net.ReadString()), Vector(53, 25, 0))
-            vm[b](vm, vm:LookupBone(net.ReadString()), Angle(0, 150, 45))
-            vm[b](vm, vm:LookupBone(net.ReadString()), Angle(0, -50, 45))
-            vm[b](vm, vm:LookupBone(net.ReadString()), Angle(0, 5, 35))
-            vm[b](vm, vm:LookupBone(net.ReadString()), Angle(-25, 0, 0))
-            print("FIXED BONE POS")
-        end)
 
+        cs_pip:SetModel("models/pipboy.mdl")
+        cs_pip:SetSubMaterial(1, "!" .. mat_name)
+        local vm = cs_vm
+        -- Target pose for when the Pip-Boy is fully raised. The bones are
+        -- lerped from the neutral (lowered) sequence pose toward these values
+        -- using the same eased fraction that slides the viewmodel in/out, so
+        -- opening and closing the menu animates smoothly instead of snapping.
+        local PIP_BONE_POSE = {
+            -- `low` is the bone's manipulation while the Pip-Boy is fully
+            -- lowered, `ang`/`pos` the fully-raised target. Both ends are
+            -- lerped so the arm bones swing through a real arc instead of
+            -- snapping straight to the raised pose.
+            { bone = "ValveBiped.Bip01_R_UpperArm", pos = Vector(53, 25, 0), ang = Angle(0, 150, 45), low = Angle(-9, 35, 15) },
+            { bone = "ValveBiped.Bip01_L_UpperArm", ang = Angle(0, -50, 45), low = Angle(0, -55, 10) },
+            { bone = "ValveBiped.Bip01_L_Forearm",  ang = Angle(0, 5, 35),   low = Angle(0, 0, 222) },
+            { bone = "ValveBiped.Bip01_L_Hand",     ang = Angle(-25, 0, 0) },
+        }
+
+        function ApplyPipboyBonePose(frac)
+            -- frac is the already-eased offsetDT, so the bone rotations
+            -- follow the same 0.2s timeline as the slide-in.
+            frac = math.Clamp(frac, 0, 1)
+            for _, v in ipairs(PIP_BONE_POSE) do
+                local id = vm:LookupBone(v.bone)
+                if not id then continue end
+                if v.pos then
+                    vm:ManipulateBonePosition(id, LerpVector(frac, vector_origin, v.pos))
+                end
+                if v.ang then
+                    vm:ManipulateBoneAngles(id, LerpAngle(frac, v.low or angle_zero, v.ang))
+                end
+            end
+        end
+        print("FIXED BONE POS")
         local function applycs(self, vm)
             self:AddEffects(EF_BONEMERGE)
             if vm then self:SetParent(vm) end
@@ -601,31 +744,40 @@ local function REFRESH_PIPBOY()
         cs_vm:SetAngles(angle_zero)
         local error_mat = Material("models/shadertest/shader3")
         local cxm = nil
+        PrintTable(cs_vm:GetSequenceList())
         local _VEC_OFFSET = Vector()
-        local LOWERED_ANGLES = Angle(-9, 35, 15)
-        local PA_FOV = CreateClientConVar("pipboy_fov", "60", true, false)
-        hook.Add("PostDrawHUD", "aheXXAFGAGA", function(viewmodel, weapon)
-            if ISPIPBOYTHIRDPERSON() then return end
-            cam.Start3D(nil, nil, PA_FOV:GetFloat())
+        -- Fixed FOV used to render the pipboy/arms so the player's
+        -- viewmodel_fov cvar can't rescale or shift them on screen.
+        local PIPBOY_RENDER_FOV = tonumber(GetConVar("viewmodel_fov"):GetDefault()) or 54
+        hook.Add("PreDrawViewModel", "aheXXAFGAGA", function(viewmodel, weapon)
+            offsetDT = PipAnimValue() -- recompute here so the bone pose is never a frame stale
             local miles = (1 - offsetDT) * 18
             local client = LocalPlayer()
-            cs_vm:SetPos(client:GetViewModel():GetPos() - _VEC_OFFSET + (cs_vm:GetUp() * 4.5) + (cs_vm:GetForward() * 5) + (cs_vm:GetUp() * -miles))
-            local cs_vm_ang = EyeAngles()
-            cs_vm:SetAngles(cs_vm_ang)
-            cs_pip:SetPos(cs_vm:GetPos() + (cs_vm:GetForward() * 10) + (cs_vm:GetUp() * -5))
-            local ang = cs_vm:GetAngles()
-            ang:RotateAroundAxis(cs_vm:GetForward(), 270)
-            ang:RotateAroundAxis(cs_vm:GetRight(), 180)
+            -- Build the offset basis from EyeAngles directly. Using
+            -- cs_vm:GetForward/Up reads the previous frame's angles and
+            -- also drifts when viewmodel_fov changes the engine's reported
+            -- viewmodel pose, so derive the basis from the camera instead.
+            local eyeAng = EyeAngles()
+            local eyeFwd, eyeUp = eyeAng:Forward(), eyeAng:Up()
+            cs_vm:SetPos(client:GetViewModel():GetPos() - _VEC_OFFSET + (eyeUp * 4.5) + (eyeFwd * 5) + (eyeUp * -miles))
+            cs_vm:SetAngles(eyeAng)
+            cs_pip:SetPos(cs_vm:GetPos() + (eyeFwd * 10) + (eyeUp * -5))
+            local ang = Angle(eyeAng.p, eyeAng.y, eyeAng.r)
+            ang:RotateAroundAxis(eyeFwd, 270)
+            ang:RotateAroundAxis(eyeAng:Right(), 180)
             cs_pip:SetAngles(ang)
             if offsetDT > 0.00001 then
+                ApplyPipboyBonePose(offsetDT)
                 cs_vm:SetupBones()
+                -- Re-issue the view with our fixed FOV so the draw calls
+                -- inherit it instead of the viewmodel pass's viewmodel_fov.
+                cam.Start3D(EyePos(), eyeAng, PIPBOY_RENDER_FOV)
                 cs_vm:DrawModel()
                 cs_arms:DrawModel()
                 cs_pip:DrawModel()
+                cam.End3D()
                 render.SetLightingMode(0)
             end
-
-            cam.End3D()
         end)
 
         hook.Add("PostDrawViewModel", "aheXXAFGAGA", function(viewmodel, weapon)
@@ -634,7 +786,7 @@ local function REFRESH_PIPBOY()
         end)
 
         hook.Add("CalcViewModelView", "calcoffset", function(wep, vm, oldPos, oldAng, pos, ang)
-            offsetDT = Lerp(FrameTime() * 5, offsetDT, offsetView)
+            offsetDT = PipAnimValue()
             local p = offsetDT * -24
             _VEC_OFFSET = vm:GetUp() * p
             if offsetDT > 0.001 then return oldPos + (vm:GetUp() * p), ang end
@@ -663,9 +815,18 @@ local function REFRESH_PIPBOY()
         end)
 
         function TogglePipboyView(ChangePageTo)
-            if IsValid(cs_arms) then cs_arms:SetModel(LocalPlayer():GetViewModel():GetModel()) end
+            if IsValid(cs_arms) then
+                local plyVM = LocalPlayer():GetViewModel()
+                local vmModel = IsValid(plyVM) and plyVM:GetModel()
+                if vmModel and vmModel ~= "" then cs_arms:SetModel(vmModel) end
+            end
             offsetView = tog and 1 or 0
             tog = not tog
+            -- Restart the 0.2s rotation animation from wherever it currently
+            -- sits, so interrupting a raise/lower lerps smoothly to the new
+            -- target instead of jumping.
+            pipAnimFrom = offsetDT
+            pipAnimStart = CurTime()
             PIPBOY_ON_SCREEN = offsetView == 1
             if doDrawBackground == true then offsetView = 0 end
             net.Start("pipboy_toggle")
@@ -676,39 +837,30 @@ local function REFRESH_PIPBOY()
             ui_hum[PIPBOY_ON_SCREEN and "Play" or "Pause"](ui_hum)
         end
 
+        hook.Add("PlayerBindPress", nut.plugin.list["f1menu"], function(client, bind, pressed) end)
     end
 
     hook.Add("Move", "keyLiwasten", function()
-        KEYBOARD_T_CLICK = false
-        KEYBOARD_X_CLICK = false
-        KEYBOARD_G_CLICK = false
         if vgui.GetKeyboardFocus() == nil then
             if input.WasKeyPressed(KEY_I) then
                 CHANGE_PIP_BOY_PAGE("INV")
                 TogglePipboyView()
             end
-
-            if input.WasKeyPressed(KEY_T) then KEYBOARD_T_CLICK = true end
-            if input.WasKeyPressed(KEY_X) then KEYBOARD_X_CLICK = true end
-            if input.WasKeyPressed(KEY_G) then KEYBOARD_G_CLICK = true end
         end
     end)
 
     concommand.Add("test", function() TogglePipboyView() end)
     ui_hum = ui_hum or nil
     if ui_hum then ui_hum:Stop() end
-    function ISPIPBOYTHIRDPERSON()
-        return PIPBOY_ON_SCREEN and (GetConVar("simple_thirdperson_enabled") and GetConVar("simple_thirdperson_enabled"):GetBool() or doDrawBackground)
-    end
-
-    CreateClientConVar("fallout_simple_pipboy", "0", true, false)
+    CreateClientConVar("fallout_simple_pipboy", "1", true, false)
     hook.Add("HUDPaint", "pipboy", function()
         doDrawBackground = GetConVar("fallout_simple_pipboy"):GetBool()
-        if ISPIPBOYTHIRDPERSON() then
-            local wth, height = 800, ScrH() / 1.5
+        local simpleThird = GetConVar("simple_thirdperson_enabled")
+        if PIPBOY_ON_SCREEN and ((simpleThird and simpleThird:GetBool()) or doDrawBackground) then
+            local wth, height = 1000, ScrH()
             height = height - 100
             wth = height / 4 * 5
-            local x, y = (wth / 4) + 50, 150
+            local x, y = (wth / 4) + 50, 50
             surface.SetDrawColor(0, 0, 0, 50)
             surface.DrawRect(x, y, wth, height)
             surface.SetDrawColor(color_white)
@@ -739,6 +891,4 @@ hook.Add("PlayerBindPress", "1_pip_tab", function(ply, bind, pressed, num)
         TogglePipboyView()
         return true
     end
-
-
 end)

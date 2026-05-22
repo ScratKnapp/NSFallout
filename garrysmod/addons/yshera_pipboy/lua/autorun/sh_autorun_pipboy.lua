@@ -1,6 +1,5 @@
 local function AddFile(File, directory)
     local prefix = string.lower(string.Left(File, 3))
-
     if SERVER and prefix == "sv_" then
         include(directory .. File)
         print("[AUTOLOAD] SERVER INCLUDE: " .. File)
@@ -26,11 +25,8 @@ end
 local function IncludeDir(directory)
     directory = directory .. "/"
     local files, directories = file.Find(directory .. "*", "LUA")
-
     for _, v in ipairs(files) do
-        if string.EndsWith(v, ".lua") then
-            AddFile(v, directory)
-        end
+        if string.EndsWith(v, ".lua") then AddFile(v, directory) end
     end
 
     for _, v in ipairs(directories) do
@@ -39,25 +35,18 @@ local function IncludeDir(directory)
     end
 end
 
-
 if SERVER then
     AddCSLuaFile("cl_pipboy.lua")
-	AddCSLuaFile("cl_nut_ui_overwrite.lua")
+    AddCSLuaFile("cl_nut_ui_overwrite.lua")
     include("sv_pipboy.lua")
 else
     include("cl_pipboy.lua")
-	include("cl_nut_ui_overwrite.lua")
+    include("cl_nut_ui_overwrite.lua")
 end
 
-if SERVER then 
-IncludeDir("pipboy") 
-else 
-IncludeDir("pipboy") 
-hook.Add("ReloadPipboy","reloadplugins",function() 
-	IncludeDir("pipboy") 
-end)
+if SERVER then
+    IncludeDir("pipboy")
+else
+    IncludeDir("pipboy")
+    hook.Add("ReloadPipboy", "reloadplugins", function() IncludeDir("pipboy") end)
 end
-
-
-
- 
