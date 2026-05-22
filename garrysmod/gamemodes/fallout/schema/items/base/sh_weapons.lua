@@ -24,17 +24,19 @@ end
 -- On item is dropped, Remove a weapon from the player and keep the ammo in the item.
 ITEM:hook("drop", function(item)
 	if (item:getData("equip")) then
+		local equipSlot = item:getData("equipSlot", item.weaponCategory)
 		item:setData("equip", nil)
+		item:setData("equipSlot", nil)
 
 		item.player.carryWeapons = item.player.carryWeapons or {}
 
-		local weapon = item.player.carryWeapons[item.weaponCategory]
-		
+		local weapon = item.player.carryWeapons[equipSlot]
+
 		if (IsValid(weapon)) then
 			item:setData("ammo", weapon:Clip1())
-			
+
 			item.player:StripWeapon(item.class)
-			item.player.carryWeapons[item.weaponCategory] = nil
+			item.player.carryWeapons[equipSlot] = nil
 			item.player:EmitSound("items/ammo_pickup.wav", 80)
 		end
 		
@@ -54,32 +56,34 @@ ITEM.functions.EquipUn = { -- sorry, for name order.
 	icon = "icon16/cross.png",
 	onRun = function(item)
 		local client = item.player
-		
+
 		if(IsValid(client.nutRagdoll)) then
 			client:notify("You cannot do this right now.")
 			return false
 		end
-	
+
 		client.carryWeapons = client.carryWeapons or {}
 
-		local weapon = client.carryWeapons[item.weaponCategory]
+		local equipSlot = item:getData("equipSlot", item.weaponCategory)
+		local weapon = client.carryWeapons[equipSlot]
 
 		if (!weapon or !IsValid(weapon)) then
-			weapon = client:GetWeapon(item.class)	
+			weapon = client:GetWeapon(item.class)
 		end
 
 		if (weapon and weapon:IsValid()) then
 			item:setData("ammo", weapon:Clip1())
-		
+
 			client:StripWeapon(item.class)
 		else
 			print(Format("[Nutscript] Weapon %s does not exist!", item.class))
 		end
 
 		client:EmitSound("items/ammo_pickup.wav", 80)
-		client.carryWeapons[item.weaponCategory] = nil
+		client.carryWeapons[equipSlot] = nil
 
 		item:setData("equip", nil)
+		item:setData("equipSlot", nil)
 
 		if (item.onUnequipWeapon) then
 			item:onUnequipWeapon(client, weapon)
@@ -104,14 +108,15 @@ ITEM.functions.Equip = {
 	name = "Equip",
 	tip = "equipTip",
 	icon = "icon16/tick.png",
-	onRun = function(item)
+	onRun = function(item, data)
 		local client = item.player
-	
+		local targetSlot = (isstring(data) and data) or item.weaponCategory
+
 		if(IsValid(item.player.nutRagdoll)) then
 			client:notify("You cannot do this right now.")
 			return false
-		end	
-	
+		end
+
 		local items = client:getChar():getInv():getItems()
 
 		client.carryWeapons = client.carryWeapons or {}
@@ -120,7 +125,7 @@ ITEM.functions.Equip = {
 			if (v.id != item.id) then
 				if (
 					v.isWeapon and
-					client.carryWeapons[item.weaponCategory] and
+					client.carryWeapons[targetSlot] and
 					v:getData("equip")
 			 	) then
 					client:notifyLocalized("weaponSlotFilled")
@@ -171,7 +176,7 @@ ITEM.functions.Equip = {
 					end
 				end)
 			end)
-			client.carryWeapons[item.weaponCategory] = weapon
+			client.carryWeapons[targetSlot] = weapon
 			client:EmitSound(item.equipSound or "items/ammo_pickup.wav", 80)
 
 			-- Remove default given ammo.
@@ -183,6 +188,7 @@ ITEM.functions.Equip = {
 				client:RemoveAmmo(weapon:Clip1(), weapon:GetPrimaryAmmoType())
 			end
 			item:setData("equip", true)
+			item:setData("equipSlot", targetSlot)
 
 			weapon:SetClip1(item:getData("ammo", 0))
 
@@ -545,7 +551,7 @@ function ITEM:onLoadout()
 
 		if (IsValid(weapon)) then
 			client:RemoveAmmo(weapon:Clip1(), weapon:GetPrimaryAmmoType())
-			client.carryWeapons[self.weaponCategory] = weapon
+			client.carryWeapons[self:getData("equipSlot", self.weaponCategory)] = weapon
 
 			weapon:SetClip1(self:getData("ammo", 0))
 		else

@@ -261,17 +261,47 @@ local function drawItem(item3, y, pip_color, _amt, ITEM_INSTANCE_RRA)
         end
 
         if IsUseDown and (_G.EatTimer or 0) > CurTime() then IsUseDown = false end
+        local function resolveInstance()
+            if ITEM_INSTANCE_RRA then return ITEM_INSTANCE_RRA end
+            local Inventory = GetITEMS()
+            return LocalPlayer():getChar():getInv().items[Inventory.instances[item3][1]]
+        end
+        local function equipToggle(v, slot)
+            if v:getData("equip") then
+                netstream.Start("invAct", "EquipUn", v.id, v:getID(), slot)
+            elseif v.isWeapon then
+                netstream.Start("invAct", "Equip", v.id, v:getID(), slot)
+            elseif v.functions and v.functions.EquipSlot then
+                local specialSlot = istable(v.specialSlot) and v.specialSlot[1] or v.specialSlot
+                netstream.Start("invAct", "EquipSlot", v.id, v:getID(), slot or specialSlot)
+            elseif v.functions and v.functions.Equip then
+                netstream.Start("invAct", "Equip", v.id, v:getID(), slot)
+            else
+                netstream.Start("invAct", "use", v.id, v:getID(), v.id)
+                _G.EatTimer = CurTime() + 0.5
+                if v.functions.use and v.functions.use.onRunClient then v.functions.use.onRunClient(v) end
+            end
+        end
         if IsUseDown then
             IsUseDown = false
-            local Inventory = GetITEMS()
-            local v = ITEM_INSTANCE_RRA or LocalPlayer():getChar():getInv().items[Inventory.instances[item3][1]]
+            local v = resolveInstance()
             netstream.Start("invAct", "use", v.id, v:getID(), v.id)
             _G.EatTimer = CurTime() + 0.5
-            if v.functions.use.onRunClient then v.functions.use.onRunClient(v) end
+            if v.functions.use and v.functions.use.onRunClient then v.functions.use.onRunClient(v) end
+        elseif click then
+            local v = resolveInstance()
+            equipToggle(v, nil)
+            _G.EatTimer = CurTime() + 0.25
+        elseif IsRightMouseDown then
+            IsRightMouseDown = false
+            local v = resolveInstance()
+            if v.isWeapon then
+                equipToggle(v, "sidearm")
+                _G.EatTimer = CurTime() + 0.25
+            end
         elseif IsReloadUse then
             IsReloadUse = false
-            local Inventory = GetITEMS()
-            local v = ITEM_INSTANCE_RRA or LocalPlayer():getChar():getInv().items[Inventory.instances[item3][1]]
+            local v = resolveInstance()
             netstream.Start("invAct", "drop", v.id, v:getID(), v.id)
         end
     else
@@ -416,7 +446,12 @@ hook.Add("pip_changepage", "inv_", function(from, to)
         hook.Add("PostRenderVGUI", "inv_r", function()
             if ITEM_DRAWN_THIS_FRAME == nil then return end
             render.SetViewPort(ScrW() * 0.2, ScrH() * 0.775, wth, ht)
-            local options = {"E) USE", "R) DROP",}
+            local isWep = ITEM_DRAWN_THIS_FRAME.isWeapon or ITEM_DRAWN_THIS_FRAME.type == "WEAPON"
+            local equipLabel = ITEM_DRAWN_THIS_FRAME:getData("equip") and "UNEQUIP" or "EQUIP"
+            local options = {"LMB) " .. equipLabel}
+            if isWep then table.insert(options, "RMB) SIDEARM") end
+            table.insert(options, "E) USE")
+            table.insert(options, "R) DROP")
             if ITEM_DRAWN_THIS_FRAME.type == "WEAPON" then
                 table.insert(options, "T) REPAIR")
                 if KEYBOARD_T_CLICK then

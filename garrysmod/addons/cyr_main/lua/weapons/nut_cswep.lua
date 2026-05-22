@@ -930,9 +930,31 @@ if CLIENT then
 		self.vatsMode = on
 		if on then
 			self:VATSRefreshTargets()
-			self.vatsCommittedTarget = nil  -- DrawHUD seeds the closest target
 			self.vatsMouseAccumX = 0
 			self.vatsMouseAccumY = 0
+			-- Pre-seed the locked target now (instead of waiting for the
+			-- DrawHUD seed) so CalcView has a destination on the very first
+			-- frame of the "in" transition. Without this, CalcView returns
+			-- nothing until DrawHUD has run at least once, and on lossy
+			-- frames the 0.2s timer can elapse before the first zoom frame
+			-- ever renders — the camera then snaps straight to the VATS
+			-- framing and the user sees no zoom animation at all.
+			-- Picks the in-range target nearest screen centre, same scoring
+			-- as the DrawHUD seed.
+			self.vatsCommittedTarget = nil
+			local best, bestDist = nil, math.huge
+			local cx, cy = ScrW() * 0.5, ScrH() * 0.5
+			for _, t in ipairs(self.vatsTargets or {}) do
+				if IsValid(t) then
+					local sp = t:WorldSpaceCenter():ToScreen()
+					if sp.visible then
+						local dx, dy = sp.x - cx, sp.y - cy
+						local d = dx * dx + dy * dy
+						if d < bestDist then best, bestDist = t, d end
+					end
+				end
+			end
+			self.vatsCommittedTarget = best
 			-- Kick off the zoom-IN transition. CalcView handles the blend
 			-- from the player's normal view → VATS framing, and computes the
 			-- duration from camera travel distance (0.2s..0.6s) on its first
@@ -1249,12 +1271,25 @@ if CLIENT then
 			end
 		end
 
-		-- LMB commits, RMB cancels.
-		if pressedEdge(input.IsMouseDown(MOUSE_LEFT),  wep, "vatsPrevLMB") then
-			wep:VATSCommit()
-		end
-		if pressedEdge(input.IsMouseDown(MOUSE_RIGHT), wep, "vatsPrevRMB") then
-			wep:SetVATSMode(false, "cancel")
+		-- LMB commits, RMB cancels — but only when no Derma popup has the
+		-- cursor. input.IsMouseDown reads raw OS state, so clicking on the
+		-- action-list buttons would otherwise be caught here as a VATS
+		-- commit/cancel and either fire the attack or exit V.A.T.S. mid-
+		-- selection. While the cursor is visible we still resync the
+		-- prev-state fields with the current button state so that closing
+		-- the popup doesn't manufacture a fake edge on the next tick
+		-- (e.g. if the player let go of LMB while the popup was open, we
+		-- don't want the very next mouse-up→mouse-down to fire commit).
+		if vgui.CursorVisible() then
+			wep.vatsPrevLMB = input.IsMouseDown(MOUSE_LEFT)
+			wep.vatsPrevRMB = input.IsMouseDown(MOUSE_RIGHT)
+		else
+			if pressedEdge(input.IsMouseDown(MOUSE_LEFT),  wep, "vatsPrevLMB") then
+				wep:VATSCommit()
+			end
+			if pressedEdge(input.IsMouseDown(MOUSE_RIGHT), wep, "vatsPrevRMB") then
+				wep:SetVATSMode(false, "cancel")
+			end
 		end
 	end)
 

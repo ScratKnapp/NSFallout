@@ -801,6 +801,10 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
                     IsLeftMouseDown = true
                     timer.Simple(0, function() IsLeftMouseDown = false end)
                     return true
+                elseif bind == "+attack2" then
+                    IsRightMouseDown = true
+                    timer.Simple(0, function() IsRightMouseDown = false end)
+                    return true
                 elseif bind == "+reload" then
                     IsReloadUse = true
                     IsReloadHold = true

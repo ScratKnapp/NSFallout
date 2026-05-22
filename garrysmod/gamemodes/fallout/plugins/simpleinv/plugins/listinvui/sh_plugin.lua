@@ -5,7 +5,12 @@ local INVENTORY_TYPE_ID = "simple"
 if CLIENT then
 	function PLUGIN:CreateInventoryPanel(inventory, parent)
 		if inventory.typeID ~= INVENTORY_TYPE_ID then return end
-		local panel = parent:Add("nutListInventory")
+		-- Use vgui.Create rather than parent:Add: the inventory `show` flow
+		-- (e.g. gridstorage's `localInv:show()`) passes no parent, so
+		-- parent:Add would crash on a nil indexee. vgui.Create accepts nil
+		-- and just makes a top-level panel — same convention as the sibling
+		-- gridinvui plugin's CreateInventoryPanel hook.
+		local panel = vgui.Create("nutListInventory", parent)
 		panel:setInventory(inventory)
 		panel:Center()
 		return panel
