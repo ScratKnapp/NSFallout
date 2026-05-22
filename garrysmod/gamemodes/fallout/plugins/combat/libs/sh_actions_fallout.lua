@@ -85,6 +85,7 @@ ACT.costAP = 1
 ACT.CD = 1
 ACT.selfOnly = true
 ACT.notarget = true
+ACT.AttackSound = ""
 ACT.effects = {
     [1] = {
         uid = ACT.uid,
