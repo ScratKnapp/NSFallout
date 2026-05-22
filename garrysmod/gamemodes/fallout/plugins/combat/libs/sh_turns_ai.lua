@@ -18,7 +18,9 @@ PLUGIN.partChance = {
 --gets the actions that can be used by the entity in auto turn based combat
 PLUGIN.helperFuncs["getTurnAIActions"] = function(self, id)
 	if(self.combat) then
-		return self.actionsAI or self.actions or {}
+		local actions = self:getNetVar("actionsAI", self.actionsAI) or self:getNetVar("actions", self.actions) or {}
+
+		return actions
 	else
 		return {}
 	end

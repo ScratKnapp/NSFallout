@@ -17,8 +17,8 @@ function ENT:FootstepSound()
 	self:EmitSound(sound, 75, pitch)
 end
 
-function ENT:AttackSound()
-	local sound = self:getNetVar("AttackSounds", self.AttackSounds)
+function ENT:AttackSound(overwrite)
+	local sound = overwrite or self:getNetVar("AttackSounds", self.AttackSounds)
 	if(!sound) then return end
 	
 	if(istable(sound)) then
