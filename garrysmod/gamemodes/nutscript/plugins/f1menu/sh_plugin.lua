@@ -8,6 +8,7 @@ end
 if SERVER then return end
 function PLUGIN:PlayerBindPress(client, bind, pressed)
 	if bind:lower():find("gm_showspare2") and pressed then
+		if not LocalPlayer():IsAdmin() then return end
 		if IsValid(nut.gui.menu) then
 			nut.gui.menu:remove()
 		elseif LocalPlayer():getChar() then

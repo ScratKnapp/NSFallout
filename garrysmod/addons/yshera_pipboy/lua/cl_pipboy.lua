@@ -508,32 +508,91 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
     pipboy:AddHeader("STATS")
     pipboy:AddHeader("INV")
     pipboy:AddHeader("RADIO")
-    pipboy:AddHeader("INFO")
-    pipboy:AddHeader("MAP")
     pipboy:AddHeader("CHARACTERS")
     pipboy:AddHeader("SETTINGS")
     hook.Run("pipboy_headers")
     pipboy.SelectedHeader = "STATS"
 
     -- SETTINGS page: rendered inside the pipboy RT like the other pages.
-    -- Single mouse-sensitivity slider bound to the pipboy_mouse_sens ConVar.
-    pipboy:AddRenderPage("SETTINGS", function()
-        local minS, maxS = 0.05, 1.5
-        local x, y, w = 120, 200, 700
+    -- Mouse sensitivity + RGB sliders for pipboy and HUD tint.
+    local hudColorCv = GetConVar("fallout_hud_color") or CreateClientConVar("fallout_hud_color", "#ffb642", true, false)
+    local function parseHudColor()
+        local s = hudColorCv:GetString() or ""
+        if s:sub(1, 1) == "#" then
+            local c = HexToColor and HexToColor(s) or nil
+            if c then return c end
+        end
+        local r, g, b = s:match("(%d+)%s+(%d+)%s+(%d+)")
+        if r then return Color(tonumber(r), tonumber(g), tonumber(b)) end
+        return Color(255, 182, 66)
+    end
+
+    local function writeHudColor(c)
+        hudColorCv:SetString(string.format("#%02x%02x%02x", math.Clamp(math.Round(c.r), 0, 255), math.Clamp(math.Round(c.g), 0, 255), math.Clamp(math.Round(c.b), 0, 255)))
+    end
+
+    local function writePipboyColor(c)
+        GetConVar("fallout_pipboy_color"):SetString(string.format("%d %d %d", math.Clamp(math.Round(c.r), 0, 255), math.Clamp(math.Round(c.g), 0, 255), math.Clamp(math.Round(c.b), 0, 255)))
+    end
+
+    local function drawSlider(label, x, y, w, minV, maxV, cur, decimals)
+        draw.DrawText(label, "Morton Medium@32", x, y - 34, pip_color)
+        local span = maxV - minV
+        local frac = span > 0 and ((cur - minV) / span) or 0
+        frac = math.Clamp(frac, 0, 1)
         surface.SetDrawColor(pip_color.r, pip_color.g, pip_color.b, 255)
-        draw.DrawText("MOUSE SENSITIVITY", "Morton Medium@48", x, y - 70, pip_color)
-
-        local cur = math.Clamp(cursor_sens_cv:GetFloat(), minS, maxS)
-        local frac = (cur - minS) / (maxS - minS)
-
-        surface.DrawLine(x, y + 25, x + w, y + 25)
-        surface.DrawRect(x + (frac * w) - 9, y + 25 - 9, 18, 18)
-        draw.DrawText(string.format("%.2f", cur), "Morton Medium@42", x + w + 40, y - 5, pip_color)
-
-        if CheckIfCursorInRange(x, y - 10, w, 70) and input.IsMouseDown(MOUSE_LEFT) then
+        surface.DrawLine(x, y + 8, x + w, y + 8)
+        surface.DrawRect(x + (frac * w) - 9, y - 1, 18, 18)
+        local fmt = "%." .. decimals .. "f"
+        draw.DrawText(string.format(fmt, cur), "Morton Medium@32", x + w + 20, y - 14, pip_color)
+        if CheckIfCursorInRange(x - 8, y - 12, w + 16, 36) and input.IsMouseDown(MOUSE_LEFT) then
             local nf = math.Clamp((cursor.x - x) / w, 0, 1)
-            local nv = math.Round(minS + nf * (maxS - minS), 2)
-            cursor_sens_cv:SetFloat(nv)
+            return minV + nf * span
+        end
+        return nil
+    end
+
+    pipboy:AddRenderPage("SETTINGS", function()
+        -- Layout sized to the 1024-wide pipboy RT. Two columns with 64px
+        -- side gutters; slider values render to the right of the bar, so
+        -- the bar width plus ~60px of value room must fit inside each
+        -- column's right edge.
+        local leftX  = 64
+        local rightX = 528
+        local colW   = 360   -- slider bar width
+        local valueW = 80    -- room for the right-aligned value text
+        local minS, maxS = 0.05, 1.5
+
+        -- Mouse sensitivity spans both columns.
+        local sensW = (rightX + colW + valueW) - leftX - valueW
+        local senV = drawSlider("MOUSE SENSITIVITY", leftX, 110, sensW, minS, maxS, math.Clamp(cursor_sens_cv:GetFloat(), minS, maxS), 2)
+        if senV then cursor_sens_cv:SetFloat(math.Round(senV, 2)) end
+
+        -- PIPBOY column header + swatch.
+        draw.DrawText("PIPBOY COLOR", "Morton Medium@42", leftX, 200, pip_color)
+        surface.SetDrawColor(pip_color)
+        surface.DrawRect(leftX + colW - 80, 208, 80, 36)
+
+        local pr, pg, pb = pip_color.r, pip_color.g, pip_color.b
+        local nr = drawSlider("R", leftX, 300, colW, 0, 255, pr, 0)
+        local ng = drawSlider("G", leftX, 380, colW, 0, 255, pg, 0)
+        local nb = drawSlider("B", leftX, 460, colW, 0, 255, pb, 0)
+        if nr or ng or nb then
+            writePipboyColor(Color(nr or pr, ng or pg, nb or pb))
+        end
+
+        -- HUD column header + swatch.
+        local hudC = parseHudColor()
+        draw.DrawText("HUD COLOR", "Morton Medium@42", rightX, 200, pip_color)
+        surface.SetDrawColor(hudC)
+        surface.DrawRect(rightX + colW - 80, 208, 80, 36)
+
+        local hr, hg, hb = hudC.r, hudC.g, hudC.b
+        local hnr = drawSlider("R", rightX, 300, colW, 0, 255, hr, 0)
+        local hng = drawSlider("G", rightX, 380, colW, 0, 255, hg, 0)
+        local hnb = drawSlider("B", rightX, 460, colW, 0, 255, hb, 0)
+        if hnr or hng or hnb then
+            writeHudColor(Color(hnr or hr, hng or hg, hnb or hb))
         end
     end)
     hook.Add("HUDPaint", "mute", function()

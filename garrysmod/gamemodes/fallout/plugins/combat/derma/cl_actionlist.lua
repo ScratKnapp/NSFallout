@@ -107,11 +107,41 @@ local PANEL = {}
 
 		partTarget:SetText("[BODY]")
 
-		local parts = PLUGIN:getPartsModifiers()
+		-- Deferred to next tick because actionList.selected / actionList.swep
+		-- are assigned by the caller AFTER vgui.Create() finishes Init.
+		-- Prefer the per-model limb list from CYR's CombatModel registry when
+		-- the selected target has one (robots without legs, quadrupeds, etc.).
+		local function populateParts()
+			partTarget:Clear()
+			partTarget:SetText("[BODY]")
 
-		for k, v in pairs(parts) do
-			partTarget:AddChoice(k)
+			local target = self.selected
+			if not IsValid(target) and IsValid(self.swep) and self.swep.getNetVar then
+				target = self.swep:getNetVar("selected")
+			end
+
+			local partNames
+			if NWL and NWL.CombatModel and IsValid(target) then
+				local set = NWL.CombatModel.GetLimbSet(target)
+				if set then
+					partNames = {}
+					for name in pairs(set) do partNames[#partNames + 1] = name end
+					table.sort(partNames)
+				end
+			end
+
+			if not partNames then
+				partNames = {}
+				for k in pairs(PLUGIN:getPartsModifiers()) do partNames[#partNames + 1] = k end
+				table.sort(partNames)
+			end
+
+			for _, name in ipairs(partNames) do
+				partTarget:AddChoice(name)
+			end
 		end
+		timer.Simple(0, populateParts)
+		self.refreshPartList = populateParts
 
 		partTarget.OnSelect = function(panel, index, value)
 			panel:SetText("[" .. string.upper(value) .. "]")

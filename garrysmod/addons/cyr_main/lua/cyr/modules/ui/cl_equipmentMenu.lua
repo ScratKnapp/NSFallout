@@ -546,23 +546,5 @@ if netstream then
     netstream.Hook("nut_stat_increase", function() hook.Run("OnNut_stat_increase") end)
 end
 
-local f4Down = false
 hook.Remove("PlayerBindPress", "CYR_F4_Open")
-local function Think()
-    local bind = input.LookupBinding("gm_showspare2")
-    local keyCode = bind and input.GetKeyCode(bind) or KEY_F4
-    if input.IsKeyDown(keyCode) then
-        if not f4Down then
-            f4Down = true
-            if IsValid(CYR_EQUIPMENTMENU) then
-                CYR_EQUIPMENTMENU:Remove()
-            else
-                CreateCYRWindow()
-            end
-        end
-    else
-        f4Down = false
-    end
-end
-
-hook.Add("Think", "OnThinkF4", Think)
+hook.Remove("Think", "OnThinkF4")

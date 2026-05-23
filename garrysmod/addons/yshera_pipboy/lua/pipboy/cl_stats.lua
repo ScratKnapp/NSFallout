@@ -38,13 +38,26 @@ function DrawPly.STATS()
     local ply = LocalPlayer()
     local character = ply:getChar()
     local faction = nut.faction.indices[character:getFaction()]
-    local stomach = character:getData("stomach", 0) or 0
+    -- Use the combat plugin's HP (ply:getHP/getMaxHP) instead of engine
+    -- health so the pipboy mirrors what the combat HUD shows.
+    local hp, hpMax
+    if isfunction(ply.getHP) and isfunction(ply.getMaxHP) then
+        hp, hpMax = ply:getHP(), ply:getMaxHP()
+    else
+        hp, hpMax = ply:Health(), ply:GetMaxHealth()
+    end
     --Draw Player Info
     formattedText("Name:", character:getName(), 64, 132)
-    formattedText("Desc:", character:getDesc() or "", 64, 500)
-    formattedText("Faction:", faction and faction.name or "None", 64, 128 + 258)
-    formattedText("HP:", LocalPlayer():Health() .. "/" .. LocalPlayer():GetMaxHealth(), 64, 128 + 64)
-    formattedText("Hunger:", stomach .. "%", 64, 128 + 128)
+    formattedText("HP:", math.ceil(hp) .. "/" .. math.ceil(hpMax), 64, 128 + 64)
+    formattedText("Faction:", faction and faction.name or "None", 64, 128 + 128)
+
+    -- DESCRIPTION as its own header with the text in a smaller wrapped body.
+    draw.DrawText("DESCRIPTION", "Morton Medium@48", 64, 380, pip_color)
+    local desc = character:getDesc() or ""
+    -- RT is 1024 wide; leave a 64px gutter on each side so text never clips
+    -- against the curved CRT edge.
+    local wrapped = textWrap(desc, "Morton Medium@24", 1024 - 64 - 64)
+    draw.DrawNonParsedText(wrapped, "Morton Medium@24", 64, 440, color_white)
 
     surface.SetDrawColor(pip_color)
     surface.SetMaterial(error_mat)

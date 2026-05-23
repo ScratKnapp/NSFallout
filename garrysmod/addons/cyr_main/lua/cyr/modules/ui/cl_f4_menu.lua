@@ -437,15 +437,5 @@ function CreateCYRF1Menu()
     end
 end
 
-hook.Add("ShowSpare2", "CYR_F4Menu_Override", function()
-    CreateCYRF1Menu() -- Keeping function name for now to minimalize diff, but this is the F4 menu
-    return true
-end)
-
--- playerbind
-hook.Add("PlayerBindPress", "CYR_F4Menu_Override", function(client, bind, pressed)
-    if bind:lower():find("gm_showspare2") and pressed then
-        CreateCYRF1Menu()
-        return true
-    end
-end)
+hook.Remove("ShowSpare2", "CYR_F4Menu_Override")
+hook.Remove("PlayerBindPress", "CYR_F4Menu_Override")

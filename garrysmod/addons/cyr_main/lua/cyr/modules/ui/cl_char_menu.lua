@@ -222,11 +222,14 @@ function PANEL:RefreshCharacters()
     local attributes = {}
     if nut.attribs and nut.attribs.list then
         for k, v in pairs(nut.attribs.list) do
-            table.insert(attributes, {
-                id = k,
-                name = v.name,
-                desc = v.desc
-            })
+            local nm = tostring(v.name or "")
+            if nm:lower() ~= "unknown" then
+                table.insert(attributes, {
+                    id = k,
+                    name = v.name,
+                    desc = v.desc
+                })
+            end
         end
 
         table.sort(attributes, function(a, b) return a.name < b.name end)

@@ -398,7 +398,7 @@ local HUDCFG_DEFAULTS = {
     frameW            = 400,
     marginX           = 44.407894736842,
     frameBottomGap    = 14,
-    lineFrac          = 0.46428571428571,
+    lineFrac          = 0.47039473684210525,
     -- LEFT bracket (hud_left_main.png is 386x256).
     innerL            = 0.041776315789474,
     innerR            = 0.905,
@@ -411,17 +411,19 @@ local HUDCFG_DEFAULTS = {
     barHFrac          = 0.12,
     gap               = 5,
     hpBarPadLMul      = 0.10,
-    hpBarPadRMul      = 0.15,
+    hpBarPadRMul      = 0.14144736842105265,
+    hpValueXOff       = 9.8684210526316,
+    hpValueYOff       = -12.236842105263,
     -- RIGHT bracket AP / CND / ammo placement (px @ 1080 unless noted *Mul).
     apPadLMul         = 0.00,
     apPadRMul         = 0.00,
     apLabelXOff       = 0,
     cndX              = 0,
-    cndY              = 0,
+    cndY              = 41.44736842105263,
     cndW              = 120,
     cndLabelXOff      = 0,
-    ammoXOff          = 0,
-    ammoYOff          = 0,
+    ammoXOff          = -3.9473684210526017,
+    ammoYOff          = 16.973684210526315,
     compassFadeStart  = 0.55,
     compassFOV        = 180,
     compassHeadingOff = 17,
@@ -486,6 +488,8 @@ local function OpenHUDEditor()
     addSlider("Vertical gap (px)",      "gap",              -20,   60,  0)
     addSlider("HP bar pad L (mul)",     "hpBarPadLMul",     -0.5,  0.5, 3)
     addSlider("HP bar pad R (mul)",     "hpBarPadRMul",     -0.5,  0.5, 3)
+    addSlider("HP value X (px)",        "hpValueXOff",     -300,  300,  0)
+    addSlider("HP value Y (px)",        "hpValueYOff",      -60,   60,  0)
     addSlider("R: AP pad L (mul)",      "apPadLMul",        -0.5,  0.5, 3)
     addSlider("R: AP pad R (mul)",      "apPadRMul",        -0.5,  0.5, 3)
     addSlider("R: AP label X (px)",     "apLabelXOff",     -200,  200,  0)
@@ -588,7 +592,7 @@ end
 -- text occupies the same fraction of the screen at 1080p and 4K (the frame /
 -- bars already scale by ScrH()/1080, the fixed-size fonts did not).
 local FO3_FONT_BASE = {
-    label = 24,
+    label = 36,
     value = 42
 }
 
@@ -599,7 +603,7 @@ local function EnsureHUDFonts()
     FO3_FONT_H = h
     local s = h / 1080
     surface.CreateFont("FO3_HUD_Label", {
-        font = "mynamejeff",
+        font = "Monofonto",
         extended = false,
         size = math.Round(FO3_FONT_BASE.label * s),
         weight = 500,
@@ -607,10 +611,10 @@ local function EnsureHUDFonts()
     })
 
     surface.CreateFont("FO3_HUD_Value", {
-        font = "mynamejeff",
+        font = "Monofonto",
         extended = false,
         size = math.Round(FO3_FONT_BASE.value * s),
-        weight = 500,
+        weight = 600,
         antialias = true,
     })
 end
@@ -623,12 +627,21 @@ EnsureHUDFonts()
 -- identically and respond to the same convar / colour-picker the player uses
 -- on the pipboy itself. The `fallout_hud_color` convar remains as a fallback
 -- for hosts who don't have the pipboy addon loaded.
-local FALLOUT_HUD_COLOR = CreateClientConVar("fallout_hud_color", "#ffb642", true, false, "Fallout HUD tint colour (hex, e.g. #ffb642) — only used when pipboy's pip_color is unavailable")
+local FALLOUT_HUD_COLOR = CreateClientConVar("fallout_hud_color", "#ffb642", true, false, "Fallout HUD tint colour (hex, e.g. #ffb642)")
 local function GetHUDColor()
-    if pip_color then
-        return ColorAlpha(pip_color, 255)
+    local s = FALLOUT_HUD_COLOR:GetString()
+    local c
+    if s and s:sub(1, 1) == "#" then
+        c = HexToColor(s)
+    else
+        local r, g, b = (s or ""):match("(%d+)%s+(%d+)%s+(%d+)")
+        if r then c = Color(tonumber(r), tonumber(g), tonumber(b)) end
     end
-    return ColorAlpha(HexToColor(FALLOUT_HUD_COLOR:GetString()), 255)
+    if not c then
+        if pip_color then return ColorAlpha(pip_color, 255) end
+        c = Color(255, 182, 66)
+    end
+    return ColorAlpha(c, 255)
 end
 -- Publish globally so other pipboy-styled HUD files (cl_combat_hud_theme,
 -- cl_notify_override) can call the same helper without re-implementing the
@@ -735,7 +748,7 @@ local function DrawTheHUD()
     local valW = 70 * scale
     draw.SimpleText("HP", "FO3_HUD_Label", innerX, barY - gap, primary, TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
     fo3Bar(innerX + lx * HUDCFG.hpBarPadLMul, barY, innerW - valW - lx * HUDCFG.hpBarPadRMul, barH, hpPerc, primary)
-    draw.SimpleText(math.ceil(hp), "FO3_HUD_Value", innerX + innerW, barY + barH / 2, primary, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+    draw.SimpleText(math.ceil(hp), "FO3_HUD_Value", innerX + innerW + HUDCFG.hpValueXOff * scale, barY + barH / 2 + HUDCFG.hpValueYOff * scale, primary, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
     -- ===================== BOTTOM RIGHT : AP + AMMO + CND =====================
     local rx = ScrW() - marginX - frameW
     surface.SetDrawColor(primary)

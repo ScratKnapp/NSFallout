@@ -7,26 +7,41 @@ CYR.UI.CharMenuHTML = [[
     <link href="https://fonts.cdnfonts.com/css/vcr-osd-mono" rel="stylesheet">
     <style>
         :root {
-            /* White Theme */
-            --primary-color: #FFFFFF; 
-            --secondary-color: #CCCCCC;
-            --tertiary-color: #FF0000; /* Keep red for danger */
-            
-            --primary-dim: rgba(255, 255, 255, 0.2); 
-            --bg-color: #050505;
-            --grid-color: rgba(255, 255, 255, 0.1);
+            /* Fallout Terminal Theme (RobCo green-on-black) */
+            --primary-color: #33ff66;
+            --secondary-color: #1faa44;
+            --tertiary-color: #ff5050; /* danger / terminate */
+
+            --primary-dim: rgba(51, 255, 102, 0.22);
+            --primary-glow: rgba(51, 255, 102, 0.55);
+            --bg-color: #020a04;
+            --grid-color: rgba(51, 255, 102, 0.08);
+            --amber-color: #ffb83d; /* secondary accent */
         }
+
+        html, body { background-color: #001a05; }
 
         body {
             margin: 0;
             padding: 0;
-            background-color: transparent;
+            background-color: #001a05;
             font-family: 'VCR OSD Mono', monospace;
             color: var(--primary-color);
+            text-shadow: 0 0 6px var(--primary-glow);
             overflow: hidden;
             width: 100vw;
             height: 100vh;
             user-select: none;
+        }
+
+        /* Subtle screen curvature / vignette */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 999;
+            background: radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,0,0.85) 100%);
         }
 
         /* CRT Effects */
@@ -44,12 +59,12 @@ CYR.UI.CharMenuHTML = [[
 
         .crt-scanline {
             width: 100%;
-            height: 5px;
-            background: rgba(255, 255, 255, 0.03);
+            height: 6px;
+            background: linear-gradient(rgba(51,255,102,0) 0%, rgba(51,255,102,0.15) 50%, rgba(51,255,102,0) 100%);
             position: fixed;
             z-index: 1001;
-            animation: scanline 8s linear infinite;
-            opacity: 0.2;
+            animation: scanline 6s linear infinite;
+            opacity: 0.6;
             pointer-events: none;
         }
 
@@ -124,9 +139,11 @@ CYR.UI.CharMenuHTML = [[
             text-transform: uppercase;
             letter-spacing: 4px;
             background: var(--primary-color);
-            color: #000;
+            color: #001a05;
             padding: 5px 20px;
             font-weight: bold;
+            text-shadow: none;
+            box-shadow: 0 0 18px var(--primary-glow);
         }
 
         /* Character List (Left) */
@@ -172,7 +189,7 @@ CYR.UI.CharMenuHTML = [[
 
         .char-item.active {
             background: var(--primary-color);
-            color: #000;
+            color: #001a05;
             border-color: var(--primary-color);
         }
 
@@ -260,7 +277,7 @@ CYR.UI.CharMenuHTML = [[
 
         .action-btn:hover:not(:disabled) {
             background: var(--primary-color);
-            color: #000;
+            color: #001a05;
             box-shadow: 0 0 15px var(--primary-dim);
         }
 
@@ -510,17 +527,29 @@ CYR.UI.CharMenuHTML = [[
             line-height: 1;
             font-weight: bold;
             color: var(--primary-color);
-            text-shadow: 6px 6px 0px var(--primary-dim);
+            text-shadow:
+                0 0 18px var(--primary-glow),
+                6px 6px 0px var(--primary-dim);
             z-index: 2;
             pointer-events: none;
             opacity: 0.9;
             image-rendering: pixelated;
+            animation: flicker 4s infinite;
+        }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 0.92; }
+            45%      { opacity: 0.85; }
+            46%      { opacity: 0.55; }
+            47%      { opacity: 0.92; }
+            70%      { opacity: 0.7; }
+            71%      { opacity: 0.95; }
         }
     </style>
 </head>
 <body>
-    <!-- <div class="crt-overlay"></div>
-    <div class="crt-scanline"></div> -->
+    <div class="crt-overlay"></div>
+    <div class="crt-scanline"></div>
     
     <div class="container">
         <div class="corner tl"></div>
@@ -529,34 +558,29 @@ CYR.UI.CharMenuHTML = [[
         <div class="corner br"></div>
 
         <header>
-            <div class="title">IDENTITY SELECT</div>
-            <div style="text-align:right;">
-                STATUS: <span style="color:#0f0">ONLINE</span><br>
-                SERVER: AETHERSTONE
+            <div class="title">ROBCO INDUSTRIES (TM) TERMLINK</div>
+            <div style="text-align:right; font-size:0.9rem; line-height:1.4;">
+                ROBCO INDUSTRIES UNIFIED OPERATING SYSTEM<br>
+                -SERVER LINK ESTABLISHED-
             </div>
         </header>
 
         <!-- Main Menu View -->
         <div id="main-view" style="display: contents;">
             <div class="char-list-panel">
-                <div class="panel-header">AVAILABLE IDENTITIES</div>
+                <div class="panel-header">[ REGISTERED DWELLERS ]</div>
                 <div class="char-list" id="char-list">
                     <!-- Char Items -->
                 </div>
-                <div class="create-btn" onclick="showCreation()">+ Initialize New Identity</div>
+                <div class="create-btn" onclick="showCreation()">> REGISTER NEW DWELLER</div>
             </div>
 
             <div class="center-stage">
-                <div class="holo-container">
-                    <div class="holo-ring"></div>
-                    <div class="holo-inner"></div>
-                    <div class="holo-a">A</div>
-                </div>
-                <div class="center-bg-text">AETHERSTONE</div>
+                <div class="center-bg-text">VAULT-TEC</div>
             </div>
 
             <div class="details-panel" id="details-panel">
-                <div class="panel-header">IDENTITY RECORD</div>
+                <div class="panel-header">[ DWELLER RECORD ]</div>
                 <div class="detail-row">
                     <span class="detail-label">NAME</span>
                     <span class="detail-val" id="det-name">---</span>
@@ -586,8 +610,8 @@ CYR.UI.CharMenuHTML = [[
             </div>
 
             <div class="actions">
-                <button class="action-btn delete-btn" id="btn-delete" disabled onclick="triggerDelete()">TERMINATE</button>
-                <button class="action-btn" id="btn-play" disabled onclick="triggerPlay()">INITIATE LINK</button>
+                <button class="action-btn delete-btn" id="btn-delete" disabled onclick="triggerDelete()">PURGE RECORD</button>
+                <button class="action-btn" id="btn-play" disabled onclick="triggerPlay()">RUN PROGRAM</button>
             </div>
             
             <button class="disconnect-btn" onclick="triggerDisconnect()">DISCONNECT</button>
@@ -595,7 +619,7 @@ CYR.UI.CharMenuHTML = [[
 
         <!-- Creation Wizard View -->
         <div id="creation-view" class="creation-view">
-            <div class="panel-header">INITIALIZATION PROTOCOL</div>
+            <div class="panel-header">[ DWELLER REGISTRATION PROTOCOL ]</div>
             
             <div class="step-container">
                 <div class="step-list">
@@ -1065,7 +1089,6 @@ CYR.UI.CharMenuHTML = [[
         // Signal Ready
         window.onload = function() {
             if(window.gmod) gmod.webhook('js_ready');
-            createGrowingVines();
         }
 
         function createGrowingVines() {

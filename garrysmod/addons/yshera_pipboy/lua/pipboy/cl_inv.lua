@@ -35,33 +35,84 @@ end
 
 function clearinv()
     player = LocalPlayer()
-    local inventory = player:getChar():getInv()
-    local items = {}
-    local iteminstances = {}
-    local stackCounter = 0
-    for i, v in pairs(inventory:getItems()) do
-        local uniqueID = v.uniqueID
-        --stackid
-        local item = nut.item.list[uniqueID]
-        if IsStackable(item) then
-            if items[uniqueID] then
-                table.insert(items[uniqueID], v)
+    local char = player:getChar()
+    if not char then return end
+    local inventory = char:getInv()
+    if not inventory then return end
+
+    local items          = {} -- stackKey -> count (non-stackable) | array<item> (stackable)
+    local iteminstances  = {} -- stackKey -> array of item ids
+    local stackUID       = {} -- stackKey -> uniqueID  (for nut.item.list lookups)
+    local firstInstances = {} -- stackKey -> first item instance for the stack
+    local seen           = {}
+
+    -- Customised non-stackable items get a per-instance stack key so a
+    -- renamed / painted / infused / stat-modified weapon doesn't collapse
+    -- into the vanilla count alongside its untouched siblings. Equipped
+    -- copies are also split out: clicking a "Pistol (2)" row where only
+    -- one is equipped would otherwise act on whichever happened to come
+    -- first in inventory iteration order.
+    local function getStackKey(v, cls)
+        if cls.PreventStacks then return v.uniqueID .. "@" .. v.id end
+        local d = v.data or {}
+        local custom  = d.custom
+        local customW = d.customW
+        if (custom and next(custom) ~= nil)
+            or (customW and next(customW) ~= nil)
+            or d.infused or d.edited or d.equip then
+            return v.uniqueID .. "@" .. v.id
+        end
+        return v.uniqueID
+    end
+
+    local function addItem(v)
+        if not v or not v.uniqueID or seen[v.id] then return end
+        seen[v.id] = true
+        local cls = nut.item.list[v.uniqueID]
+        if not cls then return end
+
+        local key = getStackKey(v, cls)
+        stackUID[key] = v.uniqueID
+
+        if IsStackable(cls) then
+            if items[key] then
+                table.insert(items[key], v)
             else
-                items[uniqueID] = {v}
+                items[key] = {v}
             end
         else
-            items[uniqueID] = (items[uniqueID] and items[uniqueID] or 0) + 1
+            items[key] = (type(items[key]) == "number" and items[key] or 0) + 1
         end
 
-        local tbl = iteminstances[uniqueID] or {}
+        if not firstInstances[key] then firstInstances[key] = v end
+
+        local tbl = iteminstances[key] or {}
         table.insert(tbl, v.id)
-        iteminstances[uniqueID] = tbl
-        --item.functions.drop
+        iteminstances[key] = tbl
+    end
+
+    for _, v in pairs(inventory:getItems()) do
+        addItem(v)
+    end
+
+    -- Items moved into equipment slots by the equipment plugin's addEquip
+    -- (sh_plugin.lua:211) get yanked out of the inventory via
+    -- `item:removeFromInventory(true)`, so iterating `inventory:getItems()`
+    -- alone makes them vanish from the listing the moment they're equipped.
+    -- Pull them back in from the char's equip table so they stay visible
+    -- (and right-clickable for Unequip).
+    if isfunction(player.getEquip) then
+        for _, itemID in pairs(player:getEquip() or {}) do
+            local v = nut.item.instances[itemID]
+            if v then addItem(v) end
+        end
     end
 
     tablet.Inventory = {
-        items = items,
-        instances = iteminstances
+        items          = items,
+        instances      = iteminstances,
+        stackUID       = stackUID,
+        firstInstances = firstInstances,
     }
 end
 
@@ -187,8 +238,19 @@ local function drawItem(item3, y, pip_color, _amt, ITEM_INSTANCE_RRA)
     local inst = nut.item.list[item3]
     if (IsStackable(inst) == false) and _amt > 1 then name = inst.name .. " (" .. _amt .. ")" end
     local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover(string.upper(name) .. cc, "Morton Medium@42", 86, 116 + (y * FUSION_ITEM_BUTTON_SIZE.ho), FUSION_ITEM_BUTTON_SIZE.w, FUSION_ITEM_BUTTON_SIZE.h, 1, color_white, color_black, 0, pip_color)
+
+    -- While the action menu is open the highlight is pinned to the
+    -- item it was opened for: cursor-driven hover would otherwise
+    -- light up neighbouring rows as the user moves to reach the menu
+    -- and drop the highlight off the row whose actions the menu is
+    -- actually showing.
+    if PIP_INV_MENU then
+        local isMenuItem = ITEM_INSTANCE_RRA and ITEM_INSTANCE_RRA.id == PIP_INV_MENU.itemID
+        fn = isMenuItem and true or false
+    end
+
     if fn and InventoryModelView and InventoryModelView.Entity then
-        ITEM_DRAWN_THIS_FRAME = ITEM_INSTANCE_RRA
+        ITEM_DRAWN_THIS_FRAME = ITEM_INSTANCE_RRA or nut.item.list[item3]
         surface.SetDrawColor(pip_color_accent.r, pip_color_accent.g, pip_color_accent.b, 100)
         surface.DrawRect(86, 120 + (y * FUSION_ITEM_BUTTON_SIZE.ho), FUSION_ITEM_BUTTON_SIZE.w, FUSION_ITEM_BUTTON_SIZE.h)
         InventoryModelView.Angle = inst.Angle or angle_zero
@@ -261,13 +323,16 @@ local function drawItem(item3, y, pip_color, _amt, ITEM_INSTANCE_RRA)
         end
 
         if IsUseDown and (_G.EatTimer or 0) > CurTime() then IsUseDown = false end
+        -- DrawInventoryPage now hands the row's actual instance in via
+        -- ITEM_INSTANCE_RRA for both stackable and non-stackable rows
+        -- (each stackKey carries its own firstInstance), so this is
+        -- just an alias for clarity.
         local function resolveInstance()
-            if ITEM_INSTANCE_RRA then return ITEM_INSTANCE_RRA end
-            local Inventory = GetITEMS()
-            return LocalPlayer():getChar():getInv().items[Inventory.instances[item3][1]]
+            return ITEM_INSTANCE_RRA
         end
         local function equipToggle(v, slot)
-            if v:getData("equip") then
+            if not v then return end
+            if isfunction(v.getData) and v:getData("equip") then
                 netstream.Start("invAct", "EquipUn", v.id, v:getID(), slot)
             elseif v.isWeapon then
                 netstream.Start("invAct", "Equip", v.id, v:getID(), slot)
@@ -279,30 +344,41 @@ local function drawItem(item3, y, pip_color, _amt, ITEM_INSTANCE_RRA)
             else
                 netstream.Start("invAct", "use", v.id, v:getID(), v.id)
                 _G.EatTimer = CurTime() + 0.5
-                if v.functions.use and v.functions.use.onRunClient then v.functions.use.onRunClient(v) end
+                if v.functions and v.functions.use and v.functions.use.onRunClient then
+                    v.functions.use.onRunClient(v)
+                end
             end
         end
-        if IsUseDown then
-            IsUseDown = false
-            local v = resolveInstance()
-            netstream.Start("invAct", "use", v.id, v:getID(), v.id)
-            _G.EatTimer = CurTime() + 0.5
-            if v.functions.use and v.functions.use.onRunClient then v.functions.use.onRunClient(v) end
-        elseif click then
-            local v = resolveInstance()
-            equipToggle(v, nil)
-            _G.EatTimer = CurTime() + 0.25
-        elseif IsRightMouseDown then
-            IsRightMouseDown = false
-            local v = resolveInstance()
-            if v.isWeapon then
-                equipToggle(v, "sidearm")
+        -- While the action menu is open, item-row inputs are inert: the
+        -- menu owns the next click / keypress.
+        if not PIP_INV_MENU then
+            if IsUseDown then
+                IsUseDown = false
+                local v = resolveInstance()
+                if v then
+                    netstream.Start("invAct", "use", v.id, v:getID(), v.id)
+                    _G.EatTimer = CurTime() + 0.5
+                    if v.functions and v.functions.use and v.functions.use.onRunClient then
+                        v.functions.use.onRunClient(v)
+                    end
+                end
+            elseif click then
+                equipToggle(resolveInstance(), nil)
                 _G.EatTimer = CurTime() + 0.25
+            elseif IsRightMouseDown then
+                IsRightMouseDown = false
+                local v = resolveInstance()
+                if v then
+                    OPEN_PIP_INV_MENU(v, cursor.x, cursor.y)
+                    _G.EatTimer = CurTime() + 0.25
+                end
+            elseif IsReloadUse then
+                IsReloadUse = false
+                local v = resolveInstance()
+                if v then
+                    netstream.Start("invAct", "drop", v.id, v:getID(), v.id)
+                end
             end
-        elseif IsReloadUse then
-            IsReloadUse = false
-            local v = resolveInstance()
-            netstream.Start("invAct", "drop", v.id, v:getID(), v.id)
         end
     else
         draww()
@@ -317,6 +393,170 @@ hook.Add("ItemInitialized", "ItemInitializedItemInitialized", function() timer.S
 last_item_page_draw_amt = 0
 local color_gray = Color(255, 255, 255, 25)
 local color_bright_Gray = Color(255, 255, 255, 55)
+
+-- ------------------------------------------------------------------
+-- In-pipboy item action dropdown.
+--
+-- Mirrors nutscript's openActionMenu (utils/derma/cl_inventory.lua):
+-- merges functionsB / functions / functionsD, filters via onCanRun,
+-- and emits the same `invAct` netstream the standard menu does.
+-- isMulti entries get flattened into one row per multiOption so the
+-- whole list fits a single-level pipboy dropdown.
+-- We can't use DermaMenu because the pipboy uses an in-RT cursor
+-- distinct from the OS cursor, so vgui menus open in the wrong place
+-- (and outside the pipboy render target).
+PIP_INV_MENU = nil
+
+local function pipInvMenuPlaySound(snd)
+    if not snd then return end
+    if type(snd) == "table" then
+        LocalPlayer():EmitSound(unpack(snd))
+    elseif type(snd) == "string" then
+        surface.PlaySound(snd)
+    end
+end
+
+local function pipInvMenuBuildOptions(itemTable)
+    local merged = {}
+    for k, v in pairs(itemTable.functionsB or {}) do merged[k] = v end
+    for k, v in pairs(itemTable.functions  or {}) do merged[k] = v end
+    for k, v in pairs(itemTable.functionsD or {}) do merged[k] = v end
+
+    local list = {}
+    for k, v in SortedPairs(merged) do
+        if isfunction(v.onCanRun) and not v.onCanRun(itemTable) then continue end
+        if v.isMulti then
+            local subs = isfunction(v.multiOptions)
+                and v.multiOptions(itemTable, LocalPlayer())
+                or v.multiOptions
+            if istable(subs) then
+                for _, sub in pairs(subs) do
+                    list[#list + 1] = {
+                        label     = L(v.name or k) .. ": " .. tostring(sub.name or ""),
+                        actionKey = k,
+                        action    = v,
+                        data      = sub.data,
+                    }
+                end
+            end
+        else
+            list[#list + 1] = {
+                label     = L(v.name or k),
+                actionKey = k,
+                action    = v,
+                data      = nil,
+            }
+        end
+    end
+    return list
+end
+
+function OPEN_PIP_INV_MENU(itemTable, x, y)
+    if not itemTable then return end
+    itemTable.player = LocalPlayer()
+    local options = pipInvMenuBuildOptions(itemTable)
+    itemTable.player = nil
+    if #options == 0 then PIP_INV_MENU = nil; return end
+
+    local inv = LocalPlayer():getChar():getInv()
+    PIP_INV_MENU = {
+        x       = x,
+        y       = y,
+        options = options,
+        itemID  = itemTable:getID(),
+        invID   = inv and inv:getID() or nil,
+        -- Seed the rising-edge tracker with the current LMB state so a
+        -- button that's still held from before the menu opened doesn't
+        -- count as an immediate click.
+        lmbPrev = input.IsMouseDown(MOUSE_LEFT),
+    }
+end
+
+local function pipInvMenuRun(opt)
+    local menu = PIP_INV_MENU
+    if not menu then return end
+    local itemTable = nut.item.instances[menu.itemID]
+    if not itemTable then PIP_INV_MENU = nil; return end
+
+    itemTable.player = LocalPlayer()
+    local send = true
+    if isfunction(opt.action.onClick) then
+        send = opt.action.onClick(itemTable, opt.data)
+    end
+    pipInvMenuPlaySound(opt.action.sound or (SOUND_INVENTORY_INTERACT or nil))
+    if send ~= false then
+        netstream.Start("invAct", opt.actionKey, itemTable.id, menu.invID, opt.data)
+    end
+    itemTable.player = nil
+    PIP_INV_MENU = nil
+end
+
+local function pipInvMenuDraw()
+    local menu = PIP_INV_MENU
+    if not menu then return end
+
+    local rowH = 36
+    local pad  = 10
+    surface.SetFont("Morton Medium@32")
+    local maxW = 0
+    for _, opt in ipairs(menu.options) do
+        local w = surface.GetTextSize(opt.label)
+        if w > maxW then maxW = w end
+    end
+    local menuW = math.max(220, maxW + pad * 2)
+    local menuH = rowH * #menu.options + pad
+
+    local screenW = WIDTH or 1300
+    local screenH = HEIGHT or 800
+    local mx = math.Clamp(menu.x, 0, screenW - menuW)
+    local my = math.Clamp(menu.y, 0, screenH - menuH)
+
+    surface.SetDrawColor(0, 0, 0, 230)
+    surface.DrawRect(mx, my, menuW, menuH)
+    surface.SetDrawColor(pip_color)
+    surface.DrawOutlinedRect(mx, my, menuW, menuH)
+
+    -- One-shot click detection independent of the pipboy's AddUIButton
+    -- pulse (which has already been consumed by the inventory rows
+    -- drawn earlier this frame). input.IsMouseDown reads the raw mouse
+    -- state — we keep a local rising-edge flag so each press fires once.
+    local lmbHeld = input.IsMouseDown(MOUSE_LEFT)
+    local justClicked = lmbHeld and not menu.lmbPrev
+    menu.lmbPrev = lmbHeld
+
+    local hoveredOpt
+    for i, opt in ipairs(menu.options) do
+        local ry = my + math.floor(pad * 0.5) + (i - 1) * rowH
+        local inside = cursor.x >= mx and cursor.x <= mx + menuW
+                   and cursor.y >= ry  and cursor.y <= ry + rowH
+        if inside then
+            surface.SetDrawColor(pip_color)
+            surface.DrawRect(mx + 2, ry, menuW - 4, rowH)
+            hoveredOpt = opt
+        end
+        draw.SimpleText(opt.label, "Morton Medium@32",
+            mx + pad, ry + 4,
+            inside and color_black or color_white,
+            TEXT_ALIGN_LEFT)
+    end
+
+    if justClicked then
+        if hoveredOpt then
+            pipInvMenuRun(hoveredOpt)
+        else
+            PIP_INV_MENU = nil
+        end
+        return
+    end
+
+    -- Right-click anywhere (including over an item) also dismisses
+    -- the menu, mirroring how OS context menus behave.
+    if IsRightMouseDown then
+        IsRightMouseDown = false
+        PIP_INV_MENU = nil
+    end
+end
+
 firsttime = true
 local function DrawInventoryPage()
     ITEM_DRAWN_THIS_FRAME = nil
@@ -340,46 +580,59 @@ local function DrawInventoryPage()
     end
 
     local _ = 0
-    local cache = tablet.Inventory.cache
     if tablet.Inventory.cacheKeys == nil then
-        local temp_build = {}
-        local temp_build_key = {}
-        local ind = 0
-        for i, v in pairs(tablet.Inventory.items) do
-            ind = ind + 1
-            temp_build[nut.item.list[i]:getName()] = i
-            temp_build_key[ind] = nut.item.list[i]:getName()
+        -- Order rows by the instance's display name so customised items
+        -- (which now occupy their own stackKey) sort by their custom
+        -- name rather than the class name. Tie-break on stackKey keeps
+        -- the ordering deterministic across frames when names collide.
+        local sortable = {}
+        for k in pairs(tablet.Inventory.items) do
+            sortable[#sortable + 1] = k
         end
-
-        table.sort(temp_build_key, function(a, b) return a:upper() < b:upper() end)
-        local temp_build_sorted = temp_build_key
-        local convertTable = {}
-        for i = 1, #temp_build_sorted do
-            convertTable[i] = temp_build[temp_build_sorted[i]]
-        end
-
-        --tablet.Inventory.cache = CurTime()+3
-        tablet.Inventory.cacheKeys = convertTable
+        table.sort(sortable, function(a, b)
+            local instA = tablet.Inventory.firstInstances[a]
+            local instB = tablet.Inventory.firstInstances[b]
+            local clsA  = nut.item.list[tablet.Inventory.stackUID[a]]
+            local clsB  = nut.item.list[tablet.Inventory.stackUID[b]]
+            local nameA = (instA and instA.getName and instA:getName())
+                or (clsA and clsA:getName()) or a
+            local nameB = (instB and instB.getName and instB:getName())
+                or (clsB and clsB:getName()) or b
+            local ua, ub = nameA:upper(), nameB:upper()
+            if ua == ub then return tostring(a) < tostring(b) end
+            return ua < ub
+        end)
+        tablet.Inventory.cacheKeys = sortable
     end
 
     local cache = tablet.Inventory.cacheKeys
     local stack = {}
     local keypos = 1
     for c = 1, #cache do
-        local i = cache[c]
-        local v = tablet.Inventory.items[i]
-        --for i, v in pairs(tablet.Inventory.items) do
-        if inventory.focus == 1 or nut.item.list[i].category == categories[inventory.focus] then
-            if IsStackable(nut.item.list[i]) then
-                for _unstack, dostack in pairs(tablet.Inventory.items[i]) do
-                    stack[keypos] = {i, _, pip_color, 1, dostack}
+        local stackKey = cache[c]
+        local uniqueID = tablet.Inventory.stackUID[stackKey]
+        local cls      = uniqueID and nut.item.list[uniqueID]
+        if cls then
+            -- Category filter is case-insensitive: tabs are upper-case
+            -- ("WEAPONS"), but fallout item categories are mixed-case
+            -- ("Weapons"), so a literal equality compare hides weapons /
+            -- aid / etc. from their own tab.
+            if inventory.focus == 1 or string.upper(cls.category or "MISC") == categories[inventory.focus] then
+                if IsStackable(cls) then
+                    for _unstack, dostack in pairs(tablet.Inventory.items[stackKey]) do
+                        stack[keypos] = {uniqueID, _, pip_color, 1, dostack}
+                        keypos = keypos + 1
+                        _ = _ + 1
+                    end
+                else
+                    -- Always hand drawItem the concrete instance so it
+                    -- can render the customised name / data instead of
+                    -- falling back to the class's default name.
+                    local inst = tablet.Inventory.firstInstances[stackKey]
+                    stack[keypos] = {uniqueID, _, pip_color, tablet.Inventory.items[stackKey], inst}
                     keypos = keypos + 1
                     _ = _ + 1
                 end
-            else
-                stack[keypos] = {i, _, pip_color, tablet.Inventory.items[i]}
-                keypos = keypos + 1
-                _ = _ + 1
             end
         end
     end
@@ -417,6 +670,11 @@ local function DrawInventoryPage()
     local p2 = math.Clamp(15 / #stack, 0, 1)
     surface.DrawRect(643, 120 + (p1 * 540), 10, p2 * 540 + 5)
     PIP_DRAW_FOOTER()
+
+    -- Drawn last so it sits visually above the list / scrollbar /
+    -- footer; its own input.IsMouseDown handling means it doesn't
+    -- need to race the inventory rows for the click pulse.
+    pipInvMenuDraw()
 end
 
 local wth, ht = ScrW(), ScrH()
@@ -446,12 +704,7 @@ hook.Add("pip_changepage", "inv_", function(from, to)
         hook.Add("PostRenderVGUI", "inv_r", function()
             if ITEM_DRAWN_THIS_FRAME == nil then return end
             render.SetViewPort(ScrW() * 0.2, ScrH() * 0.775, wth, ht)
-            local isWep = ITEM_DRAWN_THIS_FRAME.isWeapon or ITEM_DRAWN_THIS_FRAME.type == "WEAPON"
-            local equipLabel = ITEM_DRAWN_THIS_FRAME:getData("equip") and "UNEQUIP" or "EQUIP"
-            local options = {"LMB) " .. equipLabel}
-            if isWep then table.insert(options, "RMB) SIDEARM") end
-            table.insert(options, "E) USE")
-            table.insert(options, "R) DROP")
+            local options = {"E) USE", "R) DROP",}
             if ITEM_DRAWN_THIS_FRAME.type == "WEAPON" then
                 table.insert(options, "T) REPAIR")
                 if KEYBOARD_T_CLICK then

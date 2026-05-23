@@ -113,4 +113,10 @@ if(CLIENT) then
 		size = 25,
 		weight = 400
 	})
+
+	surface.CreateFont("nutCombatHUDSmall", {
+		font = "Monofonto",
+		size = 19,
+		weight = 400
+	})
 end

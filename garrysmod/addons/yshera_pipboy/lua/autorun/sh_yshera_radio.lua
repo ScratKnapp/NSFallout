@@ -5,18 +5,15 @@ function Radio_Reset()
         local aftermath_cl_radio_volume = CreateClientConVar("aftermath_cl_radio_volume", "1", true, false, "The volume the radio plays on your local character")
         local volumecache = nil
         playingindex = 0
-        StationName = {"East STATION", "Reborn FM", "Despair, Fission, Radiation", "Classics Radio", "NAME NOT FOUND","SEXYBACK 24/7b","THE GRIND!"}
+        StationName = {"East STATION", "Reborn FM", "Despair, Fission, Radiation", "Classics Radio"}
         radioFreq = {}
         radioFreq[1] = 16
         radioFreq[2] = 5
         radioFreq[3] = 7
         radioFreq[4] = 100
-        radioFreq[5] = 52
         radioHeight = {}
-        radioHeight[6] = 0.25
-        radioFreq[7] = 144
         local songname = "NA"
-        stations = {"http://fallout.fm:8000/falloutfm6.ogg", "http://fallout.fm:8000/falloutfm10.ogg", "http://fallout.fm:8000/falloutfm3.ogg", "http://fallout.fm:8000/falloutfm1.ogg", "http://soundbible.com/grab.php?id=1674&type=wav", "https://ia902908.us.archive.org/27/items/justintimberlakesexyback/Justin%20Timberlake-Sexyback.mp4","https://ia904704.us.archive.org/34/items/katy-perry-ft-snoop-dogg-california-gurls/Katy_Perry_ft_Snoop_Dogg_-_California_Gurls.mp3"}
+        stations = {"http://fallout.fm:8000/falloutfm6.ogg", "http://fallout.fm:8000/falloutfm10.ogg", "http://fallout.fm:8000/falloutfm3.ogg", "http://fallout.fm:8000/falloutfm1.ogg"}
         local function AddStation(a, b, c)
             table.insert(StationName, a)
             table.insert(stations, b)
@@ -24,7 +21,7 @@ function Radio_Reset()
         end
 
         hook.Run("ADD_RADIO_STATIONS", AddStation)
-        EV_RAIDO_STATIONS_GET_SONG = {"http://fallout.fm/now_playing.php?the_stream=http%3A%2F%2Ffallout.fm%3A8000%2Ffalloutfm6.ogg", [[http://theopathy.net/fallout9.php]], "http://fallout.fm/now_playing.php?the_stream=http%3A%2F%2Ffallout.fm%3A8000%2Ffalloutfm3.ogg", "http://fallout.fm/now_playing.php?the_stream=http%3A%2F%2Ffallout.fm%3A8000%2Ffalloutfm1.ogg", nil, nil}
+        EV_RAIDO_STATIONS_GET_SONG = {"http://fallout.fm/now_playing.php?the_stream=http%3A%2F%2Ffallout.fm%3A8000%2Ffalloutfm6.ogg", [[http://theopathy.net/fallout9.php]], "http://fallout.fm/now_playing.php?the_stream=http%3A%2F%2Ffallout.fm%3A8000%2Ffalloutfm3.ogg", "http://fallout.fm/now_playing.php?the_stream=http%3A%2F%2Ffallout.fm%3A8000%2Ffalloutfm1.ogg"}
         -- fix because gmod hated this url uses a mirror
         local disablechatmessages = true
         function EV_RADIO_PUBLIC_CON(x)

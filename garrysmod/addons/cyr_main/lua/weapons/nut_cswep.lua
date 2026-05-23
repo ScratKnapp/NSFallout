@@ -314,7 +314,7 @@ local PART_BONES = {
 
 local PART_LABEL = {
 	["Head"]      = "HEAD",
-	["Body"]      = "TORSO",
+	["Body"]      = "BODY",
 	["Left Arm"]  = "L.ARM",
 	["Right Arm"] = "R.ARM",
 	["Left Leg"]  = "L.LEG",
@@ -322,17 +322,92 @@ local PART_LABEL = {
 }
 
 
-local function getPartBonePos(ent, part)
-	local names = PART_BONES[part]
-	if not names then return ent:WorldSpaceCenter() end
+-- Average a list of bone names into a single world position. Each bone is
+-- nudged toward its first child (when one exists) so the aim point lands in
+-- the middle of the bone segment rather than at the joint near the torso.
+local function averageBonePositions(ent, names)
+	if not IsValid(ent) or not names then return nil end
+	local sum, count = Vector(0, 0, 0), 0
+
+	-- Build a parent->children map once per call so we can find each bone's
+	-- child to compute a midpoint.
+	local children
+	local function ensureChildren()
+		if children then return end
+		children = {}
+		for i = 0, (ent:GetBoneCount() or 0) - 1 do
+			local p = ent:GetBoneParent(i)
+			if p and p >= 0 then
+				children[p] = children[p] or {}
+				table.insert(children[p], i)
+			end
+		end
+	end
+
 	for _, n in ipairs(names) do
 		local id = ent:LookupBone(n)
 		if id then
 			local pos = ent:GetBonePosition(id)
-			if pos and pos ~= vector_origin then return pos end
+			if not pos or pos == vector_origin then
+				local m = ent:GetBoneMatrix(id)
+				if m then pos = m:GetTranslation() end
+			end
+			if pos and pos ~= vector_origin then
+				-- Push the sample halfway toward the first child bone so the
+				-- effect sits along the limb instead of right at the joint.
+				ensureChildren()
+				local kids = children[id]
+				if kids and kids[1] then
+					local cm = ent:GetBoneMatrix(kids[1])
+					if cm then
+						pos = (pos + cm:GetTranslation()) * 0.5
+					end
+				end
+				sum = sum + pos
+				count = count + 1
+			end
 		end
 	end
+
+	if count == 0 then return nil end
+	return sum / count
+end
+
+local function getPartBonePos(ent, part)
+	-- Prefer per-model bones from the CYR CombatModel registry (handles
+	-- non-humanoid limbs like Tail/Stinger/Front Left Leg).
+	if NWL and NWL.CombatModel and IsValid(ent) then
+		local limb = NWL.CombatModel.GetLimb(ent, part)
+		if limb and limb.bones then
+			local avg = averageBonePositions(ent, limb.bones)
+			if avg then return avg end
+		end
+	end
+
+	local names = PART_BONES[part]
+	if not names then
+		if IsValid(ent) then return ent:WorldSpaceCenter() end
+		return nil
+	end
+	local avg = averageBonePositions(ent, names)
+	if avg then return avg end
 	return ent:WorldSpaceCenter()
+end
+
+-- Returns the ordered list of part names to consider for this entity:
+-- if the CombatModel registry has a set for it, those limb names; else the
+-- default 6-part humanoid list.
+local function getPartListFor(ent)
+	if NWL and NWL.CombatModel and IsValid(ent) then
+		local set = NWL.CombatModel.GetLimbSet(ent)
+		if set then
+			local out = {}
+			for name in pairs(set) do out[#out + 1] = name end
+			table.sort(out)
+			return out
+		end
+	end
+	return {"Head", "Body", "Left Arm", "Right Arm", "Left Leg", "Right Leg"}
 end
 
 -- Closest-bone fallback for HitGroup detection. Source returns HITGROUP_GENERIC
@@ -342,7 +417,7 @@ end
 local function partFromHitPos(ent, hitPos)
 	if not hitPos then return "Body" end
 	local best, bestDist = "Body", math.huge
-	for partName in pairs(PART_BONES) do
+	for _, partName in ipairs(getPartListFor(ent)) do
 		local pos = getPartBonePos(ent, partName)
 		if pos then
 			local d = hitPos:DistToSqr(pos)
@@ -654,13 +729,16 @@ function SWEP:DrawHUD()
 		local indicator = string.format("[ %s ]  %d/%d  [R] CHANGE", string.upper(actName), cur, #actions)
 		surface.SetFont("nutCombatHUD")
 		local tw, th = surface.GetTextSize(indicator)
+		-- Match TARGET ACQUIRED: extra top padding so the header chip doesn't
+		-- crowd the indicator line.
+		local topPad = pad * 2
 		local boxW = tw + pad * 4
-		local boxH = th + pad * 2
+		local boxH = th + topPad + pad
 		local boxX = ScrW() * 0.5 - boxW * 0.5
 		local boxY = ScrH() * 0.55
 		drawTermPanel(boxX, boxY, boxW, boxH, "ACTION")
 		surface.SetTextColor(TERM_BRIGHT)
-		surface.SetTextPos(boxX + pad * 2, boxY + pad)
+		surface.SetTextPos(boxX + pad * 2, boxY + topPad)
 		surface.DrawText(indicator)
 	end
 
@@ -669,24 +747,27 @@ function SWEP:DrawHUD()
 	local rightX = ScrW() - 240 * scrModX
 	local rightW = 220 * scrModX
 	posY = 50 * scrModY
+	-- Same extra top padding rule as ACTION / TARGET ACQUIRED so header chips
+	-- don't crowd the first body row.
+	local topPad = pad * 2
 	if AP and APMax then
-		local boxH = lineH * 2 + pad * 3
+		local boxH = lineH * 2 + topPad + pad * 2
 		drawTermPanel(rightX, posY, rightW, boxH, "ACTION POINTS")
 		local apString = string.format("%d / %d", AP, APMax)
 		local tx = surface.GetTextSize(apString)
 		surface.SetTextColor(TERM_BRIGHT)
-		surface.SetTextPos(rightX + rightW * 0.5 - tx * 0.5, posY + pad)
+		surface.SetTextPos(rightX + rightW * 0.5 - tx * 0.5, posY + topPad)
 		surface.DrawText(apString)
-		drawTermBar(rightX + pad, posY + pad * 2 + lineH, rightW - pad * 2, lineH * 0.7, APMax > 0 and AP / APMax or 0)
+		drawTermBar(rightX + pad, posY + topPad + pad + lineH, rightW - pad * 2, lineH * 0.7, APMax > 0 and AP / APMax or 0)
 		posY = posY + boxH + pad
 	end
 
 	local buffs = user.getBuffs and user:getBuffs()
 	if buffs and table.Count(buffs) > 0 then
 		local count = table.Count(buffs)
-		local boxH = pad * 2 + lineH * count
+		local boxH = topPad + pad + lineH * count
 		drawTermPanel(rightX, posY, rightW, boxH, "ACTIVE EFFECTS")
-		local lineY = posY + pad
+		local lineY = posY + topPad
 		for _, v in pairs(buffs) do
 			if v.name then
 				local nameDur = "> " .. v.name .. ((v.duration and (" [" .. v.duration .. "T]")) or "")
@@ -702,9 +783,9 @@ function SWEP:DrawHUD()
 	local cooldowns = user.getCooldowns and user:getCooldowns()
 	if cooldowns and table.Count(cooldowns) > 0 then
 		local count = table.Count(cooldowns)
-		local boxH = pad * 2 + lineH * count
+		local boxH = topPad + pad + lineH * count
 		drawTermPanel(rightX, posY, rightW, boxH, "COOLDOWNS")
-		local lineY = posY + pad
+		local lineY = posY + topPad
 		for k, v in pairs(cooldowns) do
 			local actionTbl = ACTS.actions[k]
 			if not actionTbl then
@@ -759,7 +840,7 @@ function SWEP:DrawHUD()
 		local activePart = self.partString or "Body"
 		local plugin = combatPlugin()
 		local hasAction = action and action.name
-		for partName in pairs(PART_BONES) do
+		for _, partName in ipairs(getPartListFor(self.vatsTarget)) do
 			local pos = getPartBonePos(self.vatsTarget, partName)
 			if pos then
 				local sp = pos:ToScreen()
@@ -839,7 +920,10 @@ function SWEP:DrawHUD()
 			hitChance = math.floor(plugin:calcHitChance(accuracy, self.viewed, user))
 		end
 
-		surface.SetFont("nutCombatHUD")
+		-- Body uses the smaller HUD font so multi-line TARGET ACQUIRED panels
+		-- stay compact; the header (drawn by drawTermPanel) keeps the regular
+		-- nutCombatHUD size for readability.
+		surface.SetFont("nutCombatHUDSmall")
 		local _, targetLineH = surface.GetTextSize("M")
 
 		local lines = {}
@@ -871,14 +955,20 @@ function SWEP:DrawHUD()
 			if lw > maxW then maxW = lw end
 		end
 
+		-- Extra top padding so the header chip (which straddles the top border)
+		-- doesn't visually crowd the first body line.
+		local topPad = pad * 2
 		local boxW = maxW + pad * 4
-		local boxH = #lines * targetLineH + pad * 2
+		local boxH = #lines * targetLineH + topPad + pad
 		local boxX = ScrW() * 0.5 - boxW * 0.5
-		local boxY = ScrH() * 0.7 - boxH * 0.5
+		-- Top-anchor (not centered) so adding lines grows the box downward
+		-- instead of upward into the ACTION panel above (which sits at 0.55).
+		local boxY = ScrH() * 0.63
 		drawTermPanel(boxX, boxY, boxW, boxH, "TARGET ACQUIRED")
+		surface.SetFont("nutCombatHUDSmall")
 		for i, l in ipairs(lines) do
 			surface.SetTextColor(l[2])
-			surface.SetTextPos(boxX + pad * 2, boxY + pad + (i - 1) * targetLineH)
+			surface.SetTextPos(boxX + pad * 2, boxY + topPad + (i - 1) * targetLineH)
 			surface.DrawText(l[1])
 		end
 	end
@@ -1037,7 +1127,7 @@ if CLIENT then
 		-- bone is off-screen / behind the camera are excluded; they can't be
 		-- targets of a directional hop because the player can't see them.
 		local positions = {}
-		for _, part in ipairs(VATS_PARTS) do
+		for _, part in ipairs(getPartListFor(target)) do
 			local pos = getPartBonePos(target, part)
 			if pos then
 				local sp = pos:ToScreen()
