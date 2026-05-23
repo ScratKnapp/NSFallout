@@ -40,29 +40,63 @@ function clearinv()
     local inventory = char:getInv()
     if not inventory then return end
 
-    local items          = {} -- stackKey -> count (non-stackable) | array<item> (stackable)
+    local items          = {} -- stackKey -> count (number of instances in this stack)
     local iteminstances  = {} -- stackKey -> array of item ids
     local stackUID       = {} -- stackKey -> uniqueID  (for nut.item.list lookups)
     local firstInstances = {} -- stackKey -> first item instance for the stack
+    local partialStacks  = {} -- uniqueID -> {key, count, max, nextIdx} for in-progress packing
     local seen           = {}
 
-    -- Customised non-stackable items get a per-instance stack key so a
-    -- renamed / painted / infused / stat-modified weapon doesn't collapse
-    -- into the vanilla count alongside its untouched siblings. Equipped
-    -- copies are also split out: clicking a "Pistol (2)" row where only
-    -- one is equipped would otherwise act on whichever happened to come
-    -- first in inventory iteration order.
+    -- Stacking policy:
+    --   * Items whose class supports customisation (has functions.Custom
+    --     or functions.CustomAtr) never stack. Each instance is its own
+    --     row whether or not it's actually been customised yet, because
+    --     it could be in the future and identical-looking copies could
+    --     still diverge.
+    --   * Instance-level customisation / equipped state forces a per-
+    --     instance stack key too (covers classes that lack the Custom
+    --     function but pick up custom/equip data via other paths).
+    --   * Otherwise, only stack if the class declares `maxStack > 1`, and
+    --     pack instances into buckets of that size — additional copies
+    --     spill into a new bucket so the visible count never exceeds the
+    --     declared maxStack.
+    --   * Anything else (no maxStack, maxStack <= 1, PreventStacks) is
+    --     one-row-per-instance.
+    local function uniqueKey(v) return v.uniqueID .. "@" .. v.id end
     local function getStackKey(v, cls)
-        if cls.PreventStacks then return v.uniqueID .. "@" .. v.id end
+        if cls.PreventStacks then return uniqueKey(v) end
+        local fns = cls.functions
+        if fns and (fns.Custom or fns.CustomAtr) then
+            return uniqueKey(v)
+        end
         local d = v.data or {}
         local custom  = d.custom
         local customW = d.customW
         if (custom and next(custom) ~= nil)
             or (customW and next(customW) ~= nil)
             or d.infused or d.edited or d.equip then
-            return v.uniqueID .. "@" .. v.id
+            return uniqueKey(v)
         end
-        return v.uniqueID
+
+        local maxStack = tonumber(cls.maxStack) or 1
+        if maxStack <= 1 then return uniqueKey(v) end
+
+        -- Pack into the current bucket for this uniqueID; spill into a
+        -- fresh bucket (#2, #3, ...) once the cap is reached so a row's
+        -- count never exceeds maxStack.
+        local ps = partialStacks[v.uniqueID]
+        if ps and ps.count < ps.max then
+            ps.count = ps.count + 1
+            return ps.key
+        end
+        local nextIdx = (ps and ps.nextIdx) or 1
+        partialStacks[v.uniqueID] = {
+            key     = v.uniqueID .. "#" .. nextIdx,
+            count   = 1,
+            max     = maxStack,
+            nextIdx = nextIdx + 1,
+        }
+        return partialStacks[v.uniqueID].key
     end
 
     local function addItem(v)
@@ -74,15 +108,7 @@ function clearinv()
         local key = getStackKey(v, cls)
         stackUID[key] = v.uniqueID
 
-        if IsStackable(cls) then
-            if items[key] then
-                table.insert(items[key], v)
-            else
-                items[key] = {v}
-            end
-        else
-            items[key] = (type(items[key]) == "number" and items[key] or 0) + 1
-        end
+        items[key] = (items[key] or 0) + 1
 
         if not firstInstances[key] then firstInstances[key] = v end
 
@@ -236,7 +262,11 @@ local function drawItem(item3, y, pip_color, _amt, ITEM_INSTANCE_RRA)
     local cc = amt == 1 and "" or " (" .. amt .. ")"
     local name = (ITEM_INSTANCE_RRA or item):getName()
     local inst = nut.item.list[item3]
-    if (IsStackable(inst) == false) and _amt > 1 then name = inst.name .. " (" .. _amt .. ")" end
+    -- _amt is the number of instances packed into this row (maxStack
+    -- buckets); show it whenever the stack groups more than one. Use
+    -- the class name in that case since all stacked copies are
+    -- functionally identical.
+    if _amt > 1 then name = inst.name .. " (" .. _amt .. ")" end
     local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover(string.upper(name) .. cc, "Morton Medium@42", 86, 116 + (y * FUSION_ITEM_BUTTON_SIZE.ho), FUSION_ITEM_BUTTON_SIZE.w, FUSION_ITEM_BUTTON_SIZE.h, 1, color_white, color_black, 0, pip_color)
 
     -- While the action menu is open the highlight is pinned to the
@@ -416,14 +446,49 @@ local function pipInvMenuPlaySound(snd)
     end
 end
 
+-- Items routed through the Equipment plugin's specialSlot path land in
+-- char:getData("equip") via `playerMeta:addEquip`, which calls
+-- `item:removeFromInventory(true)` — so `item.data.equip` is never set
+-- and the item's own EquipUn.onCanRun (which checks that flag) returns
+-- false. Detecting the char-slot occupancy lets us inject a synthetic
+-- Unequip that fires the plugin's dedicated `nut_unequip_slot` net
+-- stream instead.
+local function pipInvMenuCharEquipSlot(itemTable)
+    if not itemTable or not itemTable.id then return nil end
+    local plr = LocalPlayer()
+    if not isfunction(plr.getEquip) then return nil end
+    for slot, id in pairs(plr:getEquip() or {}) do
+        if id == itemTable.id then return slot end
+    end
+    return nil
+end
+
 local function pipInvMenuBuildOptions(itemTable)
+    local charSlot = pipInvMenuCharEquipSlot(itemTable)
+
     local merged = {}
     for k, v in pairs(itemTable.functionsB or {}) do merged[k] = v end
     for k, v in pairs(itemTable.functions  or {}) do merged[k] = v end
     for k, v in pairs(itemTable.functionsD or {}) do merged[k] = v end
 
     local list = {}
+
+    -- Synthetic Unequip for char.equip-tracked items.
+    if charSlot then
+        list[#list + 1] = {
+            label       = L("Unequip"),
+            actionKey   = "nut_unequip_slot",
+            data        = charSlot,
+            isCharEquip = true,
+        }
+    end
+
     for k, v in SortedPairs(merged) do
+        -- For items already sitting in a char.equip slot, hide the
+        -- re-equip entries — they'd either silently fail or double-fill
+        -- the slot. The synthetic Unequip above is the only equip-side
+        -- action they need.
+        if charSlot and (k == "Equip" or k == "EquipSlot") then continue end
         if isfunction(v.onCanRun) and not v.onCanRun(itemTable) then continue end
         if v.isMulti then
             local subs = isfunction(v.multiOptions)
@@ -477,6 +542,16 @@ local function pipInvMenuRun(opt)
     if not menu then return end
     local itemTable = nut.item.instances[menu.itemID]
     if not itemTable then PIP_INV_MENU = nil; return end
+
+    -- Synthetic Unequip for char.equip-tracked items: hits the
+    -- equipment plugin's dedicated netstream so the slot is actually
+    -- freed and the item is moved back into the inventory.
+    if opt.isCharEquip then
+        pipInvMenuPlaySound(SOUND_INVENTORY_INTERACT or nil)
+        netstream.Start("nut_unequip_slot", opt.data, itemTable.id)
+        PIP_INV_MENU = nil
+        return
+    end
 
     itemTable.player = LocalPlayer()
     local send = true
@@ -618,21 +693,14 @@ local function DrawInventoryPage()
             -- ("Weapons"), so a literal equality compare hides weapons /
             -- aid / etc. from their own tab.
             if inventory.focus == 1 or string.upper(cls.category or "MISC") == categories[inventory.focus] then
-                if IsStackable(cls) then
-                    for _unstack, dostack in pairs(tablet.Inventory.items[stackKey]) do
-                        stack[keypos] = {uniqueID, _, pip_color, 1, dostack}
-                        keypos = keypos + 1
-                        _ = _ + 1
-                    end
-                else
-                    -- Always hand drawItem the concrete instance so it
-                    -- can render the customised name / data instead of
-                    -- falling back to the class's default name.
-                    local inst = tablet.Inventory.firstInstances[stackKey]
-                    stack[keypos] = {uniqueID, _, pip_color, tablet.Inventory.items[stackKey], inst}
-                    keypos = keypos + 1
-                    _ = _ + 1
-                end
+                -- Every stackKey is one row now: items[stackKey] is the
+                -- count and firstInstances[stackKey] is the instance to
+                -- render / interact with. Single-instance rows have
+                -- count 1; maxStack-packed rows have count up to maxStack.
+                local inst = tablet.Inventory.firstInstances[stackKey]
+                stack[keypos] = {uniqueID, _, pip_color, tablet.Inventory.items[stackKey], inst}
+                keypos = keypos + 1
+                _ = _ + 1
             end
         end
     end

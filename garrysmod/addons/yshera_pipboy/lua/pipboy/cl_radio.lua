@@ -8,6 +8,10 @@ local speed = 150
 local radio_vol = GetConVar("aftermath_cl_radio_volume")
 local volIndicator = IsValid(radio_vol) and radio_vol:GetFloat() or 1
 local startTime = CurTime() - 1
+local audioSamples = {}
+local audioSampleCount = 30
+for i = 1, audioSampleCount do audioSamples[i] = 0 end
+local nextAudioSample = 0
 local function video_killed_the_radio_star()
     if radio_vol == nil then
         radio_vol = GetConVar("aftermath_cl_radio_volume")
@@ -170,9 +174,40 @@ local function video_killed_the_radio_star()
 
     -- ===== Waveform with glow trail =====
     local time = CurTime()
-    local waveH = height * (radioHeight[idx] or 1) * volIndicator
+    -- Push one averaged-FFT sample into a 30-slot ring at 30Hz, giving us a
+    -- 1-second window of recent loudness. We then map each x along the scope
+    -- to one of those samples so the wave's amplitude varies across the
+    -- trace instead of bobbing the whole sine up and down uniformly.
+    if time >= nextAudioSample then
+        nextAudioSample = time + 1 / 30
+        local lvl = 0
+        if AUDIORADIO and AUDIORADIO:GetState() == GMOD_CHANNEL_PLAYING then
+            local fft = {}
+            local n = AUDIORADIO:FFT(fft, FFT_256) or 0
+            if n > 0 then
+                local sum = 0
+                for i = 1, n do sum = sum + fft[i] end
+                lvl = math.Clamp((sum / n) * 18, 0, 1)
+            end
+        end
+        table.remove(audioSamples, 1)
+        audioSamples[audioSampleCount] = lvl
+    end
+
+    local baseWaveH = height * (radioHeight[idx] or 1) * volIndicator
+    local function sampleAt(x)
+        -- x ranges across [startX, startX + length]; oldest sample on the left,
+        -- newest on the right (the "scanning head").
+        local t = (x - startX) / length
+        local f = t * (audioSampleCount - 1) + 1
+        local i = math.floor(f)
+        local frac = f - i
+        local a = audioSamples[i] or 0
+        local b = audioSamples[i + 1] or a
+        return a + (b - a) * frac
+    end
     local function waveAt(x, phaseOff)
-        return newfunc((x + time * speed + phaseOff) / segmentWidth) * waveH / 2 + middleY
+        return middleY - sampleAt(x) * baseWaveH
     end
 
     -- ghost trails (older phase, faded) for a smear/CRT feel
