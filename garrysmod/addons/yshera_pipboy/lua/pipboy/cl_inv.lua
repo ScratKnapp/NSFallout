@@ -524,12 +524,21 @@ local function pipInvMenuBuildOptions(itemTable)
         }
     end
 
+    -- Detect equipped state across both tracking paths so the drop
+    -- entry can be hidden — equipped items must be unequipped before
+    -- they can be dropped, otherwise the player can desync (item on
+    -- the floor while the SWEP / buffs are still attached).
+    local isEquipped = charSlot ~= nil
+        or (isfunction(itemTable.getData) and itemTable:getData("equip") and true or false)
+
     for k, v in SortedPairs(merged) do
         -- For items already sitting in a char.equip slot, hide the
         -- re-equip entries — they'd either silently fail or double-fill
         -- the slot. The synthetic Unequip above is the only equip-side
         -- action they need.
         if charSlot and (k == "Equip" or k == "EquipSlot") then continue end
+        -- Hide drop on equipped items: requires Unequip first.
+        if isEquipped and k == "drop" then continue end
         if isfunction(v.onCanRun) and not v.onCanRun(itemTable) then continue end
         if v.isMulti then
             local subs = isfunction(v.multiOptions)
