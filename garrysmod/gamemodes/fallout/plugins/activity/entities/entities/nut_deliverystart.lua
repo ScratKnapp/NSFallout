@@ -54,13 +54,12 @@ if (SERVER) then
 			end
 			
 			local itemObj = nut.item.list["act_mail"]
-			local x, y = inventory:findFreePosition(itemObj)
-			if(x and y) then
+			if inventory:findItemSlot(itemObj) then
 				inventory:add("act_mail", 1, {dID = ranID})
-				
+
 				self.mail = self.mail - 1
 				activator:notify("Mail obtained.")
-				
+
 				nut.log.addRaw(activator:Name().. " has retrieved mail for delivery.")
 			else
 				activator:notify("You don't have enough room in your inventory.")

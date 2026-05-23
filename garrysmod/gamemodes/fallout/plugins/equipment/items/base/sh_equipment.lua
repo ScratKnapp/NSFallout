@@ -890,33 +890,65 @@ ITEM.functions.Clone = {
 
 -- On item is dropped, Remove a weapon from the player and keep the ammo in the item.
 ITEM:hook("drop", function(item)
+	local client = item.player
+	if not client then return end
+
+	-- specialSlot items live in `char:getData("equip")` rather than
+	-- carrying `data.equip = true`, because `playerMeta:addEquip`
+	-- yanked them out of the inventory. Detect that case and clear
+	-- the slot + run onEquipUn for the buff cleanup, then mark the
+	-- item as "in transit" so the default drop onRun can spawn it
+	-- in the world (its `removeFromInventory` is a no-op for invID=0,
+	-- which avoids any double-add or addItem-then-remove churn).
+	if isfunction(client.getEquip) then
+		local equipTbl = client:getEquip()
+		for slot, id in pairs(equipTbl) do
+			if id == item:getID() then
+				if item.onEquipUn then item:onEquipUn(client) end
+				equipTbl[slot] = nil
+				client:getChar():setData("equip", equipTbl)
+				if SERVER then netstream.Start(client, "nut_updateEquipSlots") end
+				item.invID = 0
+				return
+			end
+		end
+	end
+
 	if (item:getData("equip")) then
-		local client = item.player
-	
 		item:setData("equip", nil)
-		
+
 		if(item.class) then
 			client.equip = client.equip or {}
 
+			-- Same fallback as onEquipUn: drop the SWEP even when
+			-- client.equip got out of sync with what the player is
+			-- actually holding, otherwise we leave the weapon in the
+			-- player's hand after the inventory item has hit the floor.
 			local weapon = client.equip[item.slot]
-			
+			if (!weapon or !IsValid(weapon)) then
+				weapon = client:GetWeapon(item.class)
+			end
+
 			if (IsValid(weapon)) then
 				item:setData("ammo", weapon:Clip1())
-				
+
 				client:StripWeapon(item.class)
 				client.equip[item.slot] = nil
-				
+
 				client:EmitSound(item.unequipSound or "items/ammo_pickup.wav", 80)
+			elseif client:HasWeapon(item.class) then
+				client:StripWeapon(item.class)
+				client.equip[item.slot] = nil
 			end
 		end
-		
+
 		local customBoosts = item:getData("attrib", item.attrib or {})
 		if (!table.IsEmpty(customBoosts)) then
 			for k, v in pairs(customBoosts) do
 				client:getChar():removeBoost(item:getName(), k)
 			end
 		end
-		
+
 		local customSkillBoosts = item:getData("skill", item.skill or {})
 		if (!table.IsEmpty(customSkillBoosts)) then
 			for k, v in pairs(customSkillBoosts) do

@@ -253,8 +253,28 @@ local tab = {
 }
 
 ITEM_DRAWN_THIS_FRAME = nil
+-- Indent applied to every row to reserve a strip on the left for the
+-- equipped indicator box. Keeping the indent constant (rather than only
+-- shifting when equipped) means item names stay vertically aligned no
+-- matter which rows are equipped.
+local EQUIP_BOX_PAD  = 6
+local EQUIP_BOX_SIZE = 18
+local EQUIP_INDENT   = EQUIP_BOX_SIZE + EQUIP_BOX_PAD
+
+local function isInstanceEquipped(inst)
+    if not inst then return false end
+    if isfunction(inst.getData) and inst:getData("equip") then return true end
+    local plr = LocalPlayer()
+    if isfunction(plr.getEquip) then
+        for _, id in pairs(plr:getEquip() or {}) do
+            if id == inst.id then return true end
+        end
+    end
+    return false
+end
+
 local function drawItem(item3, y, pip_color, _amt, ITEM_INSTANCE_RRA)
-    --if item then PrintTable(tablet.Inventory.data) end 
+    --if item then PrintTable(tablet.Inventory.data) end
     surface.SetDrawColor(pip_color)
     --surface.DrawOutlinedRect(-420, 0, 400, 55)
     local item = nut.item.list[item3]
@@ -267,7 +287,10 @@ local function drawItem(item3, y, pip_color, _amt, ITEM_INSTANCE_RRA)
     -- the class name in that case since all stacked copies are
     -- functionally identical.
     if _amt > 1 then name = inst.name .. " (" .. _amt .. ")" end
-    local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover(string.upper(name) .. cc, "Morton Medium@42", 86, 116 + (y * FUSION_ITEM_BUTTON_SIZE.ho), FUSION_ITEM_BUTTON_SIZE.w, FUSION_ITEM_BUTTON_SIZE.h, 1, color_white, color_black, 0, pip_color)
+    local rowX = 86 + EQUIP_INDENT
+    local rowW = FUSION_ITEM_BUTTON_SIZE.w - EQUIP_INDENT
+    local rowY = 116 + (y * FUSION_ITEM_BUTTON_SIZE.ho)
+    local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover(string.upper(name) .. cc, "Morton Medium@42", rowX, rowY, rowW, FUSION_ITEM_BUTTON_SIZE.h, 1, color_white, color_black, 0, pip_color)
 
     -- While the action menu is open the highlight is pinned to the
     -- item it was opened for: cursor-driven hover would otherwise
@@ -415,11 +438,29 @@ local function drawItem(item3, y, pip_color, _amt, ITEM_INSTANCE_RRA)
     end
 
     if inst.DrawLabel and ITEM_INSTANCE_RRA then ITEM_INSTANCE_RRA:DrawLabel(86, 116 + (y * FUSION_ITEM_BUTTON_SIZE.ho)) end
+
+    -- Equipped indicator: small filled box in the indent strip on the
+    -- left of the row. Drawn last so it sits on top of the hover
+    -- highlight rather than being painted over by it. Covers both
+    -- equip-tracking paths (item.data.equip and char:getData("equip")).
+    if isInstanceEquipped(ITEM_INSTANCE_RRA) then
+        local boxX = 86 + math.floor(EQUIP_BOX_PAD * 0.5)
+        local boxY = rowY + math.floor((FUSION_ITEM_BUTTON_SIZE.h - EQUIP_BOX_SIZE) * 0.5)
+        surface.SetDrawColor(color_white)
+        surface.DrawRect(boxX, boxY, EQUIP_BOX_SIZE, EQUIP_BOX_SIZE)
+    end
 end
 
 hook.Add("ItemDataChanged", "ItemDataChanged", function() clearinv() end)
 hook.Add("InventoryItemRemoved", "invDatainvData", function() clearinv() end)
 hook.Add("ItemInitialized", "ItemInitializedItemInitialized", function() timer.Simple(0, clearinv) end)
+-- `nut_updateEquipSlots` (fired by `playerMeta:addEquip` /
+-- `playerMeta:removeEquip` and by dropping a slotted item) triggers
+-- NutUpdateEquipSlots client-side. Item-data and inventory-removed
+-- hooks don't cover changes to char:getData("equip"), so without this
+-- the pipboy would keep the equipped indicator drawn after the slot
+-- has actually been cleared.
+hook.Add("NutUpdateEquipSlots", "PipboyEquipUpdate", function() clearinv() end)
 last_item_page_draw_amt = 0
 local color_gray = Color(255, 255, 255, 25)
 local color_bright_Gray = Color(255, 255, 255, 55)

@@ -1010,6 +1010,20 @@ if CLIENT then
 	local VATS_RANGE = 4096
 	local VATS_RANGE_SQR = VATS_RANGE * VATS_RANGE
 
+	-- Forward declarations for the CalcView / desaturation hook bodies, which
+	-- are defined further down in this same CLIENT block.
+	local vatsCalcViewFn, vatsDesatFn
+
+	-- Forward decl for the CalcView priority shim. GMod's hook.Call returns
+	-- on the FIRST non-nil hook return — and hook.Add always appends — so our
+	-- VATS CalcView hook sits at the tail of the event table and gets
+	-- preempted by anything earlier that returns a view (the fallout viewbob
+	-- plugin is the persistent offender; it returns a view every frame the
+	-- player is alive + first-person + has a character). With no priority API
+	-- available, we patch competing CalcView hooks in place so they yield
+	-- while V.A.T.S. is engaged on this SWEP. SetVATSMode(true) calls this.
+	local ensureVATSCamPriority
+
 	-- `reason` controls which exit SFX plays when leaving V.A.T.S.:
 	--   "commit" → fired the attack, plays ui_vats_exit
 	--   anything else (default) → cancelled, plays ui_vats_cancel
@@ -1054,6 +1068,20 @@ if CLIENT then
 			self.vatsCamPhase         = "in"
 			self.vatsCamPhaseStart    = CurTime()
 			self.vatsCamTransitionDur = nil
+			-- Make sure no other CalcView hook preempts our zoom return.
+			-- GMod's hook.Call stops on the FIRST non-nil return — and our
+			-- hook always lands at the tail of the event table because
+			-- hook.Add appends. Several other CalcView hooks (notably the
+			-- fallout viewbob plugin) unconditionally return a view table
+			-- whenever you're alive + first-person + holding a weapon, which
+			-- means iteration stops before reaching us and the zoom is
+			-- invisible. Rather than trying to reorder the global hook list
+			-- (no priority API exists), we patch each competing hook to
+			-- early-return while V.A.T.S. is engaged on this SWEP. The
+			-- wrappers are idempotent (re-wrapping a wrapper is a no-op via
+			-- the marker field) and they fall through to the original hook
+			-- whenever VATS isn't active, so other addons keep working.
+			ensureVATSCamPriority()
 			surface.PlaySound("vats wav files/ui_vats_enter.wav")
 			surface.PlaySound("vats wav files/ui_vats_camera_in.wav")
 		else
@@ -1494,9 +1522,9 @@ if CLIENT then
 	--   nil + vatsMode=true  → active VATS, per-frame inter-limb lerp
 	--   "out"  → blending FROM cached VATS view BACK to player's eye view (0.2s)
 	-- vatsCamPhaseStart is the CurTime() at which the current transition began.
-	hook.Add("CalcView", "nut_cswep_vats_view", function(ply, origin, angles, fov)
+	vatsCalcViewFn = function(ply, origin, angles, fov)
 		if not IsValid(ply) then return end
-		local wep = ply:GetActiveWeapon()
+		local wep = ply:GetActiveWeapon() 
 		if not IsValid(wep) or wep:GetClass() ~= "nut_cswep" then return end
 
 		local active = wep.vatsMode
@@ -1601,7 +1629,63 @@ if CLIENT then
 			fov        = wep.vatsCamFOV,
 			drawviewer = true,  -- show the player's body since the cam is offset
 		}
-	end)
+	end
+	hook.Add("CalcView", "nut_cswep_vats_view", vatsCalcViewFn)
+
+	-- ──────────────────────────────────────────────────────────────────────
+	-- CalcView priority shim. See the forward-decl comment above for why.
+	--
+	-- Walks the current CalcView hook table and, for every entry except our
+	-- own, re-adds it as a wrapper that early-returns nil while VATS is
+	-- engaged on this SWEP. Returning nil from a hook lets hook.Call keep
+	-- iterating, so our zoom hook (still at the tail) finally gets reached.
+	-- When VATS isn't active the wrapper just tail-calls the original and
+	-- behaviour is unchanged.
+	--
+	-- The wrapper is marked with `_nut_vats_wrapped = true` so re-running
+	-- ensureVATSCamPriority is a no-op for hooks we already patched. New
+	-- CalcView hooks registered between engages get caught next time.
+	--
+	-- We deliberately do NOT touch our own hook name here — that's what the
+	-- vatsCalcViewFn upvalue is for, and re-adding it with hook.Add would
+	-- just replace it in place without changing iteration position.
+	-- Set of functions we've already wrapped, so re-running the helper on
+	-- subsequent VATS engages doesn't double-wrap or wrap our own wrappers.
+	-- Has to be a side table because Lua functions aren't indexable.
+	local vatsWrappedFns = setmetatable({}, { __mode = "k" })  -- weak keys
+
+	ensureVATSCamPriority = function()
+		local tbl = hook.GetTable().CalcView
+		if not tbl then return end
+		for name, fn in pairs(tbl) do
+			if name ~= "nut_cswep_vats_view" and type(fn) == "function" and not vatsWrappedFns[fn] then
+				local original = fn
+				local wrapper
+				wrapper = function(...)
+					-- Use LocalPlayer() instead of inspecting the first arg.
+					-- For hooks added with a table identifier (nutscript
+					-- PLUGIN:CalcView style), hook.Call invokes them as
+					-- func(object, ply, ...) so the first vararg is the
+					-- PLUGIN table, NOT the player. Reading LocalPlayer()
+					-- side-steps that ambiguity entirely — we don't care how
+					-- the hook is dispatched, just whether the local player
+					-- is currently in VATS on the combat SWEP.
+					local lp = LocalPlayer()
+					if IsValid(lp) then
+						local w = lp:GetActiveWeapon()
+						if IsValid(w) and w:GetClass() == "nut_cswep" and (w.vatsMode or w.vatsCamPhase == "out") then
+							return  -- yield to nut_cswep_vats_view
+						end
+					end
+					return original(...)
+				end
+				vatsWrappedFns[wrapper] = true
+				-- hook.Add updates in place when `name` already exists, so
+				-- this swaps the stored function without changing slot.
+				hook.Add("CalcView", name, wrapper)
+			end
+		end
+	end
 
 	-- Cached colour-modify material for the VATS desaturation pass. Drawn
 	-- as a fullscreen quad sampling the current scene texture, with
@@ -1622,7 +1706,7 @@ if CLIENT then
 	-- pass and the desat bled over the target. PDTR runs inside the main 3D
 	-- pass while the framebuffer (with stencil) is still bound, and is the
 	-- hook the canonical GMod halo library uses for exactly this pattern.
-	hook.Add("PostDrawTranslucentRenderables", "nut_cswep_vats_desat", function(bDepth, bSkybox, bDraw3DSkybox)
+	vatsDesatFn = function(bDepth, bSkybox, bDraw3DSkybox)
 		-- Filter out water reflections, depth-only passes, 3D-skybox renders —
 		-- this hook fires for each of those and we only want main-view drawing.
 		if bDepth or bSkybox or bDraw3DSkybox then return end
@@ -1696,5 +1780,6 @@ if CLIENT then
 		render.DrawScreenQuad()
 
 		render.SetStencilEnable(false)
-	end)
+	end
+	hook.Add("PostDrawTranslucentRenderables", "nut_cswep_vats_desat", vatsDesatFn)
 end

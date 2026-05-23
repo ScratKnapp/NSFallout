@@ -226,32 +226,8 @@ if SERVER then
 
 		local inventory = self:getChar():getInv()
 		if inventory then
-			local position = self:getItemDropPos()
-
-			-- `findFreePosition` only exists on the grid inventory type;
-			-- the simple/list inventory doesn't need x/y placement, so
-			-- fall back to a direct addItem when the method is absent.
-			-- Either way, only spawn the item in the world if the
-			-- inventory genuinely can't take it.
-			if isfunction(inventory.findFreePosition) then
-				local x, y = inventory:findFreePosition(item)
-				if (x and y) then
-					item:setData("x", x)
-					item:setData("y", y)
-					inventory:addItem(item)
-				else
-					item:spawn(position)
-				end
-			else
-				-- Simple/list inventory: only fail if the weight cap
-				-- (the only access rule that gates addItem in SimpleInv)
-				-- would reject it.
-				local ok = inventory:canAccess("add", {item = item})
-				if ok then
-					inventory:addItem(item)
-				else
-					item:spawn(position)
-				end
+			if not inventory:tryPlaceItem(item) then
+				item:spawn(self:getItemDropPos())
 			end
 		end
 

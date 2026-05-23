@@ -30,7 +30,15 @@ ITEM:hook("drop", function(item)
 
 		item.player.carryWeapons = item.player.carryWeapons or {}
 
+		-- Fall back to a direct GetWeapon lookup when carryWeapons is
+		-- out of sync (e.g. a respawn / equipment-plugin path that
+		-- gave the SWEP via a different code path). EquipUn already
+		-- does this; without the same fallback here, the inventory
+		-- item gets dropped but the SWEP stays in the player's hand.
 		local weapon = item.player.carryWeapons[equipSlot]
+		if (!weapon or !IsValid(weapon)) and item.class then
+			weapon = item.player:GetWeapon(item.class)
+		end
 
 		if (IsValid(weapon)) then
 			item:setData("ammo", weapon:Clip1())
@@ -38,8 +46,15 @@ ITEM:hook("drop", function(item)
 			item.player:StripWeapon(item.class)
 			item.player.carryWeapons[equipSlot] = nil
 			item.player:EmitSound("items/ammo_pickup.wav", 80)
+		elseif item.class and item.player:HasWeapon(item.class) then
+			-- Defensive: even if neither lookup returned a valid SWEP,
+			-- strip by class if the player actually has it. Catches the
+			-- case where the weapon entity got orphaned from both
+			-- tracking tables.
+			item.player:StripWeapon(item.class)
+			item.player.carryWeapons[equipSlot] = nil
 		end
-		
+
 		local boosts = item:getData("attrib", nil)
 		if (boosts) then
 			for k, v in pairs(boosts) do

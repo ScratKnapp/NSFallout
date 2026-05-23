@@ -65,18 +65,16 @@ if SERVER then
 				if(table.Count(inventory:getItems()) < nut.config.get("stor_locallimit", 2)) then
 					local itemObj = nut.item.list[item]
 					if(!itemObj) then return false end
-				
-					x, y = inventory:findFreePosition(itemObj)
-					
-					if(x) then
+
+					if inventory:findItemSlot(itemObj) then
 						inventory:add(item, 1)
-						
+
 						if(container.pickable) then
 							container:setNetVar("locked", true)
 							container.password = math.Rand(1,1000)
 
 							container.skillCheck = table.Random({1, 1, 1, 1, 4, 4, 8, 8, 12, 16})
-						
+
 							container:setNetVar("desc", "Lock Strength: " ..container.skillCheck)
 						end
 					else

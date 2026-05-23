@@ -125,3 +125,55 @@ function SimpleInv:getMaxWeight()
 end
 
 SimpleInv:register("simple")
+
+-- =============================================================
+-- Inventory-type-agnostic placement helpers.
+--
+-- Several gamemode plugins (equipment, combat, activity, crafting,
+-- storage, ...) shared the same `inventory:findFreePosition` + setData
+-- x/y + addItem dance that's only meaningful for the grid inventory
+-- type. When the simple/list inventory is in use, findFreePosition is
+-- nil and the call crashes. These helpers live on the base
+-- nut.Inventory meta so both grid and simple inventories inherit a
+-- single uniform API.
+--
+--   inv:findItemSlot(itemOrClass)
+--     -> grid: (x, y) when there's room, nil when full
+--     -> simple: (true, nil) when there's room, nil when refused by an
+--        access rule (e.g. weight cap)
+--     The caller can branch on the truthiness of the first return
+--     value to decide whether to add the item or spawn / reject it.
+--
+--   inv:tryPlaceItem(item)
+--     Convenience for the common pattern: finds a slot, sets x/y when
+--     the inventory type wants them, calls addItem, and returns true
+--     on success / false on rejection so the caller can spawn the
+--     item in the world (or notify the player) on a miss.
+
+if nut and nut.Inventory then
+    function nut.Inventory:findItemSlot(item)
+        if isfunction(self.findFreePosition) then
+            local x, y = self:findFreePosition(item)
+            if x and y then return x, y end
+            return nil
+        end
+        -- List-style inventory: defer to the access rules so weight
+        -- caps (and any other "add" gates) still apply.
+        if isfunction(self.canAccess) then
+            local ok = self:canAccess("add", {item = item})
+            if ok == false then return nil end
+        end
+        return true, nil
+    end
+
+    function nut.Inventory:tryPlaceItem(item)
+        local x, y = self:findItemSlot(item)
+        if x == nil then return false end
+        if isnumber(x) and isnumber(y) then
+            item:setData("x", x)
+            item:setData("y", y)
+        end
+        self:addItem(item)
+        return true
+    end
+end
