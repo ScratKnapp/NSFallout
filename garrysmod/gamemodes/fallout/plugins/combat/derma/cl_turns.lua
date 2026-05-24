@@ -142,6 +142,8 @@ local PANEL = {}
 			end
 
 			for teamID, teamName in pairs(data.order) do
+				local entities = data.entities or {}
+			
 				local height = 60
 			
 				local subPanel = scroll:Add("DPanel")
@@ -154,6 +156,17 @@ local PANEL = {}
 				header:SetFont("nutChatFont")
 				header:DockMargin(4,0,0,2)
 				header:Dock(TOP)
+				
+				--team name header
+				local AIButton = subPanel:Add("DButton")
+				AIButton:SetText("AI")
+				AIButton:SetFont("nutChatFont")
+				AIButton:DockMargin(4,0,0,2)
+				AIButton:SetWide(30)
+				AIButton:Dock(RIGHT)
+				AIButton.DoClick = function(this)
+					self:AIPopup(entities, this, teamID)
+				end
 
 				--leave/join buttons for teams
 				if(client:getTurnTeam() != teamID) then
@@ -166,7 +179,7 @@ local PANEL = {}
 					end)
 				end
 
-				for entity, team in pairs(data.entities or {}) do
+				for entity, team in pairs(entities) do
 					if(!IsValid(entity)) then continue end
 					if(teamID != team) then continue end
 					
@@ -175,11 +188,23 @@ local PANEL = {}
 					
 					local name = (PLUGIN:canSeeEntityName(client, id) and entity:Name()) or "Anonymous"
 					
+					local AI
+					local currentAI = entity:getNetVar("TurnAI")
+					if(currentAI) then
+						AI = PLUGIN.AITree[currentAI].name
+					end
+					
+					if(AI and AI != "None") then
+						name = name.. "[" ..AI.. "]"
+					end
+					
 					self:CreateButton(name, subPanel, function(this) --left click
 						if(!entity.combat) then return end
 						--only CEnts for now
 						
 						self:AIPopup(entity, this)
+					end, function(this) --right click
+						netstream.Start("nut_turnLeave", id, entity, teamID)
 					end)
 				end
 				
@@ -206,7 +231,7 @@ local PANEL = {}
 		end
 	end
 	
-	function PANEL:AIPopup(entity, button)
+	function PANEL:AIPopup(entity, button, teamID)
 		if(IsValid(self.AIMenu)) then
 			self.AIMenu:Remove()
 		end
@@ -229,21 +254,38 @@ local PANEL = {}
 
 		local name = "None"
 		
-		local currentAI = entity:getNetVar("TurnAI")
-		if(currentAI) then
-			name = PLUGIN.AITree[currentAI].name
-		end
-		
 		local selection = vgui.Create("DComboBox", scroll)
-		selection:SetValue(name)
+		
 		selection:Dock(TOP)
 
 		for k, v in pairs(PLUGIN.AITree) do
 			selection:AddChoice(v.name, k)
 		end
 		
+		if(!istable(entity)) then
+			local currentAI = entity:getNetVar("TurnAI")
+			if(currentAI) then
+				name = PLUGIN.AITree[currentAI].name
+			end
+
+			selection:SetValue(name)
+		end
+		
 		selection.OnSelect = function(this, data, name, id)
+			if(istable(entity)) then
+				local send = {}
+				for k, v in pairs(entity) do
+					if(v == teamID) then
+						send[#send+1] = k
+					end
+				end
+				
+				entity = send
+			end
+		
 			netstream.Start("nut_turnAISet", entity, id)
+			
+			self:Refresh()
 		end
 	end
 	

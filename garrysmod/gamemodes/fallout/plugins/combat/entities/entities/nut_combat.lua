@@ -76,7 +76,9 @@ function ENT:StuckTeleport(pos)
 	self.desiredPos = nil
 	self.failedPath = nil
 
-	self:SetPos(pos)
+	if(util.IsInWorld(pos)) then
+		self:SetPos(pos)
+	end
 
 	self:resetAnim()
 	

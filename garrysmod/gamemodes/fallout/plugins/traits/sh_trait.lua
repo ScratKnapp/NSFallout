@@ -644,3 +644,13 @@ TRAIT.category = "Perks (Attributes)"
 TRAIT.hidden = true
 --TRAIT.icon = "fonvui/hud/icons/perks/Toughness.png"
 TRAITS:Register(TRAIT)
+
+//
+local TRAIT = {}
+TRAIT.uid = "augdoc" 
+TRAIT.name = "Augmentation Doctor"
+TRAIT.desc = "You know how to install augmentations into the human body."
+TRAIT.category = "Perks (Special)"
+TRAIT.hidden = true
+--TRAIT.icon = "fonvui/hud/icons/perks/Toughness.png"
+TRAITS:Register(TRAIT)
