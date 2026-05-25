@@ -57,9 +57,13 @@ function PLUGIN:OnCharCreated(client, character)
 			end
 		end
 		
-		for attribID, value in pairs(character:getAttribs()) do
-			PLUGIN:OnCharAttribUpdated(client, character, attribID, value)
-		end
+		timer.Simple(1, function()
+			if(character) then
+				for attribID, value in pairs(character:getAttribs()) do
+					PLUGIN:OnCharAttribUpdated(client, character, attribID, value)
+				end
+			end
+		end)
 	end)
 end
 
