@@ -148,7 +148,12 @@ local ROW = {}
 		self.themeColor  = themeColor
 		self.onPressed   = onPressed
 		self.onHovered   = onHovered
-		self.displayName = (item.getName and item:getName()) or item.name or "Unknown"
+		-- Prefer the per-instance custom name (engraved/renamed items
+		-- stash it in data.customName) before falling back to getName,
+		-- which on most items just returns the localized base name.
+		local customName = item.getData and item:getData("customName")
+		self.displayName = (customName ~= nil and customName ~= "" and tostring(customName))
+			or (item.getName and item:getName()) or item.name or "Unknown"
 		self.value       = (item.getPrice and item:getPrice()) or item.price or 0
 		self.weight      = GET_ITEM_WEIGHT and GET_ITEM_WEIGHT(item)
 			or (type(item.weight) == "function" and item:weight(item))
@@ -843,7 +848,10 @@ local PANEL = {}
 				end
 			end
 
-			-- WG / VAL stacked to the right of the icon (FNV-style stat block)
+			-- WG / VAL stacked to the right of the icon (FNV-style stat block).
+			-- A second column to the right adds DMG / AMMO / SIZE when the
+			-- hovered item is a weapon or ammo box. Columns share the same
+			-- two-row vertical layout so the two stat blocks read as siblings.
 			surface.SetFont("nutBarterValue")
 			local _, lh = surface.GetTextSize("M")
 			local rowGap = math.Round(6 * s)
@@ -854,6 +862,41 @@ local PANEL = {}
 			surface.DrawText(string.format("WG   %.2f", self.hoveredWeight or 0))
 			surface.SetTextPos(labelX, labelY + lh + rowGap)
 			surface.DrawText(string.format("VAL  %d",  self.hoveredValue  or 0))
+
+			-- Second column: only render rows we actually have data for so
+			-- ammo boxes (no DMG) and melee weapons (no SIZE/TYPE) don't
+			-- show empty fields. Width is sized off the widest WG/VAL
+			-- string so the column starts at a stable offset regardless
+			-- of the current values.
+			local extras = {}
+			if self.hoveredDamage   then extras[#extras + 1] = string.format("DMG  %s", tostring(self.hoveredDamage)) end
+			if self.hoveredAmmoSize then extras[#extras + 1] = string.format("SIZE %s", tostring(self.hoveredAmmoSize)) end
+			if self.hoveredAmmoType then extras[#extras + 1] = string.format("AMMO %s", tostring(self.hoveredAmmoType)) end
+			if #extras > 0 then
+				local wgW = surface.GetTextSize(string.format("WG   %.2f", self.hoveredWeight or 0))
+				local vlW = surface.GetTextSize(string.format("VAL  %d",  self.hoveredValue  or 0))
+				local col2X = labelX + math.max(wgW, vlW) + math.Round(28 * s)
+				-- Up to two rows fit at the same height as WG/VAL; a
+				-- third (rare: weapon with all three) wraps under the
+				-- second column with a tighter line height.
+				surface.SetTextPos(col2X, labelY)
+				surface.DrawText(extras[1])
+				if extras[2] then
+					surface.SetTextPos(col2X, labelY + lh + rowGap)
+					surface.DrawText(extras[2])
+				end
+				if extras[3] then
+					-- Third row jumps to a third column rather than
+					-- overflowing the footer vertically.
+					local col3W = math.max(
+						surface.GetTextSize(extras[1] or ""),
+						surface.GetTextSize(extras[2] or "")
+					)
+					local col3X = col2X + col3W + math.Round(28 * s)
+					surface.SetTextPos(col3X, labelY)
+					surface.DrawText(extras[3])
+				end
+			end
 		end
 
 		-- Hints stacked on the right side of the footer
@@ -1032,6 +1075,35 @@ local PANEL = {}
 		self.hoveredWeight = (GET_ITEM_WEIGHT and GET_ITEM_WEIGHT(item))
 			or (type(item.weight) == "function" and item:weight(item))
 			or item.weight or 1
+
+		-- Extra weapon / ammo stats for the footer stat block. Weapons
+		-- carry .dmg keyed by ammo type, .magSize, and .ammo on the
+		-- class table; ammo boxes carry per-instance data: "Amount"
+		-- (ammo count) and "ammo" (caliber).
+		self.hoveredDamage   = nil
+		self.hoveredAmmoSize = nil
+		self.hoveredAmmoType = nil
+
+		if type(item.dmg) == "table" and item.ammo then
+			local d = item.dmg[item.ammo]
+			if type(d) == "number" then self.hoveredDamage = d end
+			self.hoveredAmmoType = item.ammo
+			self.hoveredAmmoSize = item.magSize
+		elseif type(item.dmg) == "number" then
+			-- Melee weapons store a flat damage number.
+			self.hoveredDamage = item.dmg
+		end
+
+		if item.getData then
+			local amount = item:getData("Amount")
+			local ammo   = item:getData("ammo")
+			if amount and not self.hoveredAmmoSize then
+				self.hoveredAmmoSize = amount
+			end
+			if ammo and not self.hoveredAmmoType then
+				self.hoveredAmmoType = ammo
+			end
+		end
 	end
 
 	-- Inventory event hooks — fire when items get added / removed / changed

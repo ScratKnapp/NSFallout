@@ -133,9 +133,15 @@ SimpleInv:register("simple")
 -- storage, ...) shared the same `inventory:findFreePosition` + setData
 -- x/y + addItem dance that's only meaningful for the grid inventory
 -- type. When the simple/list inventory is in use, findFreePosition is
--- nil and the call crashes. These helpers live on the base
--- nut.Inventory meta so both grid and simple inventories inherit a
--- single uniform API.
+-- nil and the call crashes.
+--
+-- `nut.Inventory:extend` uses `table.Inherit` — a shallow one-shot
+-- copy of the parent class's fields into the subclass at extend-time.
+-- Methods added to `nut.Inventory` *after* a subclass is extended
+-- don't reach the subclass (or its instances). So we install the
+-- helpers on `SimpleInv` directly here, and on `GridInv` from its own
+-- plugin file. `nut.inv.installPlacementHelpers(class)` keeps the
+-- single source of truth — both inventory plugins call into it.
 --
 --   inv:findItemSlot(itemOrClass)
 --     -> grid: (x, y) when there's room, nil when full
@@ -150,8 +156,11 @@ SimpleInv:register("simple")
 --     on success / false on rejection so the caller can spawn the
 --     item in the world (or notify the player) on a miss.
 
-if nut and nut.Inventory then
-    function nut.Inventory:findItemSlot(item)
+nut.inv = nut.inv or {}
+function nut.inv.installPlacementHelpers(class)
+    if not class then return end
+
+    function class:findItemSlot(item)
         if isfunction(self.findFreePosition) then
             local x, y = self:findFreePosition(item)
             if x and y then return x, y end
@@ -166,7 +175,7 @@ if nut and nut.Inventory then
         return true, nil
     end
 
-    function nut.Inventory:tryPlaceItem(item)
+    function class:tryPlaceItem(item)
         local x, y = self:findItemSlot(item)
         if x == nil then return false end
         if isnumber(x) and isnumber(y) then
@@ -177,3 +186,10 @@ if nut and nut.Inventory then
         return true
     end
 end
+
+nut.inv.installPlacementHelpers(SimpleInv)
+-- Also install on GridInv if the grid inventory plugin is loaded.
+-- nutscript plugins are loaded before gamemode plugins, so by the
+-- time this file runs the "grid" type is already registered when
+-- gridinv is active. Harmless no-op when grid isn't loaded.
+nut.inv.installPlacementHelpers(nut.inventory and nut.inventory.types and nut.inventory.types["grid"])

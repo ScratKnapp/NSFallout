@@ -34,6 +34,10 @@ local function AttributeDisplay(name, desc, progress, level, y, x)
 end
 
 local DrawPly = {}
+-- Hoisted from the PERKS section: DrawPly.STATS (just below) references this
+-- color in its respec modal, so the local must be declared before the function
+-- is defined or Lua binds the name to a nil global at compile time.
+local perk_req_negative = Color(255, 35, 35)
 function DrawPly.STATS()
     local ply = LocalPlayer()
     local character = ply:getChar()
@@ -70,6 +74,68 @@ function DrawPly.STATS()
         DrawHPBar(800, 350, 1 - (character:getData("hp_leg_right", 0) / 300))
         DrawHPBar(580, 350, 1 - (character:getData("hp_leg_left", 0) / 300))
     end
+
+    -- Respec entry button. Click opens the confirmation modal below; the
+    -- actual nut_respec netstream is only fired from the modal's CONFIRM so a
+    -- stray click can't wipe a character.
+    local rx, ry, rw, rh = 600, 540, 300, 40
+    local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover("RESPEC", "Morton Medium@42", rx, ry, rw, rh, 1, color_white)
+    local rc = pip_color_accent or pip_color
+    surface.SetDrawColor(pip_color)
+    surface.DrawOutlinedRect(rx, ry, rw, rh)
+    if fn then
+        rc = color_black
+        surface.SetDrawColor(pip_color)
+        surface.DrawRect(rx, ry, rw, rh)
+    end
+    draww(rc)
+    if click and not RESPEC_MODAL then
+        RESPEC_MODAL = true
+    end
+
+    if RESPEC_MODAL then
+        local MX, MY, MW, MH = 192, 180, 640, 360
+        surface.SetDrawColor(0, 0, 0, 220)
+        surface.DrawRect(0, 96, 1024, 608)
+        surface.SetDrawColor(0, 0, 0, 250)
+        surface.DrawRect(MX, MY, MW, MH)
+        surface.SetDrawColor(pip_color)
+        surface.DrawOutlinedRect(MX, MY, MW, MH)
+        surface.DrawOutlinedRect(MX - 2, MY - 2, MW + 4, MH + 4)
+
+        draw.DrawText("RESPEC CHARACTER", "Morton Medium@48", MX + MW * 0.5, MY + 24, pip_color, TEXT_ALIGN_CENTER)
+
+        local bodyLines = {
+            "This will reset your SPECIAL, skills, and traits.",
+            "Spend points will be refunded based on your current level.",
+            "Hidden traits and your level itself are preserved.",
+            "",
+            "This action cannot be undone.",
+        }
+        local by = MY + 100
+        for _, line in ipairs(bodyLines) do
+            draw.DrawText(line, "Morton Medium@32", MX + MW * 0.5, by, color_white, TEXT_ALIGN_CENTER)
+            by = by + 34
+        end
+
+        local btnY, btnH = MY + MH - 60, 40
+        local btnW = 220
+        local cfx = MX + 24
+        surface.SetDrawColor(perk_req_negative)
+        surface.DrawOutlinedRect(cfx, btnY, btnW, btnH)
+        if NzGUI:DrawTextButton("CONFIRM", "Morton Medium@42", cfx, btnY - 2, btnW, btnH, 0, perk_req_negative) then
+            netstream.Start("nut_respec")
+            surface.PlaySound("buttons/button3.wav")
+            RESPEC_MODAL = false
+        end
+
+        local cx = MX + MW - 24 - btnW
+        surface.SetDrawColor(pip_color)
+        surface.DrawOutlinedRect(cx, btnY, btnW, btnH)
+        if NzGUI:DrawTextButton("CANCEL", "Morton Medium@42", cx, btnY - 2, btnW, btnH, 0, pip_color) then
+            RESPEC_MODAL = false
+        end
+    end
 end
 
 local attri = {"Strength", "Perception", "Endurance", "Charisma", "Intelligence", "Agility", "Luck"}
@@ -83,9 +149,15 @@ local attriIMG = {Material("vault_boy/str"), Material("vault_boy/per"), Material
 local color_black = Color(0, 0, 0)
 local f = Material("vault_boy/agi")
 local deltSt = 0
+-- When true, the STATS sub-page draws a confirmation modal over the page
+-- before firing the nut_respec netstream. Cleared on confirm/cancel and on
+-- pipboy page change (see pip_changepage hook below).
+local RESPEC_MODAL = false
 function DrawPly.SPECIAL()
     local ply = LocalPlayer()
     local character = ply:getChar()
+    local amts = (character:getSkillLevel("specialpoints") or 1) - 1
+    draw.DrawText("SPECIAL POINTS: " .. amts, "Morton Medium@42", 950, 64, amts > 0 and pip_color or color_white, TEXT_ALIGN_RIGHT)
     for y, v in pairs(attri) do
         local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover(v, "Morton Medium@48", 64, 116 + (y * 44), 400, 40, 1, color_white)
         local c = pip_color
@@ -95,9 +167,9 @@ function DrawPly.SPECIAL()
             surface.DrawRect(64, 118 + (y * 44), 500 - 64, 42)
             if IS_R_DOWN then
                 deltSt = deltSt == 0 and CurTime() or deltSt
-                --  
-                --  
-                if (LocalPlayer():getChar():getSkillLevel("specialpoints") or 1) - 1 > 0 then
+                --
+                --
+                if amts > 0 then
                     local p = math.Clamp((CurTime() - deltSt) * 0.75, 0.01, 1)
                     surface.SetDrawColor(pip_color.r * 0.5, pip_color.g * 0.5, pip_color.b * 0.5)
                     surface.DrawRect(64, 118 + (y * 44), (500 - 64) * p, 42)
@@ -130,6 +202,21 @@ function DrawPly.SPECIAL()
         local iness = character:getAttrib(attri_a[y], 0)
         draw.DrawText(iness, "Morton Medium@48", 500, 116 + (y * 44), c, TEXT_ALIGN_RIGHT)
         draww(c)
+
+        -- Click-to-spend "+" square at the right of each row. Drawn outside the
+        -- hover block so the player can target it even when the row itself
+        -- isn't highlighted. Hidden entirely when no specialpoints remain.
+        if amts > 0 then
+            local bx, by, bs = 515, 120 + (y * 44), 32
+            surface.SetDrawColor(pip_color)
+            surface.DrawOutlinedRect(bx, by, bs, bs)
+            local hit = NzGUI:DrawTextButton("+", "Morton Medium@42", bx, by - 6, bs, bs, 0, pip_color)
+            if hit then
+                local attribKey = attri_a[y]
+                local newVal = (character:getAttrib(attribKey, 0) or 0) + 1
+                netstream.Start("statIncrease", attribKey, newVal)
+            end
+        end
     end
 end
 
@@ -158,72 +245,18 @@ for _i, _v in ipairs(skill_def) do
 end
 local SELECTED_HEADER
 local wth, ht = ScrW(), ScrH()
-hook.Add("pip_changepage", "SKILLS_", function(from, to)
-    if to == "STATS" then
-        hook.Add("PostRenderVGUI", "SKILLS", function()
-            if LocalPlayer():getChar() then
-            else
-                return
-            end
+-- Cleans up the screen-space "R [HOLD]) SPEND POINT ON..." hint that the old
+-- code attached when the STATS page opened. The counters now live inside the
+-- pipboy RT on each sub-page, so this hook is no longer needed; remove any
+-- copy that survived a hot-reload.
+hook.Remove("PostRenderVGUI", "SKILLS")
 
-            local amt = (LocalPlayer():getChar():getSkillLevel("skillpoints") or 1) - 1
-            local amts = (LocalPlayer():getChar():getSkillLevel("specialpoints") or 1) - 1
-            local amtss = (LocalPlayer():getChar():getSkillLevel("perkpoints") or 1) - 1
-            if SELECTED_HEADER == "SKILLS" and PIPBOY_ON_SCREEN and amt > 0 then
-                render.SetViewPort(ScrW() * 0.2, ScrH() * 0.775, wth, ht)
-                local t = "[]"
-                local n = "R [HOLD]) SPEND POINT ON SKILL (" .. amt .. ") "
-                surface.SetFont("Morton Medium@48")
-                local tw, th = surface.GetTextSize(t)
-                t = "["
-                surface.SetFont("Morton Medium@42")
-                local twn, thn = surface.GetTextSize(n)
-                surface.SetDrawColor(pip_color.r, pip_color.g, pip_color.b, 20)
-                surface.DrawRect(0, 13, tw + twn, th - 16)
-                surface.SetFont("Morton Medium@48")
-                NzGUI.DrawShadowText(t, 0, 0, c)
-                NzGUI.DrawShadowText("]", tw + twn - (tw / 2), 0, c)
-                surface.SetFont("Morton Medium@42")
-                NzGUI.DrawShadowText(n, 12, 6, c)
-                render.SetViewPort(0, 0, wth, ht)
-            elseif SELECTED_HEADER == "SPECIAL" and PIPBOY_ON_SCREEN and amts > 0 then
-                render.SetViewPort(ScrW() * 0.2, ScrH() * 0.775, wth, ht)
-                local t = "[]"
-                local n = "R [HOLD]) SPEND POINT ON SPECIAL (" .. amts .. ") "
-                surface.SetFont("Morton Medium@48")
-                local tw, th = surface.GetTextSize(t)
-                t = "["
-                surface.SetFont("Morton Medium@42")
-                local twn, thn = surface.GetTextSize(n)
-                surface.SetDrawColor(pip_color.r, pip_color.g, pip_color.b, 20)
-                surface.DrawRect(0, 13, tw + twn, th - 16)
-                surface.SetFont("Morton Medium@48")
-                NzGUI.DrawShadowText(t, 0, 0, c)
-                NzGUI.DrawShadowText("]", tw + twn - (tw / 2), 0, c)
-                surface.SetFont("Morton Medium@42")
-                NzGUI.DrawShadowText(n, 12, 6, c)
-                render.SetViewPort(0, 0, wth, ht)
-            elseif SELECTED_HEADER == "PERKS" and PIPBOY_ON_SCREEN then
-                render.SetViewPort(ScrW() * 0.2, ScrH() * 0.875, wth, ht)
-                local t = "[]"
-                local n = "R [HOLD]) UNLOCK PERK (" .. amtss .. ") "
-                surface.SetFont("Morton Medium@48")
-                local tw, th = surface.GetTextSize(t)
-                t = "["
-                surface.SetFont("Morton Medium@42")
-                local twn, thn = surface.GetTextSize(n)
-                surface.SetDrawColor(pip_color.r, pip_color.g, pip_color.b, 20)
-                surface.DrawRect(0, 13, tw + twn, th - 16)
-                surface.SetFont("Morton Medium@48")
-                NzGUI.DrawShadowText(t, 0, 0, c)
-                NzGUI.DrawShadowText("]", tw + twn - (tw / 2), 0, c)
-                surface.SetFont("Morton Medium@42")
-                NzGUI.DrawShadowText(n, 12, 6, c)
-                render.SetViewPort(0, 0, wth, ht)
-            end
-        end)
-    else
-        hook.Remove("PostRenderVGUI", "SKILLS")
+hook.Add("pip_changepage", "SKILLS_", function(from, to)
+    -- Leaving the STATS page closes any open modal so it doesn't pop back up
+    -- the next time the player returns.
+    if from == "STATS" and to ~= "STATS" then
+        PERK_MODAL = nil
+        RESPEC_MODAL = false
     end
 end)
 
@@ -236,9 +269,21 @@ local perk_req_format = {
     I = "Intelligence", A = "Agility", L = "Luck", level = "Level",
 }
 local PERKS_SORTED = nil
-local perk_req_negative = Color(255, 35, 35)
 -- false = show all perks (locked + owned), true = show only owned perks.
 local PERK_FILTER_OWNED = false
+-- When non-nil, a perk detail modal is open over the PERKS sub-page. Holds
+-- the perk table being viewed. Interactions with the underlying grid are
+-- suppressed while it's set.
+local PERK_MODAL = nil
+
+-- Server fires this after PLUGIN:Respec commits. The catalogue itself doesn't
+-- change, but blowing away the cached/sorted tables forces the next PERKS
+-- draw to rebuild from a clean slate, which also re-derives the owned/locked
+-- ordering with the now-empty trait list.
+netstream.Hook("nut_respec_done", function()
+    cached_desc = nil
+    PERKS_SORTED = nil
+end)
 function DrawPly.PERKS()
     local char = LocalPlayer():getChar()
     if not char then return end
@@ -258,24 +303,36 @@ function DrawPly.PERKS()
     end
 
     local amtss = (char:getSkillLevel("perkpoints") or 1) - 1
+    draw.DrawText("PERK POINTS: " .. amtss, "Morton Medium@42", 950, 64, amtss > 0 and pip_color or color_white, TEXT_ALIGN_RIGHT)
     local hovered = nil
+    local modal_open = PERK_MODAL ~= nil
 
     -- Toggle between the full catalogue and an owned-only view. Centered at the
     -- bottom of the 3-column list area (columns span x=64..560, 15 rows from
     -- y=112 end at y=532), so it sits just below the last row.
     local toggleTxt = "SHOW: " .. (PERK_FILTER_OWNED and "OWNED" or "ALL")
     local toggleClick = NzGUI:DrawTextButton(toggleTxt, "Morton Medium@32", 172, 540, 280, 32, 0, pip_color)
-    if toggleClick then PERK_FILTER_OWNED = not PERK_FILTER_OWNED end
+    if toggleClick and not modal_open then PERK_FILTER_OWNED = not PERK_FILTER_OWNED end
 
     -- Build the visible list each frame: owned perks first (level order
     -- preserved), then the locked ones unless we're filtering to owned only.
+    -- Perks whose underlying trait is flagged `hidden` are suppressed from the
+    -- locked-list pass so they only appear here if the player has actually
+    -- unlocked them (mirroring how respec preserves hidden traits).
+    local traitList = TRAITS and TRAITS.traits or nil
+    local function isHidden(uid)
+        local t = traitList and traitList[uid]
+        return t and t.hidden == true
+    end
     local display = {}
     for _, v in ipairs(PERKS_SORTED) do
         if char:isPerkOwned(v._idx) then display[#display + 1] = v end
     end
     if not PERK_FILTER_OWNED then
         for _, v in ipairs(PERKS_SORTED) do
-            if not char:isPerkOwned(v._idx) then display[#display + 1] = v end
+            if not char:isPerkOwned(v._idx) and not isHidden(v.uid) then
+                display[#display + 1] = v
+            end
         end
     end
 
@@ -295,13 +352,17 @@ function DrawPly.PERKS()
         local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover(v.display:upper(), "Morton Medium@24", px, py, PERK_COL_W, 28, 1, color_white)
         local base = owned and pip_color_accent or color_white
         local c = base
-        if fn then
+        if fn and not modal_open then
             hovered = v
             c = color_black
             surface.SetDrawColor(pip_color)
             surface.DrawRect(px, py + 2, PERK_COL_W, 24)
 
-            -- Hold R to unlock, mirroring the SKILLS/SPECIAL spend flow.
+            -- Click opens the detail modal; the modal carries the UNLOCK action.
+            if click then PERK_MODAL = v end
+
+            -- Hold R still works as a quick-unlock shortcut for users who
+            -- prefer the keyboard-hold pattern used on SPECIAL/SKILLS.
             local canUnlock = not owned and amtss > 0
             if canUnlock then
                 for rk, rv in pairs(v.requirements) do
@@ -328,10 +389,11 @@ function DrawPly.PERKS()
     end
 
     -- Right side: detail panel for the hovered perk (image, description,
-    -- requirement checklist).
-    if hovered then
-        if hovered.image then
-            surface.SetMaterial(hovered.image)
+    -- requirement checklist). Hidden while the modal is up so it doesn't
+    -- compete with the modal's own image/description block.
+    if hovered and not modal_open then
+        if hovered.material then
+            surface.SetMaterial(hovered.material)
             surface.SetDrawColor(pip_color)
             surface.DrawTexturedRect(626, 128, 256, 256)
         end
@@ -351,6 +413,95 @@ function DrawPly.PERKS()
             end
         end
     end
+
+    -- Modal overlay. Drawn last so it sits on top of the grid + preview. The
+    -- modal carries the image, description, requirement checklist, and an
+    -- UNLOCK button that fires perkAdd. Owned/unmet-requirement perks open
+    -- the same modal but the action button is disabled.
+    if PERK_MODAL then
+        local v = PERK_MODAL
+        local MX, MY, MW, MH = 132, 100, 760, 560
+
+        -- Dim the page behind the modal.
+        surface.SetDrawColor(0, 0, 0, 220)
+        surface.DrawRect(0, 96, 1024, 608)
+
+        -- Modal background + border.
+        surface.SetDrawColor(0, 0, 0, 250)
+        surface.DrawRect(MX, MY, MW, MH)
+        surface.SetDrawColor(pip_color)
+        surface.DrawOutlinedRect(MX, MY, MW, MH)
+        surface.DrawOutlinedRect(MX - 2, MY - 2, MW + 4, MH + 4)
+
+        -- Image (top-left) + name (top-right of image).
+        if v.material then
+            surface.SetMaterial(v.material)
+            surface.SetDrawColor(pip_color)
+            surface.DrawTexturedRect(MX + 24, MY + 32, 200, 200)
+        end
+        draw.DrawText(v.display:upper(), "Morton Medium@48", MX + 250, MY + 40, pip_color)
+
+        -- Description.
+        if cached_desc[v.display] then
+            draw.DrawNonParsedText(cached_desc[v.display], "Morton Medium@32", MX + 250, MY + 110, color_white, 0)
+        end
+
+        -- Requirements block (or NONE if the perk has no gating).
+        local ry = MY + 260
+        draw.DrawText("REQUIREMENTS", "Morton Medium@32", MX + 24, ry, pip_color)
+        ry = ry + 40
+        if next(v.requirements) ~= nil then
+            for rk, rv in pairs(v.requirements) do
+                local ok = CheckSkill({rk, rv})
+                local label = (ok and "+ " or "x ") .. (perk_req_format[rk] or rk) .. " " .. rv
+                draw.DrawText(label, "Morton Medium@32", MX + 24, ry, ok and color_white or perk_req_negative)
+                ry = ry + 34
+            end
+        else
+            draw.DrawText("NONE", "Morton Medium@32", MX + 24, ry, color_white)
+        end
+
+        -- Status line above the buttons so the player knows why UNLOCK might
+        -- be disabled (owned / not enough perk points / requirements unmet).
+        local owned = char:isPerkOwned(v._idx)
+        local reqsMet = true
+        for rk, rv in pairs(v.requirements) do
+            if not CheckSkill({rk, rv}) then reqsMet = false break end
+        end
+        local canUnlock = not owned and amtss > 0 and reqsMet
+
+        local statusY = MY + MH - 110
+        local statusTxt
+        if owned then
+            statusTxt = "ALREADY OWNED"
+        elseif not reqsMet then
+            statusTxt = "REQUIREMENTS NOT MET"
+        elseif amtss <= 0 then
+            statusTxt = "NO PERK POINTS AVAILABLE"
+        else
+            statusTxt = "PERK POINTS: " .. amtss
+        end
+        draw.DrawText(statusTxt, "Morton Medium@32", MX + MW * 0.5, statusY, canUnlock and pip_color or color_white, TEXT_ALIGN_CENTER)
+
+        -- Action buttons: UNLOCK (left) + CLOSE (right).
+        local btnY, btnH = MY + MH - 60, 40
+        local unlockCol = canUnlock and pip_color or Color(120, 120, 120)
+        local ux, uw = MX + 24, 220
+        surface.SetDrawColor(unlockCol)
+        surface.DrawOutlinedRect(ux, btnY, uw, btnH)
+        local unlockLabel = owned and "OWNED" or (canUnlock and "UNLOCK" or "LOCKED")
+        if NzGUI:DrawTextButton(unlockLabel, "Morton Medium@42", ux, btnY - 2, uw, btnH, 0, unlockCol) and canUnlock then
+            netstream.Start("perkAdd", v.uid)
+            PERK_MODAL = nil
+        end
+
+        local cx, cw = MX + MW - 244, 220
+        surface.SetDrawColor(pip_color)
+        surface.DrawOutlinedRect(cx, btnY, cw, btnH)
+        if NzGUI:DrawTextButton("CLOSE", "Morton Medium@42", cx, btnY - 2, cw, btnH, 0, pip_color) then
+            PERK_MODAL = nil
+        end
+    end
 end
 
 function DrawPly.SKILLS()
@@ -359,6 +510,8 @@ function DrawPly.SKILLS()
     local offset = 80
     local ply = LocalPlayer()
     local character = ply:getChar()
+    local amt = (character:getSkillLevel("skillpoints") or 1) - 1
+    draw.DrawText("SKILL POINTS: " .. amt, "Morton Medium@42", 950, 64, amt > 0 and pip_color or color_white, TEXT_ALIGN_RIGHT)
     for y, v in pairs(skill_def) do
         local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover(v[2]:upper(), "Morton Medium@42", 64, offset - 2 + (y * height), width, height, 1, color_white)
         local c = pip_color
@@ -366,23 +519,24 @@ function DrawPly.SKILLS()
             c = color_black
             surface.SetDrawColor(pip_color)
             surface.DrawRect(64, offset + (y * height), (width + 100) - 64, height)
-            local amt = (LocalPlayer():getChar():getSkillLevel("skillpoints") or 1) - 1
             c = color_black
-            --  
+            --
             surface.SetMaterial(attriIMG[1])
             surface.SetDrawColor(pip_color)
             draw.DrawNonParsedText(skill_desc[y], "Morton Medium@24", 600, 400, pip_color, 0)
             if IS_R_DOWN and amt > 0 then
                 deltSt = deltSt == 0 and CurTime() or deltSt
-                --  
-                --  
+                --
+                --
                 local p = math.Clamp((CurTime() - deltSt) * 0.75, 0.01, 1)
                 surface.SetDrawColor(pip_color.r * 0.5, pip_color.g * 0.5, pip_color.b * 0.5)
                 surface.DrawRect(64, offset + (y * height), ((width + 100) - 64) * p, height)
                 if p == 1 then
                     IsReloadUse = false
-                    local newVal = (character:getSkillLevel(v[1]) or 0) + 1
-                    netstream.Start("skillIncrease", v[1], newVal)
+                    -- updateSkill on the server *adds* the value (it's a delta,
+                    -- not a target), so send 1 per spent point. Sending
+                    -- current+1 doubled the skill each click (1->3->7->15).
+                    netstream.Start("skillIncrease", v[1], 1)
                     deltSt = 0
                 end
             else
@@ -392,6 +546,20 @@ function DrawPly.SKILLS()
 
         draw.DrawText(character:getSkillLevel(v[1]), "Morton Medium@48", width + 100, offset - 8 + (y * height), c, TEXT_ALIGN_RIGHT)
         draww(c)
+
+        -- Click-to-spend "+" square sits to the right of the value text.
+        -- Hidden entirely when no skillpoints remain to spend.
+        if amt > 0 then
+            local bx, by, bs = 525, offset + 2 + (y * height), 28
+            surface.SetDrawColor(pip_color)
+            surface.DrawOutlinedRect(bx, by, bs, bs)
+            local hit = NzGUI:DrawTextButton("+", "Morton Medium@32", bx, by - 4, bs, bs, 0, pip_color)
+            if hit then
+                -- See the hold-R branch above: skillIncrease is a delta on the
+                -- server side (skills[key] += value), so we send 1.
+                netstream.Start("skillIncrease", v[1], 1)
+            end
+        end
     end
 end
 

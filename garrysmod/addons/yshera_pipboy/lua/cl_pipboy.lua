@@ -380,7 +380,7 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
     local dirt_overlay = Material("tablet_scartch.png", "noclamp smooth")
     --[[If you get a divorce in Alabama,
 	are you still brother and sister]]
-    local suffix____ = "nm2gg4"
+    local suffix____ = "nm2gg4d2"
     local tex_name = "RenderTargetTexture_Textur3" .. suffix____
     local mat_name = mat_name or "RenderTargetTexture_Material2" .. suffix____
     local WIDTH, HEIGHT = 1024, 774

@@ -105,6 +105,39 @@ function playerMeta:getEquip()
 	return {}
 end
 
+-- `playerMeta:addEquip` calls `item:removeFromInventory(true)` which
+-- sets `item.invID = 0`. After that, the stock `ITEM:getOwner` can't
+-- find the player: it looks at `nut.inventory.instances[0]` (nil) and
+-- then scans `player.GetAll()` for someone whose `inv.items[id]` holds
+-- the item — but it's no longer in `inv.items`, it's in
+-- `char:getData("equip")`. So `setData` calls on slotted items skip
+-- the `invData` netstream entirely (no `receivers or getOwner()`),
+-- which means renames / paints / customisations applied to an
+-- equipped item are invisible to the client until the next item-
+-- bulk-load (i.e. rejoin). Extend `getOwner` to also walk each
+-- player's equip slot table so the netstream is sent to the actual
+-- owner regardless of which side of the equip path the item lives on.
+do
+	local itemMeta = nut.meta.item or FindMetaTable("Item")
+	if itemMeta then
+		local oldGetOwner = itemMeta.getOwner
+		function itemMeta:getOwner()
+			local owner = oldGetOwner and oldGetOwner(self)
+			if IsValid(owner) then return owner end
+			local id = self:getID()
+			for _, v in ipairs(player.GetAll()) do
+				if not v:getChar() then continue end
+				local equipTbl = v.getEquip and v:getEquip() or nil
+				if equipTbl then
+					for _, equippedID in pairs(equipTbl) do
+						if equippedID == id then return v end
+					end
+				end
+			end
+		end
+	end
+end
+
 --checks if the player can equip the thing
 function playerMeta:canEquip(slot, item)
 	if not item or not slot then return false end

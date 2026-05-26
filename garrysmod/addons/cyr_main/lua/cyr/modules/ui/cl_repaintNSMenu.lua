@@ -456,7 +456,7 @@ function PANEL:addActionButton(action, actionIndex)
         if item then
             local itemDmg = item:getData("dmg", item.dmg) or {}
             for k, v in pairs(itemDmg) do
-                dmg = dmg + v
+                dmg = dmg + (tonumber(v) or 0)
             end
 
             dmg = dmg * actionData.weaponMult
@@ -480,8 +480,9 @@ function PANEL:addActionButton(action, actionIndex)
             local highest = 0
             --finds the damage type with the highest value
             for k, v in pairs(itemDmg) do
-                if highest < v then
-                    highest = v
+                local nv = tonumber(v) or 0
+                if highest < nv then
+                    highest = nv
                     dmgT = k
                 end
             end

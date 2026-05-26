@@ -261,16 +261,38 @@ local EQUIP_BOX_PAD  = 6
 local EQUIP_BOX_SIZE = 18
 local EQUIP_INDENT   = EQUIP_BOX_SIZE + EQUIP_BOX_PAD
 
+-- Slot → indicator digit. Weapons land in primary/sidearm which map
+-- to 1/2; other equipment slots (headgear, body, arms, utility, legs)
+-- intentionally have no digit so their box just shows the equipped
+-- state without a misleading number.
+local EQUIP_SLOT_LABELS = {
+    primary = "1",
+    sidearm = "2",
+}
+
+local function getInstanceEquipSlot(inst)
+    if not inst then return nil end
+    if isfunction(inst.getData) and inst:getData("equip") then
+        -- Weapons stash the slot they were equipped to in `equipSlot`
+        -- on the instance data; equipment classes carry a static
+        -- `.slot` field on the class table instead. Prefer the
+        -- explicit data when present, fall back to the class slot.
+        local slot = inst:getData("equipSlot") or inst.slot
+        if slot then return slot end
+    end
+    local plr = LocalPlayer()
+    if isfunction(plr.getEquip) then
+        for slot, id in pairs(plr:getEquip() or {}) do
+            if id == inst.id then return slot end
+        end
+    end
+    return nil
+end
+
 local function isInstanceEquipped(inst)
     if not inst then return false end
     if isfunction(inst.getData) and inst:getData("equip") then return true end
-    local plr = LocalPlayer()
-    if isfunction(plr.getEquip) then
-        for _, id in pairs(plr:getEquip() or {}) do
-            if id == inst.id then return true end
-        end
-    end
-    return false
+    return getInstanceEquipSlot(inst) ~= nil
 end
 
 local function drawItem(item3, y, pip_color, _amt, ITEM_INSTANCE_RRA)
@@ -443,11 +465,25 @@ local function drawItem(item3, y, pip_color, _amt, ITEM_INSTANCE_RRA)
     -- left of the row. Drawn last so it sits on top of the hover
     -- highlight rather than being painted over by it. Covers both
     -- equip-tracking paths (item.data.equip and char:getData("equip")).
+    -- Primary/sidearm slots also get the slot number (1/2) drawn
+    -- inside the box; other slots (body, headgear, etc.) just show
+    -- the box on its own.
     if isInstanceEquipped(ITEM_INSTANCE_RRA) then
         local boxX = 86 + math.floor(EQUIP_BOX_PAD * 0.5)
         local boxY = rowY + math.floor((FUSION_ITEM_BUTTON_SIZE.h - EQUIP_BOX_SIZE) * 0.5)
         surface.SetDrawColor(color_white)
         surface.DrawRect(boxX, boxY, EQUIP_BOX_SIZE, EQUIP_BOX_SIZE)
+
+        local slot = getInstanceEquipSlot(ITEM_INSTANCE_RRA)
+        local digit = slot and EQUIP_SLOT_LABELS[slot]
+        if digit then
+            draw.SimpleText(
+                digit, "Morton Medium@32",
+                boxX + math.floor(EQUIP_BOX_SIZE * 0.5),
+                boxY + math.floor(EQUIP_BOX_SIZE * 0.5) - 2,
+                color_black, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER
+            )
+        end
     end
 end
 
@@ -911,6 +947,13 @@ DrawPly["HEAT SIGNATURES"] = function()
     local ply = LocalPlayer()
     local character = ply:getChar()
 end
+
+-- After a respec the player's perk list is wiped (only hidden traits survive),
+-- so the INV PERKS sub-page must rebuild its description cache instead of
+-- continuing to draw from stale entries keyed on the old owned set.
+netstream.Hook("nut_respec_done", function()
+    cached_desc = nil
+end)
 
 local headers = {"HEAT SIGNATURES", "DATABASE"}
 local offset = {0, 252, 225, 335}

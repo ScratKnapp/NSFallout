@@ -183,16 +183,16 @@ local function buildPerks()
             id = uid,
             display = t.name or uid,
             desc = t.desc or "",
-            image = t.image or Material("vgui/avatar_default"),
+            material = t.material or Material("vgui/avatar_default"),
             requirements = t.requirements or {},
             onLevel = t.onLevel,
         }
-        function entry:getBitmaskIndex() return 0 end
-        function entry:getBitmaskCalc() return 0 end
+        print("mat ", entry.material)
+
         PERKS[i] = entry
     end
 end
-
+buildPerks()
 -- Stub: pipboy repair UI iterates a REPAIR_GROUP. Returns an empty group so the
 -- screen renders without erroring; gamemode handles real durability elsewhere.
 REPAIR_GROUP = REPAIR_GROUP or {}

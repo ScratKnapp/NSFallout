@@ -2,7 +2,7 @@
 -- RADIO SYSTEM 
 function Radio_Reset()
     if CLIENT then
-        local aftermath_cl_radio_volume = CreateClientConVar("aftermath_cl_radio_volume", "1", true, false, "The volume the radio plays on your local character")
+        local aftermath_cl_radio_volume = CreateClientConVar("aftermath_cl_radio_volume", "0.5", true, false, "The volume the radio plays on your local character (0.0 - 4.0)")
         local volumecache = nil
         playingindex = 0
         StationName = {"East STATION", "Reborn FM", "Despair, Fission, Radiation", "Classics Radio"}

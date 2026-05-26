@@ -814,16 +814,10 @@ function SWEP:DrawHUD()
 		local ammo = weaponItem:getData("currentMag", {})
 		local _, ammoAmt = ammo[1], ammo[2]
 		if not ammoAmt then ammoAmt = 0 end
-		local ammoString = string.format("AMMO: %d / %d", ammoAmt, magSize)
-		local ammoW = 220 * scrModX
-		local ammoH = lineH + pad * 2
-		local ammoX = ScrW() - ammoW - 24 * scrModX
-		local ammoY = ScrH() - ammoH - 24 * scrModY
-		drawTermPanel(ammoX, ammoY, ammoW, ammoH)
-		local tx, ty = surface.GetTextSize(ammoString)
-		surface.SetTextColor(TERM_BRIGHT)
-		surface.SetTextPos(ammoX + ammoW * 0.5 - tx * 0.5, ammoY + ammoH * 0.5 - ty * 0.5)
-		surface.DrawText(ammoString)
+		-- Hand the combat-tool's ammo readout to the bottom-right HUD ammo slot
+		-- so it isn't shown twice. The HUD picks this up while the entry is
+		-- fresh (see cl_hud_interface.lua).
+		CYR_CTOOL_AMMO = {clip = ammoAmt, mag = magSize, t = CurTime()}
 	end
 
 	-- V.A.T.S. body-part chips: a small bracketed hit-% chip floats over every

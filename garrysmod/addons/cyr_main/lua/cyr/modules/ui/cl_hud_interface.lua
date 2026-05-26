@@ -5,6 +5,8 @@ local function safeText(text)
     return string.match(text, "^#([a-zA-Z_]+)$") and text .. " " or text
 end
 
+
+
 local _color = FindMetaTable("Color")
 function _color.__add(lhs, rhs)
     if type(lhs) == "number" then
@@ -17,7 +19,7 @@ function _color.__add(lhs, rhs)
 end
 
 function _color.__sub(lhs, rhs)
-    return Color(lhs.r - rhs.r, lhs.g - rhs.g, lhs.b - rhs.b)
+    return Color(lhs.r - rhs.r, lhs.g - rhs.g, lhs.b - rhs.b)   
 end
 
 function _color.__add(lhs, rhs)
@@ -362,72 +364,73 @@ hook.Add("CanDrawAmmoHUD", "disablePlaylist", function() return false end)
 hook.Add("ShouldHideBars", "disablePlaylist2", function() return true end)
 local matOutlnie = Material("cyr/ui/hp_bar_outline.png", "noclamp smooth")
 local matInfill = Material("cyr/ui/hp_bar_fill.png", "noclamp smooth")
--- ===========================================================================
---  Fallout: New Vegas style HUD.
---  Textures come from the FONV UI addon (materials/fonvui/hud/...).
---    hud_left_main  / hud_right_main      - the corner bracket frames
---    compass (.vmt) - 1024x65 360-degree panorama strip
---    hud_condition_triangle - 16x16 fixed compass centre marker
---    hud_condition_bar      - 56x8 soft white bar, tinted for HP/AP/CND fills
---    hud_tick_mark          - 18x32 segment tick
---  Everything is drawn with DrawTexturedRect / DrawTexturedRectUV so swapping
---  a path above is enough to reskin it.
--- ===========================================================================
+
 local FO3 = {
     left_frame = Material("fonvui/hud/hud_left_main.png", "noclamp smooth"),
     right_frame = Material("fonvui/hud/hud_right_main.png", "noclamp smooth"),
     compass = Material("fonvui/hud/compass.png", "noclamp smooth"),
     compass_marker = Material("fonvui/hud/hud_condition_triangle.png", "noclamp smooth"),
-    pip = Material("fixed_pip4.png", "noclamp smooth"),
+    pip = Material("pip_vmt"),
 }
 
--- A full bar is this many pips; pips above the current value are drawn dimmed
--- (the "empty" alpha) instead of being a separate fill colour.
+
+
+
 local BAR_PIPS = 50
-local PIP_EMPTY_ALPHA = 45
--- Horizontal fade for the compass. A render-target / dest-alpha mask is
--- unreliable with MSAA on (the backbuffer is multisampled, a custom RT is
--- not), so the strip is drawn as a gradient quad with per-vertex alpha via
--- the mesh library: plain forward rendering, no dest-alpha, MSAA-safe.
--- ===========================================================================
---  Live-tweakable HUD layout. `fallout_hud_edit` opens a slider editor; the
---  values are persisted to garrysmod/data/cyr_fo3_hud.json so changes survive
---  across sessions. Every numeric layout knob is sourced from HUDCFG below.
--- ===========================================================================
+local PIP_EMPTY_ALPHA = 65
+-- surface.DrawTexturedRectUV samples at pixel centres but treats the UV span
+-- as edge-to-edge, so tiling N times across a WxH texture lands the last
+-- https://github.com/Facepunch/garrysmod-issues/issues/3173
+-- Cached lazily because Material:Width()/Height() returns 0 before the
+local PIP_TEX_W, PIP_TEX_H = 0, 0
+local function pipTexSize()
+    if PIP_TEX_W > 0 then return PIP_TEX_W, PIP_TEX_H end
+    local mat = FO3.pip
+    local tex = mat and mat:GetTexture("$basetexture")
+    if tex then
+        PIP_TEX_W = tex:Width()
+        PIP_TEX_H = tex:Height()
+    end
+    if PIP_TEX_W <= 0 then PIP_TEX_W = mat and mat:Width() or 0 end
+    if PIP_TEX_H <= 0 then PIP_TEX_H = mat and mat:Height() or 0 end
+    return PIP_TEX_W, PIP_TEX_H
+end
+
 local HUDCFG_DEFAULTS = {
-    frameW            = 400,
-    marginX           = 44.407894736842,
-    frameBottomGap    = 14,
-    lineFrac          = 0.47039473684210525,
+    frameW = 400,
+    marginX = 44.407894736842,
+    frameBottomGap = 14,
+    lineFrac = 0.47039473684210525,
     -- LEFT bracket (hud_left_main.png is 386x256).
-    innerL            = 0.041776315789474,
-    innerR            = 0.905,
-    innerWMul         = 1.10,
+    innerL = 0.041776315789474,
+    innerR = 0.905,
+    innerWMul = 1.10,
     -- RIGHT bracket (hud_right_main.png is 381x256; not a perfect mirror).
-    innerLRight       = 0.17993421052632,
-    innerRRight       = 0.94440789473684,
-    innerWMulRight    = 1.00,
-    compHFrac         = 0.34,
-    barHFrac          = 0.12,
-    gap               = 5,
-    hpBarPadLMul      = 0.10,
-    hpBarPadRMul      = 0.14144736842105265,
-    hpValueXOff       = 9.8684210526316,
-    hpValueYOff       = -12.236842105263,
+    innerLRight = 0.17993421052632,
+    innerRRight = 0.94440789473684,
+    innerWMulRight = 1.00,
+    compHFrac = 0.34,
+    barHFrac = 0.12,
+    gap = 5,
+    hpBarPadLMul = 0.10,
+    hpBarPadRMul = 0.14144736842105265,
+    hpValueXOff = 9.8684210526316,
+    hpValueYOff = -12.236842105263,
     -- RIGHT bracket AP / CND / ammo placement (px @ 1080 unless noted *Mul).
-    apPadLMul         = 0.00,
-    apPadRMul         = 0.00,
-    apLabelXOff       = 0,
-    cndX              = 0,
-    cndY              = 41.44736842105263,
-    cndW              = 120,
-    cndLabelXOff      = 0,
-    ammoXOff          = -3.9473684210526017,
-    ammoYOff          = 16.973684210526315,
-    compassFadeStart  = 0.55,
-    compassFOV        = 180,
+    apPadLMul = 0.00,
+    apPadRMul = 0.00,
+    apLabelXOff = 0,
+    cndX = 0,
+    cndY = 41.44736842105263,
+    cndW = 120,
+    cndLabelXOff = 0,
+    ammoXOff = -3.9473684210526017,
+    ammoYOff = 16.973684210526315,
+    compassFadeStart = 0.55,
+    compassFOV = 180,
     compassHeadingOff = 17,
 }
+
 local HUDCFG = table.Copy(HUDCFG_DEFAULTS)
 local HUDCFG_PATH = "cyr_fo3_hud.json"
 local function HUDCFG_Load()
@@ -440,13 +443,14 @@ local function HUDCFG_Load()
         end
     end
 end
+
 local function HUDCFG_Save()
     file.Write(HUDCFG_PATH, util.TableToJSON(HUDCFG, true))
 end
-//HUDCFG_Load()
 
+--HUDCFG_Load()
 local HUDCFG_FRAME
-local OpenHUDExport       -- forward-declared, assigned further below
+local OpenHUDExport -- forward-declared, assigned further below
 local function OpenHUDEditor()
     if IsValid(HUDCFG_FRAME) then HUDCFG_FRAME:Remove() end
     local f = vgui.Create("DFrame")
@@ -455,16 +459,15 @@ local function OpenHUDEditor()
     f:SetSize(400, 580)
     f:Center()
     f:MakePopup()
-
     local sc = vgui.Create("DScrollPanel", f)
     sc:Dock(FILL)
-
     local function addSlider(label, key, lo, hi, decimals)
         local s = sc:Add("DNumSlider")
         s:Dock(TOP)
         s:DockMargin(6, 2, 6, 2)
         s:SetText(label)
-        s:SetMin(lo) s:SetMax(hi)
+        s:SetMin(lo)
+        s:SetMax(hi)
         s:SetDecimals(decimals or 2)
         s:SetValue(HUDCFG[key])
         s.OnValueChanged = function(_, v)
@@ -473,48 +476,49 @@ local function OpenHUDEditor()
         end
     end
 
-    addSlider("Frame width (px @1080)", "frameW",            100, 1000, 0)
-    addSlider("Margin X (px)",          "marginX",           0,   300,  0)
-    addSlider("Bottom gap (px)",        "frameBottomGap",   -50,  300,  0)
-    addSlider("Rail line (frac)",       "lineFrac",          0,    1,   3)
-    addSlider("L: Inner left",          "innerL",           -0.2,  0.5, 3)
-    addSlider("L: Inner right",         "innerR",            0.5,  1.2, 3)
-    addSlider("L: Inner width mul",     "innerWMul",         0.5,  2,   3)
-    addSlider("R: Inner left",          "innerLRight",      -0.2,  0.5, 3)
-    addSlider("R: Inner right",         "innerRRight",       0.5,  1.2, 3)
-    addSlider("R: Inner width mul",     "innerWMulRight",    0.5,  2,   3)
-    addSlider("Compass height (frac)",  "compHFrac",         0,    1,   3)
-    addSlider("Bar height (frac)",      "barHFrac",          0,    1,   3)
-    addSlider("Vertical gap (px)",      "gap",              -20,   60,  0)
-    addSlider("HP bar pad L (mul)",     "hpBarPadLMul",     -0.5,  0.5, 3)
-    addSlider("HP bar pad R (mul)",     "hpBarPadRMul",     -0.5,  0.5, 3)
-    addSlider("HP value X (px)",        "hpValueXOff",     -300,  300,  0)
-    addSlider("HP value Y (px)",        "hpValueYOff",      -60,   60,  0)
-    addSlider("R: AP pad L (mul)",      "apPadLMul",        -0.5,  0.5, 3)
-    addSlider("R: AP pad R (mul)",      "apPadRMul",        -0.5,  0.5, 3)
-    addSlider("R: AP label X (px)",     "apLabelXOff",     -200,  200,  0)
-    addSlider("R: CND bar X (px)",      "cndX",            -200,  400,  0)
-    addSlider("R: CND bar Y (px)",      "cndY",             -60,   60,  0)
-    addSlider("R: CND bar width (px)",  "cndW",             0,    400,  0)
-    addSlider("R: CND label X (px)",    "cndLabelXOff",    -200,  200,  0)
-    addSlider("R: Ammo X (px)",         "ammoXOff",        -300,  100,  0)
-    addSlider("R: Ammo Y (px)",         "ammoYOff",         -60,   60,  0)
-    addSlider("Compass fade start",     "compassFadeStart",  0,    1,   3)
-    addSlider("Compass FOV (deg)",      "compassFOV",        30,   360, 0)
-    addSlider("Compass heading offset", "compassHeadingOff",-180,  180, 2)
-
+    addSlider("Frame width (px @1080)", "frameW", 100, 1000, 0)
+    addSlider("Margin X (px)", "marginX", 0, 300, 0)
+    addSlider("Bottom gap (px)", "frameBottomGap", -50, 300, 0)
+    addSlider("Rail line (frac)", "lineFrac", 0, 1, 3)
+    addSlider("L: Inner left", "innerL", -0.2, 0.5, 3)
+    addSlider("L: Inner right", "innerR", 0.5, 1.2, 3)
+    addSlider("L: Inner width mul", "innerWMul", 0.5, 2, 3)
+    addSlider("R: Inner left", "innerLRight", -0.2, 0.5, 3)
+    addSlider("R: Inner right", "innerRRight", 0.5, 1.2, 3)
+    addSlider("R: Inner width mul", "innerWMulRight", 0.5, 2, 3)
+    addSlider("Compass height (frac)", "compHFrac", 0, 1, 3)
+    addSlider("Bar height (frac)", "barHFrac", 0, 1, 3)
+    addSlider("Vertical gap (px)", "gap", -20, 60, 0)
+    addSlider("HP bar pad L (mul)", "hpBarPadLMul", -0.5, 0.5, 3)
+    addSlider("HP bar pad R (mul)", "hpBarPadRMul", -0.5, 0.5, 3)
+    addSlider("HP value X (px)", "hpValueXOff", -300, 300, 0)
+    addSlider("HP value Y (px)", "hpValueYOff", -60, 60, 0)
+    addSlider("R: AP pad L (mul)", "apPadLMul", -0.5, 0.5, 3)
+    addSlider("R: AP pad R (mul)", "apPadRMul", -0.5, 0.5, 3)
+    addSlider("R: AP label X (px)", "apLabelXOff", -200, 200, 0)
+    addSlider("R: CND bar X (px)", "cndX", -200, 400, 0)
+    addSlider("R: CND bar Y (px)", "cndY", -60, 60, 0)
+    addSlider("R: CND bar width (px)", "cndW", 0, 400, 0)
+    addSlider("R: CND label X (px)", "cndLabelXOff", -200, 200, 0)
+    addSlider("R: Ammo X (px)", "ammoXOff", -300, 100, 0)
+    addSlider("R: Ammo Y (px)", "ammoYOff", -60, 60, 0)
+    addSlider("Compass fade start", "compassFadeStart", 0, 1, 3)
+    addSlider("Compass FOV (deg)", "compassFOV", 30, 360, 0)
+    addSlider("Compass heading offset", "compassHeadingOff", -180, 180, 2)
     local export = vgui.Create("DButton", f)
     export:Dock(BOTTOM)
     export:DockMargin(6, 0, 6, 0)
     export:SetText("Export current values...")
     export.DoClick = function() OpenHUDExport() end
-
     local reset = vgui.Create("DButton", f)
     reset:Dock(BOTTOM)
     reset:DockMargin(6, 6, 6, 6)
     reset:SetText("Reset to defaults")
     reset.DoClick = function()
-        for k, v in pairs(HUDCFG_DEFAULTS) do HUDCFG[k] = v end
+        for k, v in pairs(HUDCFG_DEFAULTS) do
+            HUDCFG[k] = v
+        end
+
         HUDCFG_Save()
         f:Remove()
         OpenHUDEditor()
@@ -533,33 +537,31 @@ function OpenHUDExport()
     f:SetSize(460, 460)
     f:Center()
     f:MakePopup()
-
     local te = vgui.Create("DTextEntry", f)
     te:Dock(FILL)
     te:DockMargin(6, 6, 6, 6)
     te:SetMultiline(true)
     te:SetFont("DermaDefaultBold")
     te:SetEditable(true)
-
     local keys = {}
-    for k in pairs(HUDCFG_DEFAULTS) do keys[#keys + 1] = k end
+    for k in pairs(HUDCFG_DEFAULTS) do
+        keys[#keys + 1] = k
+    end
+
     table.sort(keys)
-    local lines = { "local HUDCFG_DEFAULTS = {" }
+    local lines = {"local HUDCFG_DEFAULTS = {"}
     for _, k in ipairs(keys) do
         local v = HUDCFG[k]
         lines[#lines + 1] = string.format("    %-18s = %s,", k, tostring(v))
     end
+
     lines[#lines + 1] = "}"
     te:SetText(table.concat(lines, "\n"))
-
     local jsonBtn = vgui.Create("DButton", f)
     jsonBtn:Dock(BOTTOM)
     jsonBtn:DockMargin(6, 0, 6, 6)
     jsonBtn:SetText("Show JSON (data/cyr_fo3_hud.json)")
-    jsonBtn.DoClick = function()
-        te:SetText(util.TableToJSON(HUDCFG, true))
-    end
-
+    jsonBtn.DoClick = function() te:SetText(util.TableToJSON(HUDCFG, true)) end
     local copyBtn = vgui.Create("DButton", f)
     copyBtn:Dock(BOTTOM)
     copyBtn:DockMargin(6, 0, 6, 0)
@@ -569,6 +571,7 @@ function OpenHUDExport()
         surface.PlaySound("buttons/button14.wav")
     end
 end
+
 concommand.Add("fallout_hud_edit", function(_, _, args)
     if args and args[1] == "export" then
         OpenHUDExport()
@@ -582,12 +585,25 @@ end)
 local function drawFadedStrip(mat, x, y, w, h, u0, u1, col, aL, aR)
     render.SetMaterial(mat)
     mesh.Begin(MATERIAL_QUADS, 1)
-        mesh.Position(Vector(x, y, 0));         mesh.TexCoord(0, u0, 0); mesh.Color(col.r, col.g, col.b, aL); mesh.AdvanceVertex()
-        mesh.Position(Vector(x + w, y, 0));     mesh.TexCoord(0, u1, 0); mesh.Color(col.r, col.g, col.b, aR); mesh.AdvanceVertex()
-        mesh.Position(Vector(x + w, y + h, 0)); mesh.TexCoord(0, u1, 1); mesh.Color(col.r, col.g, col.b, aR); mesh.AdvanceVertex()
-        mesh.Position(Vector(x, y + h, 0));     mesh.TexCoord(0, u0, 1); mesh.Color(col.r, col.g, col.b, aL); mesh.AdvanceVertex()
+    mesh.Position(Vector(x, y, 0))
+    mesh.TexCoord(0, u0, 0)
+    mesh.Color(col.r, col.g, col.b, aL)
+    mesh.AdvanceVertex()
+    mesh.Position(Vector(x + w, y, 0))
+    mesh.TexCoord(0, u1, 0)
+    mesh.Color(col.r, col.g, col.b, aR)
+    mesh.AdvanceVertex()
+    mesh.Position(Vector(x + w, y + h, 0))
+    mesh.TexCoord(0, u1, 1)
+    mesh.Color(col.r, col.g, col.b, aR)
+    mesh.AdvanceVertex()
+    mesh.Position(Vector(x, y + h, 0))
+    mesh.TexCoord(0, u0, 1)
+    mesh.Color(col.r, col.g, col.b, aL)
+    mesh.AdvanceVertex()
     mesh.End()
 end
+
 -- HUD fonts are recreated at a size proportional to screen height, so the
 -- text occupies the same fraction of the screen at 1080p and 4K (the frame /
 -- bars already scale by ScrH()/1080, the fixed-size fonts did not).
@@ -637,18 +653,19 @@ local function GetHUDColor()
         local r, g, b = (s or ""):match("(%d+)%s+(%d+)%s+(%d+)")
         if r then c = Color(tonumber(r), tonumber(g), tonumber(b)) end
     end
+
     if not c then
         if pip_color then return ColorAlpha(pip_color, 255) end
         c = Color(255, 182, 66)
     end
     return ColorAlpha(c, 255)
 end
+
 -- Publish globally so other pipboy-styled HUD files (cl_combat_hud_theme,
 -- cl_notify_override) can call the same helper without re-implementing the
 -- pip_color preference. Safe to call from Paint hooks at any time — both the
 -- function and `pip_color` resolve at call time.
 _G.CYR_GetHUDColor = GetHUDColor
-
 -- Source-art geometry, measured from the bracket textures (386x256 / 381x256):
 --   art occupies y 4..131, the horizontal rail is at y~65, end-caps at the
 --   far left/right. We crop away the transparent lower half and express the
@@ -668,13 +685,17 @@ local function fo3Bar(x, y, w, h, perc, color, pips)
     -- the bright width to whole pip cells / pixel boundaries to avoid sub-
     -- pixel rasterization showing a half-lit pip at the edge.
     local filled = math.floor(perc * pips)
+    local tw, th = pipTexSize()
+    local vOff = th > 0 and (1 / th) or 0
     surface.SetMaterial(FO3.pip)
     surface.SetDrawColor(color.r, color.g, color.b, PIP_EMPTY_ALPHA)
-    surface.DrawTexturedRectUV(x, y, w, h, 0, 0, pips, 1)
+    local uOffDim = tw > 0 and (pips / tw) or 0
+    surface.DrawTexturedRectUV(x, y, w, h, 0, 0, pips + uOffDim, 1 + vOff)
     if filled > 0 then
         local fw = math.floor(w * filled / pips + 0.5)
+        local uOffLit = tw > 0 and (filled / tw) or 0
         surface.SetDrawColor(color.r, color.g, color.b, 255)
-        surface.DrawTexturedRectUV(x, y, fw, h, 0, 0, filled, 1)
+        surface.DrawTexturedRectUV(x, y, fw, h, 0, 0, filled + uOffLit, 1 + vOff)
     end
 end
 
@@ -733,14 +754,13 @@ local function DrawTheHUD()
     -- instead of the engine health — combat damage is tracked there, not on Entity:Health().
     local hp, hpMax
     local activeWepForHP = ply:GetActiveWeapon()
-    local usingCombatHP = IsValid(activeWepForHP)
-        and activeWepForHP:GetClass() == "nut_cswep"
-        and isfunction(ply.getHP) and isfunction(ply.getMaxHP)
+    local usingCombatHP = IsValid(activeWepForHP) and activeWepForHP:GetClass() == "nut_cswep" and isfunction(ply.getHP) and isfunction(ply.getMaxHP)
     if usingCombatHP then
         hp, hpMax = ply:getHP(), ply:getMaxHP()
     else
         hp, hpMax = ply:Health(), ply:GetMaxHealth()
     end
+
     local hpPerc = hpMax > 0 and (hp / hpMax) or 0
     local barY = lineY - gap - barH
     -- Compass rides just below the rail.
@@ -765,8 +785,30 @@ local function DrawTheHUD()
     draw.SimpleText("AP", "FO3_HUD_Label", apX + apW + HUDCFG.apLabelXOff * scale, apY - gap, primary, TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM)
     fo3Bar(apX, apY, apW, barH, apPerc, primary)
     -- Ammo counter + "CND" weapon-condition bar below the rail.
+    -- When the combat tool (nut_cswep) is broadcasting its action's ammo via
+    -- CYR_CTOOL_AMMO, hijack this slot to mirror it instead of the engine
+    -- weapon's clip — combat actions use item-data ammo, not Clip1.
     local activeWep = ply:GetActiveWeapon()
-    if IsValid(activeWep) and activeWep.Clip1 then
+    local ctool = CYR_CTOOL_AMMO
+    local ctoolFresh = ctool and ctool.t and (CurTime() - ctool.t) < 0.2
+    if ctoolFresh then
+        local rowY = lineY + gap
+        local cndPerc = 1
+        if IsValid(activeWep) then
+            if isfunction(activeWep.GetCondition) then
+                cndPerc = math.Clamp(activeWep:GetCondition() / 100, 0, 1)
+            elseif isfunction(activeWep.GetNWFloat) then
+                cndPerc = math.Clamp(activeWep:GetNWFloat("condition", 100) / 100, 0, 1)
+            end
+        end
+
+        local cndBarX = rInnerX + HUDCFG.cndX * scale
+        local cndBarY = rowY + HUDCFG.cndY * scale
+        local cndBarW = HUDCFG.cndW * scale
+        draw.SimpleText("CND", "FO3_HUD_Label", cndBarX + HUDCFG.cndLabelXOff * scale, cndBarY - gap, primary, TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
+        fo3Bar(cndBarX, cndBarY, cndBarW, barH, cndPerc, primary)
+        draw.SimpleText(ctool.clip .. "/" .. ctool.mag, "FO3_HUD_Value", rInnerX + rInnerW + HUDCFG.ammoXOff * scale, rowY + barH / 2 + HUDCFG.ammoYOff * scale, primary, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+    elseif IsValid(activeWep) and activeWep.Clip1 then
         local clip = activeWep:Clip1()
         if clip ~= -1 then
             local ammoCount = ply:GetAmmoCount(activeWep:GetPrimaryAmmoType())

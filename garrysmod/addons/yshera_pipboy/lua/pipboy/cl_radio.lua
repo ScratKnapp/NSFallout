@@ -113,7 +113,7 @@ local function video_killed_the_radio_star()
     -- Stacked above the scope: title row, then status row, with even gaps.
     local tuned = segmentWidth ~= nil
     local freqMHz = 87.5 + ((idx or 0) * 7.3) % 20.5
-    local titleY = scopeTop - 138
+    local titleY = scopeTop - 118
     local statusY = scopeTop - 70
     draw.DrawText("FREQUENCY", "Morton Black@42", scopeX, titleY, pc, TEXT_ALIGN_LEFT)
     draw.DrawText(string.format("%.1f", freqMHz) .. " MHz", "Morton Medium@48", scopeX + scopeW, titleY - 3, pc, TEXT_ALIGN_RIGHT)
@@ -133,30 +133,30 @@ local function video_killed_the_radio_star()
     draw.DrawText("VOL", "Morton Black@42", startX, volTop - 56, pc, TEXT_ALIGN_LEFT)
     draw.DrawText(math.Round(volIndicator * 100) .. "%", "Morton Medium@42", startX + 300, volTop - 56, pc, TEXT_ALIGN_RIGHT)
 
-    -- track
+    -- track (0..400%, big tick every 100%)
     surface.SetDrawColor(pc.r, pc.g, pc.b, 40)
     surface.DrawRect(startX, volTop - 2, 300, 4)
-    -- filled portion
+    -- filled portion (volIndicator 0..4 maps onto 0..300 px)
     surface.SetDrawColor(pc)
-    surface.DrawRect(startX, volTop - 2, volIndicator * 300, 4)
-    -- ticks
+    surface.DrawRect(startX, volTop - 2, volIndicator * 75, 4)
+    -- ticks (big tick every 100% → every 75 px)
     for i = 0, 300, 15 do
         local big = (i % 75 == 0)
         surface.SetDrawColor(pc.r, pc.g, pc.b, big and 160 or 70)
         surface.DrawLine(startX + i, volTop + 6, startX + i, volTop + 6 + (big and 14 or 7))
     end
     -- knob (glow + core)
-    local knobX = startX + (volIndicator * 300)
+    local knobX = startX + (volIndicator * 75)
     surface.SetDrawColor(pc.r, pc.g, pc.b, 50)
     surface.DrawRect(knobX - 7, volTop - 13, 14, 26)
     surface.SetDrawColor(pc)
     surface.DrawRect(knobX - 3, volTop - 16, 6, 32)
 
     if CheckIfCursorInRange(knobX - 16, volTop - 18, 32, 36) and input.IsMouseDown(MOUSE_LEFT) then
-        volIndicator = math.Clamp((cursor.x - startX) / 300, 0, 1)
+        volIndicator = math.Clamp((cursor.x - startX) / 75, 0, 4)
         radio_vol:SetFloat(volIndicator)
     elseif CheckIfCursorInRange(startX, volTop - 5, 300, 10) and input.IsMouseDown(MOUSE_LEFT) then
-        volIndicator = math.Clamp((cursor.x - startX) / 300, 0, 1)
+        volIndicator = math.Clamp((cursor.x - startX) / 75, 0, 4)
         radio_vol:SetFloat(volIndicator)
     end
 
@@ -194,7 +194,7 @@ local function video_killed_the_radio_star()
         audioSamples[audioSampleCount] = lvl
     end
 
-    local baseWaveH = height * (radioHeight[idx] or 1) * volIndicator
+    local baseWaveH = height * (radioHeight[idx] or 1) * volIndicator * 0.9
     local function sampleAt(x)
         -- x ranges across [startX, startX + length]; oldest sample on the left,
         -- newest on the right (the "scanning head").

@@ -168,8 +168,12 @@ else
 		char:setData("ptAttrib", pointAttrib)
 		char:setData("ptSkill", pointSkill)
 		char:setData("ptPerk", pointPerk)
-		
+
 		--give them the associated points
+
+		-- Tell the client the respec is committed so any client-side perk/trait
+		-- caches (pipboy STATS/INV pages, etc.) can refresh themselves.
+		netstream.Start(client, "nut_respec_done")
 	end
 end
 
