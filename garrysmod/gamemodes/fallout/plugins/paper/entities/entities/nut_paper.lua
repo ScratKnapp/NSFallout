@@ -43,7 +43,6 @@ if (SERVER) then
 			if (nut.shuttingDown) then return end
 		end
 
-		print("Saving paper deletion")
 		PLUGIN:SavePaper()
 	end
 else

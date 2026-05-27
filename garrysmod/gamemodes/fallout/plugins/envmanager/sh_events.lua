@@ -1,8 +1,7 @@
 local PLUGIN = PLUGIN
 
 local weathers = {
-	
-	
+
 	{
 		weather = "rain",
 		event = "Dark grey clouds with slight tints of green form on the horizon. Approaching rapidly, the clouds cover the skies within minutes, and droplets begin falling from the sky, as the region is caught under a light drizzle. It increases progressively until there is a fair amount of rainfall. The rain is visibly dirty and irradiated, and singes the skin when it makes contact.",

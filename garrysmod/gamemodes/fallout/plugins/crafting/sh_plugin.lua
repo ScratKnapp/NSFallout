@@ -7,7 +7,12 @@ RECIPES = {}
 RECIPES.recipes = {}
 function RECIPES:Register( tbl )
 	if !tbl.CanCraft then
-		function tbl:CanCraft( player )
+		function tbl:CanCraft(player, entity)
+			--crafting bench too damaged
+			if(IsValid(entity) and entity:Health() < 0) then
+				return false
+			end
+			
 			local mult --used to check if we have multiple of the same item, rather than a stack.
 			for k, v in pairs( self.items ) do
 				local inv = player:getChar():getInv()
@@ -37,55 +42,12 @@ function RECIPES:Register( tbl )
 			return true
 		end
 	end
+	
 	if !tbl.ProcessCraftItems then
-		function tbl:ProcessCraftItems( player )
-			player:EmitSound("items/ammo_pickup.wav") --change this
+		function tbl:ProcessCraftItems(player, entity)
+			player:EmitSound(self.craftSound or "items/ammo_pickup.wav") --change this
 			
 			local char = player:getChar()
-			
-			--[[
-			for k, v in pairs(self.items) do
-				local inventory = char:getInv()	
-				local itemObj = inventory:getFirstItemOfType(k)
-				
-				if(inventory:getFirstItemOfType(k)) then
-					if (!itemObj.maxstack) then --non stack items
-
-						local count = 1
-						local part = inventory:getFirstItemOfType(k)	
-						part:remove()
-						while (count < v) do
-							part = inventory:getFirstItemOfType(k)
-
-							part:remove()
-							count = count + 1
-						end
-					end
-					
-					if (itemObj.maxstack) then --if we're dealing with quantities
-						if (tonumber(itemObj:getData("Amount", 1)) >= v) then --necessary stacks are all in one item
-							itemObj:setData("Amount", tonumber(itemObj:getData("Amount")) - v)
-							if (tonumber(itemObj:getData("Amount", 1)) == 0) then
-								itemObj:remove()
-							end
-						else --necessary stacks are split across multiple items
-							local all = inventory:getItems()
-							for m, extraStack in pairs (all) do
-								if (k == extraStack.uniqueID) then
-									local amount = extraStack:getData("Amount", 1)
-									if(amount <= v) then
-										v = v - amount
-										extraStack:remove()
-									else
-										extraStack:setData("Amount", amount - v)
-									end
-								end
-							end
-						end
-					end
-				end
-			end
-			--]]
 			
 			local requiredItems = self.items
 			local items = char:getInv():getItems()
@@ -143,8 +105,17 @@ function RECIPES:Register( tbl )
 					nut.log.addRaw(player:Name().. " crafted " ..nut.item.list[k].name.. ".")
 				end
 				
+				--gives experience to profession levels
 				if(self.xp) then
 					PLUGIN:giveCraftXP(char, self.profession, self.xp)
+				end
+				
+				--deals damage to crafting bench if recipe specifies to do so
+				if(IsValid(entity) and self.tableDamage) then
+					local health = entity:getNetVar("health", 100)
+					local newHealth = math.Clamp(health-self.tableDamage, 0, 100)
+					
+					entity:setNetVar("health", newHealth)
 				end
 				
 				player:notifyLocalized("You have created %s.", self.name)
@@ -201,7 +172,7 @@ function RECIPES:GetResult( item )
 	return tblRecipe.result
 end
 
-function RECIPES:CanCraft(player, item)
+function RECIPES:CanCraft(player, item, entity)
 	local tblRecipe = self:Get(item)
 	if PLUGIN.reqireBlueprint then
 		if !tblRecipe.noBlueprint then
@@ -211,7 +182,7 @@ function RECIPES:CanCraft(player, item)
 			end
 		end
 	end
-	if !tblRecipe:CanCraft( player ) then
+	if !tblRecipe:CanCraft(player, entity) then
 		return 1
 	end
 	return 0
@@ -226,10 +197,12 @@ if CLIENT then return end
 util.AddNetworkString("nut_CraftItem")
 net.Receive("nut_CraftItem", function(length, client)
 	local item = net.ReadString()
-	local cancraft = RECIPES:CanCraft(client, item)
+	local entity = net.ReadEntity()
+	
+	local cancraft = RECIPES:CanCraft(client, item, entity)
 	local tblRecipe = RECIPES:Get(item)
 	if cancraft == 0 then
-		tblRecipe:ProcessCraftItems(client)
+		tblRecipe:ProcessCraftItems(client, entity)
 	else
 		if cancraft == 2 then
 			client:notify("You don't have the required blueprint.")
@@ -247,7 +220,8 @@ function PLUGIN:saveTables()
 				ent = v:GetClass(),
 				pos = v:GetPos(),
 				angles = v:GetAngles(),
-				invID = v:getNetVar("id")
+				invID = v:getNetVar("id"),
+				health = v:getNetVar("health", 100),
 			}
 		end
 	end
@@ -278,13 +252,15 @@ function PLUGIN:loadTables()
 		if(v.ent) then
 			local position = v.pos
 			local angles = v.angles
+			local health = v.health
 			local entity = ents.Create(v.ent)
 			if(IsValid(entity)) then
 				entity:SetPos(position)
 				entity:SetAngles(angles)
 				entity:Spawn()
 				entity:Activate()
-				
+
+				entity:setNetVar("health", health)
 				entity:setNetVar("id", v.invID)
 				
 				local phys = entity:GetPhysicsObject()
@@ -312,6 +288,8 @@ if CLIENT then
 end
 
 function PLUGIN:giveCraftXP(char, profession, xp)
+	if(!profession) then return end
+
 	local craftTbl = char:getData("craft", {})
 
 	if(istable(profession)) then

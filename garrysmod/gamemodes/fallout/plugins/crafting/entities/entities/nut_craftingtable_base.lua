@@ -23,6 +23,9 @@ if (SERVER) then
 		self:SetMoveType(MOVETYPE_VPHYSICS)
 		self:SetUseType(SIMPLE_USE)
 		
+		--not using default health because i want decimals
+		self:setNetVar("health", 100)
+		
 		local physicsObject = self:GetPhysicsObject()
 		if ( IsValid(physicsObject) ) then
 			physicsObject:Wake()
@@ -96,12 +99,17 @@ else
 			return
 		end
 		
-		surface.PlaySound("items/ammocrate_close.wav")
-		nut.gui.crafting = vgui.Create("nut_Crafting")
-		nut.gui.crafting.profession = prof
-		nut.gui.crafting.name = name
-		nut.gui.crafting.ent = ent
-		nut.gui.crafting:Center()
+		local health = ent:getNetVar("health", 100)
+		if(health > 0) then
+			surface.PlaySound("items/ammocrate_close.wav")
+			nut.gui.crafting = vgui.Create("nut_Crafting")
+			nut.gui.crafting.profession = prof
+			nut.gui.crafting.name = name
+			nut.gui.crafting.ent = ent
+			nut.gui.crafting:Center()
+		else
+			nut.util.Notify("This workbench is worn out, and needs to be repaired.")
+		end
 	end)
 
 	function ENT:Initialize()
@@ -126,6 +134,9 @@ if(CLIENT) then
 		local position = toScreen(self.LocalToWorld(self, self.OBBCenter(self)))
 		local x, y = position.x, position.y
 
-		local tx, ty = drawText(self.PrintName, x, y, colorAlpha(configGet("color"), alpha), 1, 1, nil, alpha * 2)
+		local health = self:getNetVar("health", 100)
+		local name = self.PrintName.. " (" ..math.Round(health, 2).. "%)"
+
+		local tx, ty = drawText(name, x, y, colorAlpha(configGet("color"), alpha), 1, 1, nil, alpha * 2)
 	end
 end

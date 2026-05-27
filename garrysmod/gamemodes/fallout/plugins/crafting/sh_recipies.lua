@@ -5665,12 +5665,11 @@ RECIPES:Register(RECIPE)
 
 RECIPE = {}
 RECIPE.uid = "make_bobbypin"
-RECIPE.name = "Bobbybin"
+RECIPE.name = "Bobbypin"
 RECIPE.category = "Miscelaneous"
 RECIPE.model = "models/mosi/fallout4/props/junk/bobbypin.mdl"
 RECIPE.desc = "A makeshift bobbypin."
- 
-RECIPE.xp = 0.00
+--RECIPE.tableDamage = 0.5
 RECIPE.items = {
 	["steel"] = 3,
 }
