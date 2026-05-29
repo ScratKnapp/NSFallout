@@ -47,6 +47,10 @@ local PANEL = {}
 			self.TeamMenu:Remove()
 		end
 		
+		if(IsValid(self.TurnListMenu)) then
+			self.TurnListMenu:Remove()
+		end
+		
 		if(IsValid(self.AIMenu)) then
 			self.AIMenu:Remove()
 		end
@@ -138,6 +142,8 @@ local PANEL = {}
 			end
 
 			for teamID, teamName in pairs(data.order) do
+				local entities = data.entities or {}
+			
 				local height = 60
 			
 				local subPanel = scroll:Add("DPanel")
@@ -150,6 +156,17 @@ local PANEL = {}
 				header:SetFont("nutChatFont")
 				header:DockMargin(4,0,0,2)
 				header:Dock(TOP)
+				
+				--team name header
+				local AIButton = subPanel:Add("DButton")
+				AIButton:SetText("AI")
+				AIButton:SetFont("nutChatFont")
+				AIButton:DockMargin(4,0,0,2)
+				AIButton:SetWide(30)
+				AIButton:Dock(RIGHT)
+				AIButton.DoClick = function(this)
+					self:AIPopup(entities, this, teamID)
+				end
 
 				--leave/join buttons for teams
 				if(client:getTurnTeam() != teamID) then
@@ -162,7 +179,7 @@ local PANEL = {}
 					end)
 				end
 
-				for entity, team in pairs(data.entities or {}) do
+				for entity, team in pairs(entities) do
 					if(!IsValid(entity)) then continue end
 					if(teamID != team) then continue end
 					
@@ -171,11 +188,23 @@ local PANEL = {}
 					
 					local name = (PLUGIN:canSeeEntityName(client, id) and entity:Name()) or "Anonymous"
 					
+					local AI
+					local currentAI = entity:getNetVar("TurnAI")
+					if(currentAI) then
+						AI = PLUGIN.AITree[currentAI].name
+					end
+					
+					if(AI and AI != "None") then
+						name = name.. "[" ..AI.. "]"
+					end
+					
 					self:CreateButton(name, subPanel, function(this) --left click
 						if(!entity.combat) then return end
 						--only CEnts for now
 						
 						self:AIPopup(entity, this)
+					end, function(this) --right click
+						netstream.Start("nut_turnLeave", id, entity, teamID)
 					end)
 				end
 				
@@ -202,7 +231,7 @@ local PANEL = {}
 		end
 	end
 	
-	function PANEL:AIPopup(entity, button)
+	function PANEL:AIPopup(entity, button, teamID)
 		if(IsValid(self.AIMenu)) then
 			self.AIMenu:Remove()
 		end
@@ -225,21 +254,38 @@ local PANEL = {}
 
 		local name = "None"
 		
-		local currentAI = entity:getNetVar("TurnAI")
-		if(currentAI) then
-			name = PLUGIN.AITree[currentAI].name
-		end
-		
 		local selection = vgui.Create("DComboBox", scroll)
-		selection:SetValue(name)
+		
 		selection:Dock(TOP)
 
 		for k, v in pairs(PLUGIN.AITree) do
 			selection:AddChoice(v.name, k)
 		end
 		
+		if(!istable(entity)) then
+			local currentAI = entity:getNetVar("TurnAI")
+			if(currentAI) then
+				name = PLUGIN.AITree[currentAI].name
+			end
+
+			selection:SetValue(name)
+		end
+		
 		selection.OnSelect = function(this, data, name, id)
+			if(istable(entity)) then
+				local send = {}
+				for k, v in pairs(entity) do
+					if(v == teamID) then
+						send[#send+1] = k
+					end
+				end
+				
+				entity = send
+			end
+		
 			netstream.Start("nut_turnAISet", entity, id)
+			
+			self:Refresh()
 		end
 	end
 	
@@ -326,8 +372,16 @@ local PANEL = {}
 			
 			self:CreateButton("Add Team", scroll2, function(this)
 				Derma_StringRequest("Team Name", "Adding Team", "", function(text)
-					nut.util.notify("This isn't done yet.")
-					print(text)
+					local data = {}
+					
+					local turnOrder = PLUGIN.turns[turnID]
+					local order = turnOrder.order or {}
+					
+					order[#order+1] = text
+					
+					data.order = order
+				
+					self:UpdateTurn(turnID, data)
 				end)
 			end)
 			
@@ -344,8 +398,7 @@ local PANEL = {}
 			end)
 		else
 			self:CreateButton("New Turn Table", scroll2, function(this)
-				nut.util.notify("This isn't done yet.")
-				--popup panel where you can input things and stuff
+				self:TurnListPopup()
 			end)
 		end
 	end
@@ -405,8 +458,105 @@ local PANEL = {}
 		end
 	end
 	
+	function PANEL:TurnListPopup()
+		if(IsValid(self.TurnListMenu)) then
+			self.TurnListMenu:Remove()
+		end
+	
+		local frame = vgui.Create("DFrame")
+		frame:SetSize(400, 600)
+		frame:Center()
+		frame:SetTitle("New Turn List")
+		frame:MakePopup()
+		frame:ShowCloseButton(true)
+		
+		self.TurnListMenu = frame
+		
+		local scroll = vgui.Create("DScrollPanel", frame)
+		scroll:Dock(FILL)
+		
+		local turnNameL = scroll:Add("DLabel")
+		turnNameL:Dock(TOP)
+		turnNameL:SetTall(30)
+		turnNameL:SetText("Turn List Name")
+		
+		local turnName = scroll:Add("DTextEntry")
+		turnName:Dock(TOP)
+		turnName:SetTall(30)
+		turnName:SetText("")
+		
+		local turnListTeamL = scroll:Add("DLabel")
+		turnListTeamL:Dock(TOP)
+		turnListTeamL:SetTall(30)
+		turnListTeamL:SetText("Teams")
+		
+		local turnTeam = scroll:Add("DPanel")
+		turnTeam:Dock(TOP)
+		turnTeam:SetTall(400)
+		
+		frame.teams = {}
+		
+		local teamButton = turnTeam:Add("DButton")
+		teamButton:Dock(TOP)
+		teamButton:SetText("Add Team")
+		teamButton:SetTextColor(Color(255,255,255))
+		teamButton.DoClick = function(this)
+			Derma_StringRequest("New Team", "Set Team Name", "Enemy", function(text)
+				if(text) then
+					local newTeam = turnTeam:Add("DButton")
+					newTeam:SetText(text)
+					newTeam:SetTextColor(Color(255,255,255))
+					newTeam:Dock(TOP)
+					newTeam.DoClick = function(this)
+						this:Remove()
+						
+						table.RemoveByValue(frame.teams, newTeam)
+					end
+					
+					table.insert(frame.teams, newTeam)
+				end
+			end)
+		end
+		
+		local doneButton = scroll:Add("DButton")
+		doneButton:Dock(BOTTOM)
+		doneButton:SetText("Done")
+		doneButton:SetTextColor(Color(255,255,255))
+		doneButton.DoClick = function(this)
+			local data = {}
+			
+			data.name = turnName:GetText()
+			
+			data.order = {}
+			
+			for k, v in pairs(frame.teams) do
+				data.order[#data.order+1] = v:GetText()
+			end
+
+			local id = #PLUGIN.turns+1
+
+			self:CreateTurn(id, data)
+			
+			frame:Remove()
+		end
+	end
+	
 	function PANEL:CreateTurn(id, data)
 		netstream.Start("nut_turnCreate", id, data)
+	end
+	
+	function PANEL:UpdateTurn(id, data)
+		local curData = PLUGIN.turns[id]
+		
+		if(data.order) then
+			curData.order = data.order
+		end
+		
+		if(data.name) then
+			curData.name = data.name
+		end
+	
+		netstream.Start("nut_turnCreate", id, curData)
 	end
 vgui.Register("nutTurnList", PANEL, "DFrame")
 

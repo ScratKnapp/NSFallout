@@ -84,6 +84,46 @@ ITEM.functions.Repair = {
 	end
 }
 
+--for people to name their shit
+ITEM.functions.RepairBench = {
+	name = "Repair Workbench",
+	tip = "Repair an item",
+	icon = "icon16/wrench.png",
+	onRun = function(item, data)
+		local client = item.player
+		local trace = client:GetEyeTrace()
+		local entity = trace.Entity
+
+		if(IsValid(entity) and entity.craftingbench and entity:Health() < 100) then
+			local health = entity:getNetVar("health", 100)
+			local newHealth = math.Clamp(health + item.repair, 0, 100)
+			
+			entity:setNetVar("health", newHealth)
+
+			client:notify("Workbench repaired.")
+
+			return true
+		else
+			client:notify("Look at a damaged crafting bench.")
+		
+			return false
+		end
+	end,
+	onCanRun = function(item)
+		local client = item.player
+		local char = client:getChar()
+		
+		local skill = char:getSkill("repair", 0)
+		local reqSkill = item.repairSkill
+	
+		if(reqSkill > skill) then
+			return false
+		end
+	
+		return true
+	end
+}
+
 function ITEM:getDesc(partial)
 	local desc = self.desc
 	

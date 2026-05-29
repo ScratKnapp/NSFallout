@@ -263,7 +263,7 @@ function PLUGIN:turnAdvance(id, cur)
 	end
 	
 	if(!cur) then
-		cur = turn.current
+		cur = turn.current or 1
 	end
 	
 	local newTurnID = (cur + 1) 
@@ -685,7 +685,17 @@ if(SERVER) then
 	end)
 	
 	netstream.Hook("nut_turnAISet", function(client, entity, id)
-		entity:setNetVar("TurnAI", id)
+		if(istable(entity)) then
+			for k, subEntity in pairs(entity) do
+				if(IsValid(subEntity) and subEntity.combat) then
+					subEntity:setNetVar("TurnAI", id)
+				end
+			end
+		else
+			if(IsValid(entity) and entity.combat) then
+				entity:setNetVar("TurnAI", id)
+			end
+		end
 	end)
 else
 	netstream.Hook("nut_turnSyncID", function(id, data)

@@ -1,14 +1,14 @@
 local chatLangs = {
 	["chi"] = "Chinese",
-	["nav"] = "Navajo",
+	["com"] = "Comanche",
+	["apa"] = "Apache",
 	["spa"] = "Spanish",
 	["fre"] = "French",
 	["rus"] = "Russian",
 	["jap"] = "Japanese",
 	["ger"] = "German",
 	["lat"] = "Latin",
-  	["dea"] = "Dead Horse Tribal",
-    ["whi"] = "White Leg Tribal",
+  	["agu"] = "Aguila",
 }
 
 for k, v in pairs(chatLangs) do

@@ -18,7 +18,9 @@ PLUGIN.partChance = {
 --gets the actions that can be used by the entity in auto turn based combat
 PLUGIN.helperFuncs["getTurnAIActions"] = function(self, id)
 	if(self.combat) then
-		return self.actionsAI or self.actions or {}
+		local actions = self:getNetVar("actionsAI", self.actionsAI) or self:getNetVar("actions", self.actions) or {}
+
+		return actions
 	else
 		return {}
 	end
@@ -28,7 +30,7 @@ function PLUGIN:FindMovePosition(entity, target, distance)
 	local destination
 	local range = entity:getFireRange()
 	
-	local distance = distance or range*0.7
+	local distance = distance or range*math.Rand(0.7, 0.85)
 
 	--one ap circle (squared)
 	local circle = 400
@@ -41,6 +43,10 @@ function PLUGIN:FindMovePosition(entity, target, distance)
 
 	--where we would ideally like to be
 	destination = targetPos - direction*distance
+	
+	--add some variation to NPCs dont get stuck in the same spot as much.
+	--get rid of Z since we dont want them going up
+	destination = destination + (VectorRand(-range*0.1, range*0.1) * Vector(1,1,0))
 
 	if(entityPos:DistToSqr(destination) > circleSqr) then
 		--if we cannot get right in front of them, then just move towards them
@@ -82,8 +88,20 @@ function PLUGIN:CanSeePos(pos1, pos2, filter, fraction)
 	return false
 end
 
-function PLUGIN:CheckLOS(entity, target)
-	return PLUGIN:CanSeePos(entity:EyePos(), target:WorldSpaceCenter(), {entity, target}, 0.9)
+function PLUGIN:CheckLOS(entity, target, expensiveFilter)
+	local canSee
+
+	if(expensiveFilter) then
+		canSee = PLUGIN:CanSeePos(entity:EyePos(), target:WorldSpaceCenter(), function(entity)
+			if(entity.combat) then return false end
+			if(entity == self) then return false end
+			if(entity == target) then return false end
+		end, 0.9)
+	else
+		canSee = PLUGIN:CanSeePos(entity:EyePos(), target:WorldSpaceCenter(), {entity, target}, 0.9)
+	end
+
+	return canSee
 end
 
 local function WeightedRandom(items)
@@ -103,8 +121,26 @@ local function WeightedRandom(items)
 	end
 end
 
-function PLUGIN:ChooseAttack(entity, target, delay)
-	if(!PLUGIN:CheckLOS(entity, target)) then return end --if you cant see them, dont attack them
+function PLUGIN:ChooseAttack(entity, target, delay, enemies)
+	if(!PLUGIN:CheckLOS(entity, target)) then
+		local newTarget = false
+	
+		for k, v in pairs(enemies) do
+			if(v == target) then continue end --skip the one we already did
+			
+			if(PLUGIN:CheckLOS(entity, target, true)) then
+				target = v
+				newTarget = true
+				break
+			end
+		end
+		
+		--checks if we found a new target or not
+		--if we didn't then too bad i guess
+		if(!newTarget) then 
+			return
+		end
+	end
 
 	--queued movement action
 	entity:queueActionAfter(delay or 0, function()
@@ -216,7 +252,7 @@ PLUGIN.AITree["simple"] = {
 				delay = entity:movementStart(movePos)
 			end
 
-			PLUGIN:ChooseAttack(entity, target, delay)
+			PLUGIN:ChooseAttack(entity, target, delay, enemies)
 		end
 	end,
 }
@@ -248,7 +284,7 @@ PLUGIN.AITree["ranged"] = {
 		
 			local delay = entity:movementStart(movePos)
 
-			PLUGIN:ChooseAttack(entity, target, delay)
+			PLUGIN:ChooseAttack(entity, target, delay, enemies)
 		end
 	end,
 }
@@ -278,7 +314,7 @@ PLUGIN.AITree["nomove"] = {
 		if(IsValid(target)) then
 			local movePos = PLUGIN:FindMovePosition(entity, target)
 
-			PLUGIN:ChooseAttack(entity, target)
+			PLUGIN:ChooseAttack(entity, target, nil, enemies)
 		end
 	end,
 }

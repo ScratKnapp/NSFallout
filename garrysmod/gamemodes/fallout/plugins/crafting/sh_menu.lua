@@ -547,13 +547,16 @@ else
 			if(itemTable.special) then
 				netstream.Start("nut_craftSpecial", self.ent, itemTable.uid)
 				self:Close()
-			else	
+			else
 				if (icon.disabled) then
 					return
 				end
+				
 				net.Start("nut_CraftItem")
 					net.WriteString(class)
+					net.WriteEntity(self.ent)
 				net.SendToServer()
+
 				icon.disabled = true
 				icon:SetAlpha(70)
 				timer.Simple(1, function()

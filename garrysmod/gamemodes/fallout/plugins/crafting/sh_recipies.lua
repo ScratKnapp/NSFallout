@@ -2200,10 +2200,13 @@ RECIPES:Register(RECIPE)
 RECIPE = {}
 RECIPE.uid = "make_armoredvaultsuit"
 RECIPE.name = "Armored Vault Suit"
-RECIPE.category = "Armor - Special"
+RECIPE.category = "Armor - Light"
 RECIPE.model = "models/fallout/apparel/vaultsuit.mdl"
 RECIPE.desc = "An insulated vault suit modified with padding."
-RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
+RECIPE.reqSkills = {
+  ["repair"] = 40,
+}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
     ["rubber"] = 1,
@@ -2222,10 +2225,13 @@ RECIPES:Register(RECIPE)
 RECIPE = {}
 RECIPE.uid = "make_leatherjacket"
 RECIPE.name = "Leather Jacket"
-RECIPE.category = "Armor - Leather"
+RECIPE.category = "Armor - Light"
 RECIPE.model = "models/thespireroleplay/items/clothes/group051.mdl"
 RECIPE.desc = "A tailored leather jacket."
-RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
+RECIPE.reqSkills = {
+  ["repair"] = 20,
+}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
     ["adhesive"] = 1,
@@ -2242,10 +2248,13 @@ RECIPES:Register(RECIPE)
 RECIPE = {}
 RECIPE.uid = "make_leatherarmor"
 RECIPE.name = "Leather Vest"
-RECIPE.category = "Armor - Leather"
+RECIPE.category = "Armor - Light"
 RECIPE.model = "models/thespireroleplay/items/clothes/group052.mdl"
 RECIPE.desc = "A protective leather vest."
-RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
+RECIPE.reqSkills = {
+  ["repair"] = 20,
+}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
     ["adhesive"] = 1,
@@ -2262,10 +2271,13 @@ RECIPES:Register(RECIPE)
 RECIPE = {}
 RECIPE.uid = "make_leatherbrace"
 RECIPE.name = "Leather Brace"
-RECIPE.category = "Armor - Leather"
+RECIPE.category = "Armor - Light"
 RECIPE.model = "models/mosi/fallout4/props/junk/ammobag.mdl"
 RECIPE.desc = "A set of protective leather armpads."
-RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
+RECIPE.reqSkills = {
+  ["repair"] = 20,
+}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
     ["adhesive"] = 1,
@@ -2282,10 +2294,13 @@ RECIPES:Register(RECIPE)
 RECIPE = {}
 RECIPE.uid = "make_reinforcedleatherbrace"
 RECIPE.name = "Reinforced Leather Brace"
-RECIPE.category = "Armor - Leather"
+RECIPE.category = "Armor - Light"
 RECIPE.model = "models/mosi/fallout4/props/junk/ammobag.mdl"
 RECIPE.desc = "A set of protective leather armpads."
-RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
+RECIPE.reqSkills = {
+  ["repair"] = 40,
+}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
     ["adhesive"] = 2,
@@ -2302,12 +2317,15 @@ RECIPES:Register(RECIPE)
 
 //
 RECIPE = {}
-RECIPE.uid = "make_leathekneepad"
-RECIPE.name = "Leather Kneepads"
-RECIPE.category = "Armor - Leather"
+RECIPE.uid = "make_leatherkneepad"
+RECIPE.name = "Leather Light"
+RECIPE.category = "Armor - Light"
 RECIPE.model = "models/mosi/fallout4/props/junk/ammobag.mdl"
 RECIPE.desc = "A set of protective leather kneepads."
-RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
+RECIPE.reqSkills = {
+  ["repair"] = 20,
+}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
     ["adhesive"] = 1,
@@ -2324,10 +2342,13 @@ RECIPES:Register(RECIPE)
 RECIPE = {}
 RECIPE.uid = "make_reinforcedleatherkneepad"
 RECIPE.name = "Reinforced Leather Kneepads"
-RECIPE.category = "Armor - Leather"
+RECIPE.category = "Armor - Light"
 RECIPE.model = "models/mosi/fallout4/props/junk/ammobag.mdl"
 RECIPE.desc = "A set of protective leather kneepads."
-RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
+RECIPE.reqSkills = {
+  ["repair"] = 40,
+}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
     ["adhesive"] = 2,
@@ -2346,10 +2367,13 @@ RECIPES:Register(RECIPE)
 RECIPE = {}
 RECIPE.uid = "make_leatherreinforced"
 RECIPE.name = "Reinforced Leather Jacket"
-RECIPE.category = "Armor - Leather"
+RECIPE.category = "Armor - Light"
 RECIPE.model = "models/thespireroleplay/items/clothes/group052.mdl"
 RECIPE.desc = "A reinforced protective leather vest."
-RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
+RECIPE.reqSkills = {
+  ["repair"] = 40,
+}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
     ["adhesive"] = 2,
@@ -2368,10 +2392,13 @@ RECIPES:Register(RECIPE)
 RECIPE = {}
 RECIPE.uid = "make_metalvest"
 RECIPE.name = "Metal Vest"
-RECIPE.category = "Armor - Metal"
+RECIPE.category = "Armor - Heavy"
 RECIPE.model = "models/fallout/apparel/metalarmor.mdl"
 RECIPE.desc = "A heavy, crudely fashioned metal vest."
-RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
+RECIPE.reqSkills = {
+  ["repair"] = 40,
+}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
     ["adhesive"] = 1,
@@ -2388,10 +2415,13 @@ RECIPES:Register(RECIPE)
 RECIPE = {}
 RECIPE.uid = "make_metalreinforced"
 RECIPE.name = "Reinforced Metal Vest"
-RECIPE.category = "Armor - Metal"
+RECIPE.category = "Armor - Heavy"
 RECIPE.model = "models/fallout/apparel/metalarmor.mdl"
 RECIPE.desc = "A heavy, crudely fashioned reinforced metal vest."
-RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
+RECIPE.reqSkills = {
+  ["repair"] = 60,
+}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
     ["adhesive"] = 2,
@@ -2409,10 +2439,13 @@ RECIPES:Register(RECIPE)
 RECIPE = {}
 RECIPE.uid = "make_metalarm"
 RECIPE.name = "Metal Armguard"
-RECIPE.category = "Armor - Metal"
+RECIPE.category = "Armor - Heavy"
 RECIPE.model = "models/mosi/fallout4/props/junk/ammobag.mdl"
 RECIPE.desc = "A set of protective metal armguards."
-RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
+RECIPE.reqSkills = {
+  ["repair"] = 40,
+}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
     ["adhesive"] = 1,
@@ -2429,10 +2462,13 @@ RECIPES:Register(RECIPE)
 RECIPE = {}
 RECIPE.uid = "make_reinforcedmetalarm"
 RECIPE.name = "Reinforced Metal Armguard"
-RECIPE.category = "Armor - Metal"
+RECIPE.category = "Armor - Heavy"
 RECIPE.model = "models/mosi/fallout4/props/junk/ammobag.mdl"
 RECIPE.desc = "A set of protective metal armguards."
-RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
+RECIPE.reqSkills = {
+  ["repair"] = 60,
+}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
     ["adhesive"] = 1,
@@ -2450,10 +2486,13 @@ RECIPES:Register(RECIPE)
 RECIPE = {}
 RECIPE.uid = "make_metalleg"
 RECIPE.name = "Metal Legguards"
-RECIPE.category = "Armor - Metal"
+RECIPE.category = "Armor - Heavy"
 RECIPE.model = "models/mosi/fallout4/props/junk/ammobag.mdl"
 RECIPE.desc = "A set of protective metal leg guards."
-RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
+RECIPE.reqSkills = {
+  ["repair"] = 40,
+}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
     ["adhesive"] = 1,
@@ -2470,10 +2509,13 @@ RECIPES:Register(RECIPE)
 RECIPE = {}
 RECIPE.uid = "make_reinforcedmetalleg"
 RECIPE.name = "Reinforced Metal Legguards"
-RECIPE.category = "Armor - Metal"
+RECIPE.category = "Armor - Heavy"
 RECIPE.model = "models/mosi/fallout4/props/junk/ammobag.mdl"
 RECIPE.desc = "A set of protective metal leg guards."
-RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
+RECIPE.reqSkills = {
+  ["repair"] = 60,
+}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
     ["adhesive"] = 1,
@@ -2491,10 +2533,13 @@ RECIPES:Register(RECIPE)
 RECIPE = {}
 RECIPE.uid = "make_metalhead"
 RECIPE.name = "Metal Helmet"
-RECIPE.category = "Armor - Metal"
+RECIPE.category = "Armor - Heavy"
 RECIPE.model = "models/fallout/apparel/helmetmetalarmor.mdl"
 RECIPE.desc = "A metal helmet."
-RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
+RECIPE.reqSkills = {
+  ["repair"] = 40,
+}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
     ["adhesive"] = 1,
@@ -2511,20 +2556,123 @@ RECIPES:Register(RECIPE)
 RECIPE = {}
 RECIPE.uid = "make_reinforcedmetalhead"
 RECIPE.name = "Reinforced Metal Helmet"
-RECIPE.category = "Armor - Metal"
+RECIPE.category = "Armor - Heavy"
 RECIPE.model = "models/fallout/apparel/helmetmetalarmor.mdl"
 RECIPE.desc = "A reinforced metal helmet."
-RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
+RECIPE.reqSkills = {
+  ["repair"] = 60,
+}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
     ["adhesive"] = 1,
 	["steel"] = 40,
 	["cloth"] = 2,
-	["armor_head_metal"] = 1
+	["armor_head_metal"] = 1,
 	
 }
 RECIPE.result = {
     ["armor_head_reinforcedmetal"] = 1
+}
+RECIPES:Register(RECIPE)
+
+//
+RECIPE = {}
+RECIPE.uid = "make_mediumcombatarmor"
+RECIPE.name = "Combat Armor"
+RECIPE.category = "Armor - Medium"
+RECIPE.model = "models/thespireroleplay/items/clothes/group053.mdl"
+RECIPE.desc = "A ballistic fiber reinforced armor."
+RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
+RECIPE.reqSkills = {
+  ["repair"] = 60,
+}
+RECIPE.items = {
+    --uniqueID, if unspecified in the file, are the file name without the sh_
+    ["adhesive"] = 2,
+	["leather"] = 10,
+	["cloth"] = 10,
+	["steel"] = 20,
+	["ballisticfiber"] = 10,
+	
+}
+RECIPE.result = {
+    ["armor_body_mediumcombatarmor"] = 1
+}
+RECIPES:Register(RECIPE)
+
+//
+RECIPE = {}
+RECIPE.uid = "make_combathelm"
+RECIPE.name = "Combat Armor Helmet"
+RECIPE.category = "Armor - Medium"
+RECIPE.model = "models/fallout/apparel/combatarmorhelmet.mdl"
+RECIPE.desc = "A ballistic fiber reinforced helmet."
+RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
+RECIPE.reqSkills = {
+  ["repair"] = 60,
+}
+RECIPE.items = {
+    --uniqueID, if unspecified in the file, are the file name without the sh_
+    ["adhesive"] = 1,
+	["leather"] = 5,
+	["cloth"] = 5,
+	["steel"] = 10,
+	["ballisticfiber"] = 5,
+	
+}
+RECIPE.result = {
+    ["armor_head_combathelm"] = 1
+}
+RECIPES:Register(RECIPE)
+
+//
+RECIPE = {}
+RECIPE.uid = "make_combatarmorleg"
+RECIPE.name = "Combat Armor Legguards"
+RECIPE.category = "Armor - Medium"
+RECIPE.model = "models/mosi/fallout4/props/junk/ammobag.mdl"
+RECIPE.desc = "A ballistic fiber reinforced legguards."
+RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
+RECIPE.reqSkills = {
+  ["repair"] = 60,
+}
+RECIPE.items = {
+    --uniqueID, if unspecified in the file, are the file name without the sh_
+    ["adhesive"] = 1,
+	["leather"] = 5,
+	["cloth"] = 5,
+	["steel"] = 10,
+	["ballisticfiber"] = 5,
+	
+}
+RECIPE.result = {
+    ["armor_leg_combatarmor"] = 1
+}
+RECIPES:Register(RECIPE)
+
+//
+RECIPE = {}
+RECIPE.uid = "make_combatarmorarm"
+RECIPE.name = "Combat Armor Armguards"
+RECIPE.category = "Armor - Medium"
+RECIPE.model = "models/mosi/fallout4/props/junk/ammobag.mdl"
+RECIPE.desc = "A ballistic fiber reinforced armguards."
+RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
+RECIPE.reqSkills = {
+  ["repair"] = 60,
+}
+RECIPE.items = {
+    --uniqueID, if unspecified in the file, are the file name without the sh_
+    ["adhesive"] = 1,
+	["leather"] = 5,
+	["cloth"] = 5,
+	["steel"] = 10,
+	["ballisticfiber"] = 5,
+	
+}
+RECIPE.result = {
+    ["armor_arm_combatarmor"] = 1
 }
 RECIPES:Register(RECIPE)
 
@@ -3429,6 +3577,9 @@ RECIPE.category = "Science - Medical"
 RECIPE.model = "models/maxib123/healingpowder.mdl"
 RECIPE.desc = "Healing Powder +25HP"
 RECIPE.craftEnts = {"nut_craftingtable_science"}
+RECIPE.reqSkills = {
+  ["medicine"] = 20,
+}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
     ["food_brocflower"] = 1,
@@ -3448,6 +3599,9 @@ RECIPE.category = "Science - Medical"
 RECIPE.model = "models/maxib123/healingpowder.mdl"
 RECIPE.desc = "Healing Poultice +50HP"
 RECIPE.craftEnts = {"nut_craftingtable_science"}
+RECIPE.reqSkills = {
+  ["medicine"] = 40,
+}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
     ["medical_bandages"] = 1,
@@ -3468,6 +3622,9 @@ RECIPE.category = "Science - Medical"
 RECIPE.model = "models/maxib123/healingpowder.mdl"
 RECIPE.desc = "Potent Healing Poultice +100HP"
 RECIPE.craftEnts = {"nut_craftingtable_science"}
+RECIPE.reqSkills = {
+  ["medicine"] = 80,
+}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
     ["medical_bandages"] = 1,
@@ -3477,7 +3634,7 @@ RECIPE.items = {
 	
 }
 RECIPE.result = {
-    ["medical_stimpack"] = 1
+    ["medical_superstimpack"] = 1
 }
 RECIPES:Register(RECIPE)
 
@@ -3489,6 +3646,9 @@ RECIPE.category = "Science - Medical"
 RECIPE.model = "models/mccarran/medbay/firstaidkit01.mdl"
 RECIPE.desc = "First Aid Kit +75HP"
 RECIPE.craftEnts = {"nut_craftingtable_science"}
+RECIPE.reqSkills = {
+  ["medicine"] = 60,
+}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
     ["medical_bandages"] = 1,
@@ -3511,6 +3671,9 @@ RECIPE.category = "Science - Medical"
 RECIPE.model = "models/maxib123/doctorsbag.mdl"
 RECIPE.desc = "Doctor's Bag Equipment Item"
 RECIPE.craftEnts = {"nut_craftingtable_science"}
+RECIPE.reqSkills = {
+  ["medicine"] = 60,
+}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
     ["medical_bandages"] = 1,
@@ -3524,6 +3687,65 @@ RECIPE.items = {
 }
 RECIPE.result = {
     ["med_doctor"] = 1
+}
+RECIPES:Register(RECIPE)
+
+//
+RECIPE = {}
+RECIPE.uid = "make_med_paramedicbag"
+RECIPE.name = "Paramedic's Bag"
+RECIPE.category = "Science - Medical"
+RECIPE.model = "models/vex/fallout76/backpacks/atx_backpack_firstresponders.mdl"
+RECIPE.desc = "Paramedic's Bag Equipment Item"
+RECIPE.craftEnts = {"nut_craftingtable_science"}
+RECIPE.reqSkills = {
+  ["medicine"] = 80,
+}
+RECIPE.items = {
+    --uniqueID, if unspecified in the file, are the file name without the sh_
+    ["medical_bandages"] = 1,
+	["medical_firstaidkit"] = 1,
+	["med_doctor"] = 1,
+	["cloth"] = 10,
+	["plastic"] = 10,
+	["food_cavefungus"] = 2,
+	["food_brocflower"] = 2,
+	["food_agavefruit"] = 2,
+	["food_xanderroot"] = 2,
+	
+}
+RECIPE.result = {
+    ["med_paramedicbag"] = 1
+}
+RECIPES:Register(RECIPE)
+
+//
+RECIPE = {}
+RECIPE.uid = "make_med_surgeonskit"
+RECIPE.name = "Surgeon's Kit"
+RECIPE.category = "Science - Medical"
+RECIPE.model = "models/vex/fallout76/backpacks/atx_backpack_firstresponders.mdl"
+RECIPE.desc = "Surgeon's Kit Equipment Item"
+RECIPE.craftEnts = {"nut_craftingtable_science"}
+RECIPE.reqSkills = {
+  ["medicine"] = 100,
+}
+RECIPE.items = {
+    --uniqueID, if unspecified in the file, are the file name without the sh_
+    ["medical_bandages"] = 2,
+	["medical_firstaidkit"] = 1,
+	["med_doctor"] = 1,
+	["med_paramedicbag"] = 1,
+	["cloth"] = 20,
+	["plastic"] = 10,
+	["food_cavefungus"] = 3,
+	["food_brocflower"] = 3,
+	["food_agavefruit"] = 3,
+	["food_xanderroot"] = 3,
+	
+}
+RECIPE.result = {
+    ["med_surgeonskit"] = 1
 }
 RECIPES:Register(RECIPE)
 
@@ -3613,13 +3835,18 @@ RECIPES:Register(RECIPE)
 
 //
 
+-- repair kit recipes
+
 RECIPE = {}
 RECIPE.uid = "make_repair_20"
 RECIPE.name = "Rusty Tool Roll"
 RECIPE.category = "Weapons - Repair"
 RECIPE.model = "models/mosi/fnv/props/health/repairkit.mdl"
-RECIPE.desc = "(Repair  4)A kit which has the tools needed to repair a weapon. Repairs up to 20% durability."
- 
+RECIPE.desc = "A kit which has the tools needed to repair a weapon. Repairs up to 20% durability."
+RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+  ["repair"] = 20,
+} 
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
     ["plastic"] = 3,
@@ -3639,8 +3866,11 @@ RECIPE.uid = "make_repair_40"
 RECIPE.name = "Small Tool Bag"
 RECIPE.category = "Weapons - Repair"
 RECIPE.model = "models/mosi/fnv/props/health/repairkit.mdl"
-RECIPE.desc = "(Repair  8) A kit which has the tools needed to repair a weapon. Repairs up to 40% durability."
- 
+RECIPE.desc = "A kit which has the tools needed to repair a weapon. Repairs up to 40% durability."
+RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+  ["repair"] = 40,
+} 
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
     ["plastic"] = 5,
@@ -3660,8 +3890,11 @@ RECIPE.uid = "make_repair_60"
 RECIPE.name = "Large Tool Bag"
 RECIPE.category = "Weapons - Repair"
 RECIPE.model = "models/mosi/fnv/props/health/repairkit.mdl"
-RECIPE.desc = "(Repair  12) A kit which has the tools needed to repair a weapon. Repairs up to 60% durability."
- 
+RECIPE.desc = "A kit which has the tools needed to repair a weapon. Repairs up to 60% durability."
+RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+  ["repair"] = 60,
+} 
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
     ["plastic"] = 8,
@@ -3681,8 +3914,11 @@ RECIPE.uid = "make_repair_80"
 RECIPE.name = "Field Repair Kit"
 RECIPE.category = "Weapons - Repair"
 RECIPE.model = "models/mosi/fnv/props/health/repairkit.mdl"
-RECIPE.desc = "(Repair  16) A kit which has the tools needed to repair a weapon. Repairs up to 80% durability."
- 
+RECIPE.desc = "A kit which has the tools needed to repair a weapon. Repairs up to 80% durability."
+RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+  ["repair"] = 80,
+} 
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
     ["plastic"] = 10,
@@ -3702,8 +3938,11 @@ RECIPE.uid = "make_repair_100"
 RECIPE.name = "Armorer's Kit"
 RECIPE.category = "Weapons - Repair"
 RECIPE.model = "models/mosi/fnv/props/health/repairkit.mdl"
-RECIPE.desc = "(Repair  20) A kit which has the tools needed to repair a weapon. Repairs up to 100% durability."
- 
+RECIPE.desc = "A kit which has the tools needed to repair a weapon. Repairs up to 100% durability."
+RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+  ["repair"] = 100,
+} 
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
     ["plastic"] = 15,
@@ -4562,57 +4801,66 @@ RECIPES:Register(RECIPE)
 
 //
 
--- BLACKSMITH RECIPES
+-- BLACKSMITH/MELEE RECIPES
 
 RECIPE = {}
-RECIPE.uid = "make_spikedwalkingcane"
+RECIPE.uid = "make_1hspikedwalkingcane"
 RECIPE.name = "Spiked Walking Cane"
-RECIPE.category = "Weapons - Melee"
+RECIPE.category = "Weapons - 1H Melee"
 RECIPE.model = "models/mosi/fallout4/props/weapons/melee/walkingcane.mdl"
 RECIPE.desc = "A makeshift weapon combining a walking cane and spikes."
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+  ["repair"] = 40,
+}
 RECIPE.xp = 0.01
 RECIPE.items = {
 	["adhesive"] = 1,
 	["steel"] = 5,
 	["screw"] = 2,
-	["melee_walkingcane"] =1,
+	["melee1h_walkingcane"] =1,
 }
 RECIPE.result = {
-	["melee_spikedwalkingcane"] = 1
+	["melee1h_spikedwalkingcane"] = 1
 }
 RECIPES:Register(RECIPE)
 
 //
 
 RECIPE = {}
-RECIPE.uid = "make_bladedrollingpin"
+RECIPE.uid = "make_1hbladedrollingpin"
 RECIPE.name = "Bladed Rolling Pin"
-RECIPE.category = "Weapons - Melee"
+RECIPE.category = "Weapons - 1H Melee"
 RECIPE.model = "models/mosi/fallout4/props/weapons/melee/rollingpin.mdl"
 RECIPE.desc = "A makeshift weapon made by attaching blades to a rolling pin."
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+  ["repair"] = 40,
+}
 RECIPE.xp = 0.01
 RECIPE.items = {
 	["adhesive"] = 1,
 	["steel"] = 5,
 	["screw"] = 2,
-	["melee_rollingpin"] = 1,
+	["melee1h_rollingpin"] = 1,
 }
 RECIPE.result = {
-	["melee_bladedrollingpin"] = 1
+	["melee1h_bladedrollingpin"] = 1
 }
 RECIPES:Register(RECIPE)
 
 //
 
 RECIPE = {}
-RECIPE.uid = "make_combatknife"
+RECIPE.uid = "make_1hcombatknife"
 RECIPE.name = "Combat Knife"
-RECIPE.category = "Weapons - Melee"
-RECIPE.model = "models/mosi/fallout4/props/weapons/melee/walkingcane.mdl"
+RECIPE.category = "Weapons - 1H Melee"
+RECIPE.model = "models/weapons/bowieknife.mdl"
 RECIPE.desc = "A makeshift combat knife forged out of steel."
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+  ["repair"] = 40,
+}
 RECIPE.xp = 0.01
 RECIPE.items = {
 	["adhesive"] = 1,
@@ -4620,148 +4868,169 @@ RECIPE.items = {
 	["screw"] = 2,
 }
 RECIPE.result = {
-	["melee_combatknife"] = 1
+	["melee1h_combatknife"] = 1
 }
 RECIPES:Register(RECIPE)
 
 //
 
 RECIPE = {}
-RECIPE.uid = "make_hookedwrench"
+RECIPE.uid = "make_1hhookedwrench"
 RECIPE.name = "Hooked Wrench"
-RECIPE.category = "Weapons - Melee"
+RECIPE.category = "Weapons - 1H Melee"
 RECIPE.model = "models/mosi/fallout4/props/weapons/melee/pipewrench.mdl"
 RECIPE.desc = "A makeshift wrench combined with several hooks."
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+  ["repair"] = 40,
+}
 RECIPE.xp = 0.01
 RECIPE.items = {
 	["adhesive"] = 2,
 	["steel"] = 20,
 	["screw"] = 2,
-	["melee_wrench"] = 1,
+	["melee1h_wrench"] = 1,
 }
 RECIPE.result = {
-	["melee_hookedwrench"] = 1
+	["melee1h_hookedwrench"] = 1
 }
 RECIPES:Register(RECIPE)
 
 //
 
 RECIPE = {}
-RECIPE.uid = "make_spikedbat"
+RECIPE.uid = "make_2hspikedbat"
 RECIPE.name = "Spiked Bat"
-RECIPE.category = "Weapons - Melee"
+RECIPE.category = "Weapons - 2H Melee"
 RECIPE.model = "models/mosi/fallout4/props/weapons/melee/baseballbat.mdl"
 RECIPE.desc = "A makeshift weapon created by drilling spikes into a wooden bat."
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+  ["repair"] = 40,
+}
 RECIPE.xp = 0.01
 RECIPE.items = {
 	["adhesive"] = 2,
 	["steel"] = 20,
 	["lead"] = 5,
 	["screw"] = 2,
-	["melee_baseballbat"] = 1,
+	["melee2h_baseballbat"] = 1,
 }
 RECIPE.result = {
-	["melee_spikedbat"] = 1
+	["melee2h_spikedbat"] = 1
 }
 RECIPES:Register(RECIPE)
 
 //
 
 RECIPE = {}
-RECIPE.uid = "make_bladedbat"
+RECIPE.uid = "make_2hbladedbat"
 RECIPE.name = "Bladed Bat"
-RECIPE.category = "Weapons - Melee"
+RECIPE.category = "Weapons - 2H Melee"
 RECIPE.model = "models/mosi/fallout4/props/weapons/melee/baseballbat.mdl"
 RECIPE.desc = "A makeshift weapon created by attaching blades onto a wooden bat."
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+  ["repair"] = 40,
+}
 RECIPE.xp = 0.01
 RECIPE.items = {
 	["adhesive"] = 2,
 	["steel"] = 20,
 	["aluminum"] = 5,
 	["screw"] = 2,
-	["melee_baseballbat"] = 1,
+	["melee2h_baseballbat"] = 1,
 }
 RECIPE.result = {
-	["melee_bladedbat"] = 1
+	["melee2h_bladedbat"] = 1
 }
 RECIPES:Register(RECIPE)
 
 //
 
 RECIPE = {}
-RECIPE.uid = "make_barbwirebat"
+RECIPE.uid = "make_2hbarbwirebat"
 RECIPE.name = "Barbwire Bat"
-RECIPE.category = "Weapons - Melee"
+RECIPE.category = "Weapons - 2H Melee"
 RECIPE.model = "models/mosi/fallout4/props/weapons/melee/baseballbat.mdl"
 RECIPE.desc = "A makeshift weapon created by wrapping barbed wire around a wooden bat."
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+  ["repair"] = 40,
+}
 RECIPE.xp = 0.01
 RECIPE.items = {
 	["adhesive"] = 2,
 	["steel"] = 25,
 	["screw"] = 2,
-	["melee_baseballbat"] = 1,
+	["melee2h_baseballbat"] = 1,
 }
 RECIPE.result = {
-	["melee_barbwirebat"] = 1
+	["melee2h_barbwirebat"] = 1
 }
 RECIPES:Register(RECIPE)
 
 //
 
 RECIPE = {}
-RECIPE.uid = "make_metalrazorbat"
+RECIPE.uid = "make_2hmetalrazorbat"
 RECIPE.name = "Metal Razor Bat"
-RECIPE.category = "Weapons - Melee"
+RECIPE.category = "Weapons - 2H Melee"
 RECIPE.model = "models/mosi/fallout4/props/weapons/melee/baseballbat.mdl"
 RECIPE.desc = "A makeshift weapon created by installing razor blades around a metal bat."
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+  ["repair"] = 40,
+}
 RECIPE.xp = 0.01
 RECIPE.items = {
 	["adhesive"] = 3,
 	["steel"] = 25,
 	["aluminum"] = 5,
 	["screw"] = 3,
-	["melee_metalbaseballbat"] = 1,
+	["melee2h_metalbaseballbat"] = 1,
 }
 RECIPE.result = {
-	["melee_metalrazorbat"] = 1
+	["melee2h_metalrazorbat"] = 1
 }
 RECIPES:Register(RECIPE)
 
 //
 
 RECIPE = {}
-RECIPE.uid = "make_metalchainedbat"
+RECIPE.uid = "make_2hmetalchainedbat"
 RECIPE.name = "Metal Chained Bat"
-RECIPE.category = "Weapons - Melee"
+RECIPE.category = "Weapons - 2H Melee"
 RECIPE.model = "models/mosi/fallout4/props/weapons/melee/baseballbat.mdl"
 RECIPE.desc = "A makeshift weapon created by wrapping chains around a metal bat."
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+  ["repair"] = 40,
+}
 RECIPE.xp = 0.01
 RECIPE.items = {
 	["adhesive"] = 3,
 	["steel"] = 30,
 	["screw"] = 3,
-	["melee_metalbaseballbat"] = 1,
+	["melee2h_metalbaseballbat"] = 1,
 }
 RECIPE.result = {
-	["melee_metalchainedbat"] = 1
+	["melee2h_metalchainedbat"] = 1
 }
 RECIPES:Register(RECIPE)
 
 //
 
 RECIPE = {}
-RECIPE.uid = "make_board"
+RECIPE.uid = "make_2hboard"
 RECIPE.name = "Wooden Board"
-RECIPE.category = "Weapons - Melee"
+RECIPE.category = "Weapons - 2H Melee"
 RECIPE.model = "models/mosi/fallout4/props/weapons/melee/board.mdl"
 RECIPE.desc = "A makeshift weapon made out of wood."
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+  ["repair"] = 20,
+}
 RECIPE.xp = 0.01
 RECIPE.items = {
 	["adhesive"] = 1,
@@ -4769,82 +5038,94 @@ RECIPE.items = {
 	["screw"] = 2,
 }
 RECIPE.result = {
-	["melee_board"] = 1
+	["melee2h_board"] = 1
 }
 RECIPES:Register(RECIPE)
 
 //
 
 RECIPE = {}
-RECIPE.uid = "make_bladedboard"
+RECIPE.uid = "make_2hbladedboard"
 RECIPE.name = "Bladed Board"
-RECIPE.category = "Weapons - Melee"
+RECIPE.category = "Weapons - 2H Melee"
 RECIPE.model = "models/mosi/fallout4/props/weapons/melee/board.mdl"
 RECIPE.desc = "A makeshift weapon made out of attaching blades to a board."
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+  ["repair"] = 40,
+}
 RECIPE.xp = 0.01
 RECIPE.items = {
 	["adhesive"] = 1,
 	["aluminum"] = 5,
 	["screw"] = 2,
-	["melee_board"] = 1,
+	["melee2h_board"] = 1,
 }
 RECIPE.result = {
-	["melee_bladedboard"] = 1
+	["melee2h_bladedboard"] = 1
 }
 RECIPES:Register(RECIPE)
 
 //
 
 RECIPE = {}
-RECIPE.uid = "make_spikedboard"
+RECIPE.uid = "make_2hspikedboard"
 RECIPE.name = "Spiked Board"
-RECIPE.category = "Weapons - Melee"
+RECIPE.category = "Weapons - 2H Melee"
 RECIPE.model = "models/mosi/fallout4/props/weapons/melee/board.mdl"
 RECIPE.desc = "A makeshift weapon made out of attaching spikes to a board."
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+  ["repair"] = 40,
+}
 RECIPE.xp = 0.01
 RECIPE.items = {
 	["adhesive"] = 1,
 	["lead"] = 5,
 	["screw"] = 2,
-	["melee_board"] = 1,
+	["melee2h_board"] = 1,
 }
 RECIPE.result = {
-	["melee_spikedboard"] = 1
+	["melee2h_spikedboard"] = 1
 }
 RECIPES:Register(RECIPE)
 
 //
 
 RECIPE = {}
-RECIPE.uid = "make_serratedboard"
+RECIPE.uid = "make_2hserratedboard"
 RECIPE.name = "Serrated Board"
-RECIPE.category = "Weapons - Melee"
+RECIPE.category = "Weapons - 2H Melee"
 RECIPE.model = "models/mosi/fallout4/props/weapons/melee/board.mdl"
 RECIPE.desc = "A makeshift weapon made out of attaching a serrated blade to a board."
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+  ["repair"] = 40,
+}
 RECIPE.xp = 0.01
 RECIPE.items = {
 	["adhesive"] = 1,
 	["aluminum"] = 10,
 	["screw"] = 2,
-	["melee_board"] = 1,
+	["melee2h_board"] = 1,
 }
 RECIPE.result = {
-	["melee_serratedboard"] = 1
+	["melee2h_serratedboard"] = 1
 }
 RECIPES:Register(RECIPE)
 
 //
 
 RECIPE = {}
-RECIPE.uid = "make_machete"
+RECIPE.uid = "make_1hmachete"
 RECIPE.name = "Machete"
-RECIPE.category = "Weapons - Melee"
+RECIPE.category = "Weapons - 1H Melee"
 RECIPE.model = "models/mosi/fallout4/props/weapons/melee/machete.mdl"
 RECIPE.desc = "A makeshift weapon created forging steel and attaching a handle."
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+  ["repair"] = 60,
+}
 RECIPE.xp = 0.01
 RECIPE.items = {
 	["adhesive"] = 3,
@@ -4853,19 +5134,119 @@ RECIPE.items = {
 	["leather"] = 1,
 }
 RECIPE.result = {
-	["melee_machete"] = 1
+	["melee1h_machete"] = 1
 }
 RECIPES:Register(RECIPE)
 
 //
 
 RECIPE = {}
-RECIPE.uid = "make_tireironaxe"
+RECIPE.uid = "make_2hkatana"
+RECIPE.name = "Katana"
+RECIPE.category = "Weapons - 2H Melee"
+RECIPE.model = "models/halokiller38/fallout/weapons/melee/katana.mdl"
+RECIPE.desc = "A makeshift katana created forging steel and attaching a handle."
+RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+  ["repair"] = 60,
+}
+RECIPE.xp = 0.01
+RECIPE.items = {
+	["adhesive"] = 3,
+	["steel"] = 35,
+	["screw"] = 5,
+	["leather"] = 3,
+}
+RECIPE.result = {
+	["melee2h_katana"] = 1
+}
+RECIPES:Register(RECIPE)
+
+//
+
+RECIPE = {}
+RECIPE.uid = "make_1hrevolutionarysword"
+RECIPE.name = "Revolotionary Sword"
+RECIPE.category = "Weapons - 1H Melee"
+RECIPE.model = "models/mosi/fallout4/props/weapons/melee/revolutionarysword.mdl"
+RECIPE.desc = "A makeshift sword made in the forge. It resembles an artifact from the past."
+RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+  ["repair"] = 60,
+}
+RECIPE.xp = 0.01
+RECIPE.items = {
+	["adhesive"] = 3,
+	["steel"] = 35,
+	["screw"] = 5,
+	["leather"] = 3,
+}
+RECIPE.result = {
+	["melee1h_revolutionarysword"] = 1
+}
+RECIPES:Register(RECIPE)
+
+//
+
+RECIPE = {}
+RECIPE.uid = "make_1htomahawk"
+RECIPE.name = "Tomahawk"
+RECIPE.category = "Weapons - 1H Melee"
+RECIPE.model = "models/weapons/tomahawk.mdl"
+RECIPE.desc = "A makeshift tomahawk made in the forge."
+RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+  ["repair"] = 60,
+}
+RECIPE.xp = 0.01
+RECIPE.items = {
+	["adhesive"] = 3,
+	["steel"] = 20,
+	["wood"] = 20, 
+	["screw"] = 3,
+	["leather"] = 3,
+}
+RECIPE.result = {
+	["melee1h_tomahawk"] = 1
+}
+RECIPES:Register(RECIPE)
+
+//
+
+RECIPE = {}
+RECIPE.uid = "make_2hbumpersword"
+RECIPE.name = "Bumper Sword"
+RECIPE.category = "Weapons - 2H Melee"
+RECIPE.model = "models/halokiller38/fallout/weapons/melee/bumpersword.mdl"
+RECIPE.desc = "A makeshift sword created forging car bumper and attaching a handle."
+RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+  ["repair"] = 60,
+}
+RECIPE.xp = 0.01
+RECIPE.items = {
+	["adhesive"] = 5,
+	["steel"] = 50,
+	["screw"] = 7,
+	["leather"] = 5,
+}
+RECIPE.result = {
+	["melee2h_bumpersword"] = 1
+}
+RECIPES:Register(RECIPE)
+
+//
+
+RECIPE = {}
+RECIPE.uid = "make_1htireironaxe"
 RECIPE.name = "Tire Iron Axe"
-RECIPE.category = "Weapons - Melee"
+RECIPE.category = "Weapons - 1H Melee"
 RECIPE.model = "models/mosi/fallout4/props/weapons/melee/tireiron.mdl"
 RECIPE.desc = "A makeshift weapon created by attaching an axe blade to a tire iron."
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+  ["repair"] = 40,
+}
 RECIPE.xp = 0.01
 RECIPE.items = {
 	["adhesive"] = 4,
@@ -4874,19 +5255,46 @@ RECIPE.items = {
 	["leather"] = 1,
 }
 RECIPE.result = {
-	["melee_tireironaxe"] = 1
+	["melee1h_tireironaxe"] = 1
 }
 RECIPES:Register(RECIPE)
 
 //
 
 RECIPE = {}
-RECIPE.uid = "make_polehook"
+RECIPE.uid = "make_1htribalclub"
+RECIPE.name = "Tire Iron Axe"
+RECIPE.category = "Weapons - 1H Melee"
+RECIPE.model = "models/halokiller38/fallout/weapons/melee/warclub.mdl"
+RECIPE.desc = "A makeshift club made out of wood. Ooga Booga."
+RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+  ["repair"] = 40,
+}
+RECIPE.xp = 0.01
+RECIPE.items = {
+	["adhesive"] = 4,
+	["wood"] = 20,
+	["screw"] = 4,
+	["leather"] = 1,
+}
+RECIPE.result = {
+	["melee1h_tribalclub"] = 1
+}
+RECIPES:Register(RECIPE)
+
+//
+
+RECIPE = {}
+RECIPE.uid = "make_2hpolehook"
 RECIPE.name = "Pole Hook"
-RECIPE.category = "Weapons - Melee"
+RECIPE.category = "Weapons - 2H Melee"
 RECIPE.model = "models/mosi/fallout4/props/weapons/melee/polehook.mdl"
 RECIPE.desc = "A makeshift weapon created by attaching a hook to a metal pole."
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+  ["repair"] = 20,
+}
 RECIPE.xp = 0.01
 RECIPE.items = {
 	["adhesive"] = 3,
@@ -4895,19 +5303,22 @@ RECIPE.items = {
 	["screw"] = 3,
 }
 RECIPE.result = {
-	["melee_polehook"] = 1
+	["melee2h_polehook"] = 1
 }
 RECIPES:Register(RECIPE)
 
 //
 
 RECIPE = {}
-RECIPE.uid = "make_poolcuespear"
+RECIPE.uid = "make_2hpoolcuespear"
 RECIPE.name = "Pool Cue Spear"
-RECIPE.category = "Weapons - Melee"
+RECIPE.category = "Weapons - 2H Melee"
 RECIPE.model = "models/mosi/fallout4/props/weapons/melee/poolcue.mdl"
 RECIPE.desc = "A makeshift weapon created by attaching a spike to a pool cue."
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+  ["repair"] = 20,
+}
 RECIPE.xp = 0.01
 RECIPE.items = {
 	["adhesive"] = 3,
@@ -4917,26 +5328,125 @@ RECIPE.items = {
 	["j_poolcue"] = 1,
 }
 RECIPE.result = {
-	["melee_poolcuespear"] = 1
+	["melee2h_poolcuespear"] = 1
 }
 RECIPES:Register(RECIPE)
 
 //
 
 RECIPE = {}
-RECIPE.uid = "make_poolcuespearandshield"
+RECIPE.uid = "make_2hpoolcuespearandshield"
 RECIPE.name = "Pool Cue Spear and Shield"
-RECIPE.category = "Weapons - Melee"
+RECIPE.category = "Weapons - 2H Melee"
 RECIPE.model = "models/mosi/fallout4/props/weapons/melee/poolcue.mdl"
 RECIPE.desc = "A makeshift weapon created by attaching a spike to a pool cue and wielding a sheet metal shield."
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+  ["repair"] = 40,
+}
 RECIPE.xp = 0.01
 RECIPE.items = {
 	["steel"] = 30,
-	["melee_poolcuespear"] =1,
+	["melee2h_poolcuespear"] =1,
 }
 RECIPE.result = {
-	["melee_poolcuespearandshield"] = 1
+	["melee2h_poolcuespearandshield"] = 1
+}
+RECIPES:Register(RECIPE)
+
+//
+
+RECIPE = {}
+RECIPE.uid = "make_unarmedbrassknuckles"
+RECIPE.name = "Brass Knuckles"
+RECIPE.category = "Weapons - Unarmed Melee"
+RECIPE.model = "models/halokiller38/fallout/weapons/melee/brassknuckles.mdl"
+RECIPE.desc = "A makeshift pair of brass knuckles made in the forge."
+RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+  ["repair"] = 20,
+}
+RECIPE.xp = 0.01
+RECIPE.items = {
+	["tin"] = 1,
+	["copper"] = 1,
+	["lead"] = 1,
+}
+RECIPE.result = {
+	["meleeunarmed_brassknuckles"] = 1
+}
+RECIPES:Register(RECIPE)
+
+//
+
+RECIPE = {}
+RECIPE.uid = "make_unarmedspikedknuckles"
+RECIPE.name = "Spiked Knuckles"
+RECIPE.category = "Weapons - Unarmed Melee"
+RECIPE.model = "models/mosi/fallout4/props/weapons/melee/knuckles.mdl"
+RECIPE.desc = "These look pointy."
+RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+  ["repair"] = 40,
+}
+RECIPE.xp = 0.01
+RECIPE.items = {
+	["tin"] = 2,
+	["copper"] = 2,
+	["lead"] = 2,
+	["meleeunarmed_brassknuckles"] = 1,
+}
+RECIPE.result = {
+	["meleeunarmed_spikedknuckles"] = 1
+}
+RECIPES:Register(RECIPE)
+
+//
+
+RECIPE = {}
+RECIPE.uid = "make_unarmedmantisgauntlet"
+RECIPE.name = "Mantis Gauntlet"
+RECIPE.category = "Weapons - Unarmed Melee"
+RECIPE.model = "models/halokiller38/fallout/weapons/melee/mantisgauntlet.mdl"
+RECIPE.desc = "Gauntlets made out mantis legs. Gross."
+RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+  ["repair"] = 40,
+}
+RECIPE.xp = 0.01
+RECIPE.items = {
+	["food_mantislegs"] = 2,
+	["leather"] = 2,
+	["steel"] = 2,
+	["meleeunarmed_spikedknuckles"] = 1,
+}
+RECIPE.result = {
+	["meleeunarmed_mantisguantlet"] = 1
+}
+RECIPES:Register(RECIPE)
+
+//
+
+RECIPE = {}
+RECIPE.uid = "make_powerfist"
+RECIPE.name = "Power Fist"
+RECIPE.category = "Weapons - Unarmed Melee"
+RECIPE.model = "models/mosi/fallout4/props/weapons/melee/powerfist.mdl"
+RECIPE.desc = "A big ass power fist. Nuff said."
+RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+  ["repair"] = 60,
+}
+RECIPE.xp = 0.01
+RECIPE.items = {
+	["circuitry"] = 2,
+	["leather"] = 5,
+	["steel"] = 20,
+	["ammo_energycell"] = 1,
+	["meleeunarmed_spikedknuckles"] = 1,
+}
+RECIPE.result = {
+	["meleeunarmed_powerfist"] = 1
 }
 RECIPES:Register(RECIPE)
 
@@ -4951,6 +5461,9 @@ RECIPE.category = "Throwing Weapons"
 RECIPE.model = "models/mosi/fallout4/props/weapons/melee/knife.mdl"
 RECIPE.desc = "A weighted, thin blade with no handle, meant for throwing."
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+  ["repair"] = 20,
+}
 RECIPE.xp = 0.01
 RECIPE.items = {
 	["adhesive"] = 1,
@@ -4971,6 +5484,9 @@ RECIPE.category = "Throwing Weapons"
 RECIPE.model = "models/fo3_axe.mdl"
 RECIPE.desc = "A short hatchet weighted and balanced to be thrown."
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+  ["repair"] = 60,
+}
 RECIPE.xp = 0.01
 RECIPE.items = {
 	["adhesive"] = 1,
@@ -4991,6 +5507,9 @@ RECIPE.category = "Throwing Weapons"
 RECIPE.model = "models/halokiller38/fallout/weapons/melee/bm_spear.mdl"
 RECIPE.desc = "A makeshift weapon created by attaching a spike to a wooden pole."
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+  ["repair"] = 80,
+}
 RECIPE.xp = 0.01
 RECIPE.items = {
 	["adhesive"] = 1,
@@ -5011,6 +5530,9 @@ RECIPE.category = "Throwing Weapons"
 RECIPE.model = "models/halokiller38/fallout/weapons/explosives/dynamite.mdl"
 RECIPE.desc = "A makeshift stick of dynamite."
 RECIPE.craftEnts = {"nut_craftingtable_science"}
+RECIPE.reqSkills = {
+  ["explosives"] = 40,
+}
 RECIPE.xp = 0.01
 RECIPE.items = {
 	["adhesive"] = 1,
@@ -5030,6 +5552,9 @@ RECIPE.category = "Throwing Weapons"
 RECIPE.model = "models/mosi/fnv/props/junk/tincan01.mdl"
 RECIPE.desc = "A makeshift grenade made with a tin can."
 RECIPE.craftEnts = {"nut_craftingtable_science"}
+RECIPE.reqSkills = {
+  ["explosives"] = 40,
+}
 RECIPE.xp = 0.01
 RECIPE.items = {
 	["adhesive"] = 1,
@@ -5050,11 +5575,14 @@ RECIPE.category = "Throwing Weapons"
 RECIPE.model = "models/halokiller38/fallout/weapons/mines/bottlecapmine.mdl"
 RECIPE.desc = "Make a high yield placed explosive with a load of gunpowder, shrapnel, and a container."
 RECIPE.craftEnts = {"nut_craftingtable_science"}
+RECIPE.reqSkills = {
+  ["explosives"] = 80,
+}
 RECIPE.xp = 0.01
 RECIPE.items = {
 	["adhesive"] = 3,
 	["circuitry"] = 1,
-	["gunpowder"] = 5,
+	["gunpowder"] = 10,
 	["steel"] = 6,
 }
 RECIPE.result = {
@@ -5070,11 +5598,15 @@ RECIPE.category = "Throwing Weapons"
 RECIPE.model = "models/mosi/fallout4/ammo/microfusioncell.mdl"
 RECIPE.desc = "With some copper wire and adhesive, link three MFC Grenades together into a multi-hitting clusterbomb."
 RECIPE.craftEnts = {"nut_craftingtable_science"}
+RECIPE.reqSkills = {
+  ["explosives"] = 100,
+}
 RECIPE.xp = 0.01
 RECIPE.items = {
 	["grenade_mfccluster"] = 3,
 	["copper"] = 3,
 	["adhesive"] = 5,
+	["gunpowder"] = 10,
 }
 RECIPE.result = {
 	["grenade_mfccluster"] = 1
@@ -5089,10 +5621,13 @@ RECIPE.category = "Throwing Weapons"
 RECIPE.model = "models/mosi/fallout4/ammo/microfusioncell.mdl"
 RECIPE.desc = "A makeshift grenade made a microfusion cell."
 RECIPE.craftEnts = {"nut_craftingtable_science"}
+RECIPE.reqSkills = {
+  ["explosives"] = 80,
+}
 RECIPE.xp = 0.01
 RECIPE.items = {
 	["adhesive"] = 1,
-	["gunpowder"] = 3,
+	["gunpowder"] = 10,
 	["plastic"] = 4,
 }
 RECIPE.result = {
@@ -5108,6 +5643,9 @@ RECIPE.category = "Throwing Weapons"
 RECIPE.model = "models/halokiller38/fallout/weapons/explosives/firebomb.mdl"
 RECIPE.desc = "A makeshift incendiary grenade made from flammable fluids inside a glass bottle."
 RECIPE.craftEnts = {"nut_craftingtable_science"}
+RECIPE.reqSkills = {
+  ["explosives"] = 20,
+}
 RECIPE.xp = 0.01
 RECIPE.items = {
 	["adhesive"] = 1,
@@ -5127,12 +5665,11 @@ RECIPES:Register(RECIPE)
 
 RECIPE = {}
 RECIPE.uid = "make_bobbypin"
-RECIPE.name = "Bobbybin"
+RECIPE.name = "Bobbypin"
 RECIPE.category = "Miscelaneous"
 RECIPE.model = "models/mosi/fallout4/props/junk/bobbypin.mdl"
 RECIPE.desc = "A makeshift bobbypin."
- 
-RECIPE.xp = 0.00
+--RECIPE.tableDamage = 0.5
 RECIPE.items = {
 	["steel"] = 3,
 }
@@ -5152,6 +5689,9 @@ RECIPE.category = "Storage"
 RECIPE.model = "models/vex/fallout76/backpacks/backpack_01.mdl"
 RECIPE.desc = "A small makeshift backpack."
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+  ["survival"] = 25,
+}
 RECIPE.xp = 0.01
 RECIPE.items = {
 	["leather"] = 3,
@@ -5171,6 +5711,9 @@ RECIPE.category = "Storage"
 RECIPE.model = "models/vex/fallout76/backpacks/atx_backpack_pioneer.mdl"
 RECIPE.desc = "A medium makeshift backpack."
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+  ["survival"] = 50,
+}
 RECIPE.xp = 0.01
 RECIPE.items = {
 	["leather"] = 9,
@@ -5190,6 +5733,9 @@ RECIPE.category = "Storage"
 RECIPE.model = "models/vex/fallout76/backpacks/atx_backpack_surplussack.mdl"
 RECIPE.desc = "A large makeshift backpack."
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+  ["survival"] = 75,
+}
 RECIPE.xp = 0.01
 RECIPE.items = {
 	["leather"] = 27,
@@ -6134,7 +6680,7 @@ RECIPE.name = "Breakdown Leather Jacket"
 RECIPE.category = "Breakdown Armor"
 RECIPE.model = "models/thespireroleplay/items/clothes/group051.mdl"
 RECIPE.desc = "Crudely break down the materials of armor."
-RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
 	["armor_body_leatherjacket"] = 1
@@ -6154,7 +6700,7 @@ RECIPE.name = "Breakdown Leather Vest"
 RECIPE.category = "Breakdown Armor"
 RECIPE.model = "models/thespireroleplay/items/clothes/group052.mdl"
 RECIPE.desc = "Crudely break down the materials of armor."
-RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
 	["armor_body_leatherarmor"] = 1
@@ -6173,7 +6719,7 @@ RECIPE.name = "Breakdown Leather Brace"
 RECIPE.category = "Breakdown Armor"
 RECIPE.model = "models/mosi/fallout4/props/junk/ammobag.mdl"
 RECIPE.desc = "Crudely break down the materials of armor."
-RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
 	["armor_arm_leather"] = 1
@@ -6192,7 +6738,7 @@ RECIPE.name = "Breakdown Reinforced Leather Brace"
 RECIPE.category = "Breakdown Armor"
 RECIPE.model = "models/mosi/fallout4/props/junk/ammobag.mdl"
 RECIPE.desc = "Crudely break down the materials of armor."
-RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
 	["armor_arm_reinforcedleather"] = 1
@@ -6213,7 +6759,7 @@ RECIPE.name = "Breakdown Leather Kneepads"
 RECIPE.category = "Breakdown Armor"
 RECIPE.model = "models/mosi/fallout4/props/junk/ammobag.mdl"
 RECIPE.desc = "Crudely break down the materials of armor."
-RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
 	["armor_leg_leather"] = 1
@@ -6233,7 +6779,7 @@ RECIPE.name = "Breakdown Reinforced Leather Kneepads"
 RECIPE.category = "Breakdown Armor"
 RECIPE.model = "models/mosi/fallout4/props/junk/ammobag.mdl"
 RECIPE.desc = "Crudely break down the materials of armor."
-RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
     ["armor_leg_reinforcedleather"] = 1
@@ -6254,7 +6800,7 @@ RECIPE.name = "Breakdown Reinforced Leather Jacket"
 RECIPE.category = "Breakdown Armor"
 RECIPE.model = "models/thespireroleplay/items/clothes/group052.mdl"
 RECIPE.desc = "Crudely break down the materials of armor."
-RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
 	["armor_body_leatherreinforced"] = 1

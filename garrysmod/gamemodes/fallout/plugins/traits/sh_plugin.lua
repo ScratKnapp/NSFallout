@@ -50,10 +50,18 @@ function PLUGIN:OnCharCreated(client, character)
 				client:giveTrait(v, character)
 			end
 		end
-
-		for attribID, value in pairs(character:getAttribs()) do
-			PLUGIN:OnCharAttribUpdated(client, character, attribID, value)
-		end
+		
+		--make sure attribute state is properly recognized for low level attrib states
+		timer.Simple(2, function() --delay it just a bit
+			if(client) then
+				local char = client:getChar()
+				if(char) then
+					for attribID, value in pairs(char:getAttribs()) do
+						PLUGIN:OnCharAttribUpdated(client, char, attribID, value)
+					end
+				end
+			end
+		end)
 	end)
 end
 

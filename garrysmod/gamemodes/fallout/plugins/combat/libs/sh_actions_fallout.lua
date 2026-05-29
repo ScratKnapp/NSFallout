@@ -85,6 +85,7 @@ ACT.costAP = 1
 ACT.CD = 1
 ACT.selfOnly = true
 ACT.notarget = true
+ACT.AttackSound = ""
 ACT.effects = {
     [1] = {
         uid = ACT.uid,
@@ -391,6 +392,7 @@ ACT.accuracyMult = 1
 ACT.range = 2000
 ACT.weaponMult = 1
 ACT.multi = 8
+ACT.multiEffects = 1 --limits how many effects the visuals produce
 ACT.ammoUse = 1 --how much ammo it uses
 ACTS:Register(ACT)
 

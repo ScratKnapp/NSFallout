@@ -28,7 +28,6 @@ ENT.FootstepSounds = {
 	"models/ntr/trooper/damwar.mdl",
 	"models/ntr/trooper/female02.mdl",
 	"models/ntr/trooper/male01.mdl",
-
 }
 
 ENT.hp = 115
@@ -43,7 +42,6 @@ ENT.weapons = {
 	"gunprecision_cowboyrepeater",
 	"gunsmg_45smg",
 	"gunshotgun_huntingshotgun",
-
 }
 
 ENT.armor = {
@@ -89,17 +87,16 @@ ENT.res = {
 }
 
 ENT.actions = {
-"dodge",
-"charge",
-"burstfire_smg",
-"runngun",
-"burstfire_rifle",
-"suppression1",
-"doubletap_pistol",
-"doubletap_precision",
-"aimedshot_precision",
-"grenade_frag",
-
+	"dodge",
+	"charge",
+	"burstfire_smg",
+	"runngun",
+	"burstfire_rifle",
+	"suppression1",
+	"doubletap_pistol",
+	"doubletap_precision",
+	"aimedshot_precision",
+	"grenade_frag",
 }
 
 ENT.tags = {
@@ -119,8 +116,7 @@ ENT.SoundVolume = 1
 --left blank since weapons will give actions to it
 --if you add stuff like dodge or block it may just spam it
 ENT.actionsAI = {
-"dodge",
-
+	"dodge",
 }
 
 --the range at which the CEnt will do its actions

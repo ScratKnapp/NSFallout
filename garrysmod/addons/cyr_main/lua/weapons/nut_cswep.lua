@@ -660,19 +660,21 @@ function SWEP:DrawHUD()
 			surface.DrawRect(0, 0, ScrW(), ScrH())
 
 			surface.SetFont("nutCombatTarget")
-			local banner = "// V.A.T.S. ENGAGED // [TAB] EXIT  [MOUSE] TARGET  [WASD] LIMB  [LMB] FIRE"
+			local banner = "// V.A.T.S. ENGAGED // [TAB] EXIT  [WASD] TARGET  [0-9] PICK  [MOUSE] LIMB  [LMB] FIRE"
 			local tw = surface.GetTextSize(banner)
 			surface.SetTextColor(TERM_BRIGHT)
 			surface.SetTextPos(ScrW() * 0.5 - tw * 0.5, 14)
 			surface.DrawText(banner)
 
 			surface.SetFont("nutCombatHUD")
-			for _, t in ipairs(self.vatsTargets or {}) do
+			for i, t in ipairs(self.vatsTargets or {}) do
 				if IsValid(t) then
 					local sp = t:WorldSpaceCenter():ToScreen()
 					if sp.visible then
 						local active = (t == self.vatsCommittedTarget)
 						local name = t.Name and t:Name() or t:GetClass()
+						-- Prefix the number-key index for the first ten targets.
+						if i <= 10 then name = "[" .. (i - 1) .. "] " .. name end
 						local lw, lh = surface.GetTextSize(name)
 						local col = active and TERM_BRIGHT or TERM_DIM
 						surface.SetTextColor(col)
@@ -1318,7 +1320,22 @@ if CLIENT then
 				out[#out + 1] = ent
 			end
 		end
+		-- Nearest first, so the [0]–[9] number labels stay meaningful and stable
+		-- between refreshes (closest NPC is always [0]).
+		table.sort(out, function(a, b)
+			return a:GetPos():DistToSqr(origin) < b:GetPos():DistToSqr(origin)
+		end)
 		self.vatsTargets = out
+	end
+
+	-- Lock onto the Nth listed target (1-based). Index comes from VATS_NUM_KEYS,
+	-- which maps the [0]–[9] labels the overlay paints onto each NPC.
+	function SWEP:VATSSelectTargetByIndex(idx)
+		local t = self.vatsTargets and self.vatsTargets[idx]
+		if IsValid(t) then
+			self.vatsCommittedTarget = t
+			surface.PlaySound("vats wav files/ui_vats_selecttarget.wav")
+		end
 	end
 
 	function SWEP:VATSCommit()
@@ -1369,6 +1386,13 @@ if CLIENT then
 		return false
 	end
 
+	-- Number-row key → target list index. [0] selects the first listed target,
+	-- [1] the second, … [9] the tenth — matching the overlay's [0]–[9] labels.
+	local VATS_NUM_KEYS = {
+		[KEY_0] = 1, [KEY_1] = 2, [KEY_2] = 3, [KEY_3] = 4, [KEY_4] = 5,
+		[KEY_5] = 6, [KEY_6] = 7, [KEY_7] = 8, [KEY_8] = 9, [KEY_9] = 10,
+	}
+
 	-- Input *detection* reads the OS keyboard state via input.IsKeyDown /
 	-- input.IsMouseDown. Going through this path means no other addon's
 	-- PlayerBindPress / CreateMove can swallow the press before we see it.
@@ -1402,22 +1426,27 @@ if CLIENT then
 
 		if not wep.vatsMode then return end
 
-		-- WASD limb picker. The picker reads the current screen positions of
-		-- each selectable limb so the direction tracks what the player sees
-		-- (handles viewing from behind, ragdolls, etc.) and wraps around.
+		-- WASD switches the locked TARGET (lateral / depth), mapped into the
+		-- entity-relative frame VATSSwitchTargetInDirection expects:
+		--   W → farther    S → nearer    A → left    D → right
 		-- Uses pressedRepeating so a held key cycles at VATS_KEY_REPEAT (0.2s),
 		-- with the first press firing immediately.
-		local dir
-		if     pressedRepeating(input.IsKeyDown(KEY_W), wep, "vatsPrevW", "vatsLastW") then dir = "w"
-		elseif pressedRepeating(input.IsKeyDown(KEY_S), wep, "vatsPrevS", "vatsLastS") then dir = "s"
-		elseif pressedRepeating(input.IsKeyDown(KEY_A), wep, "vatsPrevA", "vatsLastA") then dir = "a"
-		elseif pressedRepeating(input.IsKeyDown(KEY_D), wep, "vatsPrevD", "vatsLastD") then dir = "d"
+		local sx, sy
+		if     pressedRepeating(input.IsKeyDown(KEY_W), wep, "vatsPrevW", "vatsLastW") then sx, sy = 0, -1
+		elseif pressedRepeating(input.IsKeyDown(KEY_S), wep, "vatsPrevS", "vatsLastS") then sx, sy = 0,  1
+		elseif pressedRepeating(input.IsKeyDown(KEY_A), wep, "vatsPrevA", "vatsLastA") then sx, sy = -1, 0
+		elseif pressedRepeating(input.IsKeyDown(KEY_D), wep, "vatsPrevD", "vatsLastD") then sx, sy = 1,  0
 		end
-		if dir then
-			local nextPart = wep:VATSPickNextPart(dir)
-			if nextPart and nextPart ~= wep.partString then
-				wep:selectPart(nextPart)
-				surface.PlaySound("vats wav files/ui_vats_selecttargetpart.wav")
+		if sx then
+			wep:VATSSwitchTargetInDirection(sx, sy)
+		end
+
+		-- Number keys [0]–[9] jump straight to a target by its on-screen index.
+		-- The overlay labels each NPC with the same number, so [0] picks the
+		-- first listed target, [9] the tenth.
+		for key, idx in pairs(VATS_NUM_KEYS) do
+			if pressedEdge(input.IsKeyDown(key), wep, "vatsPrevNum" .. key) then
+				wep:VATSSelectTargetByIndex(idx)
 			end
 		end
 
@@ -1464,11 +1493,11 @@ if CLIENT then
 		cmd:RemoveKey(IN_ATTACK)
 		cmd:RemoveKey(IN_ATTACK2)
 
-		-- Mouse flick: accumulate cmd delta until magnitude crosses
-		-- threshold, then resolve to a direction and switch target.
-		-- After a flick fires we hold a VATS_FLICK_DEBOUNCE cooldown and
-		-- zero the accumulator each tick so a continuous mouse sweep can't
-		-- rapid-cycle through targets.
+		-- Mouse flick: accumulate cmd delta until magnitude crosses threshold,
+		-- then resolve to the dominant axis (W/A/S/D) and hop the LIMB picker
+		-- that way. After a flick fires we hold a VATS_FLICK_DEBOUNCE cooldown
+		-- and zero the accumulator each tick so a continuous mouse sweep can't
+		-- rapid-cycle through limbs.
 		local mx, my = cmd:GetMouseX(), cmd:GetMouseY()
 		if (wep.vatsNextFlickT or 0) > CurTime() then
 			wep.vatsMouseAccumX = 0
@@ -1478,7 +1507,18 @@ if CLIENT then
 			local ay = (wep.vatsMouseAccumY or 0) + my
 			local mag = math.sqrt(ax * ax + ay * ay)
 			if mag >= VATS_FLICK_THRESHOLD then
-				wep:VATSSwitchTargetInDirection(ax / mag, ay / mag)
+				-- Dominant-axis: bigger of |x|,|y| picks horizontal vs vertical.
+				local flickDir
+				if math.abs(ay) >= math.abs(ax) then
+					flickDir = ay < 0 and "w" or "s"
+				else
+					flickDir = ax < 0 and "a" or "d"
+				end
+				local nextPart = wep:VATSPickNextPart(flickDir)
+				if nextPart and nextPart ~= wep.partString then
+					wep:selectPart(nextPart)
+					surface.PlaySound("vats wav files/ui_vats_selecttargetpart.wav")
+				end
 				wep.vatsMouseAccumX = 0
 				wep.vatsMouseAccumY = 0
 				wep.vatsNextFlickT = CurTime() + VATS_FLICK_DEBOUNCE
@@ -1509,6 +1549,21 @@ if CLIENT then
 		local wep = ply:GetActiveWeapon()
 		if IsValid(wep) and wep:GetClass() == "nut_cswep" then
 			return false
+		end
+	end)
+
+	-- While V.A.T.S. is engaged, the number-row keys pick targets — so block the
+	-- weapon-slot / inv-cycle binds they'd normally trigger, otherwise pressing a
+	-- number would also swap weapons (holstering nut_cswep and dropping out of
+	-- V.A.T.S.). PlayerBindPress returning true swallows the bind; we only do so
+	-- while VATS is active on the combat SWEP, so normal play is unaffected.
+	hook.Add("PlayerBindPress", "nut_cswep_vats_blockbinds", function(ply, bind)
+		local wep = ply:GetActiveWeapon()
+		if IsValid(wep) and wep:GetClass() == "nut_cswep" and wep.vatsMode then
+			bind = string.lower(bind)
+			if bind:find("slot", 1, true) or bind:find("invnext", 1, true) or bind:find("invprev", 1, true) then
+				return true
+			end
 		end
 	end)
 

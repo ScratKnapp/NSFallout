@@ -27,6 +27,5 @@ ITEM.res = { --percentage based armor
 ITEM.specialSlot = "Body" --what slot it goes in
 ITEM.skill = { --gives the player stats on equip
   ["guns"] = 3,
-  ["meleeweapons"] = 2,
-
+  ["melee"] = 2,
 }

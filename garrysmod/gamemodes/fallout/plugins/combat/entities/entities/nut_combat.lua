@@ -76,7 +76,9 @@ function ENT:StuckTeleport(pos)
 	self.desiredPos = nil
 	self.failedPath = nil
 
-	self:SetPos(pos)
+	if(util.IsInWorld(pos)) then
+		self:SetPos(pos)
+	end
 
 	self:resetAnim()
 	
@@ -371,11 +373,12 @@ function ENT:getSaveData()
 		
 		attribs = self:getNetVar("attribs", self.attribs),
 		actions = self:getNetVar("actions", self.actions),
+		actionsAI = self:getNetVar("actionsAI", self.actionsAI),
 		dmg = self:getNetVar("dmg", self.dmg),
 		multi = self:getNetVar("multi", self.multi),
 		res = self:getNetVar("res", self.res),
 		amp = self:getNetVar("amp", self.amp),
-		range = self:getFireRange(),
+		fireRange = self:getFireRange(),
 		
 		GunEffects = self:getNetVar("GunEffects"),
 		
@@ -393,7 +396,7 @@ function ENT:getSaveData()
 		
 		AttackSounds = self:getNetVar("AttackSounds"),
 	}
-	
+
 	if(IsValid(self.weapon)) then
 		saveData.weapon = {self.weapon:GetModel(), self.weapon:GetMaterial()}
 	end
@@ -440,6 +443,7 @@ function ENT:loadSaveData(data)
 	self:setNetVar("amp", data.amp)
 	self:setNetVar("dmg", data.dmg)
 	self:setNetVar("actions", data.actions)
+	self:setNetVar("actionsAI", data.actionsAI)
 	
 	if(data.fireRange and data.fireRange != self:getFireRange()) then
 		self:setNetVar("fireRange", data.fireRange)
@@ -805,14 +809,21 @@ function ENT:Attack(target, action)
 		self.loco:FaceTowards(target:GetPos())
 	end
 	
-	local multi = (action and action.multi) or 1
+	local multi = (action and (action.multiEffects or action.multi)) or 1
+
+	local damage = action and (action.AttackSound or (action.dmg or action.weaponMult))
+
+	--if it's just a regular attack
+	if(!action or table.IsEmpty(action)) then
+		damage = true
+	end
 
 	self:attackAnimStart(target, action)
 	
 	for i = 1, multi do
 		timer.Simple(i*0.25, function()
-			if(IsValid(self)) then
-				self:AttackSound()
+			if(IsValid(self) and damage) then
+				self:AttackSound(action.AttackSound)
 			end
 		end)
 	end

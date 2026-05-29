@@ -551,18 +551,20 @@ if(SERVER) then
 		end
 	end)
 	
-	netstream.Hook("skillIncrease", function(client, skill, value)
+	netstream.Hook("skillIncrease", function(client, skill)
 		local char = client:getChar()
 		local ptSkill = char:getData("ptSkill", 0)
 		
 		if(ptSkill > 0) then
 			char:setData("ptSkill", ptSkill - 1, false, player.GetAll())
 			
-			char:updateSkill(skill, value)
+			local current = char:getSkill(skill, 0)
+			
+			char:updateSkill(skill, 1)
 			
 			client:notify("You have increased your " ..(nut.skills.list[skill] and nut.skills.list[skill].name).. ".")
 			
-			nut.log.addRaw(client:Name().. " increased their " ..(nut.skills.list[skill] and nut.skills.list[skill].name).. " from " ..(value-1).. " to " ..value.. ".")
+			nut.log.addRaw(client:Name().. " increased their " ..(nut.skills.list[skill] and nut.skills.list[skill].name).. " from " ..current.. " to " ..(current+1).. ".")
 		end
 	end)
 	
