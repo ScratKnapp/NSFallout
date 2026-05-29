@@ -135,6 +135,41 @@ end
 -- One row inside a barter column: item name + quantity on the left, value
 -- on the right. Highlights on hover, transfers on click.
 
+-- The displayed amount is the stack's quantity data, not the raw instance
+-- count. Reads Amount first (the canonical stacking key), then a "quantity"
+-- data value, then the native quantity field, defaulting to 1.
+local function itemAmount(it)
+	if not it then return 1 end
+	local n = it.getData and (tonumber(it:getData("Amount")) or tonumber(it:getData("quantity")))
+	if not n and it.getQuantity then n = it:getQuantity() end
+	return tonumber(n) or 1
+end
+
+-- Effective stack cap, honouring the nwl_stackable_items_infinite convar.
+local function effMax(maxstack)
+	if NWL and NWL.GetStackLimit then return NWL.GetStackLimit(maxstack) end
+	return maxstack
+end
+
+-- Whether an item can be stacked/grouped at all. Non-stackable items
+-- (maxstack <= 1, PreventStacks, customisable classes, or per-instance
+-- custom/equip data) must each occupy their own row — they should never
+-- group just because two instances share the same data.
+local function isStackableItem(item)
+	local cls = nut.item.list[item.uniqueID]
+	if not cls or cls.PreventStacks then return false end
+	local fns = cls.functions
+	if fns and (fns.Custom or fns.CustomAtr) then return false end
+	local d = item.data or {}
+	if (d.custom and next(d.custom) ~= nil)
+		or (d.customW and next(d.customW) ~= nil)
+		or d.infused or d.edited or d.equip then
+		return false
+	end
+	local maxstack = effMax(cls.maxstack)
+	return maxstack ~= nil and maxstack > 1
+end
+
 local ROW = {}
 	function ROW:Init()
 		self:SetTall(math.Round(28 * uiScale()))
@@ -155,9 +190,17 @@ local ROW = {}
 		self.displayName = (customName ~= nil and customName ~= "" and tostring(customName))
 			or (item.getName and item:getName()) or item.name or "Unknown"
 		self.value       = (item.getPrice and item:getPrice()) or item.price or 0
-		self.weight      = GET_ITEM_WEIGHT and GET_ITEM_WEIGHT(item)
-			or (type(item.weight) == "function" and item:weight(item))
-			or item.weight or 1
+
+		-- Displayed amount + weight are summed from the stack's quantity
+		-- data (Amount), not the raw instance count.
+		self.quantity = 0
+		self.weight   = 0
+		for _, it in ipairs(self.stack) do
+			self.quantity = self.quantity + itemAmount(it)
+			self.weight   = self.weight + ((GET_ITEM_WEIGHT and GET_ITEM_WEIGHT(it))
+				or (type(it.weight) == "function" and it:weight(it))
+				or it.weight or 1)
+		end
 	end
 
 	function ROW:Paint(w, h)
@@ -172,8 +215,8 @@ local ROW = {}
 		end
 
 		surface.SetFont("nutBarterRow")
-		local label = self.count > 1
-			and string.format("%s (%d)", self.displayName, self.count)
+		local label = (self.quantity or self.count) > 1
+			and string.format("%s (%d)", self.displayName, self.quantity or self.count)
 			or self.displayName
 		local _, th = surface.GetTextSize(label)
 		surface.SetTextColor(col)
@@ -943,18 +986,14 @@ local PANEL = {}
 	function PANEL:getStacks(inventory)
 		local stacks = {}
 		for _, item in pairs(inventory:getItems()) do
-			local itemTable = nut.item.list[item.uniqueID]
+			-- Stackable items group by uniqueID (different-sized stacks of the
+			-- same item share one row). Everything else gets a per-instance
+			-- key so non-stackable items (a barbell, etc.) never group.
 			local key
-			if itemTable and itemTable.PreventStacks then
-				key = item.uniqueID .. item:getID()
+			if isStackableItem(item) then
+				key = item.uniqueID
 			else
-				local elements = {}
-				for k, v in SortedPairs(item.data or {}) do
-					if k == "x" or k == "y" then continue end
-					elements[#elements + 1] = k
-					elements[#elements + 1] = v
-				end
-				key = item.uniqueID .. (pon and pon.encode(elements) or table.concat(elements, "|"))
+				key = item.uniqueID .. "@" .. item:getID()
 			end
 			stacks[key] = stacks[key] or {}
 			table.insert(stacks[key], item)
@@ -1013,58 +1052,101 @@ local PANEL = {}
 	function PANEL:onItemPressed(item, count, stack)
 		if not item or not item.getID then return end
 		stack = stack or { item }
-		count = count or #stack
 
-		if count <= 1 then
-			nutStorageBase:transferItem(item:getID())
-			return
-		end
+		-- Source/destination are resolved from item.invID. Regular items have
+		-- no :getInv() method (only bags do), so relying on that previously
+		-- left sourceInvID nil and made every transfer treat the player
+		-- inventory as the destination — which is why depositing was capped by
+		-- the player's weight instead of the storage's.
+		local char       = LocalPlayer():getChar()
+		local localInv   = char and char:getInv() or nil
+		local storageInv = IsValid(self.storage) and self.storage:getInv() or nil
+		local storageID  = storageInv and storageInv.getID and storageInv:getID() or nil
 
-		-- Track the original inventory so we only count / transfer items
-		-- that haven't been taken by another player in the meantime.
-		local sourceInv = item.getInv and item:getInv()
-		local sourceInvID = sourceInv and sourceInv.getID and sourceInv:getID() or nil
+		local sourceInvID = item.invID
 
 		local function isInSource(it)
 			if not it or not it.getID then return false end
 			local live = nut.item.instances[it:getID()]
 			if not live then return false end
-			if not sourceInvID then return true end
-			local inv = live.getInv and live:getInv()
-			return inv and inv.getID and inv:getID() == sourceInvID
+			return live.invID == sourceInvID
 		end
 
-		local function available()
-			local n = 0
+		-- Destination = the opposite side from where the item currently lives.
+		local destInv
+		if storageID and sourceInvID == storageID then
+			destInv = localInv            -- storage -> player (withdraw)
+		else
+			destInv = storageInv          -- player -> storage (deposit)
+		end
+
+		-- Transferable quantity is Amount-aware (a stack of one instance
+		-- carrying Amount=3 counts as 3), summed over instances still in the
+		-- source.
+		local function sourceQuantity()
+			local q = 0
 			for _, it in ipairs(stack) do
-				if isInSource(it) then n = n + 1 end
+				if isInSource(it) then q = q + itemAmount(it) end
 			end
-			return n
+			return q
+		end
+
+		-- A single unit (non-stackable item, or a 1-quantity stack) just
+		-- swaps straight across with no popup.
+		if sourceQuantity() <= 1 then
+			nutStorageBase:transferItem(item:getID())
+			return
+		end
+
+		-- Popup max = transferable quantity, capped by how much fits under the
+		-- destination inventory's carry-weight. Applies both ways: withdrawing
+		-- is limited by the player's weight, depositing by the storage's own
+		-- weight cap.
+		local function available()
+			local q = sourceQuantity()
+			if destInv and isfunction(destInv.getMaxWeight) and isfunction(destInv.getWeight) then
+				local base = (type(item.weight) == "function" and item:weight(item)) or item.weight or 1
+				if base > 0 then
+					local fit = math.floor((destInv:getMaxWeight() - destInv:getWeight()) / base)
+					q = math.min(q, math.max(0, fit))
+				end
+			end
+			return q
 		end
 
 		local popup = vgui.Create("nutBarterQuantity")
 		popup:setStack(item, available, function(n)
-			-- The gridinv server uses a per-client invTransferTransaction
-			-- lock (sv_transfer.lua) that rejects back-to-back transfers
-			-- until the previous one resolves. Firing N net messages in
-			-- the same tick gets exactly one through. Chain them with a
-			-- short delay so each transfer's lock can clear before the
-			-- next one fires; also re-check isInSource at each step in
-			-- case the source drained between ticks.
-			local idx, fired = 0, 0
-			local function fireNext()
-				while idx < #stack and fired < n do
+			n = math.floor(tonumber(n) or 0)
+			if n <= 0 then return end
+			-- Move n units across the stack's instances: transfer whole
+			-- instances while they fit under the running remainder, and split
+			-- the one that straddles the boundary. Whole-instance transfers
+			-- use the server's storage-transaction lock, so chain them with a
+			-- short delay; the split path runs immediately and ends the chain.
+			local idx = 0
+			local function step(remaining)
+				if remaining <= 0 then return end
+				while idx < #stack do
 					idx = idx + 1
 					local it = stack[idx]
 					if isInSource(it) then
-						nutStorageBase:transferItem(it:getID())
-						fired = fired + 1
-						if fired < n then timer.Simple(0.1, fireNext) end
+						local amt = itemAmount(it)
+						if amt <= remaining then
+							nutStorageBase:transferItem(it:getID())
+							timer.Simple(0.15, function()
+								if IsValid(self) then step(remaining - amt) end
+							end)
+						else
+							net.Start("cyrStorageTransferQuantity")
+								net.WriteUInt(it:getID(), 32)
+								net.WriteUInt(remaining, 32)
+							net.SendToServer()
+						end
 						return
 					end
 				end
 			end
-			fireNext()
+			step(n)
 		end)
 	end
 

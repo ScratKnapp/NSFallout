@@ -39,6 +39,18 @@ if SERVER then
     end)
 end
 
+-- When on (default), already-stackable items (maxstack > 1) get an unlimited
+-- stack. 0 uses each item's own maxstack. Non-stackable items are unaffected.
+CreateConVar("nwl_stackable_items_infinite", "1", {FCVAR_REPLICATED, FCVAR_ARCHIVE, FCVAR_NOTIFY}, "If 1, stackable items have an unlimited stack size. 0 uses each item's own maxstack.")
+
+function NWL.GetStackLimit(maxstack)
+    maxstack = tonumber(maxstack)
+    if not maxstack or maxstack <= 1 then return maxstack end
+    local cv = GetConVar("nwl_stackable_items_infinite")
+    if cv and cv:GetBool() then return math.huge end
+    return maxstack
+end
+
 hook.Add("GetDefaultInventoryType", "CYR_CreateDefaultInventory", function(character) return "simple" end)
 hook.Add("PluginShouldLoad", "CYR_PluginLoadCheck", function(uniqueID) if uniqueID == "compass" or uniqueID == "Compass" then return false end end)
 hook.Add("RemoveTabsFromMenu", "CYR_RemoveInventoryTab", function(tabs)
@@ -110,10 +122,8 @@ local function _IMPEL()
     includeModule("ui", "char_menu")
     includeModule("item", "item_pickup")
     includeModule("item", "stacking")
-    -- The DHTML combat action menu was reverted to the derma version that
-    -- ships with the fallout/combat plugin (cl_actionlist.lua). Leaving the
-    -- HTML template + override out of the load order makes nutActionList
-    -- fall back to that derma registration.
+    -- Combat action menu uses the derma version (cl_actionlist.lua);
+    -- leaving these out makes nutActionList fall back to it.
     -- includeModule("ui", "actis_html_content")
     -- includeModule("ui", "actis_ui_override")
     includeModule("ui", "combat_hud_theme")

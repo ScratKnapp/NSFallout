@@ -515,25 +515,7 @@ local skill_def = {{"big_guns", "Big Guns"}, {"small_arms", "Small Guns"}, {"ene
 local SELECTED_HEADER
 local wth, ht = ScrW(), ScrH()
 hook.Add("HUDPaint", "SKILLS", function()
-    local amt = (LocalPlayer():getChar():getSkillLevel("skillpoints") or 1) - 1
-    if SELECTED_HEADER == "SKILLS" and PIPBOY_ON_SCREEN and amt > 0 then
-        render.SetViewPort(ScrW() * 0.2, ScrH() * 0.775, wth, ht)
-        local t = "[]"
-        local n = "R [hold]) SPEND POINT ON SKILL (" .. amt .. ") "
-        surface.SetFont("Morton Medium@48")
-        local tw, th = surface.GetTextSize(t)
-        t = "["
-        surface.SetFont("Morton Medium@42")
-        local twn, thn = surface.GetTextSize(n)
-        surface.SetDrawColor(pip_color.r, pip_color.g, pip_color.b, 20)
-        surface.DrawRect(0, 13, tw + twn, th - 16)
-        surface.SetFont("Morton Medium@48")
-        NzGUI.DrawShadowText(t, 0, 0, c)
-        NzGUI.DrawShadowText("]", tw + twn - (tw / 2), 0, c)
-        surface.SetFont("Morton Medium@42")
-        NzGUI.DrawShadowText(n, 12, 6, c)
-        render.SetViewPort(0, 0, wth, ht)
-    elseif SELECTED_HEADER == "PERKS" and PIPBOY_ON_SCREEN then
+    if SELECTED_HEADER == "PERKS" and PIPBOY_ON_SCREEN then
         render.SetViewPort(ScrW() * 0.2, ScrH() * 0.775, wth, ht)
         local t = "[]"
         local n = "R) OPEN PERK MENU "

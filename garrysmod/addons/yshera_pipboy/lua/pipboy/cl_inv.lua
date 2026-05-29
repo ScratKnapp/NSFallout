@@ -4,8 +4,7 @@ table.sort(categories)
 table.insert(categories, 1, "ALL")
 table.insert(categories, "MISC")
 
--- The pipboy was built against an older item schema with .MaxHP and a "HP"
--- data field; fallout items use .durability and a "durability" data field.
+-- Old schema used .MaxHP / "HP"; fallout uses .durability / "durability".
 local function maxHp(it)
     return it.MaxHP or it.durability or 100
 end
@@ -27,6 +26,11 @@ local function sum(t)
 end
 
 local gui = nil
+-- Effective stack cap, honouring the nwl_stack_size convar (cyr_main).
+local function effMaxStack(maxstack)
+    if NWL and NWL.GetStackLimit then return NWL.GetStackLimit(maxstack) end
+    return maxstack
+end
 local function IsStackable(item)
     if item.baseStackable then return 1 end
     if item.Stackable then return 2 end
@@ -47,21 +51,10 @@ function clearinv()
     local partialStacks  = {} -- uniqueID -> {key, count, max, nextIdx} for in-progress packing
     local seen           = {}
 
-    -- Stacking policy:
-    --   * Items whose class supports customisation (has functions.Custom
-    --     or functions.CustomAtr) never stack. Each instance is its own
-    --     row whether or not it's actually been customised yet, because
-    --     it could be in the future and identical-looking copies could
-    --     still diverge.
-    --   * Instance-level customisation / equipped state forces a per-
-    --     instance stack key too (covers classes that lack the Custom
-    --     function but pick up custom/equip data via other paths).
-    --   * Otherwise, only stack if the class declares `maxStack > 1`, and
-    --     pack instances into buckets of that size — additional copies
-    --     spill into a new bucket so the visible count never exceeds the
-    --     declared maxStack.
-    --   * Anything else (no maxStack, maxStack <= 1, PreventStacks) is
-    --     one-row-per-instance.
+    -- Stacking policy: customisable classes (functions.Custom/CustomAtr),
+    -- instance custom/equip data, and PreventStacks all force one row per
+    -- instance. Otherwise stack when maxStack > 1, packing into buckets of
+    -- that size so a row's count never exceeds maxStack.
     local function uniqueKey(v) return v.uniqueID .. "@" .. v.id end
     local function getStackKey(v, cls)
         if cls.PreventStacks then return uniqueKey(v) end
@@ -81,9 +74,7 @@ function clearinv()
         local maxStack = tonumber(cls.maxStack) or 1
         if maxStack <= 1 then return uniqueKey(v) end
 
-        -- Pack into the current bucket for this uniqueID; spill into a
-        -- fresh bucket (#2, #3, ...) once the cap is reached so a row's
-        -- count never exceeds maxStack.
+        -- Pack into the current bucket; spill into a fresh one at the cap.
         local ps = partialStacks[v.uniqueID]
         if ps and ps.count < ps.max then
             ps.count = ps.count + 1
@@ -121,12 +112,8 @@ function clearinv()
         addItem(v)
     end
 
-    -- Items moved into equipment slots by the equipment plugin's addEquip
-    -- (sh_plugin.lua:211) get yanked out of the inventory via
-    -- `item:removeFromInventory(true)`, so iterating `inventory:getItems()`
-    -- alone makes them vanish from the listing the moment they're equipped.
-    -- Pull them back in from the char's equip table so they stay visible
-    -- (and right-clickable for Unequip).
+    -- Equipped items are pulled out of the inventory by addEquip, so add
+    -- them back from the char's equip table to keep them in the listing.
     if isfunction(player.getEquip) then
         for _, itemID in pairs(player:getEquip() or {}) do
             local v = nut.item.instances[itemID]
@@ -253,18 +240,14 @@ local tab = {
 }
 
 ITEM_DRAWN_THIS_FRAME = nil
--- Indent applied to every row to reserve a strip on the left for the
--- equipped indicator box. Keeping the indent constant (rather than only
--- shifting when equipped) means item names stay vertically aligned no
--- matter which rows are equipped.
+-- Constant left indent on every row, reserving space for the equipped
+-- indicator box so names stay aligned whether or not a row is equipped.
 local EQUIP_BOX_PAD  = 6
 local EQUIP_BOX_SIZE = 18
 local EQUIP_INDENT   = EQUIP_BOX_SIZE + EQUIP_BOX_PAD
 
--- Slot → indicator digit. Weapons land in primary/sidearm which map
--- to 1/2; other equipment slots (headgear, body, arms, utility, legs)
--- intentionally have no digit so their box just shows the equipped
--- state without a misleading number.
+-- Slot → indicator digit. Only primary/sidearm get a digit (1/2);
+-- other slots show the box with no number.
 local EQUIP_SLOT_LABELS = {
     primary = "1",
     sidearm = "2",
@@ -273,10 +256,8 @@ local EQUIP_SLOT_LABELS = {
 local function getInstanceEquipSlot(inst)
     if not inst then return nil end
     if isfunction(inst.getData) and inst:getData("equip") then
-        -- Weapons stash the slot they were equipped to in `equipSlot`
-        -- on the instance data; equipment classes carry a static
-        -- `.slot` field on the class table instead. Prefer the
-        -- explicit data when present, fall back to the class slot.
+        -- Weapons store their slot in data "equipSlot"; equipment classes
+        -- carry a static .slot. Prefer the data, fall back to the class.
         local slot = inst:getData("equipSlot") or inst.slot
         if slot then return slot end
     end
@@ -300,25 +281,23 @@ local function drawItem(item3, y, pip_color, _amt, ITEM_INSTANCE_RRA)
     surface.SetDrawColor(pip_color)
     --surface.DrawOutlinedRect(-420, 0, 400, 55)
     local item = nut.item.list[item3]
-    local amt = item:getData("amount") or 1
-    local cc = amt == 1 and "" or " (" .. amt .. ")"
+    local inst = item
+    -- A stack is one instance carrying an `Amount`; fall back to the
+    -- row's instance-bucket count (_amt) for anything not using Amount.
+    local amount = 1
+    if ITEM_INSTANCE_RRA and isfunction(ITEM_INSTANCE_RRA.getData) then
+        amount = tonumber(ITEM_INSTANCE_RRA:getData("Amount")) or 1
+    end
+    local shown = math.max(amount, _amt or 1)
     local name = (ITEM_INSTANCE_RRA or item):getName()
-    local inst = nut.item.list[item3]
-    -- _amt is the number of instances packed into this row (maxStack
-    -- buckets); show it whenever the stack groups more than one. Use
-    -- the class name in that case since all stacked copies are
-    -- functionally identical.
-    if _amt > 1 then name = inst.name .. " (" .. _amt .. ")" end
+    local cc = shown > 1 and (" (" .. shown .. ")") or ""
     local rowX = 86 + EQUIP_INDENT
     local rowW = FUSION_ITEM_BUTTON_SIZE.w - EQUIP_INDENT
     local rowY = 116 + (y * FUSION_ITEM_BUTTON_SIZE.ho)
     local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover(string.upper(name) .. cc, "Morton Medium@42", rowX, rowY, rowW, FUSION_ITEM_BUTTON_SIZE.h, 1, color_white, color_black, 0, pip_color)
 
-    -- While the action menu is open the highlight is pinned to the
-    -- item it was opened for: cursor-driven hover would otherwise
-    -- light up neighbouring rows as the user moves to reach the menu
-    -- and drop the highlight off the row whose actions the menu is
-    -- actually showing.
+    -- While the action menu is open, pin the highlight to its item so
+    -- cursor hover doesn't light up neighbouring rows.
     if PIP_INV_MENU then
         local isMenuItem = ITEM_INSTANCE_RRA and ITEM_INSTANCE_RRA.id == PIP_INV_MENU.itemID
         fn = isMenuItem and true or false
@@ -398,10 +377,7 @@ local function drawItem(item3, y, pip_color, _amt, ITEM_INSTANCE_RRA)
         end
 
         if IsUseDown and (_G.EatTimer or 0) > CurTime() then IsUseDown = false end
-        -- DrawInventoryPage now hands the row's actual instance in via
-        -- ITEM_INSTANCE_RRA for both stackable and non-stackable rows
-        -- (each stackKey carries its own firstInstance), so this is
-        -- just an alias for clarity.
+        -- ITEM_INSTANCE_RRA is the row's instance; alias for clarity.
         local function resolveInstance()
             return ITEM_INSTANCE_RRA
         end
@@ -424,9 +400,8 @@ local function drawItem(item3, y, pip_color, _amt, ITEM_INSTANCE_RRA)
                 end
             end
         end
-        -- While the action menu is open, item-row inputs are inert: the
-        -- menu owns the next click / keypress.
-        if not PIP_INV_MENU then
+        -- Item-row inputs are inert while a menu/selector owns the click.
+        if not PIP_INV_MENU and not PIP_DROP_SELECTOR then
             if IsUseDown then
                 IsUseDown = false
                 local v = resolveInstance()
@@ -451,7 +426,14 @@ local function drawItem(item3, y, pip_color, _amt, ITEM_INSTANCE_RRA)
                 IsReloadUse = false
                 local v = resolveInstance()
                 if v then
-                    netstream.Start("invAct", "drop", v.id, v:getID(), v.id)
+                    local cls = nut.item.list[v.uniqueID]
+                    local maxstack = effMaxStack(cls and cls.maxstack)
+                    local amount = tonumber(v:getData("Amount")) or 1
+                    if maxstack and maxstack > 1 and amount > 1 then
+                        OPEN_PIP_DROP_SELECTOR(v)
+                    else
+                        netstream.Start("invAct", "drop", v.id, v:getID(), v.id)
+                    end
                 end
             end
         end
@@ -461,13 +443,8 @@ local function drawItem(item3, y, pip_color, _amt, ITEM_INSTANCE_RRA)
 
     if inst.DrawLabel and ITEM_INSTANCE_RRA then ITEM_INSTANCE_RRA:DrawLabel(86, 116 + (y * FUSION_ITEM_BUTTON_SIZE.ho)) end
 
-    -- Equipped indicator: small filled box in the indent strip on the
-    -- left of the row. Drawn last so it sits on top of the hover
-    -- highlight rather than being painted over by it. Covers both
-    -- equip-tracking paths (item.data.equip and char:getData("equip")).
-    -- Primary/sidearm slots also get the slot number (1/2) drawn
-    -- inside the box; other slots (body, headgear, etc.) just show
-    -- the box on its own.
+    -- Equipped indicator box in the left indent. Drawn last so it sits
+    -- atop the hover highlight; primary/sidearm also get a slot digit.
     if isInstanceEquipped(ITEM_INSTANCE_RRA) then
         local boxX = 86 + math.floor(EQUIP_BOX_PAD * 0.5)
         local boxY = rowY + math.floor((FUSION_ITEM_BUTTON_SIZE.h - EQUIP_BOX_SIZE) * 0.5)
@@ -490,28 +467,17 @@ end
 hook.Add("ItemDataChanged", "ItemDataChanged", function() clearinv() end)
 hook.Add("InventoryItemRemoved", "invDatainvData", function() clearinv() end)
 hook.Add("ItemInitialized", "ItemInitializedItemInitialized", function() timer.Simple(0, clearinv) end)
--- `nut_updateEquipSlots` (fired by `playerMeta:addEquip` /
--- `playerMeta:removeEquip` and by dropping a slotted item) triggers
--- NutUpdateEquipSlots client-side. Item-data and inventory-removed
--- hooks don't cover changes to char:getData("equip"), so without this
--- the pipboy would keep the equipped indicator drawn after the slot
--- has actually been cleared.
+-- char:getData("equip") changes aren't covered by the item-data /
+-- inventory-removed hooks, so refresh here too or the indicator goes stale.
 hook.Add("NutUpdateEquipSlots", "PipboyEquipUpdate", function() clearinv() end)
 last_item_page_draw_amt = 0
 local color_gray = Color(255, 255, 255, 25)
 local color_bright_Gray = Color(255, 255, 255, 55)
 
--- ------------------------------------------------------------------
--- In-pipboy item action dropdown.
---
--- Mirrors nutscript's openActionMenu (utils/derma/cl_inventory.lua):
--- merges functionsB / functions / functionsD, filters via onCanRun,
--- and emits the same `invAct` netstream the standard menu does.
--- isMulti entries get flattened into one row per multiOption so the
--- whole list fits a single-level pipboy dropdown.
--- We can't use DermaMenu because the pipboy uses an in-RT cursor
--- distinct from the OS cursor, so vgui menus open in the wrong place
--- (and outside the pipboy render target).
+-- In-pipboy item action dropdown. Mirrors nutscript's openActionMenu
+-- (merges functionsB/functions/functionsD, filters via onCanRun, emits
+-- invAct), flattening isMulti entries into one row each. Hand-drawn
+-- rather than DermaMenu because the pipboy uses its own in-RT cursor.
 PIP_INV_MENU = nil
 
 local function pipInvMenuPlaySound(snd)
@@ -523,13 +489,9 @@ local function pipInvMenuPlaySound(snd)
     end
 end
 
--- Items routed through the Equipment plugin's specialSlot path land in
--- char:getData("equip") via `playerMeta:addEquip`, which calls
--- `item:removeFromInventory(true)` — so `item.data.equip` is never set
--- and the item's own EquipUn.onCanRun (which checks that flag) returns
--- false. Detecting the char-slot occupancy lets us inject a synthetic
--- Unequip that fires the plugin's dedicated `nut_unequip_slot` net
--- stream instead.
+-- specialSlot items live in char:getData("equip"), never set item.data.equip,
+-- so their own EquipUn.onCanRun fails. Detect the char slot here so we can
+-- inject a synthetic Unequip via the nut_unequip_slot netstream instead.
 local function pipInvMenuCharEquipSlot(itemTable)
     if not itemTable or not itemTable.id then return nil end
     local plr = LocalPlayer()
@@ -560,18 +522,14 @@ local function pipInvMenuBuildOptions(itemTable)
         }
     end
 
-    -- Detect equipped state across both tracking paths so the drop
-    -- entry can be hidden — equipped items must be unequipped before
-    -- they can be dropped, otherwise the player can desync (item on
-    -- the floor while the SWEP / buffs are still attached).
+    -- Detect equipped state (both paths) to hide drop; equipped items
+    -- must be unequipped first or the SWEP/buffs desync from the dropped item.
     local isEquipped = charSlot ~= nil
         or (isfunction(itemTable.getData) and itemTable:getData("equip") and true or false)
 
     for k, v in SortedPairs(merged) do
-        -- For items already sitting in a char.equip slot, hide the
-        -- re-equip entries — they'd either silently fail or double-fill
-        -- the slot. The synthetic Unequip above is the only equip-side
-        -- action they need.
+        -- Hide re-equip entries for char.equip-slotted items (the
+        -- synthetic Unequip above is all they need).
         if charSlot and (k == "Equip" or k == "EquipSlot") then continue end
         -- Hide drop on equipped items: requires Unequip first.
         if isEquipped and k == "drop" then continue end
@@ -599,6 +557,20 @@ local function pipInvMenuBuildOptions(itemTable)
             }
         end
     end
+
+    -- Synthetic Merge: only when there's more than one stack to combine.
+    local cls = nut.item.list[itemTable.uniqueID]
+    local maxstack = effMaxStack(cls and cls.maxstack)
+    if maxstack and maxstack > 1 then
+        local inv = LocalPlayer():getChar():getInv()
+        if inv and #inv:getItemsOfType(itemTable.uniqueID) > 1 then
+            list[#list + 1] = {
+                label   = "Merge",
+                isMerge = true,
+            }
+        end
+    end
+
     return list
 end
 
@@ -616,9 +588,7 @@ function OPEN_PIP_INV_MENU(itemTable, x, y)
         options = options,
         itemID  = itemTable:getID(),
         invID   = inv and inv:getID() or nil,
-        -- Seed the rising-edge tracker with the current LMB state so a
-        -- button that's still held from before the menu opened doesn't
-        -- count as an immediate click.
+        -- Seed with current LMB state so a held button isn't read as a click.
         lmbPrev = input.IsMouseDown(MOUSE_LEFT),
     }
 end
@@ -629,9 +599,27 @@ local function pipInvMenuRun(opt)
     local itemTable = nut.item.instances[menu.itemID]
     if not itemTable then PIP_INV_MENU = nil; return end
 
-    -- Synthetic Unequip for char.equip-tracked items: hits the
-    -- equipment plugin's dedicated netstream so the slot is actually
-    -- freed and the item is moved back into the inventory.
+    -- Stack drop: open the quantity selector instead of dropping the whole stack.
+    if opt.actionKey == "drop" then
+        local cls = nut.item.list[itemTable.uniqueID]
+        local maxstack = effMaxStack(cls and cls.maxstack)
+        local amount = tonumber(itemTable:getData("Amount")) or 1
+        if maxstack and maxstack > 1 and amount > 1 then
+            PIP_INV_MENU = nil
+            OPEN_PIP_DROP_SELECTOR(itemTable)
+            return
+        end
+    end
+
+    -- Merge action: compact partial stacks (handled in sv_stacking.lua).
+    if opt.isMerge then
+        pipInvMenuPlaySound(SOUND_INVENTORY_INTERACT or nil)
+        netstream.Start("cyrMergeStacks", itemTable.uniqueID)
+        PIP_INV_MENU = nil
+        return
+    end
+
+    -- Synthetic Unequip: frees the char.equip slot and returns the item.
     if opt.isCharEquip then
         pipInvMenuPlaySound(SOUND_INVENTORY_INTERACT or nil)
         netstream.Start("nut_unequip_slot", opt.data, itemTable.id)
@@ -677,10 +665,8 @@ local function pipInvMenuDraw()
     surface.SetDrawColor(pip_color)
     surface.DrawOutlinedRect(mx, my, menuW, menuH)
 
-    -- One-shot click detection independent of the pipboy's AddUIButton
-    -- pulse (which has already been consumed by the inventory rows
-    -- drawn earlier this frame). input.IsMouseDown reads the raw mouse
-    -- state — we keep a local rising-edge flag so each press fires once.
+    -- Raw-input rising-edge click detection (the AddUIButton pulse was
+    -- already consumed by the rows), so each press fires once.
     local lmbHeld = input.IsMouseDown(MOUSE_LEFT)
     local justClicked = lmbHeld and not menu.lmbPrev
     menu.lmbPrev = lmbHeld
@@ -710,11 +696,114 @@ local function pipInvMenuDraw()
         return
     end
 
-    -- Right-click anywhere (including over an item) also dismisses
-    -- the menu, mirroring how OS context menus behave.
+    -- Right-click anywhere also dismisses the menu.
     if IsRightMouseDown then
         IsRightMouseDown = false
         PIP_INV_MENU = nil
+    end
+end
+
+-- "Drop how many?" selector for stacks (Amount > 1), drawn in the pipboy
+-- RT like the action menu. Full amount -> normal drop; partial -> split
+-- via cyrDropQuantity (sv_stacking.lua).
+PIP_DROP_SELECTOR = nil
+
+function OPEN_PIP_DROP_SELECTOR(itemTable)
+    if not itemTable then return end
+    local max = tonumber(itemTable:getData("Amount")) or 1
+    if max <= 1 then return end
+    local inv = LocalPlayer():getChar():getInv()
+    PIP_DROP_SELECTOR = {
+        itemID  = itemTable:getID(),
+        invID   = inv and inv:getID() or nil,
+        max     = max,
+        value   = max,
+        lmbPrev = input.IsMouseDown(MOUSE_LEFT),
+    }
+end
+
+local function pipDropSelectorDraw()
+    local sel = PIP_DROP_SELECTOR
+    if not sel then return end
+    local item = nut.item.instances[sel.itemID]
+    if not item then PIP_DROP_SELECTOR = nil return end
+
+    -- Track the live max in case the stack changes underneath us.
+    sel.max = tonumber(item:getData("Amount")) or sel.max
+    sel.value = math.Clamp(sel.value, 1, sel.max)
+
+    local screenW = WIDTH or 1300
+    local screenH = HEIGHT or 800
+    local w, h = 440, 250
+    local x = math.floor((screenW - w) * 0.5)
+    local y = math.floor((screenH - h) * 0.5)
+
+    surface.SetDrawColor(0, 0, 0, 235)
+    surface.DrawRect(x, y, w, h)
+    surface.SetDrawColor(pip_color)
+    surface.DrawOutlinedRect(x, y, w, h)
+
+    draw.SimpleText("DROP HOW MANY?", "Morton Medium@42", x + w * 0.5, y + 18, pip_color, TEXT_ALIGN_CENTER)
+    local nm = (item.getName and item:getName()) or item.name or ""
+    draw.SimpleText(string.upper(nm), "Morton Medium@32", x + w * 0.5, y + 62, color_white, TEXT_ALIGN_CENTER)
+
+    local lmbHeld = input.IsMouseDown(MOUSE_LEFT)
+    local justClicked = lmbHeld and not sel.lmbPrev
+    sel.lmbPrev = lmbHeld
+
+    local function rect(rx, ry, rw, rh, label)
+        local inside = cursor.x >= rx and cursor.x <= rx + rw
+                   and cursor.y >= ry and cursor.y <= ry + rh
+        surface.SetDrawColor(pip_color)
+        if inside then
+            surface.DrawRect(rx, ry, rw, rh)
+        else
+            surface.DrawOutlinedRect(rx, ry, rw, rh)
+        end
+        if label then
+            draw.SimpleText(label, "Morton Medium@42", rx + rw * 0.5, ry + rh * 0.5 - 18,
+                inside and color_black or color_white, TEXT_ALIGN_CENTER)
+        end
+        return inside
+    end
+
+    -- [-]   value / max   [+]
+    local cy = y + 108
+    local minusIn = rect(x + 40, cy, 50, 44, "-")
+    local plusIn  = rect(x + w - 90, cy, 50, 44, "+")
+    draw.SimpleText(sel.value .. " / " .. sel.max, "Morton Medium@48",
+        x + w * 0.5, cy + 2, color_white, TEXT_ALIGN_CENTER)
+
+    -- Confirm / Cancel
+    local by = y + h - 60
+    local btnW = (w - 90) * 0.5
+    local confirmIn = rect(x + 30, by, btnW, 44, "DROP")
+    local cancelIn  = rect(x + w - 30 - btnW, by, btnW, 44, "CANCEL")
+
+    if justClicked then
+        if minusIn then
+            sel.value = math.max(1, sel.value - 1)
+        elseif plusIn then
+            sel.value = math.min(sel.max, sel.value + 1)
+        elseif confirmIn then
+            local n = math.Clamp(math.floor(sel.value), 1, sel.max)
+            if n >= sel.max then
+                netstream.Start("invAct", "drop", sel.itemID, sel.invID, sel.itemID)
+            else
+                netstream.Start("cyrDropQuantity", sel.itemID, n)
+            end
+            surface.PlaySound("os/button_6.wav")
+            PIP_DROP_SELECTOR = nil
+        elseif cancelIn then
+            PIP_DROP_SELECTOR = nil
+        end
+        return
+    end
+
+    -- Right-click also cancels, matching the action menu.
+    if IsRightMouseDown then
+        IsRightMouseDown = false
+        PIP_DROP_SELECTOR = nil
     end
 end
 
@@ -742,10 +831,8 @@ local function DrawInventoryPage()
 
     local _ = 0
     if tablet.Inventory.cacheKeys == nil then
-        -- Order rows by the instance's display name so customised items
-        -- (which now occupy their own stackKey) sort by their custom
-        -- name rather than the class name. Tie-break on stackKey keeps
-        -- the ordering deterministic across frames when names collide.
+        -- Order rows by display name (so customised items sort by their
+        -- own name); tie-break on stackKey for stable ordering.
         local sortable = {}
         for k in pairs(tablet.Inventory.items) do
             sortable[#sortable + 1] = k
@@ -774,15 +861,11 @@ local function DrawInventoryPage()
         local uniqueID = tablet.Inventory.stackUID[stackKey]
         local cls      = uniqueID and nut.item.list[uniqueID]
         if cls then
-            -- Category filter is case-insensitive: tabs are upper-case
-            -- ("WEAPONS"), but fallout item categories are mixed-case
-            -- ("Weapons"), so a literal equality compare hides weapons /
-            -- aid / etc. from their own tab.
+            -- Case-insensitive category filter: tabs are upper-case,
+            -- fallout categories mixed-case.
             if inventory.focus == 1 or string.upper(cls.category or "MISC") == categories[inventory.focus] then
-                -- Every stackKey is one row now: items[stackKey] is the
-                -- count and firstInstances[stackKey] is the instance to
-                -- render / interact with. Single-instance rows have
-                -- count 1; maxStack-packed rows have count up to maxStack.
+                -- One row per stackKey: items[] is the count, firstInstances[]
+                -- the instance to render/interact with.
                 local inst = tablet.Inventory.firstInstances[stackKey]
                 stack[keypos] = {uniqueID, _, pip_color, tablet.Inventory.items[stackKey], inst}
                 keypos = keypos + 1
@@ -825,10 +908,9 @@ local function DrawInventoryPage()
     surface.DrawRect(643, 120 + (p1 * 540), 10, p2 * 540 + 5)
     PIP_DRAW_FOOTER()
 
-    -- Drawn last so it sits visually above the list / scrollbar /
-    -- footer; its own input.IsMouseDown handling means it doesn't
-    -- need to race the inventory rows for the click pulse.
+    -- Drawn last so it sits above the list/scrollbar/footer.
     pipInvMenuDraw()
+    pipDropSelectorDraw()
 end
 
 local wth, ht = ScrW(), ScrH()
@@ -948,9 +1030,7 @@ DrawPly["HEAT SIGNATURES"] = function()
     local character = ply:getChar()
 end
 
--- After a respec the player's perk list is wiped (only hidden traits survive),
--- so the INV PERKS sub-page must rebuild its description cache instead of
--- continuing to draw from stale entries keyed on the old owned set.
+-- A respec wipes the perk list, so drop the description cache to rebuild it.
 netstream.Hook("nut_respec_done", function()
     cached_desc = nil
 end)

@@ -520,6 +520,10 @@ end
 function SWEP:DrawHUD()
 	if not CLIENT then return end
 
+	-- Hide the combat HUD entirely while the Pip-Boy is raised — it owns the
+	-- screen, and V.A.T.S. is forced off under it anyway.
+	if PIPBOY_ON_SCREEN then return end
+
 	-- Re-tint the V.A.T.S. palette from the shared pipboy primary every frame
 	-- so the overlay matches the rest of the pipboy-styled UI (FO3 bracket HUD,
 	-- notify panel, combat HUD theme). CYR_GetHUDColor lives in cl_hud_interface
@@ -1351,6 +1355,15 @@ if CLIENT then
 		if not IsValid(ply) then return end
 		local wep = ply:GetActiveWeapon()
 		if not IsValid(wep) or wep:GetClass() ~= "nut_cswep" then return end
+
+		-- The Pip-Boy owns input while raised: turn V.A.T.S. off when it opens
+		-- and don't let Tab toggle it back on underneath. vatsPrevTab is kept in
+		-- sync so closing the Pip-Boy doesn't register as a fresh Tab press.
+		if PIPBOY_ON_SCREEN then
+			if wep.vatsMode then wep:SetVATSMode(false, "cancel") end
+			wep.vatsPrevTab = input.IsKeyDown(KEY_TAB)
+			return
+		end
 
 		-- Tab toggles V.A.T.S. either way. Toggling off counts as a cancel
 		-- so the cancel SFX plays instead of the commit/exit SFX.

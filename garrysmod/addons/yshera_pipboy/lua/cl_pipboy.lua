@@ -418,6 +418,10 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
 
     -- Pipboy cursor sensitivity, adjustable from the in-pipboy SETTINGS tab.
     local cursor_sens_cv = CreateClientConVar("pipboy_mouse_sens", "0.3", true, false)
+    -- Live-tunable X/Y nudge added to the raised right upper-arm position so
+    -- the Pip-Boy arm can be repositioned on screen without recompiling.
+    local pip_arm_off_x = CreateClientConVar("pipboy_arm_offset_x", "0", true, false)
+    local pip_arm_off_y = CreateClientConVar("pipboy_arm_offset_y", "0", true, false)
     cursor.Pressed = false
     cursor.WaitingForRelease = false
     function cursor:IsReady()
@@ -776,7 +780,11 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
                 local id = vm:LookupBone(v.bone)
                 if not id then continue end
                 if v.pos then
-                    vm:ManipulateBonePosition(id, LerpVector(frac, vector_origin, v.pos))
+                    local target = v.pos
+                    if v.bone == "ValveBiped.Bip01_R_UpperArm" then
+                        target = target + Vector(pip_arm_off_x:GetFloat(), pip_arm_off_y:GetFloat(), 0)
+                    end
+                    vm:ManipulateBonePosition(id, LerpVector(frac, vector_origin, target))
                 end
                 if v.ang then
                     vm:ManipulateBoneAngles(id, LerpAngle(frac, v.low or angle_zero, v.ang))
@@ -808,35 +816,67 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
         -- Fixed FOV used to render the pipboy/arms so the player's
         -- viewmodel_fov cvar can't rescale or shift them on screen.
         local PIPBOY_RENDER_FOV = tonumber(GetConVar("viewmodel_fov"):GetDefault()) or 54
-        hook.Add("PreDrawViewModel", "aheXXAFGAGA", function(viewmodel, weapon)
+        -- Positions and draws the Pip-Boy/arm clientside models in viewmodel
+        -- space. `basePos` is the origin to hang them off (the engine
+        -- viewmodel's position for weapons that have one, EyePos() otherwise)
+        -- and `vmOffset` is the engine viewmodel slide-down to subtract (zero
+        -- when there's no real viewmodel to slide). Factored out so it can run
+        -- from either the viewmodel pass or the world-pass fallback below.
+        local function drawPipboyModels(basePos, vmOffset)
             offsetDT = PipAnimValue() -- recompute here so the bone pose is never a frame stale
+            if offsetDT <= 0.00001 then return end
             local miles = (1 - offsetDT) * 18
-            local client = LocalPlayer()
             -- Build the offset basis from EyeAngles directly. Using
             -- cs_vm:GetForward/Up reads the previous frame's angles and
             -- also drifts when viewmodel_fov changes the engine's reported
             -- viewmodel pose, so derive the basis from the camera instead.
             local eyeAng = EyeAngles()
-            local eyeFwd, eyeUp = eyeAng:Forward(), eyeAng:Up()
-            cs_vm:SetPos(client:GetViewModel():GetPos() - _VEC_OFFSET + (eyeUp * 4.5) + (eyeFwd * 5) + (eyeUp * -miles))
+            local eyeFwd, eyeUp, eyeRight = eyeAng:Forward(), eyeAng:Up(), eyeAng:Right()
+            cs_vm:SetPos(basePos - vmOffset + (eyeUp * 4.5) + (eyeFwd * 6) + (eyeUp * -miles) + (eyeRight * 0.8))
             cs_vm:SetAngles(eyeAng)
             cs_pip:SetPos(cs_vm:GetPos() + (eyeFwd * 10) + (eyeUp * -5))
             local ang = Angle(eyeAng.p, eyeAng.y, eyeAng.r)
             ang:RotateAroundAxis(eyeFwd, 270)
-            ang:RotateAroundAxis(eyeAng:Right(), 180)
+            ang:RotateAroundAxis(eyeRight, 180)
             cs_pip:SetAngles(ang)
-            if offsetDT > 0.00001 then
-                ApplyPipboyBonePose(offsetDT)
-                cs_vm:SetupBones()
-                -- Re-issue the view with our fixed FOV so the draw calls
-                -- inherit it instead of the viewmodel pass's viewmodel_fov.
-                cam.Start3D(EyePos(), eyeAng, PIPBOY_RENDER_FOV)
-                cs_vm:DrawModel()
-                cs_arms:DrawModel()
-                cs_pip:DrawModel()
-                cam.End3D()
-                render.SetLightingMode(0)
-            end
+            ApplyPipboyBonePose(offsetDT)
+            cs_vm:SetupBones()
+            -- Re-issue the view with our fixed FOV so the draw calls
+            -- inherit it instead of the viewmodel pass's viewmodel_fov.
+            cam.Start3D(EyePos(), eyeAng, PIPBOY_RENDER_FOV)
+            cs_vm:DrawModel()
+            cs_arms:DrawModel()
+            cs_pip:DrawModel()
+            cam.End3D()
+            render.SetLightingMode(0)
+        end
+
+        -- True when the active weapon declares no viewmodel (e.g. the combat
+        -- SWEP, ViewModel = ""). The engine skips the viewmodel draw pass for
+        -- such weapons, so PreDrawViewModel never fires and the fallback hook
+        -- has to render the Pip-Boy instead.
+        local function activeWeaponHasNoViewmodel()
+            local wep = LocalPlayer():GetActiveWeapon()
+            return IsValid(wep) and (wep.ViewModel or "") == ""
+        end
+
+        hook.Add("PreDrawViewModel", "aheXXAFGAGA", function(viewmodel, weapon)
+            drawPipboyModels(LocalPlayer():GetViewModel():GetPos(), _VEC_OFFSET)
+        end)
+
+        -- Fallback for weapons with no viewmodel: PreDrawViewModel doesn't run
+        -- for them, so draw during the world pass instead. The viewmodel-bearing
+        -- case is handled above and bails here to avoid double-drawing. A
+        -- compressed depth range keeps the arm from clipping into nearby world
+        -- geometry the way a real viewmodel wouldn't.
+        hook.Add("PostDrawTranslucentRenderables", "pipboy_novm_fallback", function(bDepth, bSkybox, b3dSkybox)
+            if bDepth or bSkybox or b3dSkybox then return end
+            -- drawPipboyModels gates on the raise/lower animation value, so
+            -- the close animation still plays after PIPBOY_ON_SCREEN flips off.
+            if not activeWeaponHasNoViewmodel() then return end
+            render.DepthRange(0, 0.1)
+            drawPipboyModels(EyePos(), vector_origin)
+            render.DepthRange(0, 1)
         end)
 
         hook.Add("PostDrawViewModel", "aheXXAFGAGA", function(viewmodel, weapon)
@@ -930,6 +970,19 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
             surface.SetMaterial(holographic)
             surface.DrawTexturedRect(x, y, wth, height)
         end
+    end)
+
+    -- Vignette that eases in with the Pip-Boy raise and back out on close.
+    -- Alpha is driven by the same PipAnimValue() timeline as the arm/slide,
+    -- so it appears and disappears in sync instead of snapping.
+    local pip_vignette = Material("nutscript/gui/vignette.png", "noclamp smooth")
+    hook.Add("HUDPaintBackground", "pipboy_vignette", function()
+        local frac = PipAnimValue()
+        if frac <= 0.001 then return end
+        surface.SetDrawColor(0, 0, 0, 255 * frac)
+        surface.SetMaterial(pip_vignette)
+        surface.DrawTexturedRect(0, 0, ScrW(), ScrH())
+              surface.DrawTexturedRect(0, 0, ScrW(), ScrH())
     end)
 
     sound.PlayFile("sound/pipboy/ui_hum.wav", "noblock noplay", function(channel)

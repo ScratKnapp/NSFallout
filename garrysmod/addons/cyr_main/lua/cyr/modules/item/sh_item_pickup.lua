@@ -24,11 +24,57 @@ if SERVER then
             if client.nutPickingUp ~= entity then return end
             local item = nut.item.instances[entity.nutItemID]
             if not item then return end
+
+            local char = client:getChar()
+            local inventory = char and char:getInv()
+
+            -- Auto-stack maxstack/Amount items into existing stacks before
+            -- taking a fresh slot; everything else falls through unchanged.
+            local itemDef = nut.item.list[item.uniqueID]
+            local maxstack = NWL.GetStackLimit(itemDef and itemDef.maxstack)
+            local dbg = "[STACK] pickup " .. tostring(item.uniqueID) .. " maxstack=" .. tostring(maxstack) .. " amount=" .. tostring(item:getData("Amount")) .. " hasInv=" .. tostring(inventory ~= nil)
+            print(dbg)
+            if IsValid(client) then client:ChatPrint(dbg) end
+            if inventory and maxstack and maxstack > 1 then
+                item.player = client
+                local remaining = tonumber(item:getData("Amount")) or 1
+                local existingCount = #inventory:getItemsOfType(item.uniqueID)
+                local dbg2 = "[STACK] merging incoming=" .. remaining .. " existing stacks of this type=" .. existingCount
+                print(dbg2)
+                if IsValid(client) then client:ChatPrint(dbg2) end
+                for _, existing in pairs(inventory:getItemsOfType(item.uniqueID)) do
+                    if remaining <= 0 then break end
+                    local cur = tonumber(existing:getData("Amount")) or 1
+                    local space = maxstack - cur
+                    if space > 0 then
+                        local move = math.min(space, remaining)
+                        existing:setData("Amount", cur + move)
+                        remaining = remaining - move
+                    end
+                end
+
+                if remaining <= 0 then
+                    -- Fully absorbed; destroy the world item.
+                    item:remove()
+                else
+                    -- Leftover becomes its own stack; if the add is rejected
+                    -- (full) the item stays in the world with the remainder.
+                    item:setData("Amount", remaining)
+                    inventory:add(item)
+                        :next(function() if IsValid(entity) then entity:Remove() end end)
+                        :catch(function() end)
+                end
+
+                item.player = nil
+                client.nutPickingUp = nil
+                return
+            end
+
             if item.functions and item.functions.take then
+                item.player = client
                 item.functions.take.onRun(item)
-            else
-                local inventory = client:getChar():getInv()
-                if not inventory then return end
+                item.player = nil
+            elseif inventory then
                 inventory:add(item):next(function() if IsValid(entity) then entity:Remove() end end)
             end
 
