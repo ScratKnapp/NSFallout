@@ -586,7 +586,7 @@ CYR.UI.CharMenuHTML = [[
                     <span class="detail-val" id="det-name">---</span>
                 </div>
                 <div class="detail-row">
-                    <span class="detail-label">FACTION</span>
+                    <span class="detail-label">RACE</span>
                     <span class="detail-val" id="det-faction">---</span>
                 </div>
                 <div class="detail-row">
@@ -631,7 +631,7 @@ CYR.UI.CharMenuHTML = [[
                 </div>
                 
                 <div class="step-content" id="step-1">
-                    <h3>SELECT FACTION</h3>
+                    <h3>SELECT RACE</h3>
                     <div class="grid-select" id="faction-grid"></div>
                     <p id="faction-desc" style="opacity:0.7; margin-top:20px;"></p>
                 </div>
@@ -965,7 +965,7 @@ CYR.UI.CharMenuHTML = [[
 
        function nextStep() {
             if(currentStep === 1) {
-                if(!createData.factionIndex) return showModal("ERROR", "Please select a faction.", closeModal);
+                if(!createData.factionIndex) return showModal("ERROR", "Please select a race.", closeModal);
                 
                 // Load Models for Step 2
                 const fac = factions.find(f => f.index === createData.factionIndex);

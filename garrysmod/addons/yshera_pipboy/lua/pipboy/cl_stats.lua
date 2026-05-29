@@ -53,10 +53,34 @@ function DrawPly.STATS()
     --Draw Player Info
     formattedText("Name:", character:getName(), 64, 132)
     formattedText("HP:", math.ceil(hp) .. "/" .. math.ceil(hpMax), 64, 128 + 64)
-    formattedText("Faction:", faction and faction.name or "None", 64, 128 + 128)
+    formattedText("Race:", faction and faction.name or "None", 64, 128 + 128)
 
     -- DESCRIPTION as its own header with the text in a smaller wrapped body.
     draw.DrawText("DESCRIPTION", MainFontName .. "@48", 64, 380, pip_color)
+
+    -- EDIT button (to the right of the header): fires the stock NutScript
+    -- "chardesc" command with no argument, which makes the server call
+    -- requestString and pops open the default derma description editor.
+    surface.SetFont(MainFontName .. "@48")
+    local descHdrW = surface.GetTextSize("DESCRIPTION")
+    local ebx, eby, ebw, ebh = 64 + descHdrW + 24, 384, 120, 40
+    local eHover, eClick = AddUIButton(ebx, eby, ebw, ebh)
+    surface.SetDrawColor(pip_color)
+    surface.DrawOutlinedRect(ebx, eby, ebw, ebh)
+    local eCol = pip_color
+    if eHover then
+        eCol = color_black
+        surface.SetDrawColor(pip_color)
+        surface.DrawRect(ebx, eby, ebw, ebh)
+    end
+    -- Centre the label in the box (the helper draws top-aligned, so draw it
+    -- ourselves vertically centred instead).
+    draw.SimpleText("EDIT", MainFontName .. "@32", ebx + ebw * 0.5, eby + ebh * 0.5, eCol, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    if eClick and isfunction(nut.command and nut.command.send) then
+        nut.command.send("chardesc")
+        surface.PlaySound("buttons/button14.wav")
+    end
+
     local desc = character:getDesc() or ""
     -- RT is 1024 wide; leave a 64px gutter on each side so text never clips
     -- against the curved CRT edge.
@@ -513,6 +537,8 @@ function DrawPly.SKILLS()
     local amt = (character:getSkillLevel("skillpoints") or 1) - 1
     draw.DrawText("SKILL POINTS: " .. amt, MainFontName .. "@42", 950, 64, amt > 0 and pip_color or color_white, TEXT_ALIGN_RIGHT)
     for y, v in pairs(skill_def) do
+        local skillVal = character:getSkillLevel(v[1]) or 0
+        local atCap = skillVal >= 100
         local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover(v[2]:upper(), MainFontName .. "@42", 64, offset - 2 + (y * height), width, height, 1, color_white)
         local c = pip_color
         if fn then
@@ -524,7 +550,7 @@ function DrawPly.SKILLS()
             surface.SetMaterial(attriIMG[1])
             surface.SetDrawColor(pip_color)
             draw.DrawNonParsedText(skill_desc[y], MainFontName .. "@24", 600, 400, pip_color, 0)
-            if IS_R_DOWN and amt > 0 then
+            if IS_R_DOWN and amt > 0 and not atCap then
                 deltSt = deltSt == 0 and CurTime() or deltSt
                 --
                 --
@@ -544,12 +570,13 @@ function DrawPly.SKILLS()
             end
         end
 
-        draw.DrawText(character:getSkillLevel(v[1]), MainFontName .. "@48", width + 100, offset - 8 + (y * height), c, TEXT_ALIGN_RIGHT)
+        draw.DrawText(skillVal, MainFontName .. "@48", width + 100, offset - 8 + (y * height), c, TEXT_ALIGN_RIGHT)
         draww(c)
 
         -- Click-to-spend "+" square sits to the right of the value text.
-        -- Hidden entirely when no skillpoints remain to spend.
-        if amt > 0 then
+        -- Hidden when no skillpoints remain to spend, or once the skill has
+        -- reached the 100 cap.
+        if amt > 0 and not atCap then
             local bx, by, bs = 525, offset + 2 + (y * height), 28
             surface.SetDrawColor(pip_color)
             surface.DrawOutlinedRect(bx, by, bs, bs)

@@ -161,8 +161,8 @@ end
 
 FUSION_ITEM_BUTTON_SIZE = {
     w = 550,
-    h = 36,
-    ho = 36
+    h = 30,
+    ho = 30
 }
 
 local ITEMDESCOFFSET = {
@@ -294,7 +294,7 @@ local function drawItem(item3, y, pip_color, _amt, ITEM_INSTANCE_RRA)
     local rowX = 86 + EQUIP_INDENT
     local rowW = FUSION_ITEM_BUTTON_SIZE.w - EQUIP_INDENT
     local rowY = 116 + (y * FUSION_ITEM_BUTTON_SIZE.ho)
-    local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover(string.upper(name) .. cc, MainFontName .. "@42", rowX, rowY, rowW, FUSION_ITEM_BUTTON_SIZE.h, 1, color_white, color_black, 0, pip_color)
+    local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover(string.upper(name) .. cc, MainFontName .. "@32", rowX, rowY, rowW, FUSION_ITEM_BUTTON_SIZE.h, 1, pip_color, color_black, 0, pip_color)
 
     -- While the action menu is open, pin the highlight to its item so
     -- cursor hover doesn't light up neighbouring rows.
@@ -311,7 +311,7 @@ local function drawItem(item3, y, pip_color, _amt, ITEM_INSTANCE_RRA)
         local headpos = InventoryModelView.Entity:GetPos()
         InventoryModelView:SetLookAt(headpos)
         InventoryModelView:SetCamPos(headpos - Vector(-15, 0, 0))
-        draww()
+        draww(color_black)
         PopBollc()
         -- if inst.Icon then
         InventoryModelView:SetModel(inst.model or "models/props_junk/cardboard_box001a.mdl")
@@ -447,8 +447,12 @@ local function drawItem(item3, y, pip_color, _amt, ITEM_INSTANCE_RRA)
     -- atop the hover highlight; primary/sidearm also get a slot digit.
     if isInstanceEquipped(ITEM_INSTANCE_RRA) then
         local boxX = 86 + math.floor(EQUIP_BOX_PAD * 0.5)
-        local boxY = rowY + math.floor((FUSION_ITEM_BUTTON_SIZE.h - EQUIP_BOX_SIZE) * 0.5)
-        surface.SetDrawColor(color_white)
+        -- Centre the box on the name's text line (drawn top-aligned at rowY in
+        -- the @32 font) rather than the shorter row rect, so they line up.
+        surface.SetFont(MainFontName .. "@32")
+        local _, lineH = surface.GetTextSize("0")
+        local boxY = rowY + math.floor((lineH - EQUIP_BOX_SIZE) * 0.5)
+        surface.SetDrawColor(pip_color)
         surface.DrawRect(boxX, boxY, EQUIP_BOX_SIZE, EQUIP_BOX_SIZE)
 
         local slot = getInstanceEquipSlot(ITEM_INSTANCE_RRA)
@@ -823,7 +827,17 @@ local function DrawInventoryPage()
 
     if tablet.Inventory == nil then clearinv() end
     for i = 1, #categories do
-        if NzGUI:DrawTextButton(categories[i], MainFontName .. "@48", 60 + cachedpos[i], 50, cachedsizes[i], 34, 0, inventory.focus == i and color_white or ((inventory.focus == i - 1 or inventory.focus == i + 1) and color_bright_Gray) or color_gray, pip_color) then
+        -- Focused tab is pip_color; tabs lerp toward grey (and fade out) the
+        -- further they sit from the focus, preserving the original grayscale
+        -- falloff but tinted with the pipboy colour instead of plain white.
+        local t = math.Clamp(math.abs(inventory.focus - i) / 2, 0, 1)
+        local navCol = Color(
+            Lerp(t, pip_color.r, 90),
+            Lerp(t, pip_color.g, 90),
+            Lerp(t, pip_color.b, 90),
+            Lerp(t, 255, 55)
+        )
+        if NzGUI:DrawTextButton(categories[i], MainFontName .. "@48", 60 + cachedpos[i], 50, cachedsizes[i], 34, 0, navCol, pip_color) then
             Scroll_POS = 0
             inventory.focus = i
         end
@@ -880,7 +894,7 @@ local function DrawInventoryPage()
         if input.IsMouseDown(MOUSE_LEFT) then
             local p = (cursor.y - 120) / 540
             PIP_SCROLL_IS_DOWN = true
-            Scroll_POS = math.floor(math.Clamp(p * #stack, 0, last_item_page_draw_amt - 15))
+            Scroll_POS = math.floor(math.Clamp(p * #stack, 0, last_item_page_draw_amt - 18))
         else 
             PIP_SCROLL_IS_DOWN = false
         end
@@ -889,7 +903,7 @@ local function DrawInventoryPage()
     local internal_scroll_this_frame = Scroll_POS + 1
     -- reverse stack table
     local baby_i = 0
-    for i = internal_scroll_this_frame, internal_scroll_this_frame + 14 do
+    for i = internal_scroll_this_frame, internal_scroll_this_frame + 17 do
         if stack[i] then
             stack[i][2] = baby_i
             baby_i = baby_i + 1
@@ -898,13 +912,13 @@ local function DrawInventoryPage()
     end
 
     -- get left click if in scrollbar region then scroll
-    internal_scroll_this_frame = math.Clamp(internal_scroll_this_frame or 0, 0, last_item_page_draw_amt - 15)
+    internal_scroll_this_frame = math.Clamp(internal_scroll_this_frame or 0, 0, last_item_page_draw_amt - 18)
     -- Draw Scrollbar
     surface.SetDrawColor(pip_color)
     surface.DrawOutlinedRect(643, 120, 10, 540)
     internal_scroll_this_frame = internal_scroll_this_frame - 1
     local p1 = math.Clamp(internal_scroll_this_frame / #stack, 0, 1)
-    local p2 = math.Clamp(15 / #stack, 0, 1)
+    local p2 = math.Clamp(18 / #stack, 0, 1)
     surface.DrawRect(643, 120 + (p1 * 540), 10, p2 * 540 + 5)
     PIP_DRAW_FOOTER()
 
@@ -923,7 +937,7 @@ hook.Add("pip_changepage", "inv_", function(from, to)
             if num == MOUSE_WHEEL_UP or num == MOUSE_WHEEL_DOWN then
                 if debounce_timer < CurTime() then
                     debounce_timer = CurTime()
-                    Scroll_POS = math.Clamp(Scroll_POS - (num == MOUSE_WHEEL_UP and 1 or -1), 0, last_item_page_draw_amt - 15)
+                    Scroll_POS = math.Clamp(Scroll_POS - (num == MOUSE_WHEEL_UP and 1 or -1), 0, last_item_page_draw_amt - 18)
                 end
                 return true
             end

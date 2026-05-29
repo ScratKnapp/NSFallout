@@ -403,7 +403,8 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
     local wave = Material("decals/lambdaspray_2a")
     wave:SetTexture("$basetexture", "null")
     local drawDirty = false
-    local screenMat = Material("fnvh.png", "noclamp smooth")
+    local screenMat = Material("fngray.png", "noclamp smooth")
+    local screenMatscartch = Material("tablet_scartch.png", "noclamp smooth")
     pip_color = Color(100, 255, 100)
     pip_color = Color(255, 182, 66)
     pip_color = StringToColor()
@@ -597,13 +598,12 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
             draw.DrawText("OPEN NUTMENU", "Morton Medium@32", btnX + btnW / 2, btnY + 8, pip_color, TEXT_ALIGN_CENTER)
             if clicked then
                 TogglePipboyView()
-                timer.Simple(FrameTime(), function() 
-                            local guii = vgui.Create("nutMenu")
-                guii:SetSize(ScrW(), ScrH())
-                guii:MakePopup()
-                guii:Center()
+                timer.Simple(FrameTime(), function()
+                    local guii = vgui.Create("nutMenu")
+                    guii:SetSize(ScrW(), ScrH())
+                    guii:MakePopup()
+                    guii:Center()
                 end)
-    
             end
         end
     end)
@@ -657,7 +657,7 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
         render.OverrideAlphaWriteEnable(true, true)
         render.Clear(0, 0, 0, 0, true)
         cam.Start2D()
-        surface.SetDrawColor(100, 100, 100)
+        surface.SetDrawColor(pip_color.r * 0.7, pip_color.g * 0.7, pip_color.b * 0.7)
         surface.SetMaterial(screenMat)
         surface.DrawTexturedRect(0, 0, WIDTH, HEIGHT)
         surface.SetDrawColor(255, 255, 255)
@@ -668,10 +668,12 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
         DrawCursor()
         -- LEAVE HERE PLS
         if not IsLeftMouseDown then cursor.WaitingForRelease = false end
-        cam.End2D()
-        surface.SetDrawColor(255, 255, 255, 1)
         surface.SetMaterial(dirt_overlay)
-        surface.DrawTexturedRect(0, 0, 2000, 1200)
+        surface.SetDrawColor(78, 84, 85, 6)
+        surface.DrawTexturedRect(0, 0, 1200, HEIGHT)
+        surface.SetDrawColor(color_white)
+        cam.End2D()
+
         render.PopRenderTarget()
         --frame:PaintManual()
         render.OverrideAlphaWriteEnable(true, true)
@@ -743,15 +745,15 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
         surface.DrawLine(0, 700, 1300, 700)
         surface.DrawLine(0, 701, 1300, 701)
         local money = LocalPlayer():getChar():getMoney()
-        surface.SetFont("Morton Medium@64")
+        surface.SetFont(MainFontName .. "@48")
         local moneyWidth = select(1, surface.GetTextSize(money))
-        draw.DrawText(LocalPlayer():getChar():getMoney(), "Morton Medium@64", 125, 695, pip_color)
+        draw.DrawText(LocalPlayer():getChar():getMoney(), MainFontName .. "@48", 125, 703, pip_color)
         surface.SetMaterial(iconCaps)
-        surface.DrawTexturedRect(125 + moneyWidth + 24, 705, 48, 48)
+        surface.DrawTexturedRect(125 + moneyWidth + 20, 709, 36, 36)
         draw.NoTexture()
         -- draw.DrawText("12:00", "Morton Medium@72", 432, 274, pip_color, TEXT_ALIGN_RIGHT)
-        draw.DrawText("WEIGHT :", "Morton Medium@64", 630, 695, pip_color, TEXT_ALIGN_RIGHT)
-        draw.DrawText(inventory:getWeight() .. "/" .. inventory:getMaxWeight(), "Morton Medium@64", 900, 695, pip_color, TEXT_ALIGN_RIGHT)
+        draw.DrawText("WEIGHT :", MainFontName .. "@48", 630, 703, pip_color, TEXT_ALIGN_RIGHT)
+        draw.DrawText(inventory:getWeight() .. "/" .. inventory:getMaxWeight(), MainFontName .. "@48", 900, 703, pip_color, TEXT_ALIGN_RIGHT)
         draw.NoTexture()
     end
 
@@ -893,6 +895,24 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
             cs_pip:DrawModel()
             cam.End3D()
             render.SetLightingMode(0)
+
+            -- Pip-Boy screen glow: an entity light (elight only lights models,
+            -- never the world) tinted to pip_color so the arms/viewmodel get
+            -- lit by the screen. Brightness tracks the raise animation so it
+            -- fades in/out with the device. Re-issued every frame with a short
+            -- DieTime so it follows the screen and dies when the pipboy lowers.
+            local dl = DynamicLight(LocalPlayer():EntIndex(), true)
+            if dl then
+                dl.pos = cs_pip:GetPos() + (eyeFwd * -3) + (eyeUp * 2)
+                dl.r = pip_color.r
+                dl.g = pip_color.g
+                dl.b = pip_color.b
+                dl.brightness = 1 * offsetDT
+                dl.size = 72
+                dl.decay = 1000
+                dl.dietime = CurTime() + 0.1
+                dl.nomodel = false
+            end
         end
 
         -- True when the active weapon declares no viewmodel (e.g. the combat
@@ -1006,8 +1026,15 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
             height = height - 100
             wth = height / 4 * 5
             local x, y = (wth / 4) + 50, 50
-            surface.SetDrawColor(0, 0, 0, 50)
-            surface.DrawRect(x, y, wth, height)
+            -- In simple mode draw the screen additively so the green RT
+            -- glows onto the world instead of sitting on a dark panel. The
+            -- thirdperson-only path keeps the original dimmed backdrop.
+            local additive = doDrawBackground
+            holographic:SetInt("$additive", additive and 1 or 0)
+            if not additive then
+                surface.SetDrawColor(0, 0, 0, 50)
+                surface.DrawRect(x, y, wth, height)
+            end
             surface.SetDrawColor(color_white)
             surface.SetMaterial(holographic)
             surface.DrawTexturedRect(x, y, wth, height)

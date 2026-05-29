@@ -626,7 +626,7 @@ function SWEP:DrawHUD()
 					end
 				end
 			end
-			self.vatsCommittedTarget = best
+			self:VATSSetTarget(best)
 		end
 		if IsValid(self.vatsCommittedTarget) then
 			self.vatsTarget = self.vatsCommittedTarget
@@ -660,35 +660,40 @@ function SWEP:DrawHUD()
 			surface.DrawRect(0, 0, ScrW(), ScrH())
 
 			surface.SetFont("nutCombatTarget")
-			local banner = "// V.A.T.S. ENGAGED // [TAB] EXIT  [WASD] TARGET  [0-9] PICK  [MOUSE] LIMB  [LMB] FIRE"
+			local banner = "// V.A.T.S. ENGAGED // [TAB] EXIT  [Q] UNDO  [WASD] TARGET  [0-9]/[ALT+CLICK] PICK  [MOUSE] LIMB  [LMB] FIRE"
 			local tw = surface.GetTextSize(banner)
 			surface.SetTextColor(TERM_BRIGHT)
 			surface.SetTextPos(ScrW() * 0.5 - tw * 0.5, 14)
 			surface.DrawText(banner)
 
 			surface.SetFont("nutCombatHUD")
-			for i, t in ipairs(self.vatsTargets or {}) do
-				if IsValid(t) then
-					local sp = t:WorldSpaceCenter():ToScreen()
-					if sp.visible then
-						local active = (t == self.vatsCommittedTarget)
-						local name = t.Name and t:Name() or t:GetClass()
-						-- Prefix the number-key index for the first ten targets.
-						if i <= 10 then name = "[" .. (i - 1) .. "] " .. name end
-						local lw, lh = surface.GetTextSize(name)
-						local col = active and TERM_BRIGHT or TERM_DIM
-						surface.SetTextColor(col)
-						surface.SetTextPos(sp.x - lw * 0.5, sp.y - 64)
-						surface.DrawText(name)
-						-- bracket prefix on the active one
-						if active then
-							surface.SetDrawColor(TERM_BRIGHT)
-							surface.DrawLine(sp.x - lw * 0.5 - 8, sp.y - 64 + lh * 0.5,
-							                 sp.x - lw * 0.5 - 2, sp.y - 64 + lh * 0.5)
-							surface.DrawLine(sp.x + lw * 0.5 + 2, sp.y - 64 + lh * 0.5,
-							                 sp.x + lw * 0.5 + 8, sp.y - 64 + lh * 0.5)
-						end
-					end
+			-- On-screen targets only, numbered nearest-first so labels stay
+			-- contiguous ([0],[1],[2]…) and match the number keys. To keep a crowd
+			-- from collapsing into an unreadable wall of text, only the ACTIVE
+			-- target spells out its name — every other target shows just its
+			-- compact [n] chip.
+			for i, info in ipairs(self:VATSScreenTargets()) do
+				local t = info.ent
+				local active = (t == self.vatsCommittedTarget)
+				local num = (i <= 10) and ("[" .. (i - 1) .. "]") or nil
+				local label
+				if active then
+					label = (num and (num .. " ") or "") .. (t.Name and t:Name() or t:GetClass())
+				else
+					label = num or (t.Name and t:Name() or t:GetClass())
+				end
+				local lw, lh = surface.GetTextSize(label)
+				local col = active and TERM_BRIGHT or TERM_DIM
+				surface.SetTextColor(col)
+				surface.SetTextPos(info.x - lw * 0.5, info.y - 64)
+				surface.DrawText(label)
+				-- bracket flanks on the active one
+				if active then
+					surface.SetDrawColor(TERM_BRIGHT)
+					surface.DrawLine(info.x - lw * 0.5 - 8, info.y - 64 + lh * 0.5,
+					                 info.x - lw * 0.5 - 2, info.y - 64 + lh * 0.5)
+					surface.DrawLine(info.x + lw * 0.5 + 2, info.y - 64 + lh * 0.5,
+					                 info.x + lw * 0.5 + 8, info.y - 64 + lh * 0.5)
 				end
 			end
 		end)
@@ -840,17 +845,18 @@ function SWEP:DrawHUD()
 		local activePart = self.partString or "Body"
 		local plugin = combatPlugin()
 		local hasAction = action and action.name
+
+		-- Pass 1: gather one chip per visible limb (screen pos, hit %, box size).
+		surface.SetFont("nutCombatHUD")
+		local chips = {}
 		for _, partName in ipairs(getPartListFor(self.vatsTarget)) do
 			local pos = getPartBonePos(self.vatsTarget, partName)
 			if pos then
 				local sp = pos:ToScreen()
 				if sp.visible then
 					local isActive = partName == activePart
-					local col = isActive and TERM_BRIGHT or TERM_GREEN
 
 					-- per-part hit chance (best-effort: needs an action + plugin).
-					-- Wrapped in pcall so a single bad part can't take down the
-					-- whole VATS overlay if the simulator errors on it.
 					local chipText = "--"
 					if plugin and hasAction and IsValid(self.viewed) then
 						local ok, chance = pcall(function()
@@ -868,22 +874,70 @@ function SWEP:DrawHUD()
 						if ok then chipText = chance .. "%" end
 					end
 
-					local _, cy = drawVatsChip(sp.x, sp.y, chipText, col, isActive and 2 or 1)
+					-- Box size matches drawVatsChip's padding (padX 8, padY 2). The
+					-- active chip reserves extra height/width for its limb label.
+					local tw, th = surface.GetTextSize(chipText)
+					local w, h = tw + 16, th + 4
 					if isActive then
-						-- inverted label chip above the percentage, FO4 style
-						local label = (PART_LABEL[partName] or partName):upper()
-						surface.SetFont("nutCombatHUD")
-						local tw, th = surface.GetTextSize(label)
-						local lw, lh = tw + 14, th + 2
-						local lx = math.Round(sp.x - lw * 0.5)
-						local ly = cy - lh - 2
-						surface.SetDrawColor(TERM_BRIGHT)
-						surface.DrawRect(lx, ly, lw, lh)
-						surface.SetTextColor(2, 14, 4, 255)
-						surface.SetTextPos(lx + 7, ly + 1)
-						surface.DrawText(label)
+						local ltw = surface.GetTextSize((PART_LABEL[partName] or partName):upper())
+						w = math.max(w, ltw + 14)
+						h = h + th + 4
+					end
+					chips[#chips + 1] = {part = partName, isActive = isActive, text = chipText, x = sp.x, y = sp.y, w = w, h = h}
+				end
+			end
+		end
+
+		-- Pass 2 (NOT in V.A.T.S.): at distance every limb bone projects to nearly
+		-- the same pixel, so the chips pile into an unreadable stack. Nudge any
+		-- overlapping pair apart along their axis of least penetration, a few
+		-- passes, until they're legible. In V.A.T.S. the zoom already spreads them
+		-- across the body, so we leave those sitting on their bones.
+		if not self.vatsMode and #chips > 1 then
+			local GAP = 4
+			for _ = 1, 12 do
+				local moved = false
+				for i = 1, #chips do
+					for j = i + 1, #chips do
+						local a, b = chips[i], chips[j]
+						local dx, dy = b.x - a.x, b.y - a.y
+						local penX = (a.w + b.w) * 0.5 + GAP - math.abs(dx)
+						local penY = (a.h + b.h) * 0.5 + GAP - math.abs(dy)
+						if penX > 0 and penY > 0 then
+							moved = true
+							if penX < penY then
+								local s = (dx ~= 0) and (dx > 0 and 1 or -1) or ((i % 2 == 0) and 1 or -1)
+								a.x = a.x - penX * 0.5 * s
+								b.x = b.x + penX * 0.5 * s
+							else
+								local s = (dy ~= 0) and (dy > 0 and 1 or -1) or ((i % 2 == 0) and 1 or -1)
+								a.y = a.y - penY * 0.5 * s
+								b.y = b.y + penY * 0.5 * s
+							end
+						end
 					end
 				end
+				if not moved then break end
+			end
+		end
+
+		-- Pass 3: draw the (possibly nudged) chips; active one is bold + labelled.
+		for _, chip in ipairs(chips) do
+			local col = chip.isActive and TERM_BRIGHT or TERM_GREEN
+			local _, cy = drawVatsChip(chip.x, chip.y, chip.text, col, chip.isActive and 2 or 1)
+			if chip.isActive then
+				-- inverted label chip above the percentage, FO4 style
+				local label = (PART_LABEL[chip.part] or chip.part):upper()
+				surface.SetFont("nutCombatHUD")
+				local tw, th = surface.GetTextSize(label)
+				local lw, lh = tw + 14, th + 2
+				local lx = math.Round(chip.x - lw * 0.5)
+				local ly = cy - lh - 2
+				surface.SetDrawColor(TERM_BRIGHT)
+				surface.DrawRect(lx, ly, lw, lh)
+				surface.SetTextColor(2, 14, 4, 255)
+				surface.SetTextPos(lx + 7, ly + 1)
+				surface.DrawText(label)
 			end
 		end
 	end
@@ -1034,6 +1088,7 @@ if CLIENT then
 		self.vatsMode = on
 		if on then
 			self:VATSRefreshTargets()
+			self.vatsHistory = nil  -- fresh undo history per V.A.T.S. session
 			self.vatsMouseAccumX = 0
 			self.vatsMouseAccumY = 0
 			-- Pre-seed the locked target now (instead of waiting for the
@@ -1045,20 +1100,39 @@ if CLIENT then
 			-- framing and the user sees no zoom animation at all.
 			-- Picks the in-range target nearest screen centre, same scoring
 			-- as the DrawHUD seed.
+			-- If the player is aiming at a valid V.A.T.S. target as they enter, LOCK
+			-- THAT ENTITY and keep the limb they already had selected (auto-picked
+			-- from aim) — entering V.A.T.S. should focus what you're looking at, not
+			-- snap to the screen-centre nearest / Body. Only when not aiming at an
+			-- eligible target do we fall back to the nearest-to-centre seed.
+			local aimedEnt  = self.vatsTarget
+			local aimedPart = self.partString
 			self.vatsCommittedTarget = nil
-			local best, bestDist = nil, math.huge
-			local cx, cy = ScrW() * 0.5, ScrH() * 0.5
-			for _, t in ipairs(self.vatsTargets or {}) do
-				if IsValid(t) then
-					local sp = t:WorldSpaceCenter():ToScreen()
-					if sp.visible then
-						local dx, dy = sp.x - cx, sp.y - cy
-						local d = dx * dx + dy * dy
-						if d < bestDist then best, bestDist = t, d end
+
+			local seed, seedPart
+			if IsValid(aimedEnt) then
+				for _, t in ipairs(self.vatsTargets or {}) do
+					if t == aimedEnt then
+						seed, seedPart = aimedEnt, aimedPart
+						break
 					end
 				end
 			end
-			self.vatsCommittedTarget = best
+			if not IsValid(seed) then
+				local bestDist = math.huge
+				local cx, cy = ScrW() * 0.5, ScrH() * 0.5
+				for _, t in ipairs(self.vatsTargets or {}) do
+					if IsValid(t) then
+						local sp = t:WorldSpaceCenter():ToScreen()
+						if sp.visible then
+							local dx, dy = sp.x - cx, sp.y - cy
+							local d = dx * dx + dy * dy
+							if d < bestDist then seed, bestDist = t, d end
+						end
+					end
+				end
+			end
+			self:VATSSetTarget(seed, seedPart)
 			-- Kick off the zoom-IN transition. CalcView handles the blend
 			-- from the player's normal view → VATS framing, and computes the
 			-- duration from camera travel distance (0.2s..0.6s) on its first
@@ -1090,6 +1164,11 @@ if CLIENT then
 			self.vatsMouseAccumX = 0
 			self.vatsMouseAccumY = 0
 			self.vatsNextFlickT = nil
+			-- Drop the Alt cursor if it was up when we exited.
+			if self.vatsCursorOn then
+				self.vatsCursorOn = false
+				gui.EnableScreenClicker(false)
+			end
 			-- Kick off the zoom-OUT transition. CalcView blends FROM the cached
 			-- cam state TO the player's normal view (duration 0.2s..0.6s scaled
 			-- by camera travel distance, computed lazily on first frame), then
@@ -1217,70 +1296,166 @@ if CLIENT then
 		return bestInDir or bestWrap
 	end
 
-	-- Pick the in-range target that best matches a flick direction. We score
-	-- each candidate by its alignment with the flick (dot product) and prefer
-	-- closer ones (score = dot / distance). Targets behind the flick direction
-	-- are ignored.
-	--
-	-- The selection frame is anchored on the ENTITY WE'RE LOOKING AT, not the
-	-- camera. Two axes:
-	--   lateral  — horizontal, perpendicular to the player→target line. Driven
-	--              by horizontal mouse motion (dx). Left/right swaps to targets
-	--              beside the current one.
-	--   depth    — along the (horizontalised) player→target line. Driven by
-	--              vertical mouse motion (dy). Moving the mouse DOWN pulls the
-	--              selection toward NEARER targets, UP pushes it to FARTHER ones.
-	-- Anchoring on the target (rather than the player's eye / the roaming VATS
-	-- cinematic cam) keeps "nearer/farther" and "left/right" meaningful no
-	-- matter where the cinematic camera has panned to.
-	function SWEP:VATSSwitchTargetInDirection(dx, dy)
-		local current = self.vatsCommittedTarget
-		local ply     = LocalPlayer()
-		if not IsValid(ply) then return end
-		local eyePos  = ply:EyePos()
+	-- ── Target switching ────────────────────────────────────────────────────
+	-- A/D step strictly left/right; W/S step up/down, and only when nothing is
+	-- up/down on screen do they fall through to DEPTH (W = next farther target,
+	-- S = next nearer). Everything routes through VATSScreenTargets so the
+	-- directions mean what you SEE and line up with the numbered labels.
 
-		-- Anchor + axes derived from the current target. Without a current
-		-- target, fall back to the player's view forward so the first flick
-		-- still resolves to something sensible.
-		local refPos = IsValid(current) and current:WorldSpaceCenter() or eyePos
-		local depthDir = refPos - eyePos
-		depthDir.z = 0  -- keep depth horizontal so pitch doesn't bleed into it
-		if depthDir:LengthSqr() < 1 then
-			depthDir = ply:EyeAngles():Forward()
-			depthDir.z = 0
+	-- Default aimed part for a freshly-locked target: Torso (this schema calls it
+	-- "Body") first, else Head, else a random limb the target actually has, else
+	-- nil when it has no limb set at all.
+	function SWEP:VATSDefaultPart(target)
+		local parts = getPartListFor(target)
+		local has = {}
+		for _, p in ipairs(parts) do has[p] = true end
+		if has["Body"]  then return "Body"  end
+		if has["Torso"] then return "Torso" end
+		if has["Head"]  then return "Head"  end
+		if #parts > 0 then return parts[math.random(#parts)] end
+		return nil
+	end
+
+	-- Lock a new target and set the aimed part. preferredPart (optional) is kept
+	-- when the target actually has that limb — used on V.A.T.S. entry to carry
+	-- over the limb the player was already aiming at. Otherwise it falls back to
+	-- the target's default (VATSDefaultPart). Centralises target changes so every
+	-- path — WASD, number keys, Alt-click, enter/seed — picks a sane limb on the
+	-- new body. Returns true if the target changed.
+	function SWEP:VATSSetTarget(ent, preferredPart)
+		if not IsValid(ent) or ent == self.vatsCommittedTarget then return false end
+		-- Record the outgoing target + limb so the spawn-menu undo can step back.
+		if IsValid(self.vatsCommittedTarget) then
+			self.vatsHistory = self.vatsHistory or {}
+			self.vatsHistory[#self.vatsHistory + 1] = {ent = self.vatsCommittedTarget, part = self.partString}
+			if #self.vatsHistory > 32 then table.remove(self.vatsHistory, 1) end
 		end
-		depthDir:Normalize()
-		local lateralDir = depthDir:Cross(vector_up)  -- horizontal, perpendicular
-		lateralDir:Normalize()
+		self.vatsCommittedTarget = ent
+		local part
+		if preferredPart then
+			for _, p in ipairs(getPartListFor(ent)) do
+				if p == preferredPart then
+					part = preferredPart
+					break
+				end
+			end
+		end
+		part = part or self:VATSDefaultPart(ent)
+		if part then self:selectPart(part) end
+		return true
+	end
 
-		-- Desired move in (lateral, depth) space. Screen Y is down-positive, so
-		-- negate dy: mouse down (dy>0) → negative depth → nearer target.
-		local moveLat, moveDepth = dx, -dy
+	-- Spawn-menu "undo": step back to the previously locked target (and the limb
+	-- that was selected on it). Pops the history stack, skipping any entry whose
+	-- entity has since died/despawned. Restores state directly so the undo isn't
+	-- itself recorded as another step.
+	function SWEP:VATSUndoTarget()
+		local hist = self.vatsHistory
+		while hist and #hist > 0 do
+			local snap = hist[#hist]
+			hist[#hist] = nil
+			if IsValid(snap.ent) then
+				self.vatsCommittedTarget = snap.ent
+				local part = snap.part
+				local ok = false
+				for _, p in ipairs(getPartListFor(snap.ent)) do
+					if p == part then ok = true break end
+				end
+				if not ok then part = self:VATSDefaultPart(snap.ent) end
+				if part then self:selectPart(part) end
+				surface.PlaySound("vats wav files/ui_vats_selecttarget.wav")
+				return
+			end
+		end
+	end
 
-		-- Among every candidate that lies roughly in the requested direction,
-		-- pick the NEAREST one (smallest offset from the current target). Scoring
-		-- by alignment/distance let a far, well-aligned target win over a closer
-		-- slightly-off one — so a flick "slightly up and right" could jump past a
-		-- near neighbour to something across the room. Sorting purely by distance
-		-- among in-direction candidates makes the flick always step to the next
-		-- closest target.
-		local best, bestDist = nil, math.huge
-		for _, t in ipairs(self.vatsTargets or {}) do
-			if IsValid(t) and t ~= current then
-				local off     = t:WorldSpaceCenter() - refPos
-				local lateral = off:Dot(lateralDir)
-				local depth   = off:Dot(depthDir)
-				local mag = math.sqrt(lateral * lateral + depth * depth)
-				if mag > 8 then
-					local dot = (lateral / mag) * moveLat + (depth / mag) * moveDepth
-					if dot > 0.2 and mag < bestDist then  -- in direction, and nearer
-						best, bestDist = t, mag
+	-- Nearest on-screen target in a screen direction (dx,dy unit, y down-positive),
+	-- staying on the requested axis so a horizontal step never grabs a mostly-
+	-- vertical neighbour and vice-versa. Returns the entity, or nil.
+	function SWEP:VATSPickScreen(dx, dy)
+		local screen = self:VATSScreenTargets()
+		if #screen < 2 then return nil end
+		local current = self.vatsCommittedTarget
+
+		-- Anchor at the current target's screen position; if it isn't on screen,
+		-- anchor at screen centre so a press still resolves to something.
+		local cx, cy
+		for _, info in ipairs(screen) do
+			if info.ent == current then
+				cx, cy = info.x, info.y
+				break
+			end
+		end
+		if not cx then cx, cy = ScrW() * 0.5, ScrH() * 0.5 end
+		local curPos = IsValid(current) and current:WorldSpaceCenter() or nil
+
+		local horizontal = math.abs(dx) > math.abs(dy)
+		local best, bestScore = nil, math.huge
+		for _, info in ipairs(screen) do
+			if info.ent ~= current then
+				local ox, oy = info.x - cx, info.y - cy
+				local along  = ox * dx + oy * dy            -- distance in pressed dir
+				if along > 8 then
+					-- Stay on-axis: A/D ignore mostly-vertical neighbours, W/S
+					-- ignore mostly-horizontal ones.
+					local onAxis
+					if horizontal then onAxis = math.abs(ox) >= math.abs(oy)
+					else               onAxis = math.abs(oy) >= math.abs(ox) end
+					if onAxis then
+						-- Rank survivors by WORLD proximity to the current target,
+						-- not screen pixels. A distant enemy sitting near the centre
+						-- of the screen has a tiny screen offset and would otherwise
+						-- beat the obvious neighbour stood right beside us — that's
+						-- why pressing "right" used to jump to a far gecko instead of
+						-- the dog running alongside. The screen direction above still
+						-- decides WHICH way; world distance decides WHICH one.
+						local score
+						if curPos then
+							score = info.ent:WorldSpaceCenter():DistToSqr(curPos)
+						else
+							local off = math.abs(ox * -dy + oy * dx)
+							score = along + off * 1.5
+						end
+						if score < bestScore then best, bestScore = info.ent, score end
 					end
 				end
 			end
 		end
-		if IsValid(best) then
-			self.vatsCommittedTarget = best
+		return best
+	end
+
+	-- Next on-screen target by DEPTH from the player: sign +1 = the next one
+	-- farther away, -1 = the next one nearer. The W/S fall-through when there's
+	-- nothing directly up/down. Returns the entity, or nil.
+	function SWEP:VATSPickDepth(sign)
+		local ply = LocalPlayer()
+		if not IsValid(ply) then return nil end
+		local origin = ply:EyePos()
+		local current = self.vatsCommittedTarget
+		local curDist = IsValid(current) and current:WorldSpaceCenter():Distance(origin) or 0
+		local best, bestDelta = nil, math.huge
+		for _, info in ipairs(self:VATSScreenTargets()) do
+			if info.ent ~= current then
+				local d = info.ent:WorldSpaceCenter():Distance(origin)
+				local delta = (d - curDist) * sign  -- >0 means in the requested depth dir
+				if delta > 16 and delta < bestDelta then
+					best, bestDelta = info.ent, delta
+				end
+			end
+		end
+		return best
+	end
+
+	-- Dispatch a directional target switch. A/D = pure left/right. W/S = up/down
+	-- first, then depth (W farther, S nearer) when nothing is up/down on screen.
+	function SWEP:VATSSwitchTarget(dir)
+		local t
+		if     dir == "left"  then t = self:VATSPickScreen(-1, 0)
+		elseif dir == "right" then t = self:VATSPickScreen(1, 0)
+		elseif dir == "up"    then t = self:VATSPickScreen(0, -1) or self:VATSPickDepth(1)
+		elseif dir == "down"  then t = self:VATSPickScreen(0, 1)  or self:VATSPickDepth(-1)
+		end
+		if self:VATSSetTarget(t) then
 			surface.PlaySound("vats wav files/ui_vats_selecttarget.wav")
 		end
 	end
@@ -1296,12 +1471,23 @@ if CLIENT then
 		local ply = LocalPlayer()
 		if not IsValid(ply) or not IsValid(ent) then return false end
 		local eye = ply:EyePos()
+		-- Only WORLD geometry / solid props should break line of sight. Other
+		-- players and combat NPCs are ignored, otherwise a crowd occludes its
+		-- own members — a big creature stood in front (or one enemy behind
+		-- another) would drop the rear ranks out of the target list even though
+		-- they're plainly on screen. In V.A.T.S. you should be able to lock
+		-- anything you can see; only a wall between you and it should block.
 		local tr = util.TraceHull({
 			start = eye,
 			endpos = ent:WorldSpaceCenter(),
 			mins = -VATS_LOS_HULL,
 			maxs = VATS_LOS_HULL,
-			filter = {ply, self},
+			filter = function(e)
+				if e == ply or e == self then return false end
+				if e == ent then return true end                  -- target stops the trace
+				if e:IsPlayer() or e.combat then return false end -- see past other combatants
+				return true                                        -- world props still block
+			end,
 			mask = MASK_SHOT,
 		})
 		return tr.Entity == ent or not tr.Hit
@@ -1328,13 +1514,48 @@ if CLIENT then
 		self.vatsTargets = out
 	end
 
-	-- Lock onto the Nth listed target (1-based). Index comes from VATS_NUM_KEYS,
-	-- which maps the [0]–[9] labels the overlay paints onto each NPC.
+	-- The targets currently visible ON SCREEN, in vatsTargets (nearest-first)
+	-- order, each with its projected position. This is the canonical list the
+	-- number labels, number keys and Alt-cursor click all index into — so an
+	-- off-screen target never burns a number and what you click is what you see.
+	function SWEP:VATSScreenTargets()
+		local out = {}
+		for _, t in ipairs(self.vatsTargets or {}) do
+			if IsValid(t) then
+				local sp = t:WorldSpaceCenter():ToScreen()
+				if sp.visible then
+					out[#out + 1] = { ent = t, x = sp.x, y = sp.y }
+				end
+			end
+		end
+		return out
+	end
+
+	-- Lock onto the Nth on-screen target (1-based). Index comes from
+	-- VATS_NUM_KEYS, which maps the [0]–[9] labels the overlay paints on screen.
 	function SWEP:VATSSelectTargetByIndex(idx)
-		local t = self.vatsTargets and self.vatsTargets[idx]
-		if IsValid(t) then
-			self.vatsCommittedTarget = t
+		local info = self:VATSScreenTargets()[idx]
+		if info and self:VATSSetTarget(info.ent) then
 			surface.PlaySound("vats wav files/ui_vats_selecttarget.wav")
+		end
+	end
+
+	-- Alt-cursor click: lock onto the on-screen target nearest the cursor,
+	-- provided the click landed reasonably close to one (within VATS_CLICK_RADIUS
+	-- pixels) so clicking empty space doesn't snap the selection across the room.
+	local VATS_CLICK_RADIUS = 90
+	function SWEP:VATSSelectTargetUnderCursor()
+		local mx, my = gui.MousePos()
+		local best, bestDist = nil, math.huge
+		for _, info in ipairs(self:VATSScreenTargets()) do
+			local dx, dy = info.x - mx, info.y - my
+			local d = dx * dx + dy * dy
+			if d < bestDist then best, bestDist = info.ent, d end
+		end
+		if IsValid(best) and bestDist <= VATS_CLICK_RADIUS * VATS_CLICK_RADIUS then
+			if self:VATSSetTarget(best) then
+				surface.PlaySound("vats wav files/ui_vats_selecttarget.wav")
+			end
 		end
 	end
 
@@ -1426,19 +1647,20 @@ if CLIENT then
 
 		if not wep.vatsMode then return end
 
-		-- WASD switches the locked TARGET (lateral / depth), mapped into the
-		-- entity-relative frame VATSSwitchTargetInDirection expects:
-		--   W → farther    S → nearer    A → left    D → right
+		-- WASD switches the locked TARGET:
+		--   A/D → strictly left/right (what you see on screen)
+		--   W/S → up/down first; if nothing is up/down, fall through to depth
+		--         (W = next farther target, S = next nearer)
 		-- Uses pressedRepeating so a held key cycles at VATS_KEY_REPEAT (0.2s),
 		-- with the first press firing immediately.
-		local sx, sy
-		if     pressedRepeating(input.IsKeyDown(KEY_W), wep, "vatsPrevW", "vatsLastW") then sx, sy = 0, -1
-		elseif pressedRepeating(input.IsKeyDown(KEY_S), wep, "vatsPrevS", "vatsLastS") then sx, sy = 0,  1
-		elseif pressedRepeating(input.IsKeyDown(KEY_A), wep, "vatsPrevA", "vatsLastA") then sx, sy = -1, 0
-		elseif pressedRepeating(input.IsKeyDown(KEY_D), wep, "vatsPrevD", "vatsLastD") then sx, sy = 1,  0
+		local dir
+		if     pressedRepeating(input.IsKeyDown(KEY_W), wep, "vatsPrevW", "vatsLastW") then dir = "up"
+		elseif pressedRepeating(input.IsKeyDown(KEY_S), wep, "vatsPrevS", "vatsLastS") then dir = "down"
+		elseif pressedRepeating(input.IsKeyDown(KEY_A), wep, "vatsPrevA", "vatsLastA") then dir = "left"
+		elseif pressedRepeating(input.IsKeyDown(KEY_D), wep, "vatsPrevD", "vatsLastD") then dir = "right"
 		end
-		if sx then
-			wep:VATSSwitchTargetInDirection(sx, sy)
+		if dir then
+			wep:VATSSwitchTarget(dir)
 		end
 
 		-- Number keys [0]–[9] jump straight to a target by its on-screen index.
@@ -1450,6 +1672,26 @@ if CLIENT then
 			end
 		end
 
+		-- Holding Alt raises a mouse cursor for click-to-select. Toggle the
+		-- screen clicker on the edge so we don't spam it every tick, and tear it
+		-- down again the moment Alt is released.
+		local altDown = input.IsKeyDown(KEY_LALT) or input.IsKeyDown(KEY_RALT)
+		if altDown ~= (wep.vatsCursorOn or false) then
+			wep.vatsCursorOn = altDown
+			gui.EnableScreenClicker(altDown)
+		end
+
+		if wep.vatsCursorOn then
+			-- Cursor mode: LMB locks onto the target under the cursor. Unlike the
+			-- no-cursor path this only re-targets (never fires), so it's safe even
+			-- if a Derma popup is open — VATSSelectTargetUnderCursor is a no-op
+			-- unless the click landed near a target. RMB state is kept synced so
+			-- releasing Alt can't manufacture a fake edge that cancels VATS.
+			if pressedEdge(input.IsMouseDown(MOUSE_LEFT), wep, "vatsPrevLMB") then
+				wep:VATSSelectTargetUnderCursor()
+			end
+			wep.vatsPrevRMB = input.IsMouseDown(MOUSE_RIGHT)
+
 		-- LMB commits, RMB cancels — but only when no Derma popup has the
 		-- cursor. input.IsMouseDown reads raw OS state, so clicking on the
 		-- action-list buttons would otherwise be caught here as a VATS
@@ -1459,7 +1701,7 @@ if CLIENT then
 		-- the popup doesn't manufacture a fake edge on the next tick
 		-- (e.g. if the player let go of LMB while the popup was open, we
 		-- don't want the very next mouse-up→mouse-down to fire commit).
-		if vgui.CursorVisible() then
+		elseif vgui.CursorVisible() then
 			wep.vatsPrevLMB = input.IsMouseDown(MOUSE_LEFT)
 			wep.vatsPrevRMB = input.IsMouseDown(MOUSE_RIGHT)
 		else
@@ -1499,7 +1741,11 @@ if CLIENT then
 		-- and zero the accumulator each tick so a continuous mouse sweep can't
 		-- rapid-cycle through limbs.
 		local mx, my = cmd:GetMouseX(), cmd:GetMouseY()
-		if (wep.vatsNextFlickT or 0) > CurTime() then
+		if wep.vatsCursorOn then
+			-- Alt cursor up: mouse drives the cursor, not the limb picker.
+			wep.vatsMouseAccumX = 0
+			wep.vatsMouseAccumY = 0
+		elseif (wep.vatsNextFlickT or 0) > CurTime() then
 			wep.vatsMouseAccumX = 0
 			wep.vatsMouseAccumY = 0
 		else
@@ -1552,18 +1798,37 @@ if CLIENT then
 		end
 	end)
 
+	-- Hard-block the spawn menu while V.A.T.S. is engaged. The bind itself is
+	-- repurposed as undo in PlayerBindPress above; this also catches any
+	-- programmatic / non-bind open so the menu never covers the overlay.
+	hook.Add("SpawnMenuOpen", "nut_cswep_vats_block_spawnmenu", function()
+		local ply = LocalPlayer()
+		if not IsValid(ply) then return end
+		local wep = ply:GetActiveWeapon()
+		if IsValid(wep) and wep:GetClass() == "nut_cswep" and wep.vatsMode then
+			return false
+		end
+	end)
+
 	-- While V.A.T.S. is engaged, the number-row keys pick targets — so block the
 	-- weapon-slot / inv-cycle binds they'd normally trigger, otherwise pressing a
 	-- number would also swap weapons (holstering nut_cswep and dropping out of
 	-- V.A.T.S.). PlayerBindPress returning true swallows the bind; we only do so
 	-- while VATS is active on the combat SWEP, so normal play is unaffected.
-	hook.Add("PlayerBindPress", "nut_cswep_vats_blockbinds", function(ply, bind)
+	hook.Add("PlayerBindPress", "nut_cswep_vats_blockbinds", function(ply, bind, pressed)
 		local wep = ply:GetActiveWeapon()
-		if IsValid(wep) and wep:GetClass() == "nut_cswep" and wep.vatsMode then
-			bind = string.lower(bind)
-			if bind:find("slot", 1, true) or bind:find("invnext", 1, true) or bind:find("invprev", 1, true) then
-				return true
-			end
+		if not (IsValid(wep) and wep:GetClass() == "nut_cswep" and wep.vatsMode) then return end
+		bind = string.lower(bind)
+		-- Spawn menu: don't open it in V.A.T.S. — repurpose the key as an UNDO that
+		-- steps back to the previous target. Swallow press AND release so the menu
+		-- never appears; only act on the press edge.
+		if bind == "+menu" then
+			if pressed then wep:VATSUndoTarget() end
+			return true
+		end
+		-- Weapon-slot / inv-cycle binds would swap weapons (dropping out of VATS).
+		if bind:find("slot", 1, true) or bind:find("invnext", 1, true) or bind:find("invprev", 1, true) then
+			return true
 		end
 	end)
 
@@ -1584,6 +1849,7 @@ if CLIENT then
 	local VATS_CAM_FOV  = 55    -- narrower than the default 75 for a slight zoom
 	local VATS_CAM_LERP = 10    -- inter-limb lerp rate (1/s); bigger = snappier
 	local VATS_CAM_MIN_FRONT = 16  -- keep the cam at least this far in front of the eye so the body stays out of frame
+	local VATS_CAM_LIMB_BIAS = 1.0  -- 0 = frame target centre, 1 = frame the limb fully (the per-frame lerp keeps limb changes from snapping)
 
 	-- Enter/exit zoom duration scales with how far the camera has to travel.
 	-- A close-range engagement keeps the snappy 0.2s feel; a target across a
@@ -1603,6 +1869,32 @@ if CLIENT then
 	local function vatsEase(t)
 		t = math.Clamp(t, 0, 1)
 		return t * t * t * (t * (t * 6 - 15) + 10)
+	end
+
+	-- Spherical interpolation of two unit vectors along the shortest great-circle
+	-- arc. Falls back to a renormalised straight lerp when they're nearly
+	-- parallel/opposite (where the arc is undefined / numerically unstable).
+	local function slerpVector(t, a, b)
+		local dot = math.Clamp(a:Dot(b), -1, 1)
+		local theta = math.acos(dot)
+		local sinT = math.sin(theta)
+		if sinT < 0.001 then
+			local v = LerpVector(t, a, b)
+			local len = v:Length()
+			return len > 0.001 and (v / len) or a
+		end
+		return (a * math.sin((1 - t) * theta) + b * math.sin(t * theta)) / sinT
+	end
+
+	-- Slerp between two view angles. LerpAngle interpolates pitch/yaw/roll per
+	-- component, so when yaw wraps (e.g. 170° → -170°) it winds the long way
+	-- round through 0° and the camera can spin or flip upside down. Instead we
+	-- slerp the FORWARD direction along the shortest arc and carry roll across
+	-- with a shortest-path lerp, so the blend always takes the natural path.
+	local function slerpAngle(frac, a, b)
+		local out = slerpVector(frac, a:Forward(), b:Forward()):Angle()
+		out.r = a.r + math.NormalizeAngle(b.r - a.r) * frac
+		return out
 	end
 
 	-- vatsCamPhase semantics:
@@ -1625,22 +1917,26 @@ if CLIENT then
 		local desiredOrigin, desiredAngles, desiredFOV
 		local target = wep.vatsCommittedTarget
 		if IsValid(target) then
-			local partPos = getPartBonePos(target, wep.partString or "Head")
-			if partPos then
-				local toPart = partPos - origin
-				local dist = toPart:Length()
-				if dist >= 1 then
-					local dir = toPart / dist
-					-- Pull the camera back from the target part, but never past
-					-- the player's own eye: if VATS_CAM_DIST would put the origin
-					-- behind the player (target nearer than the pull-back distance)
-					-- the body drops into frame. Clamp so the camera always sits
-					-- in front of the player by at least VATS_CAM_MIN_FRONT.
-					local camDist = math.min(VATS_CAM_DIST, math.max(dist - VATS_CAM_MIN_FRONT, 0))
-					desiredOrigin = partPos - dir * camDist
-					desiredAngles = dir:Angle()
-					desiredFOV    = VATS_CAM_FOV
-				end
+			-- Focus fully on the ACTIVE LIMB (VATS_CAM_LIMB_BIAS = 1). The per-frame
+			-- lerp below smooths the pan so changing limbs glides rather than snaps.
+			local center = target:WorldSpaceCenter()
+			local limbPos = getPartBonePos(target, wep.partString or "Body") or center
+			local lookPos = LerpVector(VATS_CAM_LIMB_BIAS, center, limbPos)
+			local toTarget = lookPos - origin
+			local dist = toTarget:Length()
+			if dist >= 1 then
+				local dir = toTarget / dist
+				-- Tighter framing than full-body: pull back only gently with target
+				-- size so a big creature's limb still has a little room, but the
+				-- shot stays zoomed IN on the limb (zoom out less). Clamped to keep
+				-- the cam at least VATS_CAM_MIN_FRONT in front of the eye so the
+				-- player's body never drops into shot.
+				local size = target:OBBMaxs():Distance(target:OBBMins())
+				local want = math.Clamp(size * 1.2, VATS_CAM_DIST, VATS_CAM_DIST * 1.8)
+				local camDist = math.min(want, math.max(dist - VATS_CAM_MIN_FRONT, 0))
+				desiredOrigin = lookPos - dir * camDist
+				desiredAngles = dir:Angle()
+				desiredFOV    = VATS_CAM_FOV
 			end
 		end
 
@@ -1669,7 +1965,7 @@ if CLIENT then
 			end
 			local frac = vatsEase(raw)
 			local o = LerpVector(frac, origin, desiredOrigin)
-			local a = LerpAngle (frac, angles, desiredAngles)
+			local a = slerpAngle(frac, angles, desiredAngles)
 			local f = Lerp     (frac, fov,    desiredFOV)
 			-- Cache the in-progress blend so an "out" interrupting an "in"
 			-- has a usable lerp-from point instead of a hard snap.
@@ -1701,7 +1997,7 @@ if CLIENT then
 			local frac = vatsEase(raw)
 			return {
 				origin     = LerpVector(frac, fromO, origin),
-				angles     = LerpAngle (frac, fromA, angles),
+				angles     = slerpAngle(frac, fromA, angles),
 				fov        = Lerp     (frac, fromF, fov),
 				drawviewer = true,
 			}
@@ -1714,7 +2010,7 @@ if CLIENT then
 		wep.vatsCamFOV    = wep.vatsCamFOV    or desiredFOV
 		local frac = math.Clamp(FrameTime() * VATS_CAM_LERP, 0, 1)
 		wep.vatsCamOrigin = LerpVector(frac, wep.vatsCamOrigin, desiredOrigin)
-		wep.vatsCamAngles = LerpAngle (frac, wep.vatsCamAngles, desiredAngles)
+		wep.vatsCamAngles = slerpAngle(frac, wep.vatsCamAngles, desiredAngles)
 		wep.vatsCamFOV    = Lerp     (frac, wep.vatsCamFOV,    desiredFOV)
 
 		return {
