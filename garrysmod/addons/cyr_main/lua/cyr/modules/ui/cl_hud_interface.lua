@@ -776,13 +776,25 @@ local function DrawTheHUD()
     surface.DrawTexturedRectUV(rx, frameY, frameW, frameH, 0, 0, 1, FRAME_SRC_V)
     local rInnerX = rx + frameW * HUDCFG.innerLRight
     local rInnerW = frameW * (HUDCFG.innerRRight - HUDCFG.innerLRight) * HUDCFG.innerWMulRight
-    -- AP (stamina) bar sits directly above the rail (mirrors the compass).
-    local stamina = ply:getLocalVar("stm", 100)
-    local apPerc = math.Clamp(stamina / 100, 0, 1)
+    -- AP bar sits directly above the rail (mirrors the compass). With the combat
+    -- SWEP out, show combat Action Points as "[CB] AP: x/y" (the value the old
+    -- top-right ACTION POINTS panel used to show, for whatever the tool controls
+    -- — the player by default); otherwise the normal stamina bar.
+    local apLabel, apPerc
+    local combatTool = IsValid(activeWepForHP) and activeWepForHP:GetClass() == "nut_cswep"
+    local apUser = combatTool and isfunction(activeWepForHP.getNetVar) and activeWepForHP:getNetVar("selected", ply) or ply
+    if combatTool and isfunction(apUser.getAP) and isfunction(apUser.getAPMax) then
+        local ap, apMax = apUser:getAP(), apUser:getAPMax()
+        apLabel = "[CB] AP: " .. ap .. "/" .. apMax
+        apPerc = apMax > 0 and math.Clamp(ap / apMax, 0, 1) or 0
+    else
+        apLabel = "AP"
+        apPerc = math.Clamp(ply:getLocalVar("stm", 100) / 100, 0, 1)
+    end
     local apY = lineY - gap - barH
     local apX = rInnerX + marginX * HUDCFG.apPadLMul
     local apW = rInnerW - marginX * (HUDCFG.apPadLMul + HUDCFG.apPadRMul)
-    draw.SimpleText("AP", "FO3_HUD_Label", apX + apW + HUDCFG.apLabelXOff * scale, apY - gap, primary, TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM)
+    draw.SimpleText(apLabel, "FO3_HUD_Label", apX + apW + HUDCFG.apLabelXOff * scale, apY - gap, primary, TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM)
     fo3Bar(apX, apY, apW, barH, apPerc, primary)
     -- Ammo counter + "CND" weapon-condition bar below the rail.
     -- When the combat tool (nut_cswep) is broadcasting its action's ammo via

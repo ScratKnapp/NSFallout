@@ -753,25 +753,16 @@ function SWEP:DrawHUD()
 		surface.DrawText(indicator)
 	end
 
-	local AP = (user.getAP and user:getAP()) or 0
-	local APMax = (user.getAPMax and user:getAPMax()) or 0
+	-- Action Points are no longer shown here — they live in the bottom-right
+	-- pip-boy bar as "[CB] AP" (see cl_hud_interface.lua). We still set up the
+	-- right-column layout vars so the ACTIVE EFFECTS / COOLDOWNS panels below
+	-- start at the top of the right column.
 	local rightX = ScrW() - 240 * scrModX
 	local rightW = 220 * scrModX
 	posY = 50 * scrModY
 	-- Same extra top padding rule as ACTION / TARGET ACQUIRED so header chips
 	-- don't crowd the first body row.
 	local topPad = pad * 2
-	if AP and APMax then
-		local boxH = lineH * 2 + topPad + pad * 2
-		drawTermPanel(rightX, posY, rightW, boxH, "ACTION POINTS")
-		local apString = string.format("%d / %d", AP, APMax)
-		local tx = surface.GetTextSize(apString)
-		surface.SetTextColor(TERM_BRIGHT)
-		surface.SetTextPos(rightX + rightW * 0.5 - tx * 0.5, posY + topPad)
-		surface.DrawText(apString)
-		drawTermBar(rightX + pad, posY + topPad + pad + lineH, rightW - pad * 2, lineH * 0.7, APMax > 0 and AP / APMax or 0)
-		posY = posY + boxH + pad
-	end
 
 	local buffs = user.getBuffs and user:getBuffs()
 	if buffs and table.Count(buffs) > 0 then

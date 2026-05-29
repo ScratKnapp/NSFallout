@@ -11,6 +11,37 @@ end
 local function curHp(it)
     return it:getData("HP", it:getData("durability", maxHp(it)))
 end
+
+-- Single-entry cache for the hovered item's parsed description markup. Only
+-- one item is detailed at a time, so re-parse only when the text changes
+-- (markup parsing every frame is wasteful).
+local DETAIL_DESC_CACHE = {text = nil, mk = nil}
+-- Description viewport (RT pixel space) and mousewheel scroll state. The detail
+-- description can overflow vertically; the wheel scrolls it when the cursor is
+-- over this region (otherwise the wheel scrolls the item list). A scissor rect
+-- clips the text to this box so scrolled lines never spill onto the footer/hint.
+local DESC_VIEW = {x = 675, y = 312, w = 322, h = 338}
+local DESC_SCROLL_POS = 0    -- current (animated) pixel offset
+local DESC_SCROLL_TARGET = 0 -- where the wheel wants us; POS eases toward this
+local DESC_MAX_SCROLL = 0    -- updated each frame from markup height
+local DESC_ITEM_HOVERED = false -- true while an item row is hovered (detail panel shown)
+-- Mousewheel input fires every frame, but the pipboy throttles its render loop
+-- for performance. Applying the scroll directly in the input hook would read
+-- stale hover/height state (computed only on rendered frames), so instead we
+-- accumulate the raw wheel delta here and consume it on the next render pass.
+local PENDING_WHEEL_DELTA = 0
+local function getDetailMarkup(inst2, w)
+    if not inst2 or not isfunction(inst2.getDesc) then return nil end
+    local ok, txt = pcall(inst2.getDesc, inst2)
+    if not ok or not isstring(txt) or txt == "" then return nil end
+    if DETAIL_DESC_CACHE.text ~= txt then
+        DETAIL_DESC_CACHE.text = txt
+        DETAIL_DESC_CACHE.mk = nut.markup.parse("<font=" .. MainFontName .. "@24>" .. txt .. "</font>", w)
+        DESC_SCROLL_POS = 0 -- reset scroll when a different item is shown
+        DESC_SCROLL_TARGET = 0
+    end
+    return DETAIL_DESC_CACHE.mk
+end
 local cachedpos = {}
 local cachedsizes = {}
 local inventory = {}
@@ -305,6 +336,7 @@ local function drawItem(item3, y, pip_color, _amt, ITEM_INSTANCE_RRA)
 
     if fn and InventoryModelView and InventoryModelView.Entity then
         ITEM_DRAWN_THIS_FRAME = ITEM_INSTANCE_RRA or nut.item.list[item3]
+        DESC_ITEM_HOVERED = true -- an item is hovered this frame; wheel scrolls its desc
         surface.SetDrawColor(pip_color_accent.r, pip_color_accent.g, pip_color_accent.b, 100)
         surface.DrawRect(86, 120 + (y * FUSION_ITEM_BUTTON_SIZE.ho), FUSION_ITEM_BUTTON_SIZE.w, FUSION_ITEM_BUTTON_SIZE.h)
         InventoryModelView.Angle = inst.Angle or angle_zero
@@ -336,6 +368,37 @@ local function drawItem(item3, y, pip_color, _amt, ITEM_INSTANCE_RRA)
         draw.SimpleText("TYPE: " .. (inst.category or "MISC"), MainFontName .. "@32", ITEMDESCOFFSET.xT, 225 + heightOfBoxes + heightOfBoxesPadding, color_white, TEXT_ALIGN_LEFT)
         surface.DrawRect(ITEMDESCOFFSET.x, 230 + heightOfBoxes + heightOfBoxes + heightOfBoxesPadding + heightOfBoxesPadding, ITEMDESCOFFSET.w + 2, heightOfBoxes)
         draw.SimpleText("WEIGHT: " .. (item.weight or "0"), MainFontName .. "@32", ITEMDESCOFFSET.xT, 230 + heightOfBoxes + heightOfBoxes, color_white, TEXT_ALIGN_LEFT)
+
+        -- Full item description (the same text the hover tooltip shows): damage,
+        -- crit, requirements, ammo, durability, etc. getDesc() embeds <color>
+        -- markup for the green section headers, so render it through the markup
+        -- parser below the VALUE/TYPE/WEIGHT summary boxes.
+        local descMk = getDetailMarkup(ITEM_INSTANCE_RRA or inst, ITEMDESCOFFSET.w)
+        if descMk then
+            local total = descMk:getHeight() or 0
+            DESC_MAX_SCROLL = math.max(0, total - DESC_VIEW.h)
+            -- Consume banked wheel notches into the desc scroll while overflowing.
+            if PENDING_WHEEL_DELTA ~= 0 and DESC_MAX_SCROLL > 0 then
+                DESC_SCROLL_TARGET = DESC_SCROLL_TARGET - PENDING_WHEEL_DELTA * 42
+                PENDING_WHEEL_DELTA = 0
+            end
+            DESC_SCROLL_TARGET = math.Clamp(DESC_SCROLL_TARGET, 0, DESC_MAX_SCROLL)
+            -- Ease toward the target so wheel notches glide instead of jumping.
+            DESC_SCROLL_POS = Lerp(math.Clamp(FrameTime() * 14, 0, 1), DESC_SCROLL_POS, DESC_SCROLL_TARGET)
+            if math.abs(DESC_SCROLL_POS - DESC_SCROLL_TARGET) < 0.5 then DESC_SCROLL_POS = DESC_SCROLL_TARGET end
+            -- Clip to the viewport so scrolled text doesn't overlap the hint/footer.
+            render.SetScissorRect(DESC_VIEW.x, DESC_VIEW.y, DESC_VIEW.x + DESC_VIEW.w, DESC_VIEW.y + DESC_VIEW.h, true)
+            descMk:draw(ITEMDESCOFFSET.xT, 312 - math.Round(DESC_SCROLL_POS), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+            render.SetScissorRect(0, 0, 0, 0, false)
+            -- Bottom-right hint when the description overflows its viewport.
+            if DESC_MAX_SCROLL > 0 then
+                local atBottom = (DESC_MAX_SCROLL - DESC_SCROLL_TARGET) <= 1
+                local hint = atBottom and "SCROLL UP ^" or "SCROLL DOWN v"
+                draw.SimpleText(hint, MainFontName .. "@24", DESC_VIEW.x + DESC_VIEW.w, DESC_VIEW.y + DESC_VIEW.h + 6, ColorAlpha(pip_color, 200), TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
+            end
+        else
+            DESC_MAX_SCROLL = 0
+        end
         --surface.DrawRect(ITEMDESCOFFSET.x, 499 + heightOfBoxes + heightOfBoxes + heightOfBoxesPadding + heightOfBoxesPadding, ITEMDESCOFFSET.w + 2, heightOfBoxes)
         --draw.SimpleText("Body Dr: " .. (item.resisbody or "0"), MainFontName .. "@32", ITEMDESCOFFSET.xT, 499 + heightOfBoxes + heightOfBoxes, color_white, TEXT_ALIGN_LEFT)
         --surface.DrawRect(ITEMDESCOFFSET.x, 525 + heightOfBoxes + heightOfBoxes + heightOfBoxesPadding + heightOfBoxesPadding, ITEMDESCOFFSET.w + 2, heightOfBoxes)
@@ -439,6 +502,39 @@ local function drawItem(item3, y, pip_color, _amt, ITEM_INSTANCE_RRA)
         end
     else
         draww()
+    end
+
+    -- Weapon condition bar, inline on the right of the row: CND [######    ].
+    -- A dim full "#" track with the lit portion overlaid at the same start so
+    -- the closing bracket stays put as the bar drains. fn (hovered) flips the
+    -- colour to black to read against the pip_color row highlight.
+    if inst.isWeapon or (inst.category and string.lower(inst.category) == "weapons") then
+        local cndInst = ITEM_INSTANCE_RRA or inst
+        -- Condition = current durability / max. The schema isn't consistent
+        -- about keys: sh_weapons uses maxDura (default 7000), the equipment /
+        -- customization items use the item's .durability (with an optional
+        -- duraMax override). Current durability is always the "dura" data key,
+        -- defaulting to the max (i.e. full) when the weapon was never damaged.
+        local pct = 1
+        if isfunction(cndInst.getData) then
+            local maxDura = cndInst:getData("maxDura") or cndInst:getData("duraMax") or cndInst.durability or 7000
+            local dura = cndInst:getData("dura", maxDura)
+            if maxDura and maxDura > 0 then pct = math.Clamp(dura / maxDura, 0, 1) end
+        end
+        local cells = 12
+        local fullBar = string.rep("#", cells)
+        local cndFont = MainFontName .. "@24"
+        local fg = fn and color_black or pip_color
+        surface.SetFont(cndFont)
+        local prefixW = surface.GetTextSize("CND [")
+        local barW = surface.GetTextSize(fullBar)
+        local startX = (86 + FUSION_ITEM_BUTTON_SIZE.w) - (prefixW + barW + surface.GetTextSize("]"))
+        local barX = startX + prefixW
+        local cndY = rowY + 4
+        draw.SimpleText("CND [", cndFont, startX, cndY, fg, TEXT_ALIGN_LEFT)
+        draw.SimpleText(fullBar, cndFont, barX, cndY, ColorAlpha(fg, 70), TEXT_ALIGN_LEFT)
+        draw.SimpleText(string.rep("#", math.Round(pct * cells)), cndFont, barX, cndY, fg, TEXT_ALIGN_LEFT)
+        draw.SimpleText("]", cndFont, barX + barW, cndY, fg, TEXT_ALIGN_LEFT)
     end
 
     if inst.DrawLabel and ITEM_INSTANCE_RRA then ITEM_INSTANCE_RRA:DrawLabel(86, 116 + (y * FUSION_ITEM_BUTTON_SIZE.ho)) end
@@ -902,6 +998,7 @@ local function DrawInventoryPage()
 
     local internal_scroll_this_frame = Scroll_POS + 1
     -- reverse stack table
+    DESC_ITEM_HOVERED = false -- recomputed by drawItem for whichever row is hovered
     local baby_i = 0
     for i = internal_scroll_this_frame, internal_scroll_this_frame + 17 do
         if stack[i] then
@@ -909,6 +1006,13 @@ local function DrawInventoryPage()
             baby_i = baby_i + 1
             drawItem(unpack(stack[i]))
         end
+    end
+
+    -- Any banked wheel notches not eaten by a scrollable description fall
+    -- through to the item list (no item hovered, or its desc doesn't overflow).
+    if PENDING_WHEEL_DELTA ~= 0 then
+        Scroll_POS = math.Clamp(Scroll_POS - PENDING_WHEEL_DELTA, 0, last_item_page_draw_amt - 18)
+        PENDING_WHEEL_DELTA = 0
     end
 
     -- get left click if in scrollbar region then scroll
@@ -931,14 +1035,16 @@ local wth, ht = ScrW(), ScrH()
 hook.Add("pip_changepage", "inv_", function(from, to)
     if to == "INV" then
         if IsValid(InventoryModelView) then InventoryModelView:Remove() end
-        local debounce_timer = 0
+        -- wepselect bails out of its bind handling when this returns false, so
+        -- the weapon-select wheel never appears while the inventory is open.
+        hook.Add("CanPlayerChooseWeapon", "!PlayerBindPressInv", function() return false end)
         hook.Add("PlayerBindPress", "!PlayerBindPressInv", function(ply, bind, pressed, num) if num == MOUSE_WHEEL_UP or num == MOUSE_WHEEL_DOWN then return true end end)
         hook.Add("PlayerButtonDown", "!PlayerBindPressInv", function(ply, num)
             if num == MOUSE_WHEEL_UP or num == MOUSE_WHEEL_DOWN then
-                if debounce_timer < CurTime() then
-                    debounce_timer = CurTime()
-                    Scroll_POS = math.Clamp(Scroll_POS - (num == MOUSE_WHEEL_UP and 1 or -1), 0, last_item_page_draw_amt - 18)
-                end
+                -- Just bank the notch; the render pass decides desc-vs-list and
+                -- applies it against fresh hover/height state. This survives
+                -- frames where the pipboy skips rendering.
+                PENDING_WHEEL_DELTA = PENDING_WHEEL_DELTA + ((num == MOUSE_WHEEL_UP) and 1 or -1)
                 return true
             end
         end)
@@ -994,6 +1100,7 @@ hook.Add("pip_changepage", "inv_", function(from, to)
         end)
     else
         hook.Remove("PostRenderVGUI", "inv_r")
+        hook.Remove("CanPlayerChooseWeapon", "!PlayerBindPressInv")
         hook.Remove("PlayerBindPress", "!PlayerBindPressInv")
         hook.Remove("PlayerButtonDown", "!PlayerBindPressInv")
     end
