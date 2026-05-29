@@ -5,7 +5,7 @@ function Radio_Reset()
         local aftermath_cl_radio_volume = CreateClientConVar("aftermath_cl_radio_volume", "0.5", true, false, "The volume the radio plays on your local character (0.0 - 4.0)")
         local volumecache = nil
         playingindex = 0
-        StationName = {"East STATION", "Reborn FM", "Despair, Fission, Radiation", "Classics Radio"}
+        StationName = {"East STATION", "Caps & Vinyl", "Fission.FM", "Classics Radio"}
         radioFreq = {}
         radioFreq[1] = 16
         radioFreq[2] = 5
@@ -30,7 +30,11 @@ function Radio_Reset()
         end
 
         hook.Add("updatedRadio", "updatedRadio", function(stat)
-            chat.AddText(Color(255, 140, 0), "Now Playing: ", Color(255, 207, 158), stat)
+            if disablechatmessages then
+            else
+                chat.AddText(Color(255, 140, 0), "Now Playing: ", Color(255, 207, 158), stat)
+            end
+
             if stat == 5 then timer.Create("radio", 5, 1, function() netstream.Start("insi") end) end
         end)
 

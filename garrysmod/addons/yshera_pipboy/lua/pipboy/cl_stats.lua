@@ -1,5 +1,5 @@
 local function formattedText(text1, text2, x, y, font)
-    font = font or "Morton Medium@48"
+    font = font or MainFontName .. "@48"
     surface.SetFont(font)
     draw.DrawText(text1, font, x, y, color_white)
     local width, _ = surface.GetTextSize(text1 .. " ")
@@ -21,9 +21,9 @@ end
 
 local function AttributeDisplay(name, desc, progress, level, y, x)
     y = y + 7
-    draw.DrawText(name, "Morton Medium@64", 80 + x, 0 + y, color_white)
-    draw.DrawText(desc, "Morton Medium@19", 80 + x, 48 + y, color_white)
-    draw.DrawText("LEVEL " .. level, "Morton Medium@48", 80 + x + attribute_width, 12 + y, pip_color, TEXT_ALIGN_RIGHT)
+    draw.DrawText(name, MainFontName .. "@64", 80 + x, 0 + y, color_white)
+    draw.DrawText(desc, MainFontName .. "@19", 80 + x, 48 + y, color_white)
+    draw.DrawText("LEVEL " .. level, MainFontName .. "@48", 80 + x + attribute_width, 12 + y, pip_color, TEXT_ALIGN_RIGHT)
     draw.NoTexture()
     surface.SetDrawColor(color_white)
     -- Render stuff here bb 
@@ -56,12 +56,12 @@ function DrawPly.STATS()
     formattedText("Faction:", faction and faction.name or "None", 64, 128 + 128)
 
     -- DESCRIPTION as its own header with the text in a smaller wrapped body.
-    draw.DrawText("DESCRIPTION", "Morton Medium@48", 64, 380, pip_color)
+    draw.DrawText("DESCRIPTION", MainFontName .. "@48", 64, 380, pip_color)
     local desc = character:getDesc() or ""
     -- RT is 1024 wide; leave a 64px gutter on each side so text never clips
     -- against the curved CRT edge.
-    local wrapped = textWrap(desc, "Morton Medium@24", 1024 - 64 - 64)
-    draw.DrawNonParsedText(wrapped, "Morton Medium@24", 64, 440, color_white)
+    local wrapped = textWrap(desc, MainFontName .. "@24", 1024 - 64 - 64)
+    draw.DrawNonParsedText(wrapped, MainFontName .. "@24", 64, 440, color_white)
 
     surface.SetDrawColor(pip_color)
     surface.SetMaterial(error_mat)
@@ -79,7 +79,7 @@ function DrawPly.STATS()
     -- actual nut_respec netstream is only fired from the modal's CONFIRM so a
     -- stray click can't wipe a character.
     local rx, ry, rw, rh = 600, 540, 300, 40
-    local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover("RESPEC", "Morton Medium@42", rx, ry, rw, rh, 1, color_white)
+    local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover("RESPEC", MainFontName .. "@42", rx, ry, rw, rh, 0, color_white)
     local rc = pip_color_accent or pip_color
     surface.SetDrawColor(pip_color)
     surface.DrawOutlinedRect(rx, ry, rw, rh)
@@ -103,7 +103,7 @@ function DrawPly.STATS()
         surface.DrawOutlinedRect(MX, MY, MW, MH)
         surface.DrawOutlinedRect(MX - 2, MY - 2, MW + 4, MH + 4)
 
-        draw.DrawText("RESPEC CHARACTER", "Morton Medium@48", MX + MW * 0.5, MY + 24, pip_color, TEXT_ALIGN_CENTER)
+        draw.DrawText("RESPEC CHARACTER", MainFontName .. "@48", MX + MW * 0.5, MY + 24, pip_color, TEXT_ALIGN_CENTER)
 
         local bodyLines = {
             "This will reset your SPECIAL, skills, and traits.",
@@ -114,7 +114,7 @@ function DrawPly.STATS()
         }
         local by = MY + 100
         for _, line in ipairs(bodyLines) do
-            draw.DrawText(line, "Morton Medium@32", MX + MW * 0.5, by, color_white, TEXT_ALIGN_CENTER)
+            draw.DrawText(line, MainFontName .. "@32", MX + MW * 0.5, by, color_white, TEXT_ALIGN_CENTER)
             by = by + 34
         end
 
@@ -123,7 +123,7 @@ function DrawPly.STATS()
         local cfx = MX + 24
         surface.SetDrawColor(perk_req_negative)
         surface.DrawOutlinedRect(cfx, btnY, btnW, btnH)
-        if NzGUI:DrawTextButton("CONFIRM", "Morton Medium@42", cfx, btnY - 2, btnW, btnH, 0, perk_req_negative) then
+        if NzGUI:DrawTextButton("CONFIRM", MainFontName .. "@42", cfx, btnY - 2, btnW, btnH, 0, perk_req_negative) then
             netstream.Start("nut_respec")
             surface.PlaySound("buttons/button3.wav")
             RESPEC_MODAL = false
@@ -132,7 +132,7 @@ function DrawPly.STATS()
         local cx = MX + MW - 24 - btnW
         surface.SetDrawColor(pip_color)
         surface.DrawOutlinedRect(cx, btnY, btnW, btnH)
-        if NzGUI:DrawTextButton("CANCEL", "Morton Medium@42", cx, btnY - 2, btnW, btnH, 0, pip_color) then
+        if NzGUI:DrawTextButton("CANCEL", MainFontName .. "@42", cx, btnY - 2, btnW, btnH, 0, pip_color) then
             RESPEC_MODAL = false
         end
     end
@@ -142,7 +142,7 @@ local attri = {"Strength", "Perception", "Endurance", "Charisma", "Intelligence"
 local attri_a = {"str", "per", "end", "cha", "int", "agi", "luck"}
 local attri_desc = {"Strength is a measure of your raw physical power. It affects how much you can carry, and determines the effectiveness of all melee attacks.", 'Perception is your environmental awareness and "sixth sense," and allows you to see things other people may not see.', "Endurance is the measure of overall physical fitness. It affects your total health and the action point drain from sprinting", "Charisma is your ability to charm and convince others. It affects your success to persuade others in dialogue and prices when you barter. It also allows you to inspire people in your party increase everyones max health.", "Intelligence is the measure of your overall mental acuity, and increases the amount of experience points earned.", "Agility is a measure of your overall finesse and reflexes. It affects the number of Action Points and your ability to sneak. Decreases reload time.", "Luck is a measure of your general good fortune, and affects the recharge rates of critical hits."}
 for i, v in pairs(attri_desc) do
-    attri_desc[i] = textWrap(v, "Morton Medium@24", 350)
+    attri_desc[i] = textWrap(v, MainFontName .. "@24", 350)
 end
 
 local attriIMG = {Material("vault_boy/str"), Material("vault_boy/per"), Material("vault_boy/end"), Material("vault_boy/chr"), Material("vault_boy/int"), Material("vault_boy/agi"), Material("vault_boy/luck")}
@@ -157,9 +157,9 @@ function DrawPly.SPECIAL()
     local ply = LocalPlayer()
     local character = ply:getChar()
     local amts = (character:getSkillLevel("specialpoints") or 1) - 1
-    draw.DrawText("SPECIAL POINTS: " .. amts, "Morton Medium@42", 950, 64, amts > 0 and pip_color or color_white, TEXT_ALIGN_RIGHT)
+    draw.DrawText("SPECIAL POINTS: " .. amts, MainFontName .. "@42", 950, 64, amts > 0 and pip_color or color_white, TEXT_ALIGN_RIGHT)
     for y, v in pairs(attri) do
-        local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover(v, "Morton Medium@48", 64, 116 + (y * 44), 400, 40, 1, color_white)
+        local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover(v, MainFontName .. "@48", 64, 116 + (y * 44), 400, 40, 1, color_white)
         local c = pip_color
         if fn then
             c = color_black
@@ -189,7 +189,7 @@ function DrawPly.SPECIAL()
 
             surface.SetMaterial(attriIMG[y])
             surface.SetDrawColor(pip_color)
-            draw.DrawNonParsedText(attri_desc[y], "Morton Medium@24", 600, 400, pip_color, 0)
+            draw.DrawNonParsedText(attri_desc[y], MainFontName .. "@24", 600, 400, pip_color, 0)
             if y == 1 then
                 surface.DrawTexturedRect(626 + 42, 128, 150, 256)
             elseif y == 5 then
@@ -200,7 +200,7 @@ function DrawPly.SPECIAL()
         end
 
         local iness = character:getAttrib(attri_a[y], 0)
-        draw.DrawText(iness, "Morton Medium@48", 500, 116 + (y * 44), c, TEXT_ALIGN_RIGHT)
+        draw.DrawText(iness, MainFontName .. "@48", 500, 116 + (y * 44), c, TEXT_ALIGN_RIGHT)
         draww(c)
 
         -- Click-to-spend "+" square at the right of each row. Drawn outside the
@@ -210,7 +210,7 @@ function DrawPly.SPECIAL()
             local bx, by, bs = 515, 120 + (y * 44), 32
             surface.SetDrawColor(pip_color)
             surface.DrawOutlinedRect(bx, by, bs, bs)
-            local hit = NzGUI:DrawTextButton("+", "Morton Medium@42", bx, by - 6, bs, bs, 0, pip_color)
+            local hit = NzGUI:DrawTextButton("+", MainFontName .. "@42", bx, by - 6, bs, bs, 0, pip_color)
             if hit then
                 local attribKey = attri_a[y]
                 local newVal = (character:getAttrib(attribKey, 0) or 0) + 1
@@ -241,7 +241,7 @@ local skill_def = {
 local skill_desc = {}
 for _i, _v in ipairs(skill_def) do
     local def = nut.skills and nut.skills.list and nut.skills.list[_v[1]]
-    skill_desc[_i] = textWrap(def and def.desc or "", "Morton Medium@24", 400)
+    skill_desc[_i] = textWrap(def and def.desc or "", MainFontName .. "@24", 400)
 end
 local SELECTED_HEADER
 local wth, ht = ScrW(), ScrH()
@@ -294,7 +294,7 @@ function DrawPly.PERKS()
         PERKS_SORTED = {}
         for i, v in pairs(PERKS) do
             v._idx = i
-            cached_desc[v.display] = textWrap(v.desc, "Morton Medium@32", 350)
+            cached_desc[v.display] = textWrap(v.desc, MainFontName .. "@32", 350)
             table.insert(PERKS_SORTED, v)
         end
         table.sort(PERKS_SORTED, function(a, b)
@@ -303,7 +303,7 @@ function DrawPly.PERKS()
     end
 
     local amtss = (char:getSkillLevel("perkpoints") or 1) - 1
-    draw.DrawText("PERK POINTS: " .. amtss, "Morton Medium@42", 950, 64, amtss > 0 and pip_color or color_white, TEXT_ALIGN_RIGHT)
+    draw.DrawText("PERK POINTS: " .. amtss, MainFontName .. "@42", 950, 64, amtss > 0 and pip_color or color_white, TEXT_ALIGN_RIGHT)
     local hovered = nil
     local modal_open = PERK_MODAL ~= nil
 
@@ -311,7 +311,7 @@ function DrawPly.PERKS()
     -- bottom of the 3-column list area (columns span x=64..560, 15 rows from
     -- y=112 end at y=532), so it sits just below the last row.
     local toggleTxt = "SHOW: " .. (PERK_FILTER_OWNED and "OWNED" or "ALL")
-    local toggleClick = NzGUI:DrawTextButton(toggleTxt, "Morton Medium@32", 172, 540, 280, 32, 0, pip_color)
+    local toggleClick = NzGUI:DrawTextButton(toggleTxt, MainFontName .. "@32", 172, 540, 280, 32, 0, pip_color)
     if toggleClick and not modal_open then PERK_FILTER_OWNED = not PERK_FILTER_OWNED end
 
     -- Build the visible list each frame: owned perks first (level order
@@ -349,7 +349,7 @@ function DrawPly.PERKS()
         local px = 64 + col * PERK_COL_STRIDE
         local py = 112 + row * 28
         local owned = char:isPerkOwned(v._idx)
-        local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover(v.display:upper(), "Morton Medium@24", px, py, PERK_COL_W, 28, 1, color_white)
+        local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover(v.display:upper(), MainFontName .. "@24", px, py, PERK_COL_W, 28, 1, color_white)
         local base = owned and pip_color_accent or color_white
         local c = base
         if fn and not modal_open then
@@ -398,17 +398,17 @@ function DrawPly.PERKS()
             surface.DrawTexturedRect(626, 128, 256, 256)
         end
 
-        draw.DrawText(hovered.display:upper(), "Morton Medium@48", 600, 96, pip_color)
-        draw.DrawNonParsedText(cached_desc[hovered.display], "Morton Medium@32", 600, 400, pip_color, 0)
+        draw.DrawText(hovered.display:upper(), MainFontName .. "@48", 600, 96, pip_color)
+        draw.DrawNonParsedText(cached_desc[hovered.display], MainFontName .. "@32", 600, 400, pip_color, 0)
 
         local ry = 540
         if next(hovered.requirements) ~= nil then
-            draw.DrawText("REQUIREMENTS", "Morton Medium@42", 600, ry, pip_color)
+            draw.DrawText("REQUIREMENTS", MainFontName .. "@42", 600, ry, pip_color)
             ry = ry + 48
             for rk, rv in pairs(hovered.requirements) do
                 local ok = CheckSkill({rk, rv})
                 local label = (ok and "+ " or "x ") .. (perk_req_format[rk] or rk) .. " " .. rv
-                draw.DrawText(label, "Morton Medium@32", 600, ry, ok and color_white or perk_req_negative)
+                draw.DrawText(label, MainFontName .. "@32", 600, ry, ok and color_white or perk_req_negative)
                 ry = ry + 34
             end
         end
@@ -439,26 +439,26 @@ function DrawPly.PERKS()
             surface.SetDrawColor(pip_color)
             surface.DrawTexturedRect(MX + 24, MY + 32, 200, 200)
         end
-        draw.DrawText(v.display:upper(), "Morton Medium@48", MX + 250, MY + 40, pip_color)
+        draw.DrawText(v.display:upper(), MainFontName .. "@48", MX + 250, MY + 40, pip_color)
 
         -- Description.
         if cached_desc[v.display] then
-            draw.DrawNonParsedText(cached_desc[v.display], "Morton Medium@32", MX + 250, MY + 110, color_white, 0)
+            draw.DrawNonParsedText(cached_desc[v.display], MainFontName .. "@32", MX + 250, MY + 110, color_white, 0)
         end
 
         -- Requirements block (or NONE if the perk has no gating).
         local ry = MY + 260
-        draw.DrawText("REQUIREMENTS", "Morton Medium@32", MX + 24, ry, pip_color)
+        draw.DrawText("REQUIREMENTS", MainFontName .. "@32", MX + 24, ry, pip_color)
         ry = ry + 40
         if next(v.requirements) ~= nil then
             for rk, rv in pairs(v.requirements) do
                 local ok = CheckSkill({rk, rv})
                 local label = (ok and "+ " or "x ") .. (perk_req_format[rk] or rk) .. " " .. rv
-                draw.DrawText(label, "Morton Medium@32", MX + 24, ry, ok and color_white or perk_req_negative)
+                draw.DrawText(label, MainFontName .. "@32", MX + 24, ry, ok and color_white or perk_req_negative)
                 ry = ry + 34
             end
         else
-            draw.DrawText("NONE", "Morton Medium@32", MX + 24, ry, color_white)
+            draw.DrawText("NONE", MainFontName .. "@32", MX + 24, ry, color_white)
         end
 
         -- Status line above the buttons so the player knows why UNLOCK might
@@ -481,7 +481,7 @@ function DrawPly.PERKS()
         else
             statusTxt = "PERK POINTS: " .. amtss
         end
-        draw.DrawText(statusTxt, "Morton Medium@32", MX + MW * 0.5, statusY, canUnlock and pip_color or color_white, TEXT_ALIGN_CENTER)
+        draw.DrawText(statusTxt, MainFontName .. "@32", MX + MW * 0.5, statusY, canUnlock and pip_color or color_white, TEXT_ALIGN_CENTER)
 
         -- Action buttons: UNLOCK (left) + CLOSE (right).
         local btnY, btnH = MY + MH - 60, 40
@@ -490,7 +490,7 @@ function DrawPly.PERKS()
         surface.SetDrawColor(unlockCol)
         surface.DrawOutlinedRect(ux, btnY, uw, btnH)
         local unlockLabel = owned and "OWNED" or (canUnlock and "UNLOCK" or "LOCKED")
-        if NzGUI:DrawTextButton(unlockLabel, "Morton Medium@42", ux, btnY - 2, uw, btnH, 0, unlockCol) and canUnlock then
+        if NzGUI:DrawTextButton(unlockLabel, MainFontName .. "@42", ux, btnY - 2, uw, btnH, 0, unlockCol) and canUnlock then
             netstream.Start("perkAdd", v.uid)
             PERK_MODAL = nil
         end
@@ -498,7 +498,7 @@ function DrawPly.PERKS()
         local cx, cw = MX + MW - 244, 220
         surface.SetDrawColor(pip_color)
         surface.DrawOutlinedRect(cx, btnY, cw, btnH)
-        if NzGUI:DrawTextButton("CLOSE", "Morton Medium@42", cx, btnY - 2, cw, btnH, 0, pip_color) then
+        if NzGUI:DrawTextButton("CLOSE", MainFontName .. "@42", cx, btnY - 2, cw, btnH, 0, pip_color) then
             PERK_MODAL = nil
         end
     end
@@ -511,9 +511,9 @@ function DrawPly.SKILLS()
     local ply = LocalPlayer()
     local character = ply:getChar()
     local amt = (character:getSkillLevel("skillpoints") or 1) - 1
-    draw.DrawText("SKILL POINTS: " .. amt, "Morton Medium@42", 950, 64, amt > 0 and pip_color or color_white, TEXT_ALIGN_RIGHT)
+    draw.DrawText("SKILL POINTS: " .. amt, MainFontName .. "@42", 950, 64, amt > 0 and pip_color or color_white, TEXT_ALIGN_RIGHT)
     for y, v in pairs(skill_def) do
-        local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover(v[2]:upper(), "Morton Medium@42", 64, offset - 2 + (y * height), width, height, 1, color_white)
+        local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover(v[2]:upper(), MainFontName .. "@42", 64, offset - 2 + (y * height), width, height, 1, color_white)
         local c = pip_color
         if fn then
             c = color_black
@@ -523,7 +523,7 @@ function DrawPly.SKILLS()
             --
             surface.SetMaterial(attriIMG[1])
             surface.SetDrawColor(pip_color)
-            draw.DrawNonParsedText(skill_desc[y], "Morton Medium@24", 600, 400, pip_color, 0)
+            draw.DrawNonParsedText(skill_desc[y], MainFontName .. "@24", 600, 400, pip_color, 0)
             if IS_R_DOWN and amt > 0 then
                 deltSt = deltSt == 0 and CurTime() or deltSt
                 --
@@ -544,7 +544,7 @@ function DrawPly.SKILLS()
             end
         end
 
-        draw.DrawText(character:getSkillLevel(v[1]), "Morton Medium@48", width + 100, offset - 8 + (y * height), c, TEXT_ALIGN_RIGHT)
+        draw.DrawText(character:getSkillLevel(v[1]), MainFontName .. "@48", width + 100, offset - 8 + (y * height), c, TEXT_ALIGN_RIGHT)
         draww(c)
 
         -- Click-to-spend "+" square sits to the right of the value text.
@@ -553,7 +553,7 @@ function DrawPly.SKILLS()
             local bx, by, bs = 525, offset + 2 + (y * height), 28
             surface.SetDrawColor(pip_color)
             surface.DrawOutlinedRect(bx, by, bs, bs)
-            local hit = NzGUI:DrawTextButton("+", "Morton Medium@32", bx, by - 4, bs, bs, 0, pip_color)
+            local hit = NzGUI:DrawTextButton("+", MainFontName .. "@32", bx, by - 4, bs, bs, 0, pip_color)
             if hit then
                 -- See the hold-R branch above: skillIncrease is a delta on the
                 -- server side (skills[key] += value), so we send 1.
@@ -569,7 +569,7 @@ local offset2 = {100, 120, 100, 100}
 SELECTED_HEADER = "STATS"
 local draw_overview = function(pip_color2)
     for i, v in pairs(headers) do
-        local vb, fn = NzGUI:DrawTextButton(v, "Morton Medium@48", 64 + offset[i], 64, offset2[i], 32, 1, v == SELECTED_HEADER and pip_color or pip_color_accent)
+        local vb, fn = NzGUI:DrawTextButton(v, MainFontName .. "@48", 64 + offset[i], 64, offset2[i], 32, 1, v == SELECTED_HEADER and pip_color or pip_color_accent)
         if vb then SELECTED_HEADER = v end
     end
 
@@ -580,12 +580,12 @@ local draw_overview = function(pip_color2)
     surface.DrawRect(210, 700, 400, 48)
     surface.DrawRect(620, 700, 230, 48)
     surface.DrawRect(860, 700, 230, 48)
-    draw.DrawText("LEVEL " .. LocalPlayer():getChar():getSkillLevel("level"), "Morton Medium@48", 214, 700, pip_color, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+    draw.DrawText("LEVEL " .. LocalPlayer():getChar():getSkillLevel("level"), MainFontName .. "@48", 214, 700, pip_color, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
     surface.SetDrawColor(pip_color)
     surface.DrawOutlinedRect(350, 715, 244, 22)
     surface.DrawOutlinedRect(351, 716, 242, 20)
     surface.DrawRect(350, 715, 244 * (lb / ub), 22)
-    formattedText("XP", lb .. "/" .. ub, 630, 700, "Morton Medium@42")
+    formattedText("XP", lb .. "/" .. ub, 630, 700, MainFontName .. "@42")
 end
 
 pipboy:AddRenderPage("STATS", draw_overview)
@@ -745,7 +745,7 @@ pipboy:AddRenderPage("BUSINESS", function()
     -- Category dropdown: a single header button showing the current
     -- category; clicking it toggles an option list that overlays the grid.
     local DD_X, DD_Y, DD_W, DD_H = 64, 56, 360, 32
-    if NzGUI:DrawTextButton((biz_cat_open and "v " or "> ") .. "CATEGORY: " .. curCat:upper(), "Morton Medium@32", DD_X, DD_Y, DD_W, DD_H, 0, pip_color) then
+    if NzGUI:DrawTextButton((biz_cat_open and "v " or "> ") .. "CATEGORY: " .. curCat:upper(), MainFontName .. "@32", DD_X, DD_Y, DD_W, DD_H, 0, pip_color) then
         biz_cat_open = not biz_cat_open
     end
     surface.SetDrawColor(pip_color)
@@ -773,11 +773,11 @@ pipboy:AddRenderPage("BUSINESS", function()
         -- instead of leaving a blank grid that looks broken.
         if #view == 0 then
             if #biz_items == 0 then
-                draw.DrawText("NO MERCHANDISE AVAILABLE", "Morton Medium@42", 64, gridTop + 28, perk_req_negative)
-                draw.DrawText("You need the relevant permit in your inventory", "Morton Medium@32", 64, gridTop + 84, pip_color)
-                draw.DrawText("before any goods can be requisitioned.", "Morton Medium@32", 64, gridTop + 118, pip_color)
+                draw.DrawText("NO MERCHANDISE AVAILABLE", MainFontName .. "@42", 64, gridTop + 28, perk_req_negative)
+                draw.DrawText("You need the relevant permit in your inventory", MainFontName .. "@32", 64, gridTop + 84, pip_color)
+                draw.DrawText("before any goods can be requisitioned.", MainFontName .. "@32", 64, gridTop + 118, pip_color)
             else
-                draw.DrawText("NOTHING IN THIS CATEGORY", "Morton Medium@42", 64, gridTop + 28, pip_color)
+                draw.DrawText("NOTHING IN THIS CATEGORY", MainFontName .. "@42", 64, gridTop + 28, pip_color)
             end
         end
 
@@ -795,10 +795,10 @@ pipboy:AddRenderPage("BUSINESS", function()
             -- Shrink the font for names that would overflow the 230px slot so
             -- they stay on one line (the qty marker eats the right ~30px).
             local label = it.name:upper()
-            local nameFont = "Morton Medium@24"
+            local nameFont = MainFontName .. "@24"
             surface.SetFont(nameFont)
             if surface.GetTextSize(label) > (qty > 0 and 200 or 228) then
-                nameFont = "Morton Medium@19"
+                nameFont = MainFontName .. "@19"
             end
             local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover(label, nameFont, px, py, 230, 28, 1, color_white)
             local c = qty > 0 and pip_color_accent or color_white
@@ -818,7 +818,7 @@ pipboy:AddRenderPage("BUSINESS", function()
             end
             draww(c)
             if qty > 0 then
-                draw.DrawText("x" .. qty, "Morton Medium@24", px + 228, py, c, TEXT_ALIGN_RIGHT)
+                draw.DrawText("x" .. qty, MainFontName .. "@24", px + 228, py, c, TEXT_ALIGN_RIGHT)
             end
         end
 
@@ -826,9 +826,9 @@ pipboy:AddRenderPage("BUSINESS", function()
         if pages > 1 then
             -- Centered text button (align 0) that underlines on hover.
             local function pagingBtn(lbl, bx)
-                local click, hover = NzGUI:DrawTextButton(lbl, "Morton Medium@32", bx, biz_paging_y, 130, 32, 0, pip_color)
+                local click, hover = NzGUI:DrawTextButton(lbl, MainFontName .. "@32", bx, biz_paging_y, 130, 32, 0, pip_color)
                 if hover then
-                    surface.SetFont("Morton Medium@32")
+                    surface.SetFont(MainFontName .. "@32")
                     local tw, th = surface.GetTextSize(lbl)
                     surface.SetDrawColor(pip_color)
                     surface.DrawRect(bx + (130 - tw) / 2, biz_paging_y + th, tw, 2)
@@ -836,7 +836,7 @@ pipboy:AddRenderPage("BUSINESS", function()
                 return click
             end
             local prevC = pagingBtn("< PREV", 64)
-            draw.DrawText("PAGE " .. (biz_page + 1) .. " / " .. pages, "Morton Medium@32", 312, biz_paging_y, pip_color, TEXT_ALIGN_CENTER)
+            draw.DrawText("PAGE " .. (biz_page + 1) .. " / " .. pages, MainFontName .. "@32", 312, biz_paging_y, pip_color, TEXT_ALIGN_CENTER)
             local nextC = pagingBtn("NEXT >", 430)
             if prevC then biz_page = math.max(0, biz_page - 1) end
             if nextC then biz_page = math.min(pages - 1, biz_page + 1) end
@@ -847,12 +847,12 @@ pipboy:AddRenderPage("BUSINESS", function()
     -- Right panel: hovered item detail + spinning model preview (INV logic).
     if hovered then
         biz_draw_model(hovered.model, hovered.angle, 600, 96, 180)
-        draw.DrawText("CAT: " .. hovered.cat:upper(), "Morton Medium@24", 800, 110, pip_color)
-        draw.DrawText("PRICE: " .. nut.currency.get(hovered.price), "Morton Medium@24", 800, 150, pip_color)
-        draw.DrawText("IN CART: " .. (biz_cart[hovered.uid] or 0), "Morton Medium@24", 800, 190, pip_color)
+        draw.DrawText("CAT: " .. hovered.cat:upper(), MainFontName .. "@24", 800, 110, pip_color)
+        draw.DrawText("PRICE: " .. nut.currency.get(hovered.price), MainFontName .. "@24", 800, 150, pip_color)
+        draw.DrawText("IN CART: " .. (biz_cart[hovered.uid] or 0), MainFontName .. "@24", 800, 190, pip_color)
         -- Name sits just above the CART header (y=320) so it never collides
         -- with the full-width category tab strip at the top.
-        draw.DrawText(hovered.name:upper(), "Morton Medium@32", 600, 284, pip_color)
+        draw.DrawText(hovered.name:upper(), MainFontName .. "@32", 600, 284, pip_color)
     end
 
     -- Right panel: cart summary + total. The CRT is curved, so keep everything
@@ -861,7 +861,7 @@ pipboy:AddRenderPage("BUSINESS", function()
     local BIZ_L = 600          -- right-panel left edge
     local BIZ_R = 940          -- safe right edge for right-aligned values
     local total, lines = 0, 0
-    draw.DrawText("CART", "Morton Medium@42", BIZ_L, 320, pip_color)
+    draw.DrawText("CART", MainFontName .. "@42", BIZ_L, 320, pip_color)
     local cy = 366
     -- Quantity tweaks are deferred until after the loop: SortedPairs snapshots
     -- the keys, but mutating biz_cart mid-iteration (esp. removing at zero) is
@@ -872,14 +872,14 @@ pipboy:AddRenderPage("BUSINESS", function()
         if info and qty > 0 then
             total = total + info.price * qty
             if lines < 6 then
-                if NzGUI:DrawTextButton("[-]", "Morton Medium@24", BIZ_L, cy, 34, 26, 0, pip_color) then
+                if NzGUI:DrawTextButton("[-]", MainFontName .. "@24", BIZ_L, cy, 34, 26, 0, pip_color) then
                     cartUid, cartDelta = uid, -1
                 end
-                if NzGUI:DrawTextButton("[+]", "Morton Medium@24", BIZ_L + 36, cy, 34, 26, 0, pip_color) then
+                if NzGUI:DrawTextButton("[+]", MainFontName .. "@24", BIZ_L + 36, cy, 34, 26, 0, pip_color) then
                     cartUid, cartDelta = uid, 1
                 end
-                draw.DrawText(info.name .. "  x" .. qty, "Morton Medium@24", BIZ_L + 78, cy, color_white)
-                draw.DrawText(nut.currency.get(info.price * qty), "Morton Medium@24", BIZ_R, cy, pip_color, TEXT_ALIGN_RIGHT)
+                draw.DrawText(info.name .. "  x" .. qty, MainFontName .. "@24", BIZ_L + 78, cy, color_white)
+                draw.DrawText(nut.currency.get(info.price * qty), MainFontName .. "@24", BIZ_R, cy, pip_color, TEXT_ALIGN_RIGHT)
                 cy = cy + 30
             end
             lines = lines + 1
@@ -891,12 +891,12 @@ pipboy:AddRenderPage("BUSINESS", function()
         biz_cart[cartUid] = nv > 0 and nv or nil
     end
     if lines > 6 then
-        draw.DrawText("+ " .. (lines - 6) .. " more...", "Morton Medium@24", BIZ_L, cy, pip_color)
+        draw.DrawText("+ " .. (lines - 6) .. " more...", MainFontName .. "@24", BIZ_L, cy, pip_color)
     end
 
     local money = char.getMoney and char:getMoney() or 0
-    draw.DrawText("YOUR CAPS: " .. nut.currency.get(money), "Morton Medium@32", BIZ_L, 588, pip_color)
-    draw.DrawText("TOTAL: " .. nut.currency.get(total), "Morton Medium@42", BIZ_L, 626, total > money and perk_req_negative or pip_color)
+    draw.DrawText("YOUR CAPS: " .. nut.currency.get(money), MainFontName .. "@32", BIZ_L, 588, pip_color)
+    draw.DrawText("TOTAL: " .. nut.currency.get(total), MainFontName .. "@42", BIZ_L, 626, total > money and perk_req_negative or pip_color)
 
     -- Hold R to submit the cart (same netstream as the F1 checkout).
     local boxY, boxW = 672, BIZ_R - BIZ_L
@@ -916,7 +916,7 @@ pipboy:AddRenderPage("BUSINESS", function()
     end
     surface.SetDrawColor(pip_color)
     surface.DrawOutlinedRect(BIZ_L, boxY, boxW, 34)
-    draw.DrawText(canBuy and "HOLD R TO REQUISITION" or (lines == 0 and "CART EMPTY" or "NOT ENOUGH CAPS"), "Morton Medium@32", BIZ_L + 20, boxY + 4, pip_color)
+    draw.DrawText(canBuy and "HOLD R TO REQUISITION" or (lines == 0 and "CART EMPTY" or "NOT ENOUGH CAPS"), MainFontName .. "@32", BIZ_L + 20, boxY + 4, pip_color)
 
     -- Open dropdown is drawn LAST so it overlays the grid and the right-hand
     -- cart panel instead of rendering behind them. Each row selects a category
@@ -940,7 +940,7 @@ pipboy:AddRenderPage("BUSINESS", function()
             local ox = DD_X + col * colStride
             local oy = listY + 4 + rowI * 34
             local sel = i == biz_cat_sel
-            local cl, hv = NzGUI:DrawTextButton(cat:upper(), "Morton Medium@32", ox + 4, oy, DD_W - 8, 30, 0, sel and pip_color or pip_color_accent)
+            local cl, hv = NzGUI:DrawTextButton(cat:upper(), MainFontName .. "@32", ox + 4, oy, DD_W - 8, 30, 0, sel and pip_color or pip_color_accent)
             if hv then
                 surface.SetDrawColor(pip_color.r, pip_color.g, pip_color.b, 40)
                 surface.DrawRect(ox + 2, oy, DD_W - 4, 30)
@@ -1007,7 +1007,7 @@ end)
 
 concommand.Add("clearpoints", function(ply, cmd, args) MAP_ZONES_DEBUG = {} end)
 local function TickBox(optionName, bool, func, x, y)
-    local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover("          " .. optionName, "Morton Medium@32", x, y, 400, 32, 1, pip_color)
+    local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover("          " .. optionName, MainFontName .. "@32", x, y, 400, 32, 1, pip_color)
     -- if bool is true then draw a filled box
     if click then func() end
     if fn then surface.SetAlphaMultiplier(0.5) end
@@ -1028,7 +1028,7 @@ local pipboyColor = {255, 255, 255}
 local function Slides(str, colorIndex, x, y, width)
     local startX = 15 + x
     local startY = 250 + y
-    draw.DrawText(str, "Morton Black@42", startX, startY)
+    draw.DrawText(str, SecondaryFontName .. "@42", startX, startY)
     surface.DrawLine(startX, startY + 50, startX + width, startY + 50)
     surface.DrawRect(startX + ((pipboyColor[colorIndex] / 255) * width) - 8, startY + 50 - 8, 18, 16)
     if CheckIfCursorInRange(startX, startY, width, 80) and input.IsMouseDown(MOUSE_LEFT) then
@@ -1125,7 +1125,7 @@ function CREATE_PERK_MENU()
     local close = PerkPanel:Add("DButton")
     close:SetSize(48, 48)
     close:SetText("X")
-    close:SetFont("Morton Medium@48")
+    close:SetFont(MainFontName .. "@48")
     close:SetPos(950, 0)
     close:SetZPos(100)
     close.DoClick = function() PerkPanel:Remove() end
@@ -1138,7 +1138,7 @@ function CREATE_PERK_MENU()
         self:NoClipping(true)
         surface.DrawShadow(0, 0, 64, 4, pip_color)
         surface.DrawShadow(256, 0, w - 255, 4, pip_color)
-        surface.SetFont("Morton Medium@48")
+        surface.SetFont(MainFontName .. "@48")
         NzGUI.DrawShadowText("PERKS", 120, -24, pip_color)
         surface.DrawShadow(0, 4, 4, h - 6, pip_color)
         surface.DrawShadow(0, h - 6, w, 4, pip_color)
@@ -1225,7 +1225,7 @@ function CREATE_PERK_MENU()
 
     function RightPanel:Paint(w, h)
         if RightPanel.Ready then
-            surface.SetFont("Morton Medium@48")
+            surface.SetFont(MainFontName .. "@48")
             NzGUI.DrawShadowText(self.Header, 0, 00, pip_color)
             if self.v.image then
                 surface.SetDrawColor(pip_color)
@@ -1248,7 +1248,7 @@ function CREATE_PERK_MENU()
     Unlock:SetTall(32)
     Unlock:SetText("")
     Unlock.PaintOver = function(self, w, h)
-        surface.SetFont("Morton Medium@32")
+        surface.SetFont(MainFontName .. "@32")
         NzGUI.DrawShadowText("UNLOCK", w / 2 - 32, 0, self.col)
     end
 
@@ -1288,7 +1288,7 @@ function CREATE_PERK_MENU()
             DButton:Dock(TOP)
             DButton:SetTall(32)
             DButton:SetColor(pip_color)
-            DButton:SetFont("Morton Medium@32")
+            DButton:SetFont(MainFontName .. "@32")
             DButton:SetText("")
             DButton.PaintOver = function(self, w, h)
                 local isOwned = LocalPlayer():hasTrait(v.uid) == true

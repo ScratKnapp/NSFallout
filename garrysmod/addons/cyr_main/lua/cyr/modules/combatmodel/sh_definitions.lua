@@ -86,6 +86,27 @@ CM.AssignModel({
 }, "biped_mirelurk")
 
 -- ============================================================
+-- Ghouls (feral, reaver, armored variants) - standard human biped, no tail.
+-- Neck/Head2 fold into Head; Spine2 into Body.
+-- ============================================================
+CM.RegisterLimbSet("biped_ghoul", {
+    ["Head"]      = { bones = {"Bip01 Head", "Bip01 Head2", "Bip01 Neck"} },
+    ["Body"]      = { bones = {"Bip01 Spine", "Bip01 Spine1", "Bip01 Spine2"} },
+    ["Left Arm"]  = { bones = {"Bip01 L UpperArm", "Bip01 L Forearm", "Bip01 L Hand"} },
+    ["Right Arm"] = { bones = {"Bip01 R UpperArm", "Bip01 R Forearm", "Bip01 R Hand"} },
+    ["Left Leg"]  = { bones = {"Bip01 L Thigh", "Bip01 L Calf", "Bip01 L Foot"} },
+    ["Right Leg"] = { bones = {"Bip01 R Thigh", "Bip01 R Calf", "Bip01 R Foot"} },
+})
+CM.AssignModel({
+    "models/fallout/ghoulferal.mdl",
+    "models/fallout/ghoulferal_vaultarmor.mdl",
+    "models/fallout/ghoulferal_jumpsuit.mdl",
+    "models/fallout/ghoulferal_mutated.mdl",
+    "models/fallout/ghoulreaver.mdl",
+    "models/fallout/ghoularmored.mdl",
+}, "biped_ghoul")
+
+-- ============================================================
 -- Quadrupeds (bighorner, brahmin, coyote, mongrel, dogvicious, molerat, giantrat, gecko)
 -- Front legs = upper-body arms, back legs = pelvis-attached thighs.
 -- ============================================================

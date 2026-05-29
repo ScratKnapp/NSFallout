@@ -181,7 +181,7 @@ local function info_drawHeader(row, x, y, w)
     surface.DrawRect(x, y, w, INFO_HEADER_H)
     surface.SetDrawColor(row.color.r, row.color.g, row.color.b, 200)
     surface.DrawRect(x, y + INFO_HEADER_H - 2, w, 2)
-    draw.DrawText(row.name, "Morton Medium@24", x + 8, y + 1, color_white)
+    draw.DrawText(row.name, MainFontName .. "@24", x + 8, y + 1, color_white)
 end
 
 local function info_drawAdminButton(label, x, y, w, charID, action, needsHold)
@@ -209,7 +209,7 @@ local function info_drawAdminButton(label, x, y, w, charID, action, needsHold)
         end
     end
 
-    draw.DrawText(label .. (needsHold and "  [HOLD R]" or ""), "Morton Medium@24",
+    draw.DrawText(label .. (needsHold and "  [HOLD R]" or ""), MainFontName .. "@24",
         x + w / 2, y + 2, isIn and color_black or color_white, TEXT_ALIGN_CENTER)
 
     if click and not needsHold then
@@ -228,7 +228,7 @@ local function info_drawTextButton(label, x, y, w, h)
         surface.SetDrawColor(pip_color.r, pip_color.g, pip_color.b, 50)
         surface.DrawRect(x, y, w, h)
     end
-    draw.DrawText(label, "Morton Medium@24", x + w / 2, y + 1, isIn and pip_color or color_white, TEXT_ALIGN_CENTER)
+    draw.DrawText(label, MainFontName .. "@24", x + w / 2, y + 1, isIn and pip_color or color_white, TEXT_ALIGN_CENTER)
     return click
 end
 
@@ -284,8 +284,8 @@ tablet.pages["INFO"] = function(color_main)
 
     -- Header bar
     surface.SetDrawColor(pip_color)
-    draw.DrawText("STATUS", "Morton Black@42", 64, 64)
-    draw.DrawText("// " .. #player.GetAll() .. " ONLINE", "Morton Medium@32", 220, 80, pip_color_accent)
+    draw.DrawText("STATUS", SecondaryFontName .. "@42", 64, 64)
+    draw.DrawText("// " .. #player.GetAll() .. " ONLINE", MainFontName .. "@32", 220, 80, pip_color_accent)
     surface.DrawRect(60, 106, 940, 4)
 
     local isAdmin = lp:IsAdmin()
@@ -303,7 +303,7 @@ tablet.pages["INFO"] = function(color_main)
             surface.SetDrawColor(pip_color.r, pip_color.g, pip_color.b, 80)
             surface.DrawRect(bx, by, bw, bh)
         end
-        draw.DrawText(label, "Morton Medium@24", bx + bw / 2, by + 4,
+        draw.DrawText(label, MainFontName .. "@24", bx + bw / 2, by + 4,
             isIn and color_black or color_white, TEXT_ALIGN_CENTER)
         if isIn then
             surface.SetDrawColor(pip_color.r, pip_color.g, pip_color.b, 50)
@@ -358,12 +358,12 @@ tablet.pages["INFO"] = function(color_main)
                 secondary = "Unknown"
             end
 
-            draw.DrawText(primary, "Morton Medium@24", INFO_LIST_X + 14, drawY + 2, textCol)
-            draw.DrawText(secondary, "Morton Medium@19", INFO_LIST_X + 14, drawY + 17, textCol)
+            draw.DrawText(primary, MainFontName .. "@24", INFO_LIST_X + 14, drawY + 2, textCol)
+            draw.DrawText(secondary, MainFontName .. "@19", INFO_LIST_X + 14, drawY + 17, textCol)
 
             -- Ping right-aligned.
             local pingTxt = tostring(ply:Ping()) .. " MS"
-            draw.DrawText(pingTxt, "Morton Medium@19", INFO_LIST_X + INFO_LIST_W - 8, drawY + 9, textCol, TEXT_ALIGN_RIGHT)
+            draw.DrawText(pingTxt, MainFontName .. "@19", INFO_LIST_X + INFO_LIST_W - 8, drawY + 9, textCol, TEXT_ALIGN_RIGHT)
 
             if click then
                 PIPBOY_INFO_SELECTED = cid
@@ -415,7 +415,7 @@ tablet.pages["INFO"] = function(color_main)
     end
 
     if not selectedRow then
-        draw.DrawText("NO TARGET", "Morton Medium@42", INFO_DETAIL_X, 200, pip_color_accent)
+        draw.DrawText("NO TARGET", MainFontName .. "@42", INFO_DETAIL_X, 200, pip_color_accent)
         return
     end
 
@@ -432,34 +432,34 @@ tablet.pages["INFO"] = function(color_main)
     -- Faction stripe / label
     surface.SetDrawColor(selectedRow.color)
     surface.DrawRect(INFO_DETAIL_X, INFO_LIST_Y, 4, 60)
-    draw.DrawText((nameStr or "UNKNOWN"):upper(), "Morton Medium@42", INFO_DETAIL_X + 14, INFO_LIST_Y - 4, pip_color)
-    draw.DrawText((fac.name or "Wastelander"):upper(), "Morton Medium@24", INFO_DETAIL_X + 14, INFO_LIST_Y + 38, selectedRow.color)
+    draw.DrawText((nameStr or "UNKNOWN"):upper(), MainFontName .. "@42", INFO_DETAIL_X + 14, INFO_LIST_Y - 4, pip_color)
+    draw.DrawText((fac.name or "Wastelander"):upper(), MainFontName .. "@24", INFO_DETAIL_X + 14, INFO_LIST_Y + 38, selectedRow.color)
 
     -- Description (wrapped).
     local desc = recognized and (char:getDesc() or "") or ("[" .. (char:getDesc() or "") .. "]")
     if desc == "" then desc = "No description provided." end
     local descY = INFO_LIST_Y + 76
-    draw.DrawText("DESCRIPTION", "Morton Medium@24", INFO_DETAIL_X, descY, pip_color_accent)
-    draw.DrawNonParsedText(textWrap(desc, "Morton Medium@24", INFO_DETAIL_W), "Morton Medium@24",
+    draw.DrawText("DESCRIPTION", MainFontName .. "@24", INFO_DETAIL_X, descY, pip_color_accent)
+    draw.DrawNonParsedText(textWrap(desc, MainFontName .. "@24", INFO_DETAIL_W), MainFontName .. "@24",
         INFO_DETAIL_X, descY + 26, color_white, 0)
 
     -- Quick stats (ping always visible; HP/health only after recognition).
     local statsY = INFO_LIST_Y + 220
-    draw.DrawText("PING", "Morton Medium@24", INFO_DETAIL_X, statsY, pip_color_accent)
-    draw.DrawText(ply:Ping() .. " ms", "Morton Medium@24", INFO_DETAIL_X + 120, statsY, color_white)
+    draw.DrawText("PING", MainFontName .. "@24", INFO_DETAIL_X, statsY, pip_color_accent)
+    draw.DrawText(ply:Ping() .. " ms", MainFontName .. "@24", INFO_DETAIL_X + 120, statsY, color_white)
 
     if ply == lp or recognized or adminBypass then
-        draw.DrawText("HEALTH", "Morton Medium@24", INFO_DETAIL_X, statsY + 28, pip_color_accent)
-        draw.DrawText(ply:Health() .. " / " .. ply:GetMaxHealth(), "Morton Medium@24", INFO_DETAIL_X + 120, statsY + 28, color_white)
+        draw.DrawText("HEALTH", MainFontName .. "@24", INFO_DETAIL_X, statsY + 28, pip_color_accent)
+        draw.DrawText(ply:Health() .. " / " .. ply:GetMaxHealth(), MainFontName .. "@24", INFO_DETAIL_X + 120, statsY + 28, color_white)
     end
 
     if adminBypass then
         -- Admins see the SteamID and player name (the OOC identity behind the
         -- character) so they can ban / report someone without alt-tabbing.
-        draw.DrawText("STEAM", "Morton Medium@24", INFO_DETAIL_X, statsY + 56, pip_color_accent)
-        draw.DrawText(ply:Name(), "Morton Medium@24", INFO_DETAIL_X + 120, statsY + 56, color_white)
-        draw.DrawText("ID", "Morton Medium@24", INFO_DETAIL_X, statsY + 84, pip_color_accent)
-        draw.DrawText(ply:SteamID(), "Morton Medium@19", INFO_DETAIL_X + 120, statsY + 90, color_white)
+        draw.DrawText("STEAM", MainFontName .. "@24", INFO_DETAIL_X, statsY + 56, pip_color_accent)
+        draw.DrawText(ply:Name(), MainFontName .. "@24", INFO_DETAIL_X + 120, statsY + 56, color_white)
+        draw.DrawText("ID", MainFontName .. "@24", INFO_DETAIL_X, statsY + 84, pip_color_accent)
+        draw.DrawText(ply:SteamID(), MainFontName .. "@19", INFO_DETAIL_X + 120, statsY + 90, color_white)
     end
 
     -- ============ Action buttons (player-facing) ============
@@ -483,7 +483,7 @@ tablet.pages["INFO"] = function(color_main)
     -- ============ Admin section ============
     if not isAdmin then return end
 
-    draw.DrawText("ADMIN", "Morton Black@42", INFO_DETAIL_X, btnY, pip_color)
+    draw.DrawText("ADMIN", SecondaryFontName .. "@42", INFO_DETAIL_X, btnY, pip_color)
     surface.SetDrawColor(pip_color)
     surface.DrawRect(INFO_DETAIL_X, btnY + 40, INFO_DETAIL_W, 2)
     btnY = btnY + 48
@@ -515,9 +515,9 @@ surface.SetDrawColor(pip_color)
 	surface.DrawRect(60, 130+y, 400, 42)
 
 
-	draw.SimpleText( quest_name,  "Morton Black@42",100, 151+y,color_black,TEXT_ALIGN_LEFT,TEXT_ALIGN_CENTER)
+	draw.SimpleText( quest_name,  SecondaryFontName .. "@42",100, 151+y,color_black,TEXT_ALIGN_LEFT,TEXT_ALIGN_CENTER)
 	else 
-	draw.SimpleText( quest_name,  "Morton Black@42",100, 151+y,color_white,TEXT_ALIGN_LEFT,TEXT_ALIGN_CENTER)
+	draw.SimpleText( quest_name,  SecondaryFontName .. "@42",100, 151+y,color_white,TEXT_ALIGN_LEFT,TEXT_ALIGN_CENTER)
 	
 	end
 	if tracked then 
@@ -616,13 +616,13 @@ function chat.AddNonParsedText(...)
 end
 
 local questDesc = [[Robert and some members of the Calypso ordered me to do some bullshit dirty work in order to get my gear back. I need to find someone that goes by "The West" to learn more.]]
-questDesc = textWrap(questDesc,"Morton Medium@24",300)
+questDesc = textWrap(questDesc,MainFontName .. "@24",300)
 
 PIPBOY_FOCUSED_QUEST = PIPBOY_FOCUSED_QUEST or nil
 
 tablet.pages["QUESTS"] = function(color_main)
 	surface.SetDrawColor(pip_color)
-	draw.DrawText("QUESTS", "Morton Black@42", 64, 64)
+	draw.DrawText("QUESTS", SecondaryFontName .. "@42", 64, 64)
 	surface.DrawRect(60, 106, 400, 8)
 
 	local char = LocalPlayer():getChar()
@@ -638,7 +638,7 @@ tablet.pages["QUESTS"] = function(color_main)
 	end
 
 	if #list == 0 then
-		draw.DrawText("No active quests.", "Morton Medium@32", 64, 140, color_white)
+		draw.DrawText("No active quests.", MainFontName .. "@32", 64, 140, color_white)
 		return
 	end
 
@@ -657,10 +657,10 @@ tablet.pages["QUESTS"] = function(color_main)
 	local focusedQuest = registered[PIPBOY_FOCUSED_QUEST]
 	if focusedQuest then
 		surface.SetDrawColor(pip_color)
-		draw.DrawText((focusedQuest.name or focusedQuest.uid):upper(), "Morton Black@42", 650, 120)
+		draw.DrawText((focusedQuest.name or focusedQuest.uid):upper(), SecondaryFontName .. "@42", 650, 120)
 		surface.DrawRect(600, 125, 8, 400)
 		local body = focusedQuest.reminder or focusedQuest.intro or ""
-		draw.DrawNonParsedText(textWrap(body, "Morton Medium@24", 300), "Morton Medium@24", 650, 166, color_white, 0)
+		draw.DrawNonParsedText(textWrap(body, MainFontName .. "@24", 300), MainFontName .. "@24", 650, 166, color_white, 0)
 	end
 end
 

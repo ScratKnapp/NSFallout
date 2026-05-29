@@ -58,7 +58,7 @@ local function video_killed_the_radio_star()
             surface.DrawRect(516, 105 + (48 * i), 4, 42)
         end
 
-        if NzGUI:DrawTextButton(string.upper(v), "Morton Medium" .. (exists and "!" or "@") .. "48", 100, 100 + (48 * i), 420, 42, 1, exists and pip_colorbb or color_white, not exists and pip_color or color_white, exists and pip_color) then
+        if NzGUI:DrawTextButton(string.upper(v), MainFontName .. (exists and "!" or "@") .. "48", 100, 100 + (48 * i), 420, 42, 1, exists and pip_colorbb or color_white, not exists and pip_color or color_white, exists and pip_color) then
             if i ~= EV_RADIO_GETINDEX() then
                 EV_RADIO_PUBLIC_CON(i)
                 songname = "Fetching..."
@@ -115,8 +115,8 @@ local function video_killed_the_radio_star()
     local freqMHz = 87.5 + ((idx or 0) * 7.3) % 20.5
     local titleY = scopeTop - 118
     local statusY = scopeTop - 70
-    draw.DrawText("FREQUENCY", "Morton Black@42", scopeX, titleY, pc, TEXT_ALIGN_LEFT)
-    draw.DrawText(string.format("%.1f", freqMHz) .. " MHz", "Morton Medium@48", scopeX + scopeW, titleY - 3, pc, TEXT_ALIGN_RIGHT)
+    draw.DrawText("FREQUENCY", SecondaryFontName .. "@42", scopeX, titleY, pc, TEXT_ALIGN_LEFT)
+    draw.DrawText(string.format("%.1f", freqMHz) .. " MHz", MainFontName .. "@48", scopeX + scopeW, titleY - 3, pc, TEXT_ALIGN_RIGHT)
 
     -- LIVE / NO SIGNAL indicator (dot vertically centred on the text)
     local blink = math.sin(CurTime() * 6) > 0
@@ -125,13 +125,13 @@ local function video_killed_the_radio_star()
         surface.SetDrawColor(statusColor)
         surface.DrawRect(scopeX + 2, statusY + 12, 16, 16)
     end
-    draw.DrawText(tuned and "LIVE" or "NO SIGNAL", "Morton Black@42", scopeX + 28, statusY, statusColor, TEXT_ALIGN_LEFT)
+    draw.DrawText(tuned and "LIVE" or "NO SIGNAL", SecondaryFontName .. "@42", scopeX + 28, statusY, statusColor, TEXT_ALIGN_LEFT)
 
     -- ===== Volume slider =====
     -- Sits well below the signal bars (scopeBot + ~24..46) so nothing overlaps.
     local volTop = scopeBot + 132
-    draw.DrawText("VOL", "Morton Black@42", startX, volTop - 56, pc, TEXT_ALIGN_LEFT)
-    draw.DrawText(math.Round(volIndicator * 100) .. "%", "Morton Medium@42", startX + 300, volTop - 56, pc, TEXT_ALIGN_RIGHT)
+    draw.DrawText("VOL", SecondaryFontName .. "@42", startX, volTop - 56, pc, TEXT_ALIGN_LEFT)
+    draw.DrawText(math.Round(volIndicator * 100) .. "%", MainFontName .. "@42", startX + 300, volTop - 56, pc, TEXT_ALIGN_RIGHT)
 
     -- track (0..400%, big tick every 100%)
     surface.SetDrawColor(pc.r, pc.g, pc.b, 40)
@@ -415,7 +415,7 @@ hook.Add("PlayerBindPress", "Minigames", function(ply, bind, pressed)
 end)
 
 local function formattedText(text1, text2, x, y, font)
-    font = font or "Morton Medium@48"
+    font = font or MainFontName .. "@48"
     surface.SetFont(font)
     draw.DrawText(text1, font, x, y, color_white)
     local width, _ = surface.GetTextSize(text1 .. " ")
@@ -435,9 +435,9 @@ end
 
 local function AttributeDisplay(name, desc, progress, level, y, x)
     y = y + 7
-    draw.DrawText(name, "Morton Medium@64", 80 + x, 0 + y, color_white)
-    draw.DrawText(desc, "Morton Medium@19", 80 + x, 48 + y, color_white)
-    draw.DrawText("LEVEL " .. level, "Morton Medium@48", 80 + x + attribute_width, 12 + y, pip_color, TEXT_ALIGN_RIGHT)
+    draw.DrawText(name, MainFontName .. "@64", 80 + x, 0 + y, color_white)
+    draw.DrawText(desc, MainFontName .. "@19", 80 + x, 48 + y, color_white)
+    draw.DrawText("LEVEL " .. level, MainFontName .. "@48", 80 + x + attribute_width, 12 + y, pip_color, TEXT_ALIGN_RIGHT)
     draw.NoTexture()
     surface.SetDrawColor(color_white)
     -- Render stuff here bb 
@@ -477,7 +477,7 @@ local attri = {"Strength", "Perception", "Endurance", "Charisma", "Intelligence"
 local attri_a = {"str", "per", "end", "cha", "int", "agi", "luc"}
 local attri_desc = {"Strength is a measure of your raw physical power. It affects how much you can carry, and determines the effectiveness of all melee attacks.", 'Perception is your environmental awareness and "sixth sense," and allows you to see things other people may not see.', "Endurance is the measure of overall physical fitness. It affects your total health and the action point drain from sprinting", "Charisma is your ability to charm and convince others. It affects your success to persuade others in dialogue and prices when you barter. It also allows you to inspire people in your party increase everyones max health.", "Intelligence is the measure of your overall mental acuity, and increases the amount of experience points earned.", "Agility is a measure of your overall finesse and reflexes. It affects the number of Action Points and your ability to sneak. Decreases reload time.", "Luck is a measure of your general good fortune, and affects the recharge rates of critical hits."}
 for i, v in pairs(attri_desc) do
-    attri_desc[i] = textWrap(v, "Morton Medium@24", 350)
+    attri_desc[i] = textWrap(v, MainFontName .. "@24", 350)
 end
 
 local attriIMG = {Material("vault_boy/str"), Material("vault_boy/per"), Material("vault_boy/end"), Material("vault_boy/chr"), Material("vault_boy/int"), Material("vault_boy/agi"), Material("vault_boy/luck")}
@@ -487,7 +487,7 @@ function DrawPly.SPECIAL()
     local ply = LocalPlayer()
     local character = ply:getChar()
     for y, v in pairs(attri) do
-        local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover(v, "Morton Medium@48", 64, 116 + (y * 44), 400, 40, 1, color_white)
+        local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover(v, MainFontName .. "@48", 64, 116 + (y * 44), 400, 40, 1, color_white)
         local c = pip_color
         if fn then
             c = color_black
@@ -495,7 +495,7 @@ function DrawPly.SPECIAL()
             surface.DrawRect(64, 118 + (y * 44), 500 - 64, 42)
             surface.SetMaterial(attriIMG[y])
             surface.SetDrawColor(pip_color)
-            draw.DrawNonParsedText(attri_desc[y], "Morton Medium@24", 600, 400, pip_color, 0)
+            draw.DrawNonParsedText(attri_desc[y], MainFontName .. "@24", 600, 400, pip_color, 0)
             if y == 1 then
                 surface.DrawTexturedRect(626 + 42, 128, 150, 256)
             elseif y == 5 then
@@ -506,7 +506,7 @@ function DrawPly.SPECIAL()
         end
 
         local iness = character:getAttrib(attri_a[y], 0)
-        draw.DrawText(iness, "Morton Medium@48", 500, 116 + (y * 44), c, TEXT_ALIGN_RIGHT)
+        draw.DrawText(iness, MainFontName .. "@48", 500, 116 + (y * 44), c, TEXT_ALIGN_RIGHT)
         draww(c)
     end
 end
@@ -519,17 +519,17 @@ hook.Add("HUDPaint", "SKILLS", function()
         render.SetViewPort(ScrW() * 0.2, ScrH() * 0.775, wth, ht)
         local t = "[]"
         local n = "R) OPEN PERK MENU "
-        surface.SetFont("Morton Medium@48")
+        surface.SetFont(MainFontName .. "@48")
         local tw, th = surface.GetTextSize(t)
         t = "["
-        surface.SetFont("Morton Medium@42")
+        surface.SetFont(MainFontName .. "@42")
         local twn, thn = surface.GetTextSize(n)
         surface.SetDrawColor(pip_color.r, pip_color.g, pip_color.b, 20)
         surface.DrawRect(0, 13, tw + twn, th - 16)
-        surface.SetFont("Morton Medium@48")
+        surface.SetFont(MainFontName .. "@48")
         NzGUI.DrawShadowText(t, 0, 0, c)
         NzGUI.DrawShadowText("]", tw + twn - (tw / 2), 0, c)
-        surface.SetFont("Morton Medium@42")
+        surface.SetFont(MainFontName .. "@42")
         NzGUI.DrawShadowText(n, 12, 6, c)
         render.SetViewPort(0, 0, wth, ht)
         if IsReloadUse then CREATE_PERK_MENU() end
@@ -543,7 +543,7 @@ function DrawPly.SKILLS()
     local ply = LocalPlayer()
     local character = ply:getChar()
     for y, v in pairs(skill_def) do
-        local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover(v[2]:upper(), "Morton Medium@42", 64, 116 + (y * height), width, height, 1, color_white)
+        local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover(v[2]:upper(), MainFontName .. "@42", 64, 116 + (y * height), width, height, 1, color_white)
         local c = pip_color
         if fn then
             c = color_black
@@ -567,7 +567,7 @@ function DrawPly.SKILLS()
             end
         end
 
-        draw.DrawText(character:getSkillLevel(v[1]), "Morton Medium@48", width + 100, 116 + (y * height), c, TEXT_ALIGN_RIGHT)
+        draw.DrawText(character:getSkillLevel(v[1]), MainFontName .. "@48", width + 100, 116 + (y * height), c, TEXT_ALIGN_RIGHT)
         draww(c)
     end
 end
@@ -578,7 +578,7 @@ local offset2 = {100, 120, 100, 100}
 SELECTED_HEADER = "SKILLS"
 local draw_overview = function(pip_color2)
     for i, v in pairs(headers) do
-        local vb, fn = NzGUI:DrawTextButton(v, "Morton Medium@48", 64 + offset[i], 64, offset2[i], 32, 1, v == SELECTED_HEADER and pip_color or pip_color_accent)
+        local vb, fn = NzGUI:DrawTextButton(v, MainFontName .. "@48", 64 + offset[i], 64, offset2[i], 32, 1, v == SELECTED_HEADER and pip_color or pip_color_accent)
         if vb then
             if v == "PERKS" then
                 CREATE_PERK_MENU()
@@ -595,19 +595,19 @@ local draw_overview = function(pip_color2)
     surface.DrawRect(210, 700, 400, 48)
     surface.DrawRect(620, 700, 230, 48)
     surface.DrawRect(860, 700, 230, 48)
-    draw.DrawText("LEVEL " .. LocalPlayer():getChar():getSkillLevel("level"), "Morton Medium@48", 214, 700, pip_color, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+    draw.DrawText("LEVEL " .. LocalPlayer():getChar():getSkillLevel("level"), MainFontName .. "@48", 214, 700, pip_color, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
     surface.SetDrawColor(pip_color)
     surface.DrawOutlinedRect(350, 715, 244, 22)
     surface.DrawOutlinedRect(351, 716, 242, 20)
     surface.DrawRect(350, 715, 244 * (lb / ub), 22)
-    formattedText("XP", lb .. "/" .. ub, 630, 700, "Morton Medium@42")
+    formattedText("XP", lb .. "/" .. ub, 630, 700, MainFontName .. "@42")
 end
 
 pipboy:AddRenderPage("INFO", function()
-    draw.DrawText("HEAT SIGNATURES: " .. #player.GetAll() .. "/" .. game.MaxPlayers(), "Morton Medium@32", 64, 48, pip_color, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+    draw.DrawText("HEAT SIGNATURES: " .. #player.GetAll() .. "/" .. game.MaxPlayers(), MainFontName .. "@32", 64, 48, pip_color, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
     for i, v in pairs(player.GetAll()) do
         local pos = v:GetPos():ToScreen() 
-        draw.DrawText(hook.Run("GetDisplayedName", v) or v:Nick(), "Morton Medium@32", 84, 64 + (i * 32), pip_color, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        draw.DrawText(hook.Run("GetDisplayedName", v) or v:Nick(), MainFontName .. "@32", 84, 64 + (i * 32), pip_color, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
     end 
 end) 
 

@@ -294,7 +294,7 @@ local function drawItem(item3, y, pip_color, _amt, ITEM_INSTANCE_RRA)
     local rowX = 86 + EQUIP_INDENT
     local rowW = FUSION_ITEM_BUTTON_SIZE.w - EQUIP_INDENT
     local rowY = 116 + (y * FUSION_ITEM_BUTTON_SIZE.ho)
-    local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover(string.upper(name) .. cc, "Morton Medium@42", rowX, rowY, rowW, FUSION_ITEM_BUTTON_SIZE.h, 1, color_white, color_black, 0, pip_color)
+    local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover(string.upper(name) .. cc, MainFontName .. "@42", rowX, rowY, rowW, FUSION_ITEM_BUTTON_SIZE.h, 1, color_white, color_black, 0, pip_color)
 
     -- While the action menu is open, pin the highlight to its item so
     -- cursor hover doesn't light up neighbouring rows.
@@ -331,15 +331,15 @@ local function drawItem(item3, y, pip_color, _amt, ITEM_INSTANCE_RRA)
         local heightOfBoxesPadding = 2
         --end
         surface.DrawRect(ITEMDESCOFFSET.x, 230, ITEMDESCOFFSET.w + 2, heightOfBoxes)
-        draw.SimpleText("VALUE: " .. (inst.value or 0), "Morton Medium@32", ITEMDESCOFFSET.xT, 225, color_white, TEXT_ALIGN_LEFT)
+        draw.SimpleText("VALUE: " .. (inst.value or 0), MainFontName .. "@32", ITEMDESCOFFSET.xT, 225, color_white, TEXT_ALIGN_LEFT)
         surface.DrawRect(ITEMDESCOFFSET.x, 230 + heightOfBoxes + heightOfBoxesPadding, ITEMDESCOFFSET.w + 2, heightOfBoxes)
-        draw.SimpleText("TYPE: " .. (inst.category or "MISC"), "Morton Medium@32", ITEMDESCOFFSET.xT, 225 + heightOfBoxes + heightOfBoxesPadding, color_white, TEXT_ALIGN_LEFT)
+        draw.SimpleText("TYPE: " .. (inst.category or "MISC"), MainFontName .. "@32", ITEMDESCOFFSET.xT, 225 + heightOfBoxes + heightOfBoxesPadding, color_white, TEXT_ALIGN_LEFT)
         surface.DrawRect(ITEMDESCOFFSET.x, 230 + heightOfBoxes + heightOfBoxes + heightOfBoxesPadding + heightOfBoxesPadding, ITEMDESCOFFSET.w + 2, heightOfBoxes)
-        draw.SimpleText("WEIGHT: " .. (item.weight or "0"), "Morton Medium@32", ITEMDESCOFFSET.xT, 230 + heightOfBoxes + heightOfBoxes, color_white, TEXT_ALIGN_LEFT)
+        draw.SimpleText("WEIGHT: " .. (item.weight or "0"), MainFontName .. "@32", ITEMDESCOFFSET.xT, 230 + heightOfBoxes + heightOfBoxes, color_white, TEXT_ALIGN_LEFT)
         --surface.DrawRect(ITEMDESCOFFSET.x, 499 + heightOfBoxes + heightOfBoxes + heightOfBoxesPadding + heightOfBoxesPadding, ITEMDESCOFFSET.w + 2, heightOfBoxes)
-        --draw.SimpleText("Body Dr: " .. (item.resisbody or "0"), "Morton Medium@32", ITEMDESCOFFSET.xT, 499 + heightOfBoxes + heightOfBoxes, color_white, TEXT_ALIGN_LEFT)
+        --draw.SimpleText("Body Dr: " .. (item.resisbody or "0"), MainFontName .. "@32", ITEMDESCOFFSET.xT, 499 + heightOfBoxes + heightOfBoxes, color_white, TEXT_ALIGN_LEFT)
         --surface.DrawRect(ITEMDESCOFFSET.x, 525 + heightOfBoxes + heightOfBoxes + heightOfBoxesPadding + heightOfBoxesPadding, ITEMDESCOFFSET.w + 2, heightOfBoxes)
-        --draw.SimpleText("Head Dr: " .. (item.resishead or "0"), "Morton Medium@32", ITEMDESCOFFSET.xT, 525 + heightOfBoxes + heightOfBoxes, color_white, TEXT_ALIGN_LEFT)
+        --draw.SimpleText("Head Dr: " .. (item.resishead or "0"), MainFontName .. "@32", ITEMDESCOFFSET.xT, 525 + heightOfBoxes + heightOfBoxes, color_white, TEXT_ALIGN_LEFT)
         local heightOffset = 0
         local prevWidth = 0
         local endMargin = 2
@@ -352,11 +352,11 @@ local function drawItem(item3, y, pip_color, _amt, ITEM_INSTANCE_RRA)
                 buildup = buildup + math.abs(v[1])
                 if buildup == 1 then endMargin = buildupAmount * 2 - 4 end
                 if v[1] < 0 then
-                    draw.SimpleText(v[2], "Morton Medium@32", ITEMDESCOFFSET.xT + prevWidth - endMargin - (ITEMDESCOFFSET.w * v[1] * 0.5) - 10, start + heightOffset, color_white, TEXT_ALIGN_CENTER)
+                    draw.SimpleText(v[2], MainFontName .. "@32", ITEMDESCOFFSET.xT + prevWidth - endMargin - (ITEMDESCOFFSET.w * v[1] * 0.5) - 10, start + heightOffset, color_white, TEXT_ALIGN_CENTER)
                 else
                     if v[2] then
                         if v[4] == nil then surface.DrawRect(ITEMDESCOFFSET.x + prevWidth, start + 5 + heightOffset, ITEMDESCOFFSET.w * v[1] - endMargin, heightOfBoxes) end
-                        draw.SimpleText(v[2], "Morton Medium@32", ITEMDESCOFFSET.xT + prevWidth - endMargin, start + heightOffset, color_white, TEXT_ALIGN_LEFT)
+                        draw.SimpleText(v[2], MainFontName .. "@32", ITEMDESCOFFSET.xT + prevWidth - endMargin, start + heightOffset, color_white, TEXT_ALIGN_LEFT)
                     end
 
                     if v[3] then
@@ -455,7 +455,7 @@ local function drawItem(item3, y, pip_color, _amt, ITEM_INSTANCE_RRA)
         local digit = slot and EQUIP_SLOT_LABELS[slot]
         if digit then
             draw.SimpleText(
-                digit, "Morton Medium@32",
+                digit, MainFontName .. "@32",
                 boxX + math.floor(EQUIP_BOX_SIZE * 0.5),
                 boxY + math.floor(EQUIP_BOX_SIZE * 0.5) - 2,
                 color_black, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER
@@ -646,7 +646,7 @@ local function pipInvMenuDraw()
 
     local rowH = 36
     local pad  = 10
-    surface.SetFont("Morton Medium@32")
+    surface.SetFont(MainFontName .. "@32")
     local maxW = 0
     for _, opt in ipairs(menu.options) do
         local w = surface.GetTextSize(opt.label)
@@ -681,7 +681,7 @@ local function pipInvMenuDraw()
             surface.DrawRect(mx + 2, ry, menuW - 4, rowH)
             hoveredOpt = opt
         end
-        draw.SimpleText(opt.label, "Morton Medium@32",
+        draw.SimpleText(opt.label, MainFontName .. "@32",
             mx + pad, ry + 4,
             inside and color_black or color_white,
             TEXT_ALIGN_LEFT)
@@ -743,9 +743,9 @@ local function pipDropSelectorDraw()
     surface.SetDrawColor(pip_color)
     surface.DrawOutlinedRect(x, y, w, h)
 
-    draw.SimpleText("DROP HOW MANY?", "Morton Medium@42", x + w * 0.5, y + 18, pip_color, TEXT_ALIGN_CENTER)
+    draw.SimpleText("DROP HOW MANY?", MainFontName .. "@42", x + w * 0.5, y + 18, pip_color, TEXT_ALIGN_CENTER)
     local nm = (item.getName and item:getName()) or item.name or ""
-    draw.SimpleText(string.upper(nm), "Morton Medium@32", x + w * 0.5, y + 62, color_white, TEXT_ALIGN_CENTER)
+    draw.SimpleText(string.upper(nm), MainFontName .. "@32", x + w * 0.5, y + 62, color_white, TEXT_ALIGN_CENTER)
 
     local lmbHeld = input.IsMouseDown(MOUSE_LEFT)
     local justClicked = lmbHeld and not sel.lmbPrev
@@ -761,7 +761,7 @@ local function pipDropSelectorDraw()
             surface.DrawOutlinedRect(rx, ry, rw, rh)
         end
         if label then
-            draw.SimpleText(label, "Morton Medium@42", rx + rw * 0.5, ry + rh * 0.5 - 18,
+            draw.SimpleText(label, MainFontName .. "@42", rx + rw * 0.5, ry + rh * 0.5 - 18,
                 inside and color_black or color_white, TEXT_ALIGN_CENTER)
         end
         return inside
@@ -771,7 +771,7 @@ local function pipDropSelectorDraw()
     local cy = y + 108
     local minusIn = rect(x + 40, cy, 50, 44, "-")
     local plusIn  = rect(x + w - 90, cy, 50, 44, "+")
-    draw.SimpleText(sel.value .. " / " .. sel.max, "Morton Medium@48",
+    draw.SimpleText(sel.value .. " / " .. sel.max, MainFontName .. "@48",
         x + w * 0.5, cy + 2, color_white, TEXT_ALIGN_CENTER)
 
     -- Confirm / Cancel
@@ -814,7 +814,7 @@ local function DrawInventoryPage()
         firsttime = false
         clearinv()
         for i = 1, #categories do
-            surface.SetFont("Morton Medium@48")
+            surface.SetFont(MainFontName .. "@48")
             local width, _ = surface.GetTextSize(categories[i] .. " ")
             cachedsizes[i] = width
             cachedpos[i] = (cachedpos[i - 1] or 0) + (cachedsizes[i - 1] or 0)
@@ -823,7 +823,7 @@ local function DrawInventoryPage()
 
     if tablet.Inventory == nil then clearinv() end
     for i = 1, #categories do
-        if NzGUI:DrawTextButton(categories[i], "Morton Medium@48", 60 + cachedpos[i], 50, cachedsizes[i], 34, 0, inventory.focus == i and color_white or ((inventory.focus == i - 1 or inventory.focus == i + 1) and color_bright_Gray) or color_gray, pip_color) then
+        if NzGUI:DrawTextButton(categories[i], MainFontName .. "@48", 60 + cachedpos[i], 50, cachedsizes[i], 34, 0, inventory.focus == i and color_white or ((inventory.focus == i - 1 or inventory.focus == i + 1) and color_bright_Gray) or color_gray, pip_color) then
             Scroll_POS = 0
             inventory.focus = i
         end
@@ -971,7 +971,7 @@ hook.Add("pip_changepage", "inv_", function(from, to)
                 built = built .. v .. (k < #options and "\t" or "  ")
             end
 
-            surface.SetFont("Morton Medium@48")
+            surface.SetFont(MainFontName .. "@48")
             local tw, th = surface.GetTextSize(built)
             surface.SetDrawColor(pip_color.r, pip_color.g, pip_color.b, 20)
             surface.DrawRect(0, 0, tw, th)
@@ -994,7 +994,7 @@ function DrawPly.PERKS()
     if cached_desc == nil then
         cached_desc = {}
         for i, v in pairs(PERKS) do
-            cached_desc[v.display] = textWrap(v.desc, "Morton Medium@32", 350)
+            cached_desc[v.display] = textWrap(v.desc, MainFontName .. "@32", 350)
         end
     end
 
@@ -1006,7 +1006,7 @@ function DrawPly.PERKS()
         local i = i - 1
         local y = math.floor(i / 2)
         local x = i % 2 * 256
-        local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover(v.display:upper(), "Morton Medium@32", 64 + x, 116 + y * 32, 225, 32, 1, color_white)
+        local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover(v.display:upper(), MainFontName .. "@32", 64 + x, 116 + y * 32, 225, 32, 1, color_white)
         local c = pip_color
         if fn then
             c = color_black
@@ -1015,7 +1015,7 @@ function DrawPly.PERKS()
             surface.DrawRect(64 + x, 120 + (y * 32), 225, 26)
             surface.SetMaterial(v.image)
             surface.SetDrawColor(pip_color)
-            draw.DrawNonParsedText(cached_desc[v.display], "Morton Medium@32", 600, 400, pip_color, 0)
+            draw.DrawNonParsedText(cached_desc[v.display], MainFontName .. "@32", 600, 400, pip_color, 0)
             surface.DrawTexturedRect(626, 128, 256, 256)
         end
 
@@ -1041,7 +1041,7 @@ local offset2 = {200, 120, 100, 100}
 SELECTED_HEADER = "HEAT SIGNATURES"
 local draw_overview = function(pip_color2)
     for i, v in pairs(headers) do
-        local vb, fn = NzGUI:DrawTextButton(v, "Morton Medium@48", 64 + offset[i], 64, offset2[i], 32, 1, v == SELECTED_HEADER and pip_color or pip_color_accent)
+        local vb, fn = NzGUI:DrawTextButton(v, MainFontName .. "@48", 64 + offset[i], 64, offset2[i], 32, 1, v == SELECTED_HEADER and pip_color or pip_color_accent)
         if vb then SELECTED_HEADER = v end
     end
 
@@ -1062,9 +1062,9 @@ local draw_repair = function(pip_color2)
     end
 
     local inst = ITEM_REPAIRING
-    local vb, fn = NzGUI:DrawTextButton("REPAIRING " .. ITEM_REPAIRING:getName(), "Morton Medium@48", 64 + offset[i], 64, offset2[i], 32, 1, v == SELECTED_HEADER and pip_color or pip_color_accent)
+    local vb, fn = NzGUI:DrawTextButton("REPAIRING " .. ITEM_REPAIRING:getName(), MainFontName .. "@48", 64 + offset[i], 64, offset2[i], 32, 1, v == SELECTED_HEADER and pip_color or pip_color_accent)
     surface.SetDrawColor(pip_color2)
-    draw.SimpleText("Weapon Decay: " .. curHp(inst), "Morton Medium@32", 64, 100, color_white, TEXT_ALIGN_LEFT)
+    draw.SimpleText("Weapon Decay: " .. curHp(inst), MainFontName .. "@32", 64, 100, color_white, TEXT_ALIGN_LEFT)
     -- get repair group
     local repairValue = 0
     local RPG = REPAIR_GROUP:Get(inst.repairGroup or inst.weaponCategory or inst.uniqueID)
@@ -1083,7 +1083,7 @@ local draw_repair = function(pip_color2)
             local x = 0
             local tt = charINV:getItemsOfType(i)[1]
             local name = tt:getName()
-            local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover(name, "Morton Medium@42", 64 + x, 124 + y * 46, 480, 48, 1, color_white)
+            local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover(name, MainFontName .. "@42", 64 + x, 124 + y * 46, 480, 48, 1, color_white)
             local c = pip_color
             if fn then
                 c = color_black
@@ -1091,7 +1091,7 @@ local draw_repair = function(pip_color2)
                 surface.DrawRect(64 + x, 128 + (y * 46), 480, 40)
                 surface.SetDrawColor(pip_color)
                 local count = charINV.items[i] or 0
-                -- draw.DrawNonParsedText(tablet.Inventory.items[i]:getName() .. "X " .. nut.item.list[i]:getName(), "Morton Medium@32", 580, 180, pip_color, 0)
+                -- draw.DrawNonParsedText(tablet.Inventory.items[i]:getName() .. "X " .. nut.item.list[i]:getName(), MainFontName .. "@32", 580, 180, pip_color, 0)
                 repairValue = v
                 if IsUseDown then
                     IsUseDown = false
@@ -1100,7 +1100,7 @@ local draw_repair = function(pip_color2)
             end
 
             draww(c)
-            draw.SimpleText("CDN", "Morton Medium@64", 580, 64, color_white, TEXT_ALIGN_LEFT)
+            draw.SimpleText("CDN", MainFontName .. "@64", 580, 64, color_white, TEXT_ALIGN_LEFT)
             local width_prod = 400
             local padd_ing = 6
             local maxV = maxHp(inst)
@@ -1127,7 +1127,7 @@ hook.Add("pip_changepage", "_repair", function(from, to)
                 built = built .. v .. (k < #options and "\t" or "  ")
             end
 
-            surface.SetFont("Morton Medium@48")
+            surface.SetFont(MainFontName .. "@48")
             local tw, th = surface.GetTextSize(built)
             surface.SetDrawColor(pip_color.r, pip_color.g, pip_color.b, 20)
             surface.DrawRect(0, 0, tw, th)

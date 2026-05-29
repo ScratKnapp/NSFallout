@@ -766,7 +766,7 @@ local function DrawTheHUD()
     -- Compass rides just below the rail.
     DrawCompass(primary, innerX, lineY + gap, innerW, compH)
     local valW = 70 * scale
-    draw.SimpleText("HP", "FO3_HUD_Label", innerX, barY - gap, primary, TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
+    draw.SimpleText(usingCombatHP and "[CB] HP" or "HP", "FO3_HUD_Label", innerX, barY - gap, primary, TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
     fo3Bar(innerX + lx * HUDCFG.hpBarPadLMul, barY, innerW - valW - lx * HUDCFG.hpBarPadRMul, barH, hpPerc, primary)
     draw.SimpleText(math.ceil(hp), "FO3_HUD_Value", innerX + innerW + HUDCFG.hpValueXOff * scale, barY + barH / 2 + HUDCFG.hpValueYOff * scale, primary, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
     -- ===================== BOTTOM RIGHT : AP + AMMO + CND =====================
@@ -807,7 +807,7 @@ local function DrawTheHUD()
         local cndBarW = HUDCFG.cndW * scale
         draw.SimpleText("CND", "FO3_HUD_Label", cndBarX + HUDCFG.cndLabelXOff * scale, cndBarY - gap, primary, TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
         fo3Bar(cndBarX, cndBarY, cndBarW, barH, cndPerc, primary)
-        draw.SimpleText(ctool.clip .. "/" .. ctool.mag, "FO3_HUD_Value", rInnerX + rInnerW + HUDCFG.ammoXOff * scale, rowY + barH / 2 + HUDCFG.ammoYOff * scale, primary, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+        draw.SimpleText("[CB] " .. ctool.clip .. "/" .. ctool.mag, "FO3_HUD_Value", rInnerX + rInnerW + HUDCFG.ammoXOff * scale, rowY + barH / 2 + HUDCFG.ammoYOff * scale, primary, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
     elseif IsValid(activeWep) and activeWep.Clip1 then
         local clip = activeWep:Clip1()
         if clip ~= -1 then

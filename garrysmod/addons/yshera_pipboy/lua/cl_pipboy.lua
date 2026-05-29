@@ -1,6 +1,5 @@
-
-
-
+MainFontName = "Morton Medium"
+SecondaryFontName = "Morton Black"
 local function REFRESH_PIPBOY()
     PIPBOY_ON_SCREEN = false
     NzGUI = NzGUI or {}
@@ -346,16 +345,16 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
         })
     end
 
-    CreateFont("Morton Medium", 82)
-    CreateFont("Morton Medium", 72)
-    CreateFont("Morton Medium", 24)
-    CreateFont("Morton Medium", 32)
-    CreateFont("Morton Medium", 19)
-    CreateFont("Morton Medium", 64)
-    CreateFont("Morton Medium", 48)
-    CreateFont("Morton Medium", 42)
-    CreateFont("Morton Medium", 92)
-    CreateFont("Morton Black", 42)
+    CreateFont(MainFontName, 82)
+    CreateFont(MainFontName, 72)
+    CreateFont(MainFontName, 24)
+    CreateFont(MainFontName, 32)
+    CreateFont(MainFontName, 19)
+    CreateFont(MainFontName, 64)
+    CreateFont(MainFontName, 48)
+    CreateFont(MainFontName, 42)
+    CreateFont(MainFontName, 92)
+    CreateFont(SecondaryFontName, 42)
     local headerUnderscorePos = {-360, -220, -75, 70, 204, 340}
     local tri_size = 6
     tablet.TransitionPos = 0
@@ -516,7 +515,6 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
     pipboy:AddHeader("SETTINGS")
     hook.Run("pipboy_headers")
     pipboy.SelectedHeader = "STATS"
-
     -- SETTINGS page: rendered inside the pipboy RT like the other pages.
     -- Mouse sensitivity + RGB sliders for pipboy and HUD tint.
     local hudColorCv = GetConVar("fallout_hud_color") or CreateClientConVar("fallout_hud_color", "#ffb642", true, false)
@@ -526,6 +524,7 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
             local c = HexToColor and HexToColor(s) or nil
             if c then return c end
         end
+
         local r, g, b = s:match("(%d+)%s+(%d+)%s+(%d+)")
         if r then return Color(tonumber(r), tonumber(g), tonumber(b)) end
         return Color(255, 182, 66)
@@ -561,44 +560,54 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
         -- side gutters; slider values render to the right of the bar, so
         -- the bar width plus ~60px of value room must fit inside each
         -- column's right edge.
-        local leftX  = 64
+        local leftX = 64
         local rightX = 528
-        local colW   = 360   -- slider bar width
-        local valueW = 80    -- room for the right-aligned value text
+        local colW = 360 -- slider bar width
+        local valueW = 80 -- room for the right-aligned value text
         local minS, maxS = 0.05, 1.5
-
         -- Mouse sensitivity spans both columns.
         local sensW = (rightX + colW + valueW) - leftX - valueW
         local senV = drawSlider("MOUSE SENSITIVITY", leftX, 110, sensW, minS, maxS, math.Clamp(cursor_sens_cv:GetFloat(), minS, maxS), 2)
         if senV then cursor_sens_cv:SetFloat(math.Round(senV, 2)) end
-
         -- PIPBOY column header + swatch.
         draw.DrawText("PIPBOY COLOR", "Morton Medium@42", leftX, 200, pip_color)
         surface.SetDrawColor(pip_color)
         surface.DrawRect(leftX + colW - 80, 208, 80, 36)
-
         local pr, pg, pb = pip_color.r, pip_color.g, pip_color.b
         local nr = drawSlider("R", leftX, 300, colW, 0, 255, pr, 0)
         local ng = drawSlider("G", leftX, 380, colW, 0, 255, pg, 0)
         local nb = drawSlider("B", leftX, 460, colW, 0, 255, pb, 0)
-        if nr or ng or nb then
-            writePipboyColor(Color(nr or pr, ng or pg, nb or pb))
-        end
-
+        if nr or ng or nb then writePipboyColor(Color(nr or pr, ng or pg, nb or pb)) end
         -- HUD column header + swatch.
         local hudC = parseHudColor()
         draw.DrawText("HUD COLOR", "Morton Medium@42", rightX, 200, pip_color)
         surface.SetDrawColor(hudC)
         surface.DrawRect(rightX + colW - 80, 208, 80, 36)
-
         local hr, hg, hb = hudC.r, hudC.g, hudC.b
         local hnr = drawSlider("R", rightX, 300, colW, 0, 255, hr, 0)
         local hng = drawSlider("G", rightX, 380, colW, 0, 255, hg, 0)
         local hnb = drawSlider("B", rightX, 460, colW, 0, 255, hb, 0)
-        if hnr or hng or hnb then
-            writeHudColor(Color(hnr or hr, hng or hg, hnb or hb))
+        if hnr or hng or hnb then writeHudColor(Color(hnr or hr, hng or hg, hnb or hb)) end
+        -- Superadmin-only shortcut to the NutScript F1 menu.
+        if LocalPlayer():IsSuperAdmin() then
+            local btnX, btnY, btnW, btnH = leftX, 600, 360, 48
+            local hovered, clicked = AddUIButton(btnX, btnY, btnW, btnH)
+            surface.SetDrawColor(pip_color.r, pip_color.g, pip_color.b, hovered and 255 or 150)
+            surface.DrawOutlinedRect(btnX, btnY, btnW, btnH)
+            draw.DrawText("OPEN NUTMENU", "Morton Medium@32", btnX + btnW / 2, btnY + 8, pip_color, TEXT_ALIGN_CENTER)
+            if clicked then
+                TogglePipboyView()
+                timer.Simple(FrameTime(), function() 
+                            local guii = vgui.Create("nutMenu")
+                guii:SetSize(ScrW(), ScrH())
+                guii:MakePopup()
+                guii:Center()
+                end)
+    
+            end
         end
     end)
+
     hook.Add("HUDPaint", "mute", function()
         local player = LocalPlayer()
         player:StopSound("items/flashlight1.wav")
@@ -617,9 +626,30 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
             hook.Run("pip_changepage", not PIPBOY_ON_SCREEN and pipboy.SelectedHeader, PIPBOY_ON_SCREEN and pipboy.SelectedHeader)
             TogglePipboyView()
             drawHeader("STATS")
-            vgui.Create("nutCharacter")
-        end
+            local charMenu = vgui.Create("nutCharacter")
+            if IsValid(charMenu) then
+                local exit = charMenu:Add("DButton")
+                exit:SetSize(48, 48)
+                exit:SetPos(ScrW() - 64, 16)
+                exit:SetZPos(1000)
+                exit:SetText("")
+                exit.Paint = function(s, w, h)
+                    surface.SetDrawColor(0, 238, 0, s:IsHovered() and 230 or 150)
+                    draw.NoTexture()
+                    draw.SimpleText("X", MainFontName .. "@48", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                    surface.DrawOutlinedRect(0, 0, w, h)
+                end
 
+                exit.DoClick = function()
+                    if not IsValid(charMenu) then return end
+                    if isfunction(charMenu.fadeOut) then
+                        charMenu:fadeOut()
+                    else
+                        charMenu:Remove()
+                    end
+                end
+            end
+        end
 
         --if nexttime > CurTime() then return end
         --nexttime = CurTime() + framerate
@@ -743,6 +773,7 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
         f = f * f * (3 - 2 * f) -- smoothstep ease in/out
         return Lerp(f, pipAnimFrom, offsetView)
     end
+
     function pip_init()
         cs_vm = IsValid(cs_vm) and cs_vm or ents.CreateClientside("cl_fakeVM")
         print("CS_VM", cs_vm)
@@ -752,7 +783,6 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
         function cs_arms:GetPlayerColor()
             return LocalPlayer():GetPlayerColor()
         end
-
 
         cs_pip:SetModel("models/pipboy.mdl")
         cs_pip:SetSubMaterial(1, "!" .. mat_name)
@@ -766,10 +796,26 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
             -- lowered, `ang`/`pos` the fully-raised target. Both ends are
             -- lerped so the arm bones swing through a real arc instead of
             -- snapping straight to the raised pose.
-            { bone = "ValveBiped.Bip01_R_UpperArm", pos = Vector(53, 25, 0), ang = Angle(0, 150, 45), low = Angle(-9, 35, 15) },
-            { bone = "ValveBiped.Bip01_L_UpperArm", ang = Angle(0, -50, 45), low = Angle(0, -55, 10) },
-            { bone = "ValveBiped.Bip01_L_Forearm",  ang = Angle(0, 5, 35),   low = Angle(0, 0, 222) },
-            { bone = "ValveBiped.Bip01_L_Hand",     ang = Angle(-25, 0, 0) },
+            {
+                bone = "ValveBiped.Bip01_R_UpperArm",
+                pos = Vector(53, 25, 0),
+                ang = Angle(0, 150, 45),
+                low = Angle(-9, 35, 15)
+            },
+            {
+                bone = "ValveBiped.Bip01_L_UpperArm",
+                ang = Angle(0, -50, 45),
+                low = Angle(0, -55, 10)
+            },
+            {
+                bone = "ValveBiped.Bip01_L_Forearm",
+                ang = Angle(0, 5, 35),
+                low = Angle(0, 0, 222)
+            },
+            {
+                bone = "ValveBiped.Bip01_L_Hand",
+                ang = Angle(-25, 0, 0)
+            },
         }
 
         function ApplyPipboyBonePose(frac)
@@ -781,16 +827,14 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
                 if not id then continue end
                 if v.pos then
                     local target = v.pos
-                    if v.bone == "ValveBiped.Bip01_R_UpperArm" then
-                        target = target + Vector(pip_arm_off_x:GetFloat(), pip_arm_off_y:GetFloat(), 0)
-                    end
+                    if v.bone == "ValveBiped.Bip01_R_UpperArm" then target = target + Vector(pip_arm_off_x:GetFloat(), pip_arm_off_y:GetFloat(), 0) end
                     vm:ManipulateBonePosition(id, LerpVector(frac, vector_origin, target))
                 end
-                if v.ang then
-                    vm:ManipulateBoneAngles(id, LerpAngle(frac, v.low or angle_zero, v.ang))
-                end
+
+                if v.ang then vm:ManipulateBoneAngles(id, LerpAngle(frac, v.low or angle_zero, v.ang)) end
             end
         end
+
         print("FIXED BONE POS")
         local function applycs(self, vm)
             self:AddEffects(EF_BONEMERGE)
@@ -860,10 +904,7 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
             return IsValid(wep) and (wep.ViewModel or "") == ""
         end
 
-        hook.Add("PreDrawViewModel", "aheXXAFGAGA", function(viewmodel, weapon)
-            drawPipboyModels(LocalPlayer():GetViewModel():GetPos(), _VEC_OFFSET)
-        end)
-
+        hook.Add("PreDrawViewModel", "aheXXAFGAGA", function(viewmodel, weapon) drawPipboyModels(LocalPlayer():GetViewModel():GetPos(), _VEC_OFFSET) end)
         -- Fallback for weapons with no viewmodel: PreDrawViewModel doesn't run
         -- for them, so draw during the world pass instead. The viewmodel-bearing
         -- case is handled above and bails here to avoid double-drawing. A
@@ -923,6 +964,7 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
                 local vmModel = IsValid(plyVM) and plyVM:GetModel()
                 if vmModel and vmModel ~= "" then cs_arms:SetModel(vmModel) end
             end
+
             offsetView = tog and 1 or 0
             tog = not tog
             -- Restart the 0.2s rotation animation from wherever it currently
@@ -982,7 +1024,7 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
         surface.SetDrawColor(0, 0, 0, 255 * frac)
         surface.SetMaterial(pip_vignette)
         surface.DrawTexturedRect(0, 0, ScrW(), ScrH())
-              surface.DrawTexturedRect(0, 0, ScrW(), ScrH())
+        surface.DrawTexturedRect(0, 0, ScrW(), ScrH())
     end)
 
     sound.PlayFile("sound/pipboy/ui_hum.wav", "noblock noplay", function(channel)

@@ -1220,57 +1220,59 @@ if CLIENT then
 	-- closer ones (score = dot / distance). Targets behind the flick direction
 	-- are ignored.
 	--
-	-- IMPORTANT: candidates are projected against the player's LOCKED EYE
-	-- FRAME (right/up vectors derived from EyeAngles), NOT through :ToScreen()
-	-- which would project through the active rendered camera — and that
-	-- camera is the VATS cinematic cam. Once we'd switched to a target at
-	-- higher elevation or a wide angle, the cinematic cam pivoted, and the
-	-- previous target ended up behind it. :ToScreen() then reported it as
-	-- non-visible, the candidate loop dropped it, and the player couldn't
-	-- flick back. CreateMove freezes mouse input while VATS is engaged, so
-	-- EyeAngles stays stable for the whole session — projecting against it
-	-- gives consistent flick semantics regardless of where the cinematic cam
-	-- has roamed.
+	-- The selection frame is anchored on the ENTITY WE'RE LOOKING AT, not the
+	-- camera. Two axes:
+	--   lateral  — horizontal, perpendicular to the player→target line. Driven
+	--              by horizontal mouse motion (dx). Left/right swaps to targets
+	--              beside the current one.
+	--   depth    — along the (horizontalised) player→target line. Driven by
+	--              vertical mouse motion (dy). Moving the mouse DOWN pulls the
+	--              selection toward NEARER targets, UP pushes it to FARTHER ones.
+	-- Anchoring on the target (rather than the player's eye / the roaming VATS
+	-- cinematic cam) keeps "nearer/farther" and "left/right" meaningful no
+	-- matter where the cinematic camera has panned to.
 	function SWEP:VATSSwitchTargetInDirection(dx, dy)
 		local current = self.vatsCommittedTarget
 		local ply     = LocalPlayer()
 		if not IsValid(ply) then return end
 		local eyePos  = ply:EyePos()
-		local eyeAng  = ply:EyeAngles()
-		local fwd     = eyeAng:Forward()
-		local right   = eyeAng:Right()
-		local up      = eyeAng:Up()
 
-		-- Reference point: projected coordinates of the current target in the
-		-- eye-view plane. Falls back to (0,0) — the player's centre of view —
-		-- if there's no current target or it's somehow behind the player.
-		local refX, refY = 0, 0
-		if IsValid(current) then
-			local d = current:WorldSpaceCenter() - eyePos
-			if d:Dot(fwd) > 0 then
-				refX =  d:Dot(right)
-				refY = -d:Dot(up)  -- screen Y is inverted (down = positive)
-			end
+		-- Anchor + axes derived from the current target. Without a current
+		-- target, fall back to the player's view forward so the first flick
+		-- still resolves to something sensible.
+		local refPos = IsValid(current) and current:WorldSpaceCenter() or eyePos
+		local depthDir = refPos - eyePos
+		depthDir.z = 0  -- keep depth horizontal so pitch doesn't bleed into it
+		if depthDir:LengthSqr() < 1 then
+			depthDir = ply:EyeAngles():Forward()
+			depthDir.z = 0
 		end
+		depthDir:Normalize()
+		local lateralDir = depthDir:Cross(vector_up)  -- horizontal, perpendicular
+		lateralDir:Normalize()
 
-		local best, bestScore = nil, -math.huge
+		-- Desired move in (lateral, depth) space. Screen Y is down-positive, so
+		-- negate dy: mouse down (dy>0) → negative depth → nearer target.
+		local moveLat, moveDepth = dx, -dy
+
+		-- Among every candidate that lies roughly in the requested direction,
+		-- pick the NEAREST one (smallest offset from the current target). Scoring
+		-- by alignment/distance let a far, well-aligned target win over a closer
+		-- slightly-off one — so a flick "slightly up and right" could jump past a
+		-- near neighbour to something across the room. Sorting purely by distance
+		-- among in-direction candidates makes the flick always step to the next
+		-- closest target.
+		local best, bestDist = nil, math.huge
 		for _, t in ipairs(self.vatsTargets or {}) do
 			if IsValid(t) and t ~= current then
-				local d = t:WorldSpaceCenter() - eyePos
-				-- Skip candidates behind the player. Possible since
-				-- VATSRefreshTargets only filters by distance, not facing.
-				if d:Dot(fwd) > 0 then
-					local tx =  d:Dot(right) - refX
-					local ty = -d:Dot(up)    - refY
-					local mag = math.sqrt(tx * tx + ty * ty)
-					if mag > 8 then
-						local dot = (tx / mag) * dx + (ty / mag) * dy
-						if dot > 0.2 then  -- roughly in the flick direction
-							local score = dot / math.max(mag, 1)
-							if score > bestScore then
-								best, bestScore = t, score
-							end
-						end
+				local off     = t:WorldSpaceCenter() - refPos
+				local lateral = off:Dot(lateralDir)
+				local depth   = off:Dot(depthDir)
+				local mag = math.sqrt(lateral * lateral + depth * depth)
+				if mag > 8 then
+					local dot = (lateral / mag) * moveLat + (depth / mag) * moveDepth
+					if dot > 0.2 and mag < bestDist then  -- in direction, and nearer
+						best, bestDist = t, mag
 					end
 				end
 			end
@@ -1281,6 +1283,28 @@ if CLIENT then
 		end
 	end
 
+	-- Box (hull) trace from the player's eye toward an entity's centre of mass.
+	-- The first thing the box hits decides line of sight: if it's the entity
+	-- itself (or nothing solid), we can see it; if a wall/prop is hit first, we
+	-- can't. A box is more forgiving than a thin line — a sliver of the target
+	-- poking past cover still resolves as the first hit, matching what the
+	-- player perceives as "visible".
+	local VATS_LOS_HULL = Vector(8, 8, 8)
+	function SWEP:VATSCanSee(ent)
+		local ply = LocalPlayer()
+		if not IsValid(ply) or not IsValid(ent) then return false end
+		local eye = ply:EyePos()
+		local tr = util.TraceHull({
+			start = eye,
+			endpos = ent:WorldSpaceCenter(),
+			mins = -VATS_LOS_HULL,
+			maxs = VATS_LOS_HULL,
+			filter = {ply, self},
+			mask = MASK_SHOT,
+		})
+		return tr.Entity == ent or not tr.Hit
+	end
+
 	function SWEP:VATSRefreshTargets()
 		local ply = LocalPlayer()
 		if not IsValid(ply) then return end
@@ -1289,7 +1313,8 @@ if CLIENT then
 		for _, ent in ipairs(ents.GetAll()) do
 			if IsValid(ent) and ent ~= ply
 				and (ent.combat or ent:IsPlayer())
-				and ent:GetPos():DistToSqr(origin) <= VATS_RANGE_SQR then
+				and ent:GetPos():DistToSqr(origin) <= VATS_RANGE_SQR
+				and self:VATSCanSee(ent) then
 				out[#out + 1] = ent
 			end
 		end
@@ -1503,6 +1528,7 @@ if CLIENT then
 	local VATS_CAM_DIST = 120   -- units from active part along player→target ray
 	local VATS_CAM_FOV  = 55    -- narrower than the default 75 for a slight zoom
 	local VATS_CAM_LERP = 10    -- inter-limb lerp rate (1/s); bigger = snappier
+	local VATS_CAM_MIN_FRONT = 16  -- keep the cam at least this far in front of the eye so the body stays out of frame
 
 	-- Enter/exit zoom duration scales with how far the camera has to travel.
 	-- A close-range engagement keeps the snappy 0.2s feel; a target across a
@@ -1550,7 +1576,13 @@ if CLIENT then
 				local dist = toPart:Length()
 				if dist >= 1 then
 					local dir = toPart / dist
-					desiredOrigin = partPos - dir * VATS_CAM_DIST
+					-- Pull the camera back from the target part, but never past
+					-- the player's own eye: if VATS_CAM_DIST would put the origin
+					-- behind the player (target nearer than the pull-back distance)
+					-- the body drops into frame. Clamp so the camera always sits
+					-- in front of the player by at least VATS_CAM_MIN_FRONT.
+					local camDist = math.min(VATS_CAM_DIST, math.max(dist - VATS_CAM_MIN_FRONT, 0))
+					desiredOrigin = partPos - dir * camDist
 					desiredAngles = dir:Angle()
 					desiredFOV    = VATS_CAM_FOV
 				end
