@@ -35,6 +35,22 @@ function PANEL:Init()
     self.html:AddFunction("gmod", "webhook", function(name, data)
         if name == "playSound" then
             if data.sound then surface.PlaySound(data.sound) end
+        elseif name == "playTypewriter" then
+            -- Looping typewriter SFX during the terminal boot intro.
+            if IsValid(self.typeChannel) then self.typeChannel:Stop() end
+            sound.PlayURL("https://www.myinstants.com/media/sounds/typewriter-sfx0281319.mp3", "noplay", function(channel)
+                if not IsValid(channel) then return end
+                if not IsValid(self) then channel:Stop() return end
+       
+                channel:SetVolume(0.6)
+                channel:Play()
+                self.typeChannel = channel
+            end)
+        elseif name == "stopTypewriter" then
+            if IsValid(self.typeChannel) then
+                self.typeChannel:Stop()
+                self.typeChannel = nil
+            end
         elseif name == "selectChar" then
             if data.id then self.selectedCharID = data.id end
             LocalPlayer():EmitSound("nl_ui_menu_focus.wav", 0, 100, 0.35)
@@ -83,19 +99,51 @@ function PANEL:Init()
                 end
             end
 
+            -- Skills are a registered char var ("skills"), stored as {skillID = points}.
+            local skillData = {}
+            if data.skillList then
+                for k, v in pairs(data.skillList) do
+                    skillData[k] = v
+                end
+            end
+
+            -- Languages are persistence data, stored as {languageUID = 1}.
+            local languageData = {}
+            if data.languageList then
+                for _, uid in ipairs(data.languageList) do
+                    languageData[uid] = 1
+                end
+            end
+
+            -- Background (history) is persistence data, a single {historyUID = 1}.
+            local historyData = {}
+            if data.backgroundUID and data.backgroundUID ~= "" then historyData[data.backgroundUID] = 1 end
+            -- The 'data' variable holds persistence data (traits, languages, history in this schema).
+            local persistData = {
+                traits = traitData,
+                languages = languageData
+            }
+
+            -- Only attach a background when one was chosen (keeps getHistory()'s "none" default intact).
+            if next(historyData) then persistData.history = historyData end
+
+            -- Perk points (ptPerk) are the leftover trait/perk pool. The stock NutScript trait
+            -- step set this on creation; the CYR menu replaced that flow, so initialize it here
+            -- (otherwise the F1 menu reads an uninitialized value and shows "Perk Points: -1").
+            -- Spend = trait picks; leftover carries over as perk points to unlock more later.
+            persistData.ptPerk = math.max(nut.config.get("maxTraits", 2) - table.Count(traitData), 0)
+
             -- NutScript nutCharCreate expects a flat table where keys match registered variables.
             -- Attributes/Skills are variables, so they must be at the top level.
             -- Name/Desc/Model/Faction are also variables.
-            -- The 'data' variable holds persistence data (like traits in this schema).
             local flatData = {
                 faction = data.factionIndex,
                 model = data.modelIndex or 1, -- Send INDEX, not path
                 name = data.name,
                 desc = data.desc,
                 attribs = attribData,
-                data = {
-                    traits = traitData
-                }
+                skills = skillData,
+                data = persistData
             }
 
             -- Debug Print
@@ -135,6 +183,7 @@ function PANEL:Init()
 end
 
 function PANEL:OnRemove()
+    if IsValid(self.typeChannel) then self.typeChannel:Stop() end
     LocalPlayer():EmitSound("nl_ui_menu_back" .. math.random(1, 3) .. ".wav", 0, 100, 0.35)
 end
 
@@ -167,7 +216,6 @@ function PANEL:RefreshCharacters()
                 local factionID = char:getFaction()
                 local factionName = "Unknown"
                 if nut.faction and nut.faction.indices and nut.faction.indices[factionID] then factionName = nut.faction.indices[factionID].name end
-                print(char:getPac("last_outfit"))
                 table.insert(chars, {
                     id = char:getID(),
                     name = char:getName(),
@@ -176,8 +224,6 @@ function PANEL:RefreshCharacters()
                     money = char:getMoney(),
                     desc = char:getDesc(),
                     model = char:getModel(),
-                    -- Retrieve PAC table using the registered variable
-                    pac = char.getPac and char:getPac("last_outfit")
                 })
                 -- if cvPacDebug:GetBool() then print("[PAC DEBUG] Char " .. char:getName() .. " lastPac type: " .. type(chars[#chars].lastPac)) end
             end
@@ -218,7 +264,7 @@ function PANEL:RefreshCharacters()
         table.sort(traits, function(a, b) return a.name < b.name end)
     end
 
-    -- 4. Fetch Attributes
+    -- 4. Fetch Attributes (SPECIAL)
     local attributes = {}
     if nut.attribs and nut.attribs.list then
         for k, v in pairs(nut.attribs.list) do
@@ -227,7 +273,9 @@ function PANEL:RefreshCharacters()
                 table.insert(attributes, {
                     id = k,
                     name = v.name,
-                    desc = v.desc
+                    desc = v.desc,
+                    maxValue = v.maxValue, -- per-attribute cap (mirrors charMeta:updateAttrib)
+                    skillBonus = v.skillBonus -- used to preview SPECIAL->skill bonuses
                 })
             end
         end
@@ -235,17 +283,90 @@ function PANEL:RefreshCharacters()
         table.sort(attributes, function(a, b) return a.name < b.name end)
     end
 
+    -- 5. Fetch Skills
+    local skills = {}
+    if nut.skills and nut.skills.list then
+        for k, v in pairs(nut.skills.list) do
+            if not v.noStartBonus then
+                table.insert(skills, {
+                    id = k,
+                    name = v.name,
+                    desc = v.desc,
+                    maxValue = v.maxValue, -- per-skill cap (mirrors charMeta:updateSkill)
+                    specialBonus = v.specialBonus
+                })
+            end
+        end
+
+        table.sort(skills, function(a, b) return a.name < b.name end)
+    end
+
+    -- 6. Fetch Backgrounds (history plugin)
+    local backgrounds = {}
+    if HISTORIES and HISTORIES.histories then
+        for uid, v in pairs(HISTORIES.histories) do
+            if not v.ignore then
+                table.insert(backgrounds, {
+                    uid = uid,
+                    name = v.name,
+                    desc = v.desc,
+                    category = v.category
+                })
+            end
+        end
+
+        table.sort(backgrounds, function(a, b) return a.name < b.name end)
+    end
+
+    -- Which factions are allowed to choose a background.
+    local allowedBgFactions = {}
+    local histPlugin = nut.plugin and nut.plugin.list and nut.plugin.list["history"]
+    if histPlugin and histPlugin.factions then
+        for facIdx in pairs(histPlugin.factions) do
+            table.insert(allowedBgFactions, facIdx)
+        end
+    end
+
+    -- 7. Fetch Languages
+    local languages = {}
+    if LANGUAGES and LANGUAGES.languages then
+        for uid, v in pairs(LANGUAGES.languages) do
+            if not v.ignore then
+                table.insert(languages, {
+                    uid = uid,
+                    name = v.name,
+                    desc = v.desc,
+                    category = v.category
+                })
+            end
+        end
+
+        table.sort(languages, function(a, b) return a.name < b.name end)
+    end
+
+    -- Resolve point pools from config / hooks.
+    local totalAttribPoints = hook.Run("GetStartAttribPoints", LocalPlayer()) or nut.config.get("startAttribs", 28)
+    local maxPerAttrib = nut.config.get("maxAttribs", 10)
+    local totalSkillPoints = hook.Run("GetStartSkillPoints", LocalPlayer()) or nut.config.get("charCreateSkills", 25)
+    local maxPerSkill = nut.config.get("maxSkills", 100)
+    local maxLanguagePoints = nut.config.get("maxLanguages", 2)
     -- Send to JS
     local jsonChars = util.TableToJSON(chars)
     local jsonFactions = util.TableToJSON(factions)
     local jsonTraits = util.TableToJSON(traits)
     local jsonAttribs = util.TableToJSON(attributes)
-    local maxAttribs = nut.config.get("attribPoints", 10)
+    local jsonSkills = util.TableToJSON(skills)
+    local jsonBackgrounds = util.TableToJSON(backgrounds)
+    local jsonBgFactions = util.TableToJSON(allowedBgFactions)
+    local jsonLanguages = util.TableToJSON(languages)
     if IsValid(self) and IsValid(self.html) then
         self.html:Call("setCharacters(" .. jsonChars .. ")")
         self.html:Call("setFactions(" .. jsonFactions .. ")")
         self.html:Call("setTraits(" .. jsonTraits .. ", " .. nut.config.get("maxTraits", 2) .. ")")
-        self.html:Call("setAttributes(" .. jsonAttribs .. ", " .. maxAttribs .. ")")
+        self.html:Call("setAttributes(" .. jsonAttribs .. ", " .. totalAttribPoints .. ", " .. maxPerAttrib .. ")")
+        self.html:Call("setSkills(" .. jsonSkills .. ", " .. totalSkillPoints .. ", " .. maxPerSkill .. ")")
+        self.html:Call("setBackgrounds(" .. jsonBackgrounds .. ", " .. jsonBgFactions .. ")")
+        self.html:Call("setLanguages(" .. jsonLanguages .. ", " .. maxLanguagePoints .. ")")
     end
 end
 

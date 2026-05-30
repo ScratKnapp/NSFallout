@@ -16,22 +16,6 @@ hook.Add("PlayerLoadedChar", "resetPipboy", function(client, char, data)
 end)
 
 local function registerNUT()
-    -- Vestigial "starting trait" character var the pipboy character creation
-    -- step writes to. The gamemode's real trait system lives in plugins/traits
-    -- and is unrelated to this int.
-    nut.char.registerVar("trait", {
-        field = "_trait",
-        default = 0,
-        isLocal = true,
-        noDisplay = true
-    })
-
-    -- NutScript writes _trait into every character save once the var above is
-    -- registered, but the base nut_characters schema has no such column. Add it
-    -- the same way the skills/pac plugins add theirs. The ALTER is a harmless
-    -- no-op (errors out) if the column already exists.
-    nut.db.query("ALTER TABLE nut_characters ADD COLUMN _trait INTEGER DEFAULT 0")
-
     nut.command.add("charsettraitid", {
         adminOnly = true,
         syntax = "<string name> <int trait>",

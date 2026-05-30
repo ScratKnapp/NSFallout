@@ -6,8 +6,8 @@ nut.util.include("sh_commands.lua")
 
 nut.config.add(
 	"maxSkills",
-	20,
-	"The total maximum amount of skill points allowed.",
+	100,
+	"The maximum value any single skill can reach.",
 	nil,
 	{
 		data = {min = 1, max = 250},

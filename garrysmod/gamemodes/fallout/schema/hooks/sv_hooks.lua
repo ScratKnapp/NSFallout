@@ -54,6 +54,25 @@ end
 --resource.AddFile("resource/fonts/IMMORTAL.ttf")
 --resource.AddFile("maps/rp_cyberpunk_2120_d.bsp")
 
+-- Enforce a floor of 1 on every attribute and skill at character creation,
+-- filling in any the client left out so no stat is ever stored at 0. This runs
+-- after the framework's point-pool validation (see multichar sv_networking's
+-- nutCharCreate handler), so the minimums apply regardless of how the player
+-- distributed their creation points.
+function SCHEMA:AdjustCreationData(client, data, newData, originalData)
+	local attribs = istable(data.attribs) and data.attribs or {}
+	for id in pairs(nut.attribs.list) do
+		attribs[id] = math.max(attribs[id] or 0, 1)
+	end
+	data.attribs = attribs
+
+	local skills = istable(data.skills) and data.skills or {}
+	for id in pairs(nut.skills.list) do
+		skills[id] = math.max(skills[id] or 0, 1)
+	end
+	data.skills = skills
+end
+
 function SCHEMA:OnCharCreated(client, character)
 	local inventory = character:getInv()
 

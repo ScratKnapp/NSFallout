@@ -537,17 +537,37 @@ nut.command.add("xpareadistrib", {
 })
 
 if(SERVER) then
-	netstream.Hook("statIncrease", function(client, attrib, value)
+	netstream.Hook("statIncrease", function(client, attrib)
 		local char = client:getChar()
+		if(!char) then return end
+
+		-- Never trust the client for which stat or by how much: the old handler
+		-- did char:setAttrib(attrib, value) with the sent target, so one point
+		-- could set any attribute to any number. Reject unknown keys and let the
+		-- server -- not the packet -- decide the new level (a fixed +1).
+		local attribTbl = nut.attribs.list[attrib]
+		if(!attribTbl) then return end
+
 		local ptAttrib = char:getData("ptAttrib", 0)
-		
+
 		if(ptAttrib > 0) then
+			-- Compare the raw stored value (getAttrib folds in temporary boosts)
+			-- against the cap, since that is what updateAttrib actually clamps.
+			-- Checking before we deduct means a spend at the cap costs no point.
+			local current = char:getAttribs()[attrib] or 0
+			local maxValue = attribTbl.maxValue or nut.config.get("maxAttribs", 10)
+
+			if(current >= maxValue) then
+				client:notify("Your " ..attribTbl.name.. " is already at its maximum of " ..maxValue.. ".")
+				return
+			end
+
 			char:setData("ptAttrib", ptAttrib - 1, false, player.GetAll())
-			char:setAttrib(attrib, value)
-			
-			client:notify("You have increased your " ..(nut.attribs.list[attrib] and nut.attribs.list[attrib].name).. ".")
-			
-			nut.log.addRaw(client:Name().. " increased their " ..(nut.attribs.list[attrib] and nut.attribs.list[attrib].name).. " from " ..(value-1).. " to " ..value.. ".")
+			char:updateAttrib(attrib, 1)
+
+			client:notify("You have increased your " ..attribTbl.name.. ".")
+
+			nut.log.addRaw(client:Name().. " increased their " ..attribTbl.name.. " from " ..current.. " to " ..(current + 1).. ".")
 		end
 	end)
 	

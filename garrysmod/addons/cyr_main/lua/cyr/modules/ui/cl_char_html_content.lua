@@ -34,14 +34,28 @@ CYR.UI.CharMenuHTML = [[
             user-select: none;
         }
 
-        /* Subtle screen curvature / vignette */
+        /* Curved CRT tube: rounded screen + edge darkening so the whole UI reads as bowed glass. */
         body::before {
             content: "";
             position: fixed;
             inset: 0;
             pointer-events: none;
             z-index: 999;
-            background: radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,0,0.85) 100%);
+            border-radius: 26px / 38px;
+            background: radial-gradient(ellipse 95% 95% at center, rgba(0,0,0,0) 52%, rgba(0,0,0,0.45) 82%, rgba(0,0,0,0.95) 100%);
+            box-shadow: inset 0 0 120px 18px rgba(0,0,0,0.85);
+        }
+        /* Convex glass: a soft glare near the top and a faint overall bulge highlight. */
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1002;
+            border-radius: 26px / 38px;
+            background:
+                radial-gradient(ellipse 150% 95% at 50% -12%, rgba(120,255,160,0.07), rgba(0,0,0,0) 46%),
+                radial-gradient(ellipse 120% 120% at center, rgba(120,255,160,0.05), rgba(0,0,0,0) 55%);
         }
 
         /* CRT Effects */
@@ -197,19 +211,37 @@ CYR.UI.CharMenuHTML = [[
         .char-faction { font-size: 0.8rem; opacity: 0.7; }
 
         .create-btn {
-            background: transparent;
-            border: 1px dashed var(--primary-dim);
-            color: var(--primary-dim);
+            background: rgba(51, 255, 102, 0.08);
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
             padding: 10px;
             text-align: center;
             cursor: pointer;
             margin-top: 10px;
             text-transform: uppercase;
+            font-weight: bold;
+            text-shadow: 0 0 8px var(--primary-glow);
+            /* Pulsing glow so it's obvious the button is there. */
+            animation: createPulse 1.8s ease-in-out infinite;
         }
         .create-btn:hover {
             border-color: var(--primary-color);
-            color: var(--primary-color);
-            background: rgba(255,255,255,0.1);
+            color: #001a05;
+            background: var(--primary-color);
+            box-shadow: 0 0 22px var(--primary-glow);
+            text-shadow: none;
+            animation: none; /* settle to a solid, clearly-clickable state on hover */
+        }
+
+        @keyframes createPulse {
+            0%, 100% {
+                box-shadow: 0 0 5px var(--primary-dim);
+                border-color: var(--secondary-color);
+            }
+            50% {
+                box-shadow: 0 0 20px var(--primary-glow);
+                border-color: var(--primary-color);
+            }
         }
 
         /* Center Display (Model info eventually?) */
@@ -419,13 +451,23 @@ CYR.UI.CharMenuHTML = [[
         .step-item {
             padding: 10px;
             border: 1px solid transparent;
-            cursor: pointer;
+            cursor: default;
             opacity: 0.5;
         }
         .step-item.active {
             border-color: var(--primary-color);
             opacity: 1;
             font-weight: bold;
+        }
+        /* Completed steps are clickable to navigate back. */
+        .step-item.done {
+            cursor: pointer;
+            opacity: 0.75;
+        }
+        .step-item.done:hover {
+            border-color: var(--primary-color);
+            opacity: 1;
+            background: rgba(255,255,255,0.05);
         }
 
         /* Faction/Model Grids */
@@ -545,6 +587,50 @@ CYR.UI.CharMenuHTML = [[
             70%      { opacity: 0.7; }
             71%      { opacity: 0.95; }
         }
+
+        /* Terminal boot/typewriter intro shown when registering a new dweller.
+           Occupies the same grid cell as the center panel so it lines up with it. */
+        .terminal-intro {
+            grid-column: 2 / 3;
+            grid-row: 2 / 3;
+            z-index: 200;
+            display: none;
+            opacity: 1;
+            transition: opacity 0.85s ease;
+            border: 1px solid var(--primary-dim);
+            background: var(--bg-color);
+            background-image:
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 40px 40px;
+            padding: 24px;
+            box-sizing: border-box;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .terminal-intro pre {
+            margin: 0;
+            height: 100%;
+            overflow: hidden;
+            white-space: pre-wrap;
+            word-break: break-word;
+            tab-size: 4;
+            -moz-tab-size: 4;
+            font-family: 'VCR OSD Mono', monospace;
+            font-size: 0.82rem;
+            line-height: 1.35;
+            color: var(--primary-color);
+            text-shadow: 0 0 6px var(--primary-glow);
+        }
+        /* Blinking block cursor at the end of the typed text. */
+        .terminal-intro pre::after {
+            content: "_";
+            animation: termCursor 1s steps(1) infinite;
+        }
+        @keyframes termCursor {
+            0%, 50% { opacity: 1; }
+            50.01%, 100% { opacity: 0; }
+        }
     </style>
 </head>
 <body>
@@ -622,21 +708,15 @@ CYR.UI.CharMenuHTML = [[
             <div class="panel-header">[ DWELLER REGISTRATION PROTOCOL ]</div>
             
             <div class="step-container">
-                <div class="step-list">
-                    <div class="step-item active" id="step-btn-1">1. AFFILIATION</div>
-                    <div class="step-item" id="step-btn-2">2. VISUAL</div>
-                    <div class="step-item" id="step-btn-3">3. DATA</div>
-                    <div class="step-item" id="step-btn-4">4. ATTRIBUTES</div>
-                    <div class="step-item" id="step-btn-5">5. TRAITS</div>
-                </div>
-                
-                <div class="step-content" id="step-1">
+                <div class="step-list" id="step-list"></div>
+
+                <div class="step-content" id="step-faction">
                     <h3>SELECT RACE</h3>
                     <div class="grid-select" id="faction-grid"></div>
                     <p id="faction-desc" style="opacity:0.7; margin-top:20px;"></p>
                 </div>
-                
-                <div class="step-content" id="step-2" style="display:none; overflow: hidden;">
+
+                <div class="step-content" id="step-visual" style="display:none; overflow: hidden;">
                     <div style="display: flex; flex-direction: row; gap: 20px; height: 100%;">
                         <div style="width: 300px; display: flex; flex-direction: column;">
                             <h3>VISUAL</h3>
@@ -652,8 +732,8 @@ CYR.UI.CharMenuHTML = [[
                         </div>
                     </div>
                 </div>
-                
-                <div class="step-content" id="step-3" style="display:none;">
+
+                <div class="step-content" id="step-data" style="display:none;">
                     <h3>IDENTITY DATA</h3>
                     <div class="input-group">
                         <span class="input-label">FULL NAME</span>
@@ -661,20 +741,39 @@ CYR.UI.CharMenuHTML = [[
                     </div>
                     <div class="input-group">
                         <span class="input-label">DESCRIPTION</span>
-                        <textarea class="text-input" id="input-desc" rows="4" placeholder="Physical description..." onclick="this.focus()"></textarea>
+                        <textarea class="text-input" id="input-desc" rows="3" placeholder="Physical description..." onclick="this.focus()"></textarea>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-label">BACKGROUND (optional, max 1 &mdash; grants bonus skills and an attribute)</span>
+                        <div class="grid-select" id="background-grid"></div>
+                        <p id="background-desc" style="opacity:0.7; margin-top:10px; min-height: 30px; white-space: pre-line; font-size: 0.85rem;"></p>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-label">LANGUAGES (<span id="language-points">2</span> LEFT)</span>
+                        <div class="grid-select" id="language-grid"></div>
+                        <p id="language-desc" style="opacity:0.7; margin-top:10px; min-height: 30px; white-space: pre-line; font-size: 0.85rem;"></p>
                     </div>
                 </div>
 
-                <div class="step-content" id="step-4" style="display:none;">
-                    <h3>ATTRIBUTES (<span id="attrib-points">10</span> POINTS REMAINING)</h3>
-                    <div id="attrib-list" style="display:flex; flex-direction:column; overflow-y:auto; height: 100%;"></div>
+                <div class="step-content" id="step-stats" style="display:none; overflow: hidden;">
+                    <div style="display: flex; flex-direction: row; gap: 20px; height: 100%;">
+                        <div style="flex: 1; display: flex; flex-direction: column; height: 100%; overflow: hidden;">
+                            <h3>S.P.E.C.I.A.L. (<span id="attrib-points">0</span> LEFT)</h3>
+                            <div id="attrib-list" style="display:flex; flex-direction:column; overflow-y:auto; flex: 1; padding-right: 5px;"></div>
+                        </div>
+                        <div style="flex: 1; display: flex; flex-direction: column; height: 100%; overflow: hidden;">
+                            <h3>SKILLS (<span id="skill-points">0</span> LEFT)</h3>
+                            <div id="skill-list" style="display:flex; flex-direction:column; overflow-y:auto; flex: 1; padding-right: 5px;"></div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="step-content" id="step-5" style="display:none;">
+                <div class="step-content" id="step-traits" style="display:none;">
                     <h3>TRAITS (<span id="trait-points">2</span> POINTS REMAINING)</h3>
                     <div class="grid-select" id="trait-grid"></div>
-                    <p id="trait-desc" style="opacity:0.7; margin-top:20px; min-height: 40px;"></p>
+                    <p id="trait-desc" style="opacity:0.7; margin-top:20px; min-height: 40px; white-space: pre-line;"></p>
                 </div>
+
             </div>
 
             <div class="wizard-actions">
@@ -685,6 +784,9 @@ CYR.UI.CharMenuHTML = [[
                 </div>
             </div>
         </div>
+
+        <!-- Terminal boot intro (typewriter), shown over the creation area then faded out -->
+        <div class="terminal-intro" id="terminal-intro" onclick="finishTerminalIntro()"><pre id="terminal-text"></pre></div>
     </div>
 
     <!-- Modal Overlay -->
@@ -702,29 +804,42 @@ CYR.UI.CharMenuHTML = [[
     <script>
         // --- DATA ---
         let characters = [];
-        let factions = []; 
-        let traits = []; 
-        let attributes = []; // New
-        
+        let factions = [];
+        let traits = [];
+        let attributes = [];
+        let skills = [];
+        let backgrounds = [];
+        let bgFactions = [];   // faction indices allowed to choose a background
+        let languages = [];
+
+        // --- POINT POOLS (filled by Lua) ---
+        let totalAttribPoints = 0;
+        let maxPerAttrib = 10;
+        let totalSkillPoints = 0;
+        let maxPerSkill = 100;
+        let maxTraitPoints = 2;
+        let maxLanguagePoints = 2;
+
         // --- STATE ---
         let selectedCharID = null;
-        let createData = {
-            factionIndex: null,
-            model: null,
-            name: "",
-            desc: "",
-            traits: {} // New: { traitUID: true/false }
-        };
-        let currentStep = 1;
-        let maxTraitPoints = 2;
-        let usedTraitPoints = 0;
+        let createData = {};
+        let currentStepIdx = 0;
+
+        // --- WIZARD STEP DEFINITIONS (order matters) ---
+        const STEPS = [
+            { id: 'faction',    title: '1. AFFILIATION' },
+            { id: 'visual',     title: '2. VISUAL' },
+            { id: 'data',       title: '3. DATA' },
+            { id: 'stats',      title: '4. SPECIAL & SKILLS' },
+            { id: 'traits',     title: '5. TRAITS' }
+        ];
 
         // --- INIT & BRIDGE ---
         function setCharacters(data) {
             characters = data || [];
             renderList();
         }
-        
+
         function setFactions(data) {
             factions = data || [];
         }
@@ -734,16 +849,36 @@ CYR.UI.CharMenuHTML = [[
             if(points) maxTraitPoints = points;
         }
 
-        function setAttributes(data, points) {
+        function setAttributes(data, total, perMax) {
             attributes = data || [];
-            if(points) maxAttribPoints = points;
+            if(total) totalAttribPoints = total;
+            if(perMax) maxPerAttrib = perMax;
         }
 
-        window.setAttributes = setAttributes;
+        function setSkills(data, total, perMax) {
+            skills = data || [];
+            if(total) totalSkillPoints = total;
+            if(perMax) maxPerSkill = perMax;
+        }
+
+        function setBackgrounds(data, allowedFactions) {
+            backgrounds = data || [];
+            // Lua sends a JSON array of faction indices; normalize to guard against {}.
+            bgFactions = Array.isArray(allowedFactions) ? allowedFactions : [];
+        }
+
+        function setLanguages(data, points) {
+            languages = data || [];
+            if(points) maxLanguagePoints = points;
+        }
 
         window.setCharacters = setCharacters;
         window.setFactions = setFactions;
         window.setTraits = setTraits;
+        window.setAttributes = setAttributes;
+        window.setSkills = setSkills;
+        window.setBackgrounds = setBackgrounds;
+        window.setLanguages = setLanguages;
 
         // --- MAIN MENU LOGIC ---
         function renderList() {
@@ -813,61 +948,417 @@ CYR.UI.CharMenuHTML = [[
         }
 
         // --- CREATION WIZARD LOGIC ---
+        // Source listing typed out during the terminal boot intro before creation.
+        const TERMINAL_CODE =
+`static int groups_to_user(gid_t __user *grouplist,
+			  const struct group_info *group_info)
+{
+	struct user_namespace *user_ns = current_user_ns();
+	int i;
+	unsigned int count = group_info->ngroups;
 
-        // --- CREATION WIZARD LOGIC ---
+	for (i = 0; i < count; i++) {
+		gid_t gid;
+		gid = from_kgid_munged(user_ns, group_info->gid[i]);
+		if (put_user(gid, grouplist+i))
+			return -EFAULT;
+	}
+	return 0;
+}
+
+/* fill a group_info from a user-space array - it must be allocated already */
+static int groups_from_user(struct group_info *group_info,
+    gid_t __user *grouplist)
+{
+	struct user_namespace *user_ns = current_user_ns();
+	int i;
+	unsigned int count = group_info->ngroups;
+
+	for (i = 0; i < count; i++) {
+		gid_t gid;
+		kgid_t kgid;
+		if (get_user(gid, grouplist+i))
+			return -EFAULT;
+
+		kgid = make_kgid(user_ns, gid);
+		if (!gid_valid(kgid))
+			return -EINVAL;
+
+		group_info->gid[i] = kgid;
+	}
+	return 0;
+}
+
+static int gid_cmp(const void *_a, const void *_b)
+{
+	kgid_t a = *(kgid_t *)_a;
+	kgid_t b = *(kgid_t *)_b;
+
+	return gid_gt(a, b) - gid_lt(a, b);
+}
+
+void groups_sort(struct group_info *group_info)
+{
+	sort(group_info->gid, group_info->ngroups, sizeof(*group_info->gid),
+	     gid_cmp, NULL);
+}
+EXPORT_SYMBOL(groups_sort);
+
+/* a simple bsearch */
+int groups_search(const struct group_info *group_info, kgid_t grp)
+{
+	unsigned int left, right;
+
+	if (!group_info)
+		return 0;
+
+	left = 0;
+	right = group_info->ngroups;
+	while (left < right) {
+		unsigned int mid = (left+right)/2;
+		if (gid_gt(grp, group_info->gid[mid]))
+			left = mid + 1;
+		else if (gid_lt(grp, group_info->gid[mid]))
+			right = mid;
+		else
+			return 1;
+	}
+	return 0;
+}
+
+void set_groups(struct cred *new, struct group_info *group_info)
+{
+	put_group_info(new->group_info);
+	get_group_info(group_info);
+	new->group_info = group_info;
+}
+EXPORT_SYMBOL(set_groups);
+
+int set_current_groups(struct group_info *group_info)
+{
+	struct cred *new;
+	const struct cred *old;
+	int retval;
+
+	new = prepare_creds();
+	if (!new)
+		return -ENOMEM;
+
+	old = current_cred();
+
+	set_groups(new, group_info);
+
+	retval = security_task_fix_setgroups(new, old);
+	if (retval < 0)
+		goto error;
+
+	return commit_creds(new);
+
+error:
+	abort_creds(new);
+	return retval;
+}`;
+
+        let introDone = false;
+        let typeTimer = null;
+
+        // Register clicked: play the terminal boot intro, then fade into the wizard.
         function showCreation() {
             document.getElementById('main-view').style.display = 'none';
+            startTerminalIntro();
+        }
+
+        function startTerminalIntro() {
+            introDone = false;
+            const intro = document.getElementById('terminal-intro');
+            const pre = document.getElementById('terminal-text');
+            pre.textContent = '';
+            intro.style.display = 'block';
+            intro.style.opacity = 1;
+
+            if(window.gmod) gmod.webhook('playTypewriter');
+
+            let i = 0;
+            function tick() {
+                if(introDone) return;
+                const chunk = 48 + Math.floor(Math.random() * 42); // ~6x faster (48..89 chars per tick)
+                pre.textContent += TERMINAL_CODE.substr(i, chunk);
+                i += chunk;
+                pre.scrollTop = pre.scrollHeight; // keep the newest line in view
+                if(i < TERMINAL_CODE.length) {
+                    typeTimer = setTimeout(tick, 14);
+                } else {
+                    typeTimer = setTimeout(finishTerminalIntro, 300); // brief hold, then fade
+                }
+            }
+            tick();
+        }
+
+        // Crossfade from the terminal into the character creation wizard.
+        function finishTerminalIntro() {
+            if(introDone) return;
+            introDone = true;
+            if(typeTimer) { clearTimeout(typeTimer); typeTimer = null; }
+            if(window.gmod) gmod.webhook('stopTypewriter');
+
+            beginCreation(); // build & reveal the wizard underneath
+
+            const intro = document.getElementById('terminal-intro');
+            intro.style.opacity = 0;
+            setTimeout(() => { intro.style.display = 'none'; }, 850);
+        }
+
+        // Builds and shows the actual creation wizard.
+        function beginCreation() {
             document.getElementById('creation-view').style.display = 'flex';
             if(window.gmod) gmod.webhook('enteredCreation'); // Signal to show DModelPanel if needed
 
             // Reset state
-            createData = { factionIndex: null, model: null, name: "", desc: "", traits: {}, attribs: {} };
-            currentStep = 1;
-            usedTraitPoints = 0;
-            usedAttribPoints = 0;
+            createData = {
+                factionIndex: null,
+                model: null,
+                modelIndex: null,
+                name: "",
+                desc: "",
+                background: null,
+                attribs: {},
+                skills: {},
+                traits: {},
+                languages: {}
+            };
+            // SPECIAL attributes start at 1.
+            attributes.forEach(a => { createData.attribs[a.id] = 1; });
+
+            currentStepIdx = 0;
+            buildStepList();
             updateWizardUI();
-            
-            // Render Factions
+            onEnterStep(STEPS[0].id);
+        }
+
+        function buildStepList() {
+            const list = document.getElementById('step-list');
+            if(!list) return;
+            list.innerHTML = '';
+            STEPS.forEach((step, idx) => {
+                const el = document.createElement('div');
+                el.className = 'step-item';
+                el.id = 'step-btn-' + step.id;
+                el.innerText = step.title;
+                // Clicking a completed (earlier) step jumps back to it.
+                el.onclick = () => { if(idx < currentStepIdx) goToStep(idx); };
+                list.appendChild(el);
+            });
+        }
+
+        function updateWizardUI() {
+            STEPS.forEach((step, idx) => {
+                const btn = document.getElementById('step-btn-' + step.id);
+                if(btn) {
+                    btn.classList.toggle('active', idx === currentStepIdx);
+                    btn.classList.toggle('done', idx < currentStepIdx); // completed -> clickable
+                }
+
+                const content = document.getElementById('step-' + step.id);
+                if(content) content.style.display = (idx === currentStepIdx) ? 'block' : 'none';
+            });
+
+            document.getElementById('btn-prev').disabled = currentStepIdx === 0;
+            document.getElementById('btn-next').innerText = (currentStepIdx === STEPS.length - 1) ? "INITIALIZE" : "NEXT";
+        }
+
+        // Prepares a step's content when it becomes active.
+        function onEnterStep(id) {
+            // The model preview only shows on the visual step.
+            if(id === 'visual') {
+                buildModelGrid();
+                setTimeout(updatePreviewBounds, 100);
+                if(createData.model && window.gmod) gmod.webhook('updateModel', { model: createData.model });
+            } else {
+                if(window.gmod) gmod.webhook('hideModel');
+            }
+
+            if(id === 'faction') renderFactions();
+            else if(id === 'data') {
+                // Background + Languages live on the DATA step. Background eligibility
+                // depends on the chosen race, so render them when this step opens.
+                renderBackgrounds();
+                renderLanguages();
+            }
+            else if(id === 'stats') {
+                // SPECIAL and Skills share a page so the SPECIAL->skill bonus updates live.
+                // Safety: ensure SPECIAL attributes were seeded to their minimum of 1.
+                if(Object.keys(createData.attribs).length === 0) {
+                    attributes.forEach(a => { createData.attribs[a.id] = 1; });
+                }
+                renderAttributes();
+                renderSkills();
+            }
+            else if(id === 'traits') renderTraits();
+        }
+
+        function validateStep(id) {
+            if(id === 'faction') {
+                if(!createData.factionIndex) return "Please select a race.";
+            } else if(id === 'visual') {
+                if(!createData.model) return "Please select a visual model.";
+            } else if(id === 'data') {
+                const name = document.getElementById('input-name').value;
+                const desc = document.getElementById('input-desc').value;
+                if(name.length < 3) return "Name must be at least 3 characters.";
+                if(desc.length < 10) return "Description is too short.";
+                createData.name = name;
+                createData.desc = desc;
+            }
+            // background / attributes / skills / traits / languages are optional.
+            return null;
+        }
+
+        // Central navigation: switch to a step index and prepare its content.
+        // onEnterStep() handles showing/hiding the model preview based on the destination.
+        function goToStep(idx) {
+            if(idx < 0 || idx >= STEPS.length) return;
+            currentStepIdx = idx;
+            updateWizardUI();
+            onEnterStep(STEPS[idx].id);
+        }
+
+        function nextStep() {
+            const step = STEPS[currentStepIdx];
+            const err = validateStep(step.id);
+            if(err) return showModal("ERROR", err, closeModal);
+
+            // Submit on the final step.
+            if(currentStepIdx === STEPS.length - 1) {
+                submitCreation();
+                return;
+            }
+
+            goToStep(currentStepIdx + 1);
+        }
+
+        function prevStep() {
+            if(currentStepIdx > 0) goToStep(currentStepIdx - 1);
+        }
+
+        function submitCreation() {
+            createData.traitList = Object.keys(createData.traits);
+            createData.attributeList = createData.attribs;
+            createData.skillList = createData.skills;
+            createData.languageList = Object.keys(createData.languages);
+            createData.backgroundUID = createData.background || "";
+
+            if(window.gmod) gmod.webhook('submitCreate', createData);
+            cancelCreation();
+        }
+
+        function cancelCreation() {
+            document.getElementById('creation-view').style.display = 'none';
+            document.getElementById('main-view').style.display = 'contents';
+            if(window.gmod) gmod.webhook('exitedCreation');
+        }
+
+        // --- STEP RENDERERS ---
+        function renderFactions() {
             const fGrid = document.getElementById('faction-grid');
             fGrid.innerHTML = '';
             factions.forEach(fac => {
                 const el = document.createElement('div');
                 el.className = 'grid-item';
                 el.innerText = fac.name;
-                el.style.borderLeft = `3px solid rgb(${fac.color.r},${fac.color.g},${fac.color.b})`;
+                if(fac.color) el.style.borderLeft = `3px solid rgb(${fac.color.r},${fac.color.g},${fac.color.b})`;
+                if(createData.factionIndex === fac.index) {
+                    el.classList.add('selected');
+                    document.getElementById('faction-desc').innerText = fac.desc || '';
+                }
                 el.onclick = () => {
-                   createData.factionIndex = fac.index;
-                   createData.model = null; // Reset model
-                   renderFactions(); // update selection
-                   document.getElementById('faction-desc').innerText = fac.desc;
+                    createData.factionIndex = fac.index;
+                    createData.model = null; // Reset model on race change
+                    createData.modelIndex = null;
+                    createData.background = null; // Background eligibility depends on race
+                    renderFactions();
+                    document.getElementById('faction-desc').innerText = fac.desc || '';
                 };
-                if(createData.factionIndex === fac.index) el.classList.add('selected');
                 fGrid.appendChild(el);
             });
         }
-        
-        function renderFactions() {
-             const fGrid = document.getElementById('faction-grid');
-             Array.from(fGrid.children).forEach((el, idx) => {
-                 el.classList.toggle('selected', factions[idx].index === createData.factionIndex);
-             });
+
+        function buildModelGrid() {
+            const fac = factions.find(f => f.index === createData.factionIndex);
+            const mGrid = document.getElementById('model-grid');
+            mGrid.innerHTML = '';
+            if(fac && fac.models) {
+                fac.models.forEach((mdl, index) => {
+                    const el = document.createElement('div');
+                    el.className = 'grid-item';
+                    const mdlName = mdl.split('/').pop().replace('.mdl', '');
+                    el.innerText = mdlName;
+                    if(createData.modelIndex === index + 1) el.classList.add('selected');
+                    el.onclick = () => {
+                        createData.model = mdl;
+                        createData.modelIndex = index + 1; // Lua is 1-indexed
+                        Array.from(mGrid.children).forEach(c => c.classList.remove('selected'));
+                        el.classList.add('selected');
+                        if(window.gmod) {
+                            gmod.webhook('updateModel', { model: mdl });
+                            updatePreviewBounds();
+                        }
+                    };
+                    mGrid.appendChild(el);
+                });
+            }
         }
-        
+
+        function renderBackgrounds() {
+            const grid = document.getElementById('background-grid');
+            const descEl = document.getElementById('background-desc');
+            grid.innerHTML = '';
+            descEl.innerText = '';
+
+            // Faction gating: only certain races can choose a background.
+            const allowed = bgFactions.indexOf(createData.factionIndex) !== -1;
+            if(!allowed) {
+                createData.background = null;
+                descEl.innerText = 'Your race cannot choose a background.';
+                return;
+            }
+
+            backgrounds.forEach(bg => {
+                const el = document.createElement('div');
+                el.className = 'grid-item';
+                el.innerText = bg.name;
+                if(createData.background === bg.uid) {
+                    el.classList.add('selected');
+                    descEl.innerText = bg.desc || '';
+                }
+                el.onclick = () => {
+                    createData.background = (createData.background === bg.uid) ? null : bg.uid;
+                    renderBackgrounds();
+                };
+                el.onmouseenter = () => { descEl.innerText = bg.desc || ''; };
+                grid.appendChild(el);
+            });
+        }
+
+        function sumAttribs() {
+            let s = 0;
+            for(const k in createData.attribs) s += createData.attribs[k];
+            return s;
+        }
+
         function renderAttributes() {
             const list = document.getElementById('attrib-list');
             list.innerHTML = '';
-            document.getElementById('attrib-points').innerText = maxAttribPoints - usedAttribPoints;
-            
+            document.getElementById('attrib-points').innerText = totalAttribPoints - sumAttribs();
+
             attributes.forEach(attr => {
-                const currentVal = createData.attribs[attr.id] || 0;
-                
+                const currentVal = createData.attribs[attr.id] || 1;
+
                 const frame = document.createElement('div');
                 frame.className = 'attrib-row';
-                
                 frame.innerHTML = `
                     <div class="attrib-info">
                         <span class="attrib-name">${attr.name}</span>
-                        <span class="attrib-desc">${attr.desc}</span>
+                        <span class="attrib-desc">${attr.desc || ''}</span>
                     </div>
                     <div class="attrib-ctrl">
                         <button class="btn-small" onclick="modAttrib('${attr.id}', -1)">-</button>
@@ -875,184 +1366,157 @@ CYR.UI.CharMenuHTML = [[
                         <button class="btn-small" onclick="modAttrib('${attr.id}', 1)">+</button>
                     </div>
                 `;
-                
                 list.appendChild(frame);
             });
         }
-        
+
         function modAttrib(id, amount) {
-            const current = createData.attribs[id] || 0;
+            const current = createData.attribs[id] || 1;
             const newVal = current + amount;
-            
-            if(newVal < 0) return; // Cannot go below 0
-            
-            if(amount > 0) {
-                if(usedAttribPoints >= maxAttribPoints) return; // Cap reached
-                usedAttribPoints++;
-            } else {
-                usedAttribPoints--;
-            }
-            
+            const attr = attributes.find(a => a.id === id);
+            const cap = (attr && attr.maxValue) || maxPerAttrib;   // per-attribute cap (maxValue, e.g. 10)
+
+            if(newVal < 1) return;                 // SPECIAL minimum is 1
+            if(newVal > cap) return;               // per-attribute cap
+            if(amount > 0 && (sumAttribs() + amount) > totalAttribPoints) return; // pool cap
+
             createData.attribs[id] = newVal;
             renderAttributes();
+            renderSkills(); // SPECIAL feeds skill bonuses; refresh the adjacent skills column live.
         }
 
-        
+        function sumSkills() {
+            let s = 0;
+            for(const k in createData.skills) s += createData.skills[k];
+            return s;
+        }
+
+        // Mirrors the server-side SPECIAL -> skill bonus preview.
+        function specialSkillBonus(skill) {
+            if(!skill.specialBonus) return 0;
+            let bonus = 0;
+            for(const attribID in skill.specialBonus) {
+                const mult = skill.specialBonus[attribID];
+                const attrib = attributes.find(a => a.id === attribID);
+                if(!attrib || !attrib.skillBonus) continue;
+                const selfMult = attrib.skillBonus[attribID];
+                if(!selfMult) continue;
+                const attribVal = createData.attribs[attribID] || 0;
+                bonus += attribVal * mult * selfMult;
+            }
+            return Math.round(bonus);
+        }
+
+        function renderSkills() {
+            const list = document.getElementById('skill-list');
+            list.innerHTML = '';
+            document.getElementById('skill-points').innerText = totalSkillPoints - sumSkills();
+
+            skills.forEach(skill => {
+                const currentVal = createData.skills[skill.id] || 0;
+                const bonus = specialSkillBonus(skill);
+                // Show the effective starting skill as one combined number (allocated points + SPECIAL bonus).
+                const valTxt = `${currentVal + bonus}`;
+
+                const frame = document.createElement('div');
+                frame.className = 'attrib-row';
+                frame.innerHTML = `
+                    <div class="attrib-info">
+                        <span class="attrib-name">${skill.name}</span>
+                        <span class="attrib-desc">${skill.desc || ''}</span>
+                    </div>
+                    <div class="attrib-ctrl">
+                        <button class="btn-small" onclick="modSkill('${skill.id}', -1)">-</button>
+                        <span class="attrib-val" style="width:auto; min-width:52px;">${valTxt}</span>
+                        <button class="btn-small" onclick="modSkill('${skill.id}', 1)">+</button>
+                    </div>
+                `;
+                list.appendChild(frame);
+            });
+        }
+
+        function modSkill(id, amount) {
+            const current = createData.skills[id] || 0;
+            const newVal = current + amount;
+            const skill = skills.find(s => s.id === id);
+            const cap = (skill && skill.maxValue) || maxPerSkill;  // per-skill cap (maxSkills, e.g. 100)
+
+            if(newVal < 0) return;                 // skills minimum is 0
+            if(newVal > cap) return;               // per-skill cap
+            if(amount > 0 && (sumSkills() + amount) > totalSkillPoints) return; // pool cap
+
+            createData.skills[id] = newVal;
+            renderSkills();
+        }
+
+        function countTraits() {
+            return Object.keys(createData.traits).length;
+        }
+
         function renderTraits() {
             const tGrid = document.getElementById('trait-grid');
-            const ptLabel = document.getElementById('trait-points');
+            const descEl = document.getElementById('trait-desc');
             tGrid.innerHTML = '';
-            
-            ptLabel.innerText = maxTraitPoints - usedTraitPoints;
-            
+            document.getElementById('trait-points').innerText = maxTraitPoints - countTraits();
+
             traits.forEach(trait => {
                 const el = document.createElement('div');
                 el.className = 'grid-item';
                 el.innerText = trait.name;
-                
-                // Styling active
-                if(createData.traits[trait.uid]) {
-                    el.classList.add('selected');
-                }
-                
+                if(createData.traits[trait.uid]) el.classList.add('selected');
+
                 el.onclick = () => {
                     if(createData.traits[trait.uid]) {
-                        // Deselect
                         delete createData.traits[trait.uid];
-                        usedTraitPoints--;
                     } else {
-                        // Select
-                        if(usedTraitPoints < maxTraitPoints) {
+                        if(countTraits() < maxTraitPoints) {
                             createData.traits[trait.uid] = true;
-                            usedTraitPoints++;
                         } else {
                             return; // Max points reached
                         }
                     }
-                    renderTraits(); // Re-render to update UI
-                    document.getElementById('trait-desc').innerText = trait.desc;
+                    renderTraits();
+                    descEl.innerText = trait.desc || '';
                 };
-                
-                // Hover for desc
-                 el.onmouseenter = () => {
-                     document.getElementById('trait-desc').innerText = trait.desc;
-                 };
-                
+                el.onmouseenter = () => { descEl.innerText = trait.desc || ''; };
                 tGrid.appendChild(el);
             });
         }
 
-        function cancelCreation() {
-            document.getElementById('creation-view').style.display = 'none';
-            document.getElementById('main-view').style.display = 'contents';
-            if(window.gmod) gmod.webhook('exitedCreation'); 
+        function countLanguages() {
+            return Object.keys(createData.languages).length;
         }
 
-        function updateWizardUI() {
-            // Steps
-            [1,2,3,4,5].forEach(i => {
-                const stepBtn = document.getElementById(`step-btn-${i}`);
-                if(stepBtn) stepBtn.classList.toggle('active', i === currentStep);
-                
-                const stepDiv = document.getElementById(`step-${i}`);
-                if(stepDiv) stepDiv.style.display = (i === currentStep) ? 'block' : 'none';
+        function renderLanguages() {
+            const grid = document.getElementById('language-grid');
+            const descEl = document.getElementById('language-desc');
+            grid.innerHTML = '';
+            document.getElementById('language-points').innerText = maxLanguagePoints - countLanguages();
+
+            languages.forEach(lang => {
+                const el = document.createElement('div');
+                el.className = 'grid-item';
+                el.innerText = lang.name;
+                if(createData.languages[lang.uid]) el.classList.add('selected');
+
+                el.onclick = () => {
+                    if(createData.languages[lang.uid]) {
+                        delete createData.languages[lang.uid];
+                    } else {
+                        if(countLanguages() < maxLanguagePoints) {
+                            createData.languages[lang.uid] = true;
+                        } else {
+                            return; // Max points reached
+                        }
+                    }
+                    renderLanguages();
+                    descEl.innerText = lang.desc || '';
+                };
+                el.onmouseenter = () => { descEl.innerText = lang.desc || ''; };
+                grid.appendChild(el);
             });
-            
-            // Buttons
-            document.getElementById('btn-prev').disabled = currentStep === 1;
-            document.getElementById('btn-next').innerText = currentStep === 5 ? "INITIALIZE" : "NEXT";
         }
 
-       function nextStep() {
-            if(currentStep === 1) {
-                if(!createData.factionIndex) return showModal("ERROR", "Please select a race.", closeModal);
-                
-                // Load Models for Step 2
-                const fac = factions.find(f => f.index === createData.factionIndex);
-                const mGrid = document.getElementById('model-grid');
-                mGrid.innerHTML = '';
-                if(fac && fac.models) {
-                    fac.models.forEach((mdl, index) => {
-                        const el = document.createElement('div');
-                        el.className = 'grid-item';
-                        const mdlName = mdl.split('/').pop().replace('.mdl', '');
-                        el.innerText = mdlName;
-                        el.onclick = () => {
-                            createData.model = mdl;
-                            createData.modelIndex = index + 1; // Lua is 1-indexed
-                            Array.from(mGrid.children).forEach(c => c.classList.remove('selected'));
-                            el.classList.add('selected');
-                            if(window.gmod) {
-                                gmod.webhook('updateModel', { model: mdl });
-                                updatePreviewBounds();
-                            }
-                        };
-                        mGrid.appendChild(el);
-                    });
-                }
-            }
-            
-            if(currentStep === 2) {
-                if(!createData.model) return showModal("ERROR", "Please select a visual model.", closeModal);
-                
-                // Leaving Step 2 -> Step 3
-                if(window.gmod) gmod.webhook('hideModel');
-            }
-            
-            if(currentStep === 3) {
-                 const name = document.getElementById('input-name').value;
-                const desc = document.getElementById('input-desc').value;
-                
-                if(name.length < 3) return showModal("ERROR", "Name must be at least 3 characters.", closeModal);
-                if(desc.length < 10) return showModal("ERROR", "Description is too short.", closeModal);
-                
-                createData.name = name;
-                createData.desc = desc;
-                
-                renderAttributes(); // Prepared for Step 4
-            }
-
-            if (currentStep === 4) {
-                renderTraits(); // Prepared for Step 5
-            }
-            
-            if(currentStep === 5) {
-                 const traitList = Object.keys(createData.traits);
-                 createData.traitList = traitList;
-                 
-                 // ADDED: Attribute List
-                 createData.attributeList = createData.attribs;
-
-                if(window.gmod) gmod.webhook('submitCreate', createData);
-                cancelCreation(); 
-                return;
-            }
-
-            currentStep++;
-            updateWizardUI();
-            
-            // Entering Step 2
-            if(currentStep === 2) {
-                 setTimeout(updatePreviewBounds, 100); // Slight delay for layout
-            }
-        }
-
-        function prevStep() {
-            if(currentStep > 1) {
-                // Leaving Step 2 -> Step 1
-                if(currentStep === 2 && window.gmod) gmod.webhook('hideModel');
-                
-                currentStep--;
-                updateWizardUI();
-                
-                // Entering Step 2 (from 3)
-                if(currentStep === 2) {
-                    setTimeout(updatePreviewBounds, 100);
-                     if(createData.model && window.gmod) gmod.webhook('updateModel', { model: createData.model });
-                }
-            }
-        }
-        
         function updatePreviewBounds() {
             const el = document.getElementById('model-preview-area');
             if(el && window.gmod) {

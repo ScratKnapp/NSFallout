@@ -392,11 +392,11 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
     })
 
     doDrawBackground = false
-    local holographic = CreateMaterial(mat_name .. "e", "UnlitGeneric", {
+    local holographic = CreateMaterial(mat_name .. "2e", "UnlitGeneric", {
         ["$basetexture"] = tex:GetName(),
         ["$translucent"] = 1,
         ["$vertexcolor"] = 1,
-        ["$additive"] = 0,
+        ["$additive"] = 1,
     })
 
     local vm
@@ -619,6 +619,11 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
     local xPos = 25
     ---local framerate = 1 / 5
     ---local nexttime = CurTime()
+    -- Input-phase work stays in Move: the CHARACTERS tab swaps the screen for
+    -- a real NutScript vgui menu, which is a state transition (toggles the
+    -- Pip-Boy view + spawns a panel), so it belongs in the prediction/input
+    -- phase rather than the paint pass. Actual input *blocking* lives in
+    -- PlayerBindPress / InputMouseApply / KeyPress and is untouched.
     hook.Add("Move", "uihud_halo", function()
         if not PIPBOY_ON_SCREEN then return end
         if pipboy.SelectedHeader == "CHARACTERS" then
@@ -650,9 +655,27 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
                 end
             end
         end
+    end)
 
-        --if nexttime > CurTime() then return end
-        --nexttime = CurTime() + framerate
+    -- The screen itself renders to its RT in a real render hook, once per
+    -- frame with a valid paint context, before the 3D and HUD passes that
+    -- sample the texture. Previously this ran inside Move (the prediction
+    -- phase), which is not a paint context and can fire multiple times per
+    -- frame, so screen updates and click sampling raced the frame and
+    -- intermittently dropped. Page logic (input reads, button hits) runs here.
+    -- Persists across frames for the left-click press-edge computed below.
+    local pipPrevLMB = false
+    hook.Add("PreRender", "pipboy_screen_render", function()
+        if not PIPBOY_ON_SCREEN then return end
+        -- Deterministic one-frame left-click edge, sampled here in the paint
+        -- phase, so every AddUIButton fires reliably. The shared IsLeftMouseDown
+        -- flag was set in PlayerBindPress and cleared on a 0-delay timer, which
+        -- raced this render and dropped clicks; computing the press edge from
+        -- the physical button here removes that race for the whole UI. (It also
+        -- self-limits to one hit per press, replacing the bind's edge-only fire.)
+        local lmbNow = input.IsMouseDown(MOUSE_LEFT)
+        IsLeftMouseDown = lmbNow and not pipPrevLMB
+        pipPrevLMB = lmbNow
         render.PushRenderTarget(tex)
         render.OverrideAlphaWriteEnable(true, true)
         render.Clear(0, 0, 0, 0, true)
@@ -661,8 +684,6 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
         surface.SetMaterial(screenMat)
         surface.DrawTexturedRect(0, 0, WIDTH, HEIGHT)
         surface.SetDrawColor(255, 255, 255)
-        -- End the 3D2D context
-        --drawFooter() 
         if tablet.pages[pipboy.SelectedHeader] then tablet.pages[pipboy.SelectedHeader](pip_color) end
         drawHeader() -- Draws Header
         DrawCursor()
@@ -674,7 +695,6 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
         surface.SetDrawColor(color_white)
         cam.End2D()
         render.PopRenderTarget()
-        --frame:PaintManual()
         render.OverrideAlphaWriteEnable(true, true)
     end)
 
@@ -956,8 +976,9 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
             if not pressed then return end
             if PIPBOY_ON_SCREEN then
                 if bind == "+attack" then
-                    IsLeftMouseDown = true
-                    timer.Simple(0, function() IsLeftMouseDown = false end)
+                    -- Block the world action only. The UI's left-click is sampled
+                    -- as a press-edge in the PreRender pass (see pipPrevLMB), so we
+                    -- no longer set IsLeftMouseDown here.
                     return true
                 elseif bind == "+attack2" then
                     IsRightMouseDown = true
@@ -997,7 +1018,7 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
             net.SendToServer()
             clearinv()
             hook.Run("pip_changepage", not PIPBOY_ON_SCREEN and pipboy.SelectedHeader, PIPBOY_ON_SCREEN and pipboy.SelectedHeader)
-            ui_hum[PIPBOY_ON_SCREEN and "Play" or "Pause"](ui_hum)
+            if ui_hum then ui_hum[PIPBOY_ON_SCREEN and "Play" or "Pause"](ui_hum) end
         end
 
         hook.Add("PlayerBindPress", nut.plugin.list["f1menu"], function(client, bind, pressed) end)
@@ -1027,12 +1048,11 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
             -- In simple mode draw the screen additively so the green RT
             -- glows onto the world instead of sitting on a dark panel. The
             -- thirdperson-only path keeps the original dimmed backdrop.
-            local additive = doDrawBackground
-            holographic:SetInt("$additive", additive and 1 or 0)
-            if not additive then
-                surface.SetDrawColor(0, 0, 0, 50)
-                surface.DrawRect(x, y, wth, height)
-            end
+            local additive = true
+            holographic:SetInt("$additive", 1)
+
+            surface.SetDrawColor(0,0,0,210)
+            surface.DrawRect(x,y,wth,height)
 
             surface.SetDrawColor(color_white)
             surface.SetMaterial(holographic)

@@ -778,7 +778,8 @@ function F1_PANEL:ShowInformation()
 
     skillsHtml = skillsHtml .. [[</div></div>]]
     -- 3. Traits (Perks)
-    local ptPerk = char:getData("ptPerk", 0)
+    -- Clamp at 0: perk points are never legitimately negative, so never display "-1".
+    local ptPerk = math.max(char:getData("ptPerk", 0), 0)
     local traitsHtml = [[<div class="info-section"><div class="info-header"><span>IDENTITY TRAITS</span><span style="font-size:0.8rem; opacity:0.6;">PERK POINTS: ]] .. ptPerk .. [[</span></div>]]
     -- Current Traits
     traitsHtml = traitsHtml .. [[<div class="traits-list">]]

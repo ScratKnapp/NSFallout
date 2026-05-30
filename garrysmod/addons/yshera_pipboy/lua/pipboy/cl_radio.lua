@@ -12,6 +12,9 @@ local audioSamples = {}
 local audioSampleCount = 30
 for i = 1, audioSampleCount do audioSamples[i] = 0 end
 local nextAudioSample = 0
+-- Previous physical left-mouse state, used for press-edge click detection
+-- (see the station list). Persists across render frames.
+local radioMouseWas = false
 local function video_killed_the_radio_star()
     if radio_vol == nil then
         radio_vol = GetConVar("aftermath_cl_radio_volume")
@@ -44,26 +47,52 @@ local function video_killed_the_radio_star()
     local startX = 600
     local posOfBox = -6000
 
+    -- Frame-accurate left-click. The pipboy's shared IsLeftMouseDown flag is
+    -- set for one frame and cleared on a 0-delay timer, which races this render
+    -- pass and intermittently drops clicks. Reading the physical button and
+    -- detecting the press edge ourselves makes selection reliable.
+    local mouseNow = input.IsMouseDown(MOUSE_LEFT)
+    local clickEdge = mouseNow and not radioMouseWas
+    radioMouseWas = mouseNow
+
     -- ===== Station list =====
     for i, v in pairs(StationName) do
-        surface.SetDrawColor(pip_color)
         local exists = i == EV_RADIO_GETINDEX()
+        local rowY = 100 + (48 * i)
+        -- Hover-aware button: gives us the hover state (pure geometry, reliable)
+        -- and a deferred label-draw so we paint the row background first and the
+        -- text on top. We ignore its click return and use the press-edge above
+        -- instead. Hitbox, highlight and label all share rowY now (the tuned
+        -- highlight used to sit 5px below the actual hitbox).
+        local hovered, _, drawLabel = NzGUI:DrawTextButtonWithDelayedHover(string.upper(v), MainFontName .. (exists and "!" or "@") .. "48", 100, rowY, 420, 42, 1, color_white)
+
+        local labelColor = color_white
         if exists then
             -- pulsing highlight bar for the tuned station
             local pulse = 30 + math.abs(newfunc(CurTime() * 4)) * 35
             surface.SetDrawColor(pip_color.r, pip_color.g, pip_color.b, pulse + 90)
-            surface.DrawRect(100, 105 + (48 * i), 420, 42)
+            surface.DrawRect(100, rowY, 420, 42)
             surface.SetDrawColor(pip_color)
-            surface.DrawRect(100, 105 + (48 * i), 4, 42)
-            surface.DrawRect(516, 105 + (48 * i), 4, 42)
+            surface.DrawRect(100, rowY, 4, 42)
+            surface.DrawRect(516, rowY, 4, 42)
+            labelColor = color_black
+        elseif hovered then
+            -- hover indicator: faint fill + left accent bar, label tinted
+            surface.SetDrawColor(pip_color.r, pip_color.g, pip_color.b, 55)
+            surface.DrawRect(100, rowY, 420, 42)
+            surface.SetDrawColor(pip_color)
+            surface.DrawRect(100, rowY, 4, 42)
+            labelColor = pip_color
         end
 
-        if NzGUI:DrawTextButton(string.upper(v), MainFontName .. (exists and "!" or "@") .. "48", 100, 100 + (48 * i), 420, 42, 1, exists and pip_colorbb or color_white, not exists and pip_color or color_white, exists and pip_color) then
-            if i ~= EV_RADIO_GETINDEX() then
+        drawLabel(labelColor)
+
+        if hovered and clickEdge then
+            if exists then
+                EV_RADIO_OFF()
+            else
                 EV_RADIO_PUBLIC_CON(i)
                 songname = "Fetching..."
-            else
-                EV_RADIO_OFF()
             end
         end
     end
@@ -145,17 +174,20 @@ local function video_killed_the_radio_star()
         surface.SetDrawColor(pc.r, pc.g, pc.b, big and 160 or 70)
         surface.DrawLine(startX + i, volTop + 6, startX + i, volTop + 6 + (big and 14 or 7))
     end
-    -- knob (glow + core)
+    -- knob + interaction. One generous hitbox spans the whole slider strip
+    -- (full track width + tick/knob height) so a click anywhere on it sets the
+    -- volume. The old hitbox only covered a 10px-tall band on the track plus a
+    -- narrow box around the knob, so most of the visible slider did nothing.
     local knobX = startX + (volIndicator * 75)
-    surface.SetDrawColor(pc.r, pc.g, pc.b, 50)
-    surface.DrawRect(knobX - 7, volTop - 13, 14, 26)
+    local sliderHot = CheckIfCursorInRange(startX - 12, volTop - 20, 324, 44)
+
+    -- knob (glow + core), emphasised while hovered
+    surface.SetDrawColor(pc.r, pc.g, pc.b, sliderHot and 90 or 50)
+    surface.DrawRect(knobX - (sliderHot and 9 or 7), volTop - (sliderHot and 15 or 13), sliderHot and 18 or 14, sliderHot and 30 or 26)
     surface.SetDrawColor(pc)
     surface.DrawRect(knobX - 3, volTop - 16, 6, 32)
 
-    if CheckIfCursorInRange(knobX - 16, volTop - 18, 32, 36) and input.IsMouseDown(MOUSE_LEFT) then
-        volIndicator = math.Clamp((cursor.x - startX) / 75, 0, 4)
-        radio_vol:SetFloat(volIndicator)
-    elseif CheckIfCursorInRange(startX, volTop - 5, 300, 10) and input.IsMouseDown(MOUSE_LEFT) then
+    if sliderHot and input.IsMouseDown(MOUSE_LEFT) then
         volIndicator = math.Clamp((cursor.x - startX) / 75, 0, 4)
         radio_vol:SetFloat(volIndicator)
     end

@@ -173,6 +173,69 @@ local attriIMG = {Material("vault_boy/str"), Material("vault_boy/per"), Material
 local color_black = Color(0, 0, 0)
 local f = Material("vault_boy/agi")
 local deltSt = 0
+
+-- ===========================================================================
+-- Optimistic point-spend prediction.
+--
+-- Point pools (ptSkill / ptAttrib) and the skill/attrib values they buy are
+-- server-authoritative: a spend only reaches the client after a round-trip.
+-- The pipboy used to gate the "+" button on the *stale* replicated pool, so
+-- under latency it kept letting you click past what you had -- the surplus
+-- clicks were rejected server-side and the counter snapped back, reading as an
+-- "overspend". We predict locally instead: a spend bumps a per-id delta now,
+-- and as the authoritative value replicates we fold the acknowledgement back
+-- out so the number holds steady. A short stale-timeout heals any prediction
+-- the server silently dropped (e.g. a spend that raced a cap).
+-- ===========================================================================
+local PRED_STALE = 1.5            -- seconds before an un-acked prediction is dropped
+local pred = {}                   -- [id] = {delta, last, fired}
+local SK_POOL = "skillpts"        -- pool id for the SKILLS tab
+local AT_POOL = "attrpts"         -- pool id for the SPECIAL tab
+
+-- Reconcile id against the freshly-read authoritative value and return what to
+-- display. sign = -1 when spending LOWERS the server value (a point pool),
+-- sign = +1 when it RAISES it (a skill / attrib value).
+local function predDisplay(id, serverVal, sign)
+    local p = pred[id]
+    if not p then
+        p = {delta = 0, last = serverVal, fired = 0}
+        pred[id] = p
+    end
+    if serverVal ~= p.last then
+        local acked = (serverVal - p.last) * sign   -- progress in the spend direction
+        if acked > 0 then
+            p.delta = math.max(0, p.delta - acked)  -- server caught up to our prediction
+        else
+            p.delta = 0                             -- external change (grant/respec): void it
+        end
+        p.last = serverVal
+    end
+    if p.delta ~= 0 and CurTime() - p.fired > PRED_STALE then
+        p.delta = 0                                 -- backstop for a never-acked prediction
+    end
+    return serverVal + sign * p.delta
+end
+
+-- Predicted points still spendable in a pool (call predDisplay for it first
+-- this frame). Used to gate a spend the instant before it fires.
+local function predPoolLeft(id, serverVal)
+    local p = pred[id]
+    return serverVal - (p and p.delta or 0)
+end
+
+-- Register one optimistic spend (entry must already exist from predDisplay).
+local function predBump(id)
+    local p = pred[id]
+    if p then
+        p.delta = p.delta + 1
+        p.fired = CurTime()
+    end
+end
+
+-- Previous-frame LMB state, so a hold can require its press to have STARTED on
+-- the button (you can't press elsewhere and drag into it). Only one spend page
+-- draws per frame, so updating this at the top of each is one write per frame.
+local MOUSE_L_PREV = false
 -- When true, the STATS sub-page draws a confirmation modal over the page
 -- before firing the nut_respec netstream. Cleared on confirm/cancel and on
 -- pipboy page change (see pip_changepage hook below).
@@ -184,9 +247,29 @@ local SPECIAL_HOLD_NEXT = 0
 function DrawPly.SPECIAL()
     local ply = LocalPlayer()
     local character = ply:getChar()
-    local amts = (character:getSkillLevel("specialpoints") or 1) - 1
+    -- specialpoints maps straight to the authoritative ptAttrib pool; show it
+    -- as-is (the old "- 1" was an off-by-one that hid your last point).
+    local serverPool = character:getSkillLevel("specialpoints") or 0
+    local amts = predDisplay(AT_POOL, serverPool, -1)
     draw.DrawText("SPECIAL POINTS: " .. amts, MainFontName .. "@42", 950, 64, amts > 0 and pip_color or color_white, TEXT_ALIGN_RIGHT)
+
+    -- LMB edge for "press must start on the button" (see SKILLS for rationale).
+    local lmbDown = input.IsMouseDown(MOUSE_LEFT)
+    local lmbPressed = lmbDown and not MOUSE_L_PREV
+    MOUSE_L_PREV = lmbDown
+    if not lmbDown then SPECIAL_HOLD_KEY = nil end
+
     for y, v in pairs(attri) do
+        local attribKey = attri_a[y]
+        local serverVal = character:getAttrib(attribKey, 0)
+        -- Predicted attrib value: rises the instant we spend, reconciles as the
+        -- server's updateAttrib replicates back.
+        local predVal = predDisplay(AT_POOL .. ":" .. attribKey, serverVal, 1)
+        -- Same cap the server enforces (per-attrib maxValue, else maxAttribs).
+        -- Once a stat reaches it we hide the "+", mirroring the SKILLS tab.
+        local attribTbl = nut.attribs.list[attribKey]
+        local atCap = predVal >= ((attribTbl and attribTbl.maxValue) or nut.config.get("maxAttribs", 10))
+
         local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover(v, MainFontName .. "@48", 64, 116 + (y * 44), 400, 40, 1, color_white)
         local c = pip_color
         if fn then
@@ -195,17 +278,20 @@ function DrawPly.SPECIAL()
             surface.DrawRect(64, 118 + (y * 44), 500 - 64, 42)
             if IS_R_DOWN then
                 deltSt = deltSt == 0 and CurTime() or deltSt
-                --
-                --
-                if amts > 0 then
+                if amts > 0 and not atCap then
                     local p = math.Clamp((CurTime() - deltSt) * 0.75, 0.01, 1)
                     surface.SetDrawColor(pip_color.r * 0.5, pip_color.g * 0.5, pip_color.b * 0.5)
                     surface.DrawRect(64, 118 + (y * 44), (500 - 64) * p, 42)
                     if p == 1 then
                         IsReloadUse = false
-                        local attribKey = attri_a[y]
-                        local newVal = (LocalPlayer():getChar():getAttrib(attribKey, 0) or 0) + 1
-                        netstream.Start("statIncrease", attribKey, newVal)
+                        if predPoolLeft(AT_POOL, serverPool) > 0 then
+                            -- Server applies a fixed +1 and ignores any sent
+                            -- value (it no longer trusts a client target), so we
+                            -- just name the stat; predBump mirrors the +1 locally.
+                            netstream.Start("statIncrease", attribKey)
+                            predBump(AT_POOL)
+                            predBump(AT_POOL .. ":" .. attribKey)
+                        end
                         deltSt = 0
                     end
                 else
@@ -227,27 +313,30 @@ function DrawPly.SPECIAL()
             end
         end
 
-        local iness = character:getAttrib(attri_a[y], 0)
-        draw.DrawText(iness, MainFontName .. "@48", 500, 116 + (y * 44), c, TEXT_ALIGN_RIGHT)
+        draw.DrawText(predVal, MainFontName .. "@48", 500, 116 + (y * 44), c, TEXT_ALIGN_RIGHT)
         draww(c)
 
-        -- Click-to-spend "+" square at the right of each row. Drawn outside the
-        -- hover block so the player can target it even when the row itself
-        -- isn't highlighted. Hidden entirely when no specialpoints remain.
-        if amts > 0 then
+        -- Click-to-spend "+" square at the right of each row. The press must
+        -- START on the square: a hold begun elsewhere and dragged in is ignored
+        -- (lmbPressed only latches on a fresh down-edge over the box). Hidden
+        -- when the pool is empty or this stat has hit its cap.
+        if amts > 0 and not atCap then
             local bx, by, bs = 515, 120 + (y * 44), 32
-            local attribKey = attri_a[y]
             local hovered = AddUIButton(bx, by, bs, bs)
-            local holding = hovered and input.IsMouseDown(MOUSE_LEFT)
+
+            if lmbPressed and hovered then
+                SPECIAL_HOLD_KEY = attribKey
+                SPECIAL_HOLD_NEXT = 0 -- fresh press: fire immediately
+            end
+            local active = (SPECIAL_HOLD_KEY == attribKey) and lmbDown and hovered
 
             -- Hover: faint translucent pip_color wash over the square.
             if hovered then
                 surface.SetDrawColor(pip_color.r, pip_color.g, pip_color.b, 45)
                 surface.DrawRect(bx, by, bs, bs)
             end
-            -- Holding: the square fills bottom-up with translucent pip_color as a
-            -- charge meter toward the next 0.2s increment.
-            if holding then
+            -- Active hold: the square fills bottom-up toward the next increment.
+            if active then
                 local progress = 1 - math.Clamp((SPECIAL_HOLD_NEXT - CurTime()) / 0.2, 0, 1)
                 local fh = bs * progress
                 surface.SetDrawColor(pip_color.r, pip_color.g, pip_color.b, 140)
@@ -257,21 +346,14 @@ function DrawPly.SPECIAL()
             surface.DrawOutlinedRect(bx, by, bs, bs)
             draw.SimpleText("+", MainFontName .. "@42", bx + bs * 0.5, by + bs * 0.5, pip_color, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
-            -- Hold LMB to keep spending: fire once on press, then every 0.2s.
-            -- statIncrease takes a target value (current + 1), recomputed fresh
-            -- each tick so the server's update is reflected.
-            if holding then
-                if SPECIAL_HOLD_KEY ~= attribKey then
-                    SPECIAL_HOLD_KEY = attribKey
-                    SPECIAL_HOLD_NEXT = 0 -- new hold: fire immediately
-                end
-                if CurTime() >= SPECIAL_HOLD_NEXT then
-                    netstream.Start("statIncrease", attribKey, (character:getAttrib(attribKey, 0) or 0) + 1)
+            if active and CurTime() >= SPECIAL_HOLD_NEXT then
+                if predPoolLeft(AT_POOL, serverPool) > 0 then
+                    netstream.Start("statIncrease", attribKey)
+                    predBump(AT_POOL)
+                    predBump(AT_POOL .. ":" .. attribKey)
                     surface.PlaySound("buttons/button14.wav")
-                    SPECIAL_HOLD_NEXT = CurTime() + 0.2
                 end
-            elseif SPECIAL_HOLD_KEY == attribKey then
-                SPECIAL_HOLD_KEY = nil -- released or moved off this button
+                SPECIAL_HOLD_NEXT = CurTime() + 0.2
             end
         end
     end
@@ -340,6 +422,9 @@ local PERK_MODAL = nil
 netstream.Hook("nut_respec_done", function()
     cached_desc = nil
     PERKS_SORTED = nil
+    -- Respec rewrites every pool/value at once; drop any in-flight predictions
+    -- so the next draw rebuilds them from the fresh authoritative numbers.
+    for k in pairs(pred) do pred[k] = nil end
 end)
 function DrawPly.PERKS()
     local char = LocalPlayer():getChar()
@@ -571,10 +656,22 @@ function DrawPly.SKILLS()
     local offset = 80
     local ply = LocalPlayer()
     local character = ply:getChar()
-    local amt = (character:getSkillLevel("skillpoints") or 1) - 1
+    -- skillpoints maps straight to the authoritative ptSkill pool; show it
+    -- as-is (the old "- 1" was an off-by-one that hid your last point).
+    local serverPool = character:getSkillLevel("skillpoints") or 0
+    local amt = predDisplay(SK_POOL, serverPool, -1)
     draw.DrawText("SKILL POINTS: " .. amt, MainFontName .. "@42", 950, 64, amt > 0 and pip_color or color_white, TEXT_ALIGN_RIGHT)
+
+    -- LMB edge: a hold only counts if its press STARTED on the "+" box, so you
+    -- can't hold the button down elsewhere and drag across the row to spend.
+    local lmbDown = input.IsMouseDown(MOUSE_LEFT)
+    local lmbPressed = lmbDown and not MOUSE_L_PREV
+    MOUSE_L_PREV = lmbDown
+    if not lmbDown then SKILL_HOLD_KEY = nil end
+
     for y, v in pairs(skill_def) do
-        local skillVal = character:getSkillLevel(v[1]) or 0
+        local serverVal = character:getSkillLevel(v[1]) or 0
+        local skillVal = predDisplay(SK_POOL .. ":" .. v[1], serverVal, 1)
         local atCap = skillVal >= 100
         local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover(v[2]:upper(), MainFontName .. "@42", 64, offset - 2 + (y * height), width, height, 1, color_white)
         local c = pip_color
@@ -599,7 +696,11 @@ function DrawPly.SKILLS()
                     -- updateSkill on the server *adds* the value (it's a delta,
                     -- not a target), so send 1 per spent point. Sending
                     -- current+1 doubled the skill each click (1->3->7->15).
-                    netstream.Start("skillIncrease", v[1], 1)
+                    if predPoolLeft(SK_POOL, serverPool) > 0 then
+                        netstream.Start("skillIncrease", v[1], 1)
+                        predBump(SK_POOL)
+                        predBump(SK_POOL .. ":" .. v[1])
+                    end
                     deltSt = 0
                 end
             else
@@ -616,16 +717,20 @@ function DrawPly.SKILLS()
         if amt > 0 and not atCap then
             local bx, by, bs = 525, offset + 2 + (y * height), 28
             local hovered = AddUIButton(bx, by, bs, bs)
-            local holding = hovered and input.IsMouseDown(MOUSE_LEFT)
+
+            if lmbPressed and hovered then
+                SKILL_HOLD_KEY = v[1]
+                SKILL_HOLD_NEXT = 0 -- fresh press: fire immediately
+            end
+            local active = (SKILL_HOLD_KEY == v[1]) and lmbDown and hovered
 
             -- Hover: faint translucent pip_color wash over the square.
             if hovered then
                 surface.SetDrawColor(pip_color.r, pip_color.g, pip_color.b, 45)
                 surface.DrawRect(bx, by, bs, bs)
             end
-            -- Holding: the square fills bottom-up with translucent pip_color as a
-            -- charge meter toward the next 0.2s increment.
-            if holding then
+            -- Active hold: the square fills bottom-up toward the next increment.
+            if active then
                 local progress = 1 - math.Clamp((SKILL_HOLD_NEXT - CurTime()) / 0.2, 0, 1)
                 local fh = bs * progress
                 surface.SetDrawColor(pip_color.r, pip_color.g, pip_color.b, 140)
@@ -636,21 +741,14 @@ function DrawPly.SKILLS()
             surface.DrawOutlinedRect(bx, by, bs, bs)
             draw.SimpleText("+", MainFontName .. "@32", bx + bs * 0.5, by + bs * 0.5, pip_color, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
-            -- Hold LMB on the button to keep spending: fire once on press, then
-            -- repeat every 0.2s. skillIncrease is a delta server-side (skills[key]
-            -- += value), so we always send 1. The server caps at 100 / 0 points.
-            if holding then
-                if SKILL_HOLD_KEY ~= v[1] then
-                    SKILL_HOLD_KEY = v[1]
-                    SKILL_HOLD_NEXT = 0 -- new hold: fire immediately
-                end
-                if CurTime() >= SKILL_HOLD_NEXT then
+            if active and CurTime() >= SKILL_HOLD_NEXT then
+                if predPoolLeft(SK_POOL, serverPool) > 0 then
                     netstream.Start("skillIncrease", v[1], 1)
+                    predBump(SK_POOL)
+                    predBump(SK_POOL .. ":" .. v[1])
                     surface.PlaySound("buttons/button14.wav")
-                    SKILL_HOLD_NEXT = CurTime() + 0.2
                 end
-            elseif SKILL_HOLD_KEY == v[1] then
-                SKILL_HOLD_KEY = nil -- released or moved off this button
+                SKILL_HOLD_NEXT = CurTime() + 0.2
             end
         end
     end

@@ -101,7 +101,6 @@ local function includeModule(path, moduleName)
 end
 
 local function _IMPEL()
-    includeModule("pac", "pac_var")
     includeModule("ui", "paint_equipmentMenu")
     includeModule("ui", "equipmentMenu")
     includeModule("ui", "fonts")
