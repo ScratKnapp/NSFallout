@@ -9,9 +9,9 @@ nut.util.include("sh_grid_inv.lua")
 nut.util.include("sv_transfer.lua")
 nut.util.include("sv_access_rules.lua")
 
-function PLUGIN:GetDefaultInventoryType(character)
-	return INVENTORY_TYPE_ID
-end
+-- function PLUGIN:GetDefaultInventoryType(character)
+-- 	return INVENTORY_TYPE_ID
+-- end
 
 if (SERVER) then
 	-- Called when item has been dragged on top of target (also an item).
