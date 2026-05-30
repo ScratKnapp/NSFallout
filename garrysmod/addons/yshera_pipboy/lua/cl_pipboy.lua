@@ -1015,7 +1015,7 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
     concommand.Add("test", function() TogglePipboyView() end)
     ui_hum = ui_hum or nil
     if ui_hum then ui_hum:Stop() end
-    CreateClientConVar("fallout_simple_pipboy", "1", true, false)
+    CreateClientConVar("fallout_simple_pipboy", "0", true, false)
     hook.Add("HUDPaint", "pipboy", function()
         doDrawBackground = GetConVar("fallout_simple_pipboy"):GetBool()
         local simpleThird = GetConVar("simple_thirdperson_enabled")
