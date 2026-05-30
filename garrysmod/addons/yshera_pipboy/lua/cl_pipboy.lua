@@ -1032,7 +1032,7 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
             end
         end
     end)
-
+    concommand.Add("toggle_pipboy", function() TogglePipboyView() end)
     concommand.Add("test", function() TogglePipboyView() end)
     ui_hum = ui_hum or nil
     if ui_hum then ui_hum:Stop() end
