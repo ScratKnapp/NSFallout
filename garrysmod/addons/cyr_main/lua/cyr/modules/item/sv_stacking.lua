@@ -92,25 +92,20 @@ end)
 netstream.Hook("cyrDropQuantity", function(client, itemID, amount)
     amount = tonumber(amount)
     if not itemID or not amount then return end
-
     local item = nut.item.instances[itemID]
     if not item then return end
-
     -- Must be a stack in the requesting player's own inventory.
     local char = client:getChar()
     if not char then return end
     local inv = char:getInv()
     if not inv or item.invID ~= inv:getID() then return end
     if item.noDrop then return end
-
     local itemDef = nut.item.list[item.uniqueID]
     local maxstack = NWL.GetStackLimit(itemDef and itemDef.maxstack)
     if not maxstack or maxstack <= 1 then return end
-
     local current = tonumber(item:getData("Amount")) or 1
     amount = math.floor(amount)
     if amount < 1 then return end
-
     if amount >= current then
         -- Whole stack: hand off to the normal drop path.
         item.player = client
@@ -121,11 +116,9 @@ netstream.Hook("cyrDropQuantity", function(client, itemID, amount)
 
     -- Reduce the source and spawn the split as a new world item, keeping data.
     item:setData("Amount", current - amount)
-
     local data = table.Copy(item:getData(true) or {})
     data.x, data.y = nil, nil
     data.Amount = amount
-
     nut.item.spawn(item.uniqueID, client:getItemDropPos(), nil, nil, data)
     client:EmitSound("os/button_6.wav", 65, 120)
     netstream.Start(client, "nutInventoryRefresh")
@@ -135,11 +128,7 @@ end)
 -- destroy (custom attributes, mods, infusion/edit flags, equipped state).
 local function isPlainStack(item)
     local d = item:getData(true) or {}
-    if (d.custom and next(d.custom) ~= nil)
-        or (d.customW and next(d.customW) ~= nil)
-        or d.infused or d.edited or d.equip then
-        return false
-    end
+    if (d.custom and next(d.custom) ~= nil) or (d.customW and next(d.customW) ~= nil) or d.infused or d.edited or d.equip then return false end
     local def = nut.item.list[item.uniqueID]
     local fns = def and def.functions
     if fns and (fns.Custom or fns.CustomAtr) then return false end
@@ -151,13 +140,12 @@ local function compactStacks(inv, uniqueID)
     local def = nut.item.list[uniqueID]
     local maxstack = NWL.GetStackLimit(def and def.maxstack)
     if not maxstack or maxstack <= 1 then return false end
-
     local stacks = {}
     for _, it in pairs(inv:getItemsOfType(uniqueID)) do
         if isPlainStack(it) then stacks[#stacks + 1] = it end
     end
-    if #stacks < 2 then return false end
 
+    if #stacks < 2 then return false end
     local total = 0
     for _, it in ipairs(stacks) do
         total = total + (tonumber(it:getData("Amount")) or 1)
@@ -171,17 +159,16 @@ local function compactStacks(inv, uniqueID)
         remaining = remaining - give
         idx = idx + 1
     end
+
     for k = idx, #stacks do
         stacks[k]:remove()
     end
-
     return true
 end
 
 -- Exposed so other systems (e.g. storage transfers) can fold a freshly moved
 -- item into existing stacks instead of leaving separate instances.
 NWL.CompactStacks = compactStacks
-
 -- Merge action: combine scattered partial stacks of one item type in the
 -- player's inventory. Triggered from the pipboy's right-click menu.
 netstream.Hook("cyrMergeStacks", function(client, uniqueID)
@@ -191,15 +178,14 @@ netstream.Hook("cyrMergeStacks", function(client, uniqueID)
     if not char then return end
     local inv = char:getInv()
     if not inv then return end
-
     local def = nut.item.list[uniqueID]
     local total, plain = 0, 0
     for _, it in pairs(inv:getItemsOfType(uniqueID)) do
         total = total + 1
         if isPlainStack(it) then plain = plain + 1 end
     end
-    print("[CYR STACK] merge", uniqueID, "maxstack=", tostring(def and def.maxstack), "total=", total, "plain(mergeable)=", plain)
 
+    print("[CYR STACK] merge", uniqueID, "maxstack=", tostring(def and def.maxstack), "total=", total, "plain(mergeable)=", plain)
     if compactStacks(inv, uniqueID) then
         client:EmitSound("os/button_6.wav", 65, 120)
         netstream.Start(client, "nutInventoryRefresh")
@@ -212,18 +198,13 @@ hook.Add("OnPlayerInteractItem", "CYR_AutoStackOnTake", function(client, action,
     if action ~= "take" then return end
     if result == false then return end
     if not item or not IsValid(client) then return end
-
     local uniqueID = item.uniqueID
     timer.Simple(0, function()
         if not IsValid(client) then return end
         local char = client:getChar()
         local inv = char and char:getInv()
         if not inv then return end
-
         local merged = compactStacks(inv, uniqueID)
-        client:ChatPrint("[STACK] take " .. tostring(uniqueID) .. " merged=" .. tostring(merged))
-        if merged then
-            netstream.Start(client, "nutInventoryRefresh")
-        end
+        if merged then netstream.Start(client, "nutInventoryRefresh") end
     end)
 end)
