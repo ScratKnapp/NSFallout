@@ -129,16 +129,33 @@ else
 			char:setSkill(k, 1)
 		end
 		
-		local traits = {}
-		for k, v in pairs(client:getTraits()) do
-			local traitData = TRAITS.traits[k]
-			if(traitData and traitData.hidden) then
-				traits[k] = v
+		-- PERKS: refund only the perks the player purchased; keep faction/history-granted
+		-- (and hidden) perks intact. Legacy characters with no purchasedPerks record fall back
+		-- to the old behavior (strip all non-hidden traits, refund the full configured pool).
+		local purchased = char:getData("purchasedPerks", nil)
+		local perkRefund -- nil => use the config-based pool further down (legacy path)
+
+		if (purchased == nil) then
+			local traits = {}
+			for k, v in pairs(client:getTraits()) do
+				local traitData = TRAITS.traits[k]
+				if(traitData and traitData.hidden) then
+					traits[k] = v
+				end
 			end
+			char:setData("traits", traits)
+		else
+			local traits = char:getData("traits", {})
+			for perkUID in pairs(purchased) do
+				traits[perkUID] = nil
+			end
+			char:setData("traits", traits)
+
+			-- Exact refund: hand back the points spent on purchased perks plus any unspent points.
+			perkRefund = char:getData("ptPerk", 0) + table.Count(purchased)
+			char:setData("purchasedPerks", {})
 		end
-		
-		char:setData("traits", traits)
-		
+
 		local faction = char:getFaction()
 		local factionTbl = nut.faction.indices[faction]
 		if(factionTbl) then
@@ -159,11 +176,17 @@ else
 		
 		local pointAttrib = math.floor(charLevel/nut.config.get("specialLevels", 2)) * nut.config.get("specialPerLevel", 1)
 		local pointSkill = math.floor((charLevel-1)/nut.config.get("skillLevels", 1)) * nut.config.get("skillPerLevel", 5)
-		local pointPerk = math.floor(charLevel/nut.config.get("perkLevels", 5)) * nut.config.get("perkPerLevel", 1)
 
 		pointAttrib = pointAttrib + nut.config.get("startAttribs", 28) - table.Count(nut.attribs.list)
 		pointSkill = pointSkill + nut.config.get("charCreateSkills", 25)
-		pointPerk = pointPerk + nut.config.get("maxTraits", 2)
+
+		-- Tracked characters refund exactly their purchased perks (perkRefund); legacy characters
+		-- get the full configured pool (level-earned perk points + the creation maxTraits pool).
+		local pointPerk = perkRefund
+		if (pointPerk == nil) then
+			pointPerk = math.floor(charLevel/nut.config.get("perkLevels", 5)) * nut.config.get("perkPerLevel", 1)
+				+ nut.config.get("maxTraits", 2)
+		end
 
 		char:setData("ptAttrib", pointAttrib)
 		char:setData("ptSkill", pointSkill)
@@ -602,9 +625,14 @@ if(SERVER) then
 		
 		if(ptPerk > 0) then
 			char:setData("ptPerk", ptPerk - 1, false, player.GetAll())
-			
+
 			client:giveTrait(perk)
-			
+
+			-- Record the purchase so a respec refunds exactly the perks the player paid for.
+			local purchased = char:getData("purchasedPerks", {})
+			purchased[perk] = true
+			char:setData("purchasedPerks", purchased, false, player.GetAll())
+
 			client:notify("You have gained the " ..(TRAITS.traits[perk] and TRAITS.traits[perk].name).. " perk.")
 			
 			nut.log.addRaw(client:Name().. " has gained the " ..(TRAITS.traits[perk] and TRAITS.traits[perk].name).. " perk.")

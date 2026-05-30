@@ -133,6 +133,12 @@ function PANEL:Init()
             -- Spend = trait picks; leftover carries over as perk points to unlock more later.
             persistData.ptPerk = math.max(nut.config.get("maxTraits", 2) - table.Count(traitData), 0)
 
+            -- Initialise as empty: creation perks are free baseline picks, not "purchased"
+            -- ones. Only perks bought post-creation via perkAdd go into this table.
+            -- An empty-table (not nil) is important so the respec code takes the new
+            -- non-legacy path and does NOT strip creation traits.
+            persistData.purchasedPerks = {}
+
             -- NutScript nutCharCreate expects a flat table where keys match registered variables.
             -- Attributes/Skills are variables, so they must be at the top level.
             -- Name/Desc/Model/Faction are also variables.
@@ -202,6 +208,14 @@ net.Receive("nutCharCreate", function()
     if IsValid(CYR_CHAR_MENU) then
         CYR_CHAR_MENU:RefreshCharacters()
         CYR_CHAR_MENU.html:Call("cancelCreation()") -- Return to character list
+    end
+end)
+
+-- Refresh the open menu whenever the character list changes server-side (e.g. after a
+-- character is deleted and the server re-syncs nutCharList), so stale entries are removed.
+hook.Add("CharacterListUpdated", "cyrCharMenuRefresh", function()
+    if IsValid(CYR_CHAR_MENU) then
+        CYR_CHAR_MENU:RefreshCharacters()
     end
 end)
 

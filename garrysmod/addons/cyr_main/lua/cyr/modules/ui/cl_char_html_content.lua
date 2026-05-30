@@ -210,37 +210,37 @@ CYR.UI.CharMenuHTML = [[
         .char-name { font-size: 1.2rem; font-weight: bold; }
         .char-faction { font-size: 0.8rem; opacity: 0.7; }
 
+        /* Solid, glowing, pulsing call-to-action so it's impossible to miss. */
         .create-btn {
-            background: rgba(51, 255, 102, 0.08);
-            border: 1px solid var(--primary-color);
-            color: var(--primary-color);
-            padding: 10px;
+            background: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            color: #001a05;
+            padding: 15px;
             text-align: center;
             cursor: pointer;
-            margin-top: 10px;
+            margin-top: 12px;
             text-transform: uppercase;
             font-weight: bold;
-            text-shadow: 0 0 8px var(--primary-glow);
-            /* Pulsing glow so it's obvious the button is there. */
-            animation: createPulse 1.8s ease-in-out infinite;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            animation: createPulse 1.4s ease-in-out infinite;
         }
         .create-btn:hover {
-            border-color: var(--primary-color);
+            background: #7dffb0;
+            border-color: #ffffff;
             color: #001a05;
-            background: var(--primary-color);
-            box-shadow: 0 0 22px var(--primary-glow);
-            text-shadow: none;
+            box-shadow: 0 0 30px var(--primary-color);
             animation: none; /* settle to a solid, clearly-clickable state on hover */
         }
 
         @keyframes createPulse {
             0%, 100% {
-                box-shadow: 0 0 5px var(--primary-dim);
-                border-color: var(--secondary-color);
+                box-shadow: 0 0 8px var(--primary-dim);
+                transform: scale(1);
             }
             50% {
-                box-shadow: 0 0 20px var(--primary-glow);
-                border-color: var(--primary-color);
+                box-shadow: 0 0 28px var(--primary-glow), 0 0 48px var(--primary-dim);
+                transform: scale(1.035);
             }
         }
 
@@ -658,7 +658,7 @@ CYR.UI.CharMenuHTML = [[
                 <div class="char-list" id="char-list">
                     <!-- Char Items -->
                 </div>
-                <div class="create-btn" onclick="showCreation()">> REGISTER NEW DWELLER</div>
+                <div class="create-btn" onclick="showCreation()">+ NEW CHARACTER</div>
             </div>
 
             <div class="center-stage">
@@ -837,7 +837,25 @@ CYR.UI.CharMenuHTML = [[
         // --- INIT & BRIDGE ---
         function setCharacters(data) {
             characters = data || [];
+            // If the selected character no longer exists (e.g. it was just deleted), reset the UI.
+            if (selectedCharID !== null && !characters.some(c => c.id === selectedCharID)) {
+                clearSelection();
+            }
             renderList();
+        }
+
+        // Reset the details panel + action buttons to the "nothing selected" state.
+        function clearSelection() {
+            selectedCharID = null;
+            document.getElementById('det-name').innerText = '---';
+            document.getElementById('det-faction').innerText = '---';
+            document.getElementById('det-money').innerText = '---';
+            document.getElementById('det-id').innerText = '---';
+            document.getElementById('det-pac').innerText = '---';
+            document.getElementById('det-desc').innerText = 'Select an identity to view record details.';
+            document.getElementById('btn-play').disabled = true;
+            document.getElementById('btn-delete').disabled = true;
+            if (window.gmod) gmod.webhook('hideModel');
         }
 
         function setFactions(data) {
@@ -936,7 +954,12 @@ CYR.UI.CharMenuHTML = [[
                      "TERMINATE IDENTITY?",
                      "Are you sure you want to permanently delete this identity? This action cannot be reversed.",
                      function() {
-                         if(window.gmod) gmod.webhook('delete', { id: selectedCharID });
+                         const id = selectedCharID;
+                         if(window.gmod) gmod.webhook('delete', { id: id });
+                         // Remove it from the list immediately; the server re-sync will confirm.
+                         characters = characters.filter(c => c.id !== id);
+                         clearSelection();
+                         renderList();
                          closeModal();
                      }
                  );
