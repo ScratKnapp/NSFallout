@@ -14,9 +14,7 @@ if (SERVER) then
 	end
 
 	function PLUGIN:PlayerThrowPunch(client, hit)
-		if (client:getChar()) then
-			client:getChar():updateAttrib("str", 0.001)
-		end
+
 	end
 end
 
