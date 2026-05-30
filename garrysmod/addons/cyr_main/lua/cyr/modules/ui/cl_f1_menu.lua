@@ -1138,14 +1138,3 @@ net.Receive("cyrPluginList", function()
     if IsValid(CYR_MENU) and CYR_MENU.lastHelpTab == "plugins" then CYR_MENU:ShowHelp() end
 end)
 
--- Hook to open/close
-hook.Add("PlayerBindPress", "CYR_OpenF1Menu", function(ply, bind, pressed)
-    if (bind == "gm_showhelp" or bind:find("gm_showhelp")) and pressed then
-        if IsValid(CYR_MENU) then
-            CYR_MENU:Remove()
-        else
-            vgui.Create("cyrMenu")
-        end
-        return true
-    end
-end)
