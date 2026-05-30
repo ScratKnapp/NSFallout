@@ -435,6 +435,7 @@ end
 local snakePrevKeys = {}
 hook.Add("Think", "pipboy_snake_input", function()
     if not (PIPBOY_ON_SCREEN and pipboy.SelectedHeader == "snake") then return end
+    if PIPBOY_INPUT_BLOCKED() then return end
     for key, dir in pairs(directions) do
         local down = input.IsKeyDown(key)
         if down and not snakePrevKeys[key] and #movementsqueued <= 2 then

@@ -1,5 +1,13 @@
 MainFontName = "Morton Medium"
 SecondaryFontName = "Morton Black"
+
+-- True while a Derma panel owns input (e.g. a focused text entry). The pipboy
+-- reads raw mouse/keyboard state, so it ignores its own input while this is true
+-- to avoid double-handling clicks and keypresses meant for the panel.
+function PIPBOY_INPUT_BLOCKED()
+    return vgui.GetKeyboardFocus() ~= nil
+end
+
 local function REFRESH_PIPBOY()
     PIPBOY_ON_SCREEN = false
     NzGUI = NzGUI or {}
@@ -443,12 +451,31 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
         local lply = LocalPlayer()
         local awep = lply:GetActiveWeapon()
         local left, right, bottom, top = 0, WIDTH, HEIGHT, 0
+
+        if IsValid(lply) and lply:ShouldDrawLocalPlayer() then return end
         if lply and PIPBOY_ON_SCREEN then
             local cursor_sens = cursor_sens_cv:GetFloat()
             cursor.x, cursor.y = math.Clamp(cursor.x + (x * cursor_sens), left, right), math.Clamp(cursor.y + (y * cursor_sens), top, bottom)
             ccmd:SetViewAngles(angle)
             return true
         end
+    end)
+
+
+    hook.Add("CreateMove", "pipboy_cursor_thirdperson", function(cmd)
+        local lply = LocalPlayer()
+        if not (IsValid(lply) and PIPBOY_ON_SCREEN and lply:ShouldDrawLocalPlayer()) then
+            return
+        end
+
+        local cursor_sens = cursor_sens_cv:GetFloat()
+        cursor.x = math.Clamp(cursor.x + (cmd:GetMouseX() * cursor_sens), 0, WIDTH)
+        cursor.y = math.Clamp(cursor.y + (cmd:GetMouseY() * cursor_sens), 0, HEIGHT)
+
+        -- Starve the third-person camera of mouse input (it reads the same usercmd),
+        -- without locking/overriding eye angles.
+        cmd:SetMouseX(0)
+        cmd:SetMouseY(0)
     end)
 
     function DrawCursor()
@@ -468,6 +495,8 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
     end
 
     function AddUIButton(x, y, width, height, PardonMouseUP)
+        -- A Derma panel owns input: report no hover/click so the UI is inert.
+        if PIPBOY_INPUT_BLOCKED() then return false, false end
         PardonMouseUP = PardonMouseUP or false
         local isCursorIn = CheckIfCursorInRange(x, y, width, height)
         --  surface.SetDrawColor(isCursorIn and uiButtonCheck or pip_color)
@@ -617,13 +646,7 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
     end)
 
     local xPos = 25
-    ---local framerate = 1 / 5
-    ---local nexttime = CurTime()
-    -- Input-phase work stays in Move: the CHARACTERS tab swaps the screen for
-    -- a real NutScript vgui menu, which is a state transition (toggles the
-    -- Pip-Boy view + spawns a panel), so it belongs in the prediction/input
-    -- phase rather than the paint pass. Actual input *blocking* lives in
-    -- PlayerBindPress / InputMouseApply / KeyPress and is untouched.
+    
     hook.Add("Move", "uihud_halo", function()
         if not PIPBOY_ON_SCREEN then return end
         if pipboy.SelectedHeader == "CHARACTERS" then
@@ -802,15 +825,9 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
         cs_pip:SetModel("models/pipboy.mdl")
         cs_pip:SetSubMaterial(1, "!" .. mat_name)
         local vm = cs_vm
-        -- Target pose for when the Pip-Boy is fully raised. The bones are
-        -- lerped from the neutral (lowered) sequence pose toward these values
-        -- using the same eased fraction that slides the viewmodel in/out, so
-        -- opening and closing the menu animates smoothly instead of snapping.
+
         local PIP_BONE_POSE = {
-            -- `low` is the bone's manipulation while the Pip-Boy is fully
-            -- lowered, `ang`/`pos` the fully-raised target. Both ends are
-            -- lerped so the arm bones swing through a real arc instead of
-            -- snapping straight to the raised pose.
+   
             {
                 bone = "ValveBiped.Bip01_R_UpperArm",
                 pos = Vector(53, 25, 0),
@@ -875,20 +892,12 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
         -- Fixed FOV used to render the pipboy/arms so the player's
         -- viewmodel_fov cvar can't rescale or shift them on screen.
         local PIPBOY_RENDER_FOV = tonumber(GetConVar("viewmodel_fov"):GetDefault()) or 54
-        -- Positions and draws the Pip-Boy/arm clientside models in viewmodel
-        -- space. `basePos` is the origin to hang them off (the engine
-        -- viewmodel's position for weapons that have one, EyePos() otherwise)
-        -- and `vmOffset` is the engine viewmodel slide-down to subtract (zero
-        -- when there's no real viewmodel to slide). Factored out so it can run
-        -- from either the viewmodel pass or the world-pass fallback below.
+ 
         local function drawPipboyModels(basePos, vmOffset)
             offsetDT = PipAnimValue() -- recompute here so the bone pose is never a frame stale
             if offsetDT <= 0.00001 then return end
             local miles = (1 - offsetDT) * 18
-            -- Build the offset basis from EyeAngles directly. Using
-            -- cs_vm:GetForward/Up reads the previous frame's angles and
-            -- also drifts when viewmodel_fov changes the engine's reported
-            -- viewmodel pose, so derive the basis from the camera instead.
+       
             local eyeAng = EyeAngles()
             local eyeFwd, eyeUp, eyeRight = eyeAng:Forward(), eyeAng:Up(), eyeAng:Right()
             cs_vm:SetPos(basePos - vmOffset + (eyeUp * 4.5) + (eyeFwd * 6) + (eyeUp * -miles) + (eyeRight * 0.8))
@@ -927,21 +936,14 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
             end
         end
 
-        -- True when the active weapon declares no viewmodel (e.g. the combat
-        -- SWEP, ViewModel = ""). The engine skips the viewmodel draw pass for
-        -- such weapons, so PreDrawViewModel never fires and the fallback hook
-        -- has to render the Pip-Boy instead.
+
         local function activeWeaponHasNoViewmodel()
             local wep = LocalPlayer():GetActiveWeapon()
             return IsValid(wep) and (wep.ViewModel or "") == ""
         end
 
         hook.Add("PreDrawViewModel", "aheXXAFGAGA", function(viewmodel, weapon) drawPipboyModels(LocalPlayer():GetViewModel():GetPos(), _VEC_OFFSET) end)
-        -- Fallback for weapons with no viewmodel: PreDrawViewModel doesn't run
-        -- for them, so draw during the world pass instead. The viewmodel-bearing
-        -- case is handled above and bails here to avoid double-drawing. A
-        -- compressed depth range keeps the arm from clipping into nearby world
-        -- geometry the way a real viewmodel wouldn't.
+
         hook.Add("PostDrawTranslucentRenderables", "pipboy_novm_fallback", function(bDepth, bSkybox, b3dSkybox)
             if bDepth or bSkybox or b3dSkybox then return end
             -- drawPipboyModels gates on the raise/lower animation value, so
@@ -965,7 +967,7 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
         end)
 
         hook.Add("KeyPress", ">unsureaboutthisone", function(ply, key) if PIPBOY_ON_SCREEN then return true end end)
-        hook.Add("Think", "Pipboy_overwrite_input_listen", function() IS_R_DOWN = input.IsKeyDown(KEY_R) end)
+        hook.Add("Think", "Pipboy_overwrite_input_listen", function() IS_R_DOWN = input.IsKeyDown(KEY_R) and not PIPBOY_INPUT_BLOCKED() end)
         hook.Add("PlayerBindPress", "Pipboy_overwrite_input", function(ply, bind, pressed)
             if not pressed then return end
             if PIPBOY_ON_SCREEN then
@@ -1018,7 +1020,7 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
     end
 
     hook.Add("Move", "keyLiwasten", function()
-        if vgui.GetKeyboardFocus() == nil then
+        if not PIPBOY_INPUT_BLOCKED() then
             if input.WasKeyPressed(KEY_I) then
                 CHANGE_PIP_BOY_PAGE("INV")
                 TogglePipboyView()
@@ -1032,6 +1034,13 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
     CreateClientConVar("fallout_simple_pipboy", "0", true, false)
     hook.Add("HUDPaint", "pipboy", function()
         doDrawBackground = GetConVar("fallout_simple_pipboy"):GetBool()
+        -- If the local player is actually being rendered (third person, vehicle/death
+        -- cams, etc.), behave as if fallout_simple_pipboy were 1 so the holographic
+        -- screen draws additively onto the world -- without touching their convar.
+        local lp = LocalPlayer()
+        if (IsValid(lp) and lp:ShouldDrawLocalPlayer()) then
+            doDrawBackground = true
+        end
         local simpleThird = GetConVar("simple_thirdperson_enabled")
         if PIPBOY_ON_SCREEN and ((simpleThird and simpleThird:GetBool()) or doDrawBackground) then
             local wth, height = 1000, ScrH()
@@ -1215,6 +1224,7 @@ end
 local snakePrevKeys = {}
 hook.Add("Think", "pipboy_snake_input", function()
     if not (PIPBOY_ON_SCREEN and pipboy.SelectedHeader == "snake") then return end
+    if PIPBOY_INPUT_BLOCKED() then return end
     for key, dir in pairs(directions) do
         local down = input.IsKeyDown(key)
         if down and not snakePrevKeys[key] and #movementsqueued <= 2 then

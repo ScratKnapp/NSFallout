@@ -138,7 +138,7 @@ CM.AssignModel({
     "models/fallout/dogvicious.mdl",
 }, "quad_canid")
 
--- Brahmin: two-headed mutant cow. Two heads, plus a sack pseudo-limb.
+
 CM.RegisterLimbSet("quad_brahmin", {
     ["Left Head"]       = { bones = {"Bip01 HeadL", "Bip01 Neck2L", "Bip01 Neck3L"} },
     ["Right Head"]      = { bones = {"Bip01 HeadR", "Bip01 Neck2R", "Bip01 Neck3R"} },
@@ -156,7 +156,6 @@ CM.AssignModel("models/fallout/brahmin.mdl", "quad_brahmin")
 -- 6-legged insects (giantant, mantis, blowfly, radroach)
 -- ============================================================
 
--- Giant ant: front=UpperArm pair, mid+rear=thigh pairs, antennae + mandibles
 CM.RegisterLimbSet("hex_giantant", {
     ["Head"]              = { bones = {"Bip01 Head", "Bip01 Head Brain"} },
     ["Body"]              = { bones = {"Bip01 Spine"} },
@@ -170,7 +169,7 @@ CM.RegisterLimbSet("hex_giantant", {
 })
 CM.AssignModel("models/fallout/giantant.mdl", "hex_giantant")
 
--- Giant ant queen: 6 legs (front/mid/rear pairs), bigger tail, antennae, mandibles
+
 CM.RegisterLimbSet("hex_giantantqueen", {
     ["Head"]              = { bones = {"Bip01 Head", "Bip01 Head Brain"} },
     ["Body"]              = { bones = {"Bip01 Spine", "Bip01 Spine1"} },
@@ -184,7 +183,7 @@ CM.RegisterLimbSet("hex_giantantqueen", {
 })
 CM.AssignModel("models/fallout/giantantqueen.mdl", "hex_giantantqueen")
 
--- Mantis: 6 legs + 2 raptorial arms + wings + antennae
+
 CM.RegisterLimbSet("hex_mantis", {
     ["Head"]              = { bones = {"Bip01 Head", "Bip01 Head Brain"} },
     ["Body"]              = { bones = {"Bip01 Thorax00", "Bip01 Thorax01"} },
@@ -200,7 +199,7 @@ CM.RegisterLimbSet("hex_mantis", {
 })
 CM.AssignModel("models/fallout/mantis.mdl", "hex_mantis")
 
--- Blowfly: 6 legs in 3 pairs (Thigh 01/02/03 on each side), UpperArm acts as wings/forelimbs
+
 CM.RegisterLimbSet("hex_blowfly", {
     ["Head"]            = { bones = {"Bip01 Head", "Bip01 Head Jaw"} },
     ["Body"]            = { bones = {"Bip01 Spine"} },
@@ -253,8 +252,7 @@ CM.AssignModel("models/fallout/cazadore.mdl", "hex_cazadore")
 
 -- ============================================================
 -- Radscorpion: 8 legs (4 pairs) + 2 pincer claws + stinger tail.
--- No head bone exists on this model; the tail tip = stinger.
--- ============================================================
+
 CM.RegisterLimbSet("oct_radscorpion", {
     ["Body"]                = { bones = {"Bip01 Spine", "Bip01 Pelvis"} },
     ["Left Pincer"]         = { bones = {"Bip01 L UpperArm", "Bip01 L Forearm", "Bip01 L Hand"} },
@@ -272,12 +270,23 @@ CM.RegisterLimbSet("oct_radscorpion", {
 })
 CM.AssignModel("models/fallout/radscorpion.mdl", "oct_radscorpion")
 
+
+CM.RegisterLimbSet("quad_headcrab", {
+    ["Head"]            = { bones = {"HCfast.body", "HCfast.chest"} },
+    ["Body"]            = { bones = {"HCfast.hips", "HCfast.wiggle_front", "HCfast.wiggle_back",
+                                     "HCfast.wiggle_L", "HCfast.wiggle_R"} },
+    ["Front Left Leg"]  = { bones = {"HCfast.whole_L", "HCfast.clav_L", "HCfast.arm_bone1_L", "HCfast.arm_bone2_L"} },
+    ["Front Right Leg"] = { bones = {"HCfast.whole_R", "HCfast.clav_R", "HCfast.arm_bone1_R", "HCfast.arm_bone2_R"} },
+    ["Back Left Leg"]   = { bones = {"HCfast.leg_bone1_L", "HCfast.leg_bone2_L", "HCfast.leg_bone3_L"} },
+    ["Back Right Leg"]  = { bones = {"HCfast.leg_bone1_R", "HCfast.leg_bone2_R", "HCfast.leg_bone3_R"} },
+})
+CM.AssignModel("models/headcrab.mdl", "quad_headcrab")
+
 -- ============================================================
 -- Robots
 -- ============================================================
 
--- Eyebot: floating spherical drone. The whole chassis is treated as the head -
--- there are no meaningful sub-limbs to target, so every bone maps to Head.
+-- Eyebot: floating spherical drone. One fucking limb.
 CM.RegisterLimbSet("robot_eyebot", {
     ["Head"] = { bones = {"Bip01", "Bip01 Head", "Bip01 Neck1",
                           "Bip01 L UpperArm", "Bip01 L Forearm", "Bip01 L Hand",
@@ -288,8 +297,7 @@ CM.RegisterLimbSet("robot_eyebot", {
 })
 CM.AssignModel("models/fallout/eyebot.mdl", "robot_eyebot")
 
--- Protectron: standard biped with a detachable head dome. Spine Brain pseudo-limb
--- represents the exposed CPU when the dome is shot off.
+.
 CM.RegisterLimbSet("robot_protectron", {
     ["Head"]      = { bones = {"Bip01 Head", "Bip01 Head Dome", "Dome", "Bip01 Neck", "Bip01 Neck1"} },
     ["Body"]      = { bones = {"Bip01 Spine", "Bip01 Pelvis"} },
@@ -309,9 +317,8 @@ CM.DeriveLimbSet("robot_protectron_factory", "robot_protectron", {
 })
 CM.AssignModel("models/fallout/protectron_factory.mdl", "robot_protectron_factory")
 
--- Mister Gutsy / Mr. Handy: floating tri-thruster robot. Three thruster "legs"
--- (left/right + back), two manipulator arms with weapon attachments
--- (flamer on left, plasma on right), exposed brain core.
+-- Mister Gutsy / Mr. Handy: . Three thruster "legs"
+
 CM.RegisterLimbSet("robot_mistergutsy", {
     ["Head"]              = { bones = {"Bip01 Head", "Bip01 Neck 02", "Bip01 Neck 03", "Bip01 Neck 04", "Bip01 Neck1"} },
     ["Body"]              = { bones = {"Bip01 Spine", "Bip01 Spine 01", "Bip01 Pelvis"} },
@@ -334,7 +341,7 @@ CM.RegisterLimbSet("robot_mistergutsy", {
 })
 CM.AssignModel("models/fallout/mistergutsy.mdl", "robot_mistergutsy")
 
--- Sentry Bot: heavy tripod with 3 leg/treads, 2 weaponized arms, exposed brain.
+
 CM.RegisterLimbSet("robot_sentrybot", {
     ["Head"]            = { bones = {"Bip01 Head"} },
     ["Body"]            = { bones = {"Bip01 Spine", "Bip01 Pelvis", "Bip01 PelvisDetach"} },
@@ -348,8 +355,7 @@ CM.RegisterLimbSet("robot_sentrybot", {
 })
 CM.AssignModel("models/fallout/sentrybot_edit.mdl", "robot_sentrybot")
 
--- Sentry Turret: stationary base + yaw/pitch gimbal. No legs; the piston/hinge
--- chain is the only moving structure. Treat gimbal as "Head" for shot calling.
+
 CM.RegisterLimbSet("robot_sentryturret", {
     ["Head"]   = { bones = {"Bip01 Pitch", "Bip01 Wires", "ProjectileNode"} },
     ["Body"]   = { bones = {"Bip01", "Bip01 Base", "Bip01 Yaw", "Bip01 Piston",
