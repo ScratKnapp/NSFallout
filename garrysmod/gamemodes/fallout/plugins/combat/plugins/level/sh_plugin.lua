@@ -38,6 +38,10 @@ nut.config.add("perkPerLevel", 1, "How many perk points to give when applicable.
 	category = "Level"
 })
 
+nut.config.add("respecRefundStartPerks", false, "Whether a respec also refunds and removes the perks chosen during character creation. When off, creation perks are kept and only level-earned/purchased perks are refunded.", nil, {
+	category = "Level"
+})
+
 --attributes to exclude
 PLUGIN.exclude = {
 	--["medical"] = true,
@@ -129,11 +133,15 @@ else
 			char:setSkill(k, 1)
 		end
 		
-		-- PERKS: refund only the perks the player purchased; keep faction/history-granted
-		-- (and hidden) perks intact. Legacy characters with no purchasedPerks record fall back
-		-- to the old behavior (strip all non-hidden traits, refund the full configured pool).
+		-- PERKS: creation trait picks are free; perk points are earned only from leveling. A respec
+		-- removes only player-PURCHASED perks (keeping faction/history-granted and hidden perks) and
+		-- refunds the level-earned pool below. Legacy characters with no purchasedPerks record fall
+		-- back to stripping all non-hidden traits.
 		local purchased = char:getData("purchasedPerks", nil)
-		local perkRefund -- nil => use the config-based pool further down (legacy path)
+
+		-- Points handed back for stripped character-creation perks. Only nonzero when
+		-- the "respecRefundStartPerks" config is on and we actually remove some.
+		local startPerkRefund = 0
 
 		if (purchased == nil) then
 			local traits = {}
@@ -149,10 +157,22 @@ else
 			for perkUID in pairs(purchased) do
 				traits[perkUID] = nil
 			end
-			char:setData("traits", traits)
 
-			-- Exact refund: hand back the points spent on purchased perks plus any unspent points.
-			perkRefund = char:getData("ptPerk", 0) + table.Count(purchased)
+			-- Optionally refund + strip the perks chosen during character creation. Guarded
+			-- on the trait still being present so we never over-refund a perk that was
+			-- already removed elsewhere. Hidden/auto-granted traits are never in creationPerks.
+			if (nut.config.get("respecRefundStartPerks", false)) then
+				local creationPerks = char:getData("creationPerks", {})
+				for perkUID in pairs(creationPerks) do
+					if (traits[perkUID]) then
+						traits[perkUID] = nil
+						startPerkRefund = startPerkRefund + 1
+					end
+				end
+				char:setData("creationPerks", {})
+			end
+
+			char:setData("traits", traits)
 			char:setData("purchasedPerks", {})
 		end
 
@@ -180,13 +200,11 @@ else
 		pointAttrib = pointAttrib + nut.config.get("startAttribs", 28) - table.Count(nut.attribs.list)
 		pointSkill = pointSkill + nut.config.get("charCreateSkills", 25)
 
-		-- Tracked characters refund exactly their purchased perks (perkRefund); legacy characters
-		-- get the full configured pool (level-earned perk points + the creation maxTraits pool).
-		local pointPerk = perkRefund
-		if (pointPerk == nil) then
-			pointPerk = math.floor(charLevel/nut.config.get("perkLevels", 5)) * nut.config.get("perkPerLevel", 1)
-				+ nut.config.get("maxTraits", 2)
-		end
+		-- Perk points come from leveling only (creation perks are free), so refund the
+		-- level-earned perk pool. At level 1 this is 0 — a respec grants no perk points.
+		-- startPerkRefund adds back the creation perks too when respecRefundStartPerks is on.
+		local pointPerk = math.floor(charLevel/nut.config.get("perkLevels", 5)) * nut.config.get("perkPerLevel", 1)
+			+ startPerkRefund
 
 		char:setData("ptAttrib", pointAttrib)
 		char:setData("ptSkill", pointSkill)

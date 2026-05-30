@@ -388,9 +388,8 @@ tablet.pages["snake"] = function(color_main)
         regenFoodLoc()
     end
 
-    for i, v in pairs(directions) do
-        if input.WasKeyPressed(i) then if #movementsqueued <= 2 then table.insert(movementsqueued, v) end end
-    end
+    -- Movement input is sampled in the "pipboy_snake_input" Think hook below;
+    -- input.WasKeyPressed reads false from this PreRender (paint) context.
 
     if nextTime < CurTime() then
         direction = movementsqueued[1] or direction
@@ -431,6 +430,22 @@ tablet.pages["snake"] = function(color_main)
     surface.DrawRect(foodPos.x + 6, foodPos.y + 6, 13, 13)
     render.SetViewPort(0, 0, oldW, oldH)
 end
+
+-- Snake controls. The screen renders in PreRender (a paint phase) where
+-- input.WasKeyPressed always reads false, which silently froze the controls.
+-- Poll the physical key state in Think (valid every frame) and edge-detect a
+-- fresh press so one tap queues exactly one turn, as WasKeyPressed used to.
+local snakePrevKeys = {}
+hook.Add("Think", "pipboy_snake_input", function()
+    if not (PIPBOY_ON_SCREEN and pipboy.SelectedHeader == "snake") then return end
+    for key, dir in pairs(directions) do
+        local down = input.IsKeyDown(key)
+        if down and not snakePrevKeys[key] and #movementsqueued <= 2 then
+            table.insert(movementsqueued, dir)
+        end
+        snakePrevKeys[key] = down
+    end
+end)
 
 hook.Add("PlayerBindPress", "Minigames", function(ply, bind, pressed)
     if PIPBOY_ON_SCREEN and pipboy.SelectedHeader == "snake" then

@@ -127,17 +127,23 @@ function PANEL:Init()
             -- Only attach a background when one was chosen (keeps getHistory()'s "none" default intact).
             if next(historyData) then persistData.history = historyData end
 
-            -- Perk points (ptPerk) are the leftover trait/perk pool. The stock NutScript trait
-            -- step set this on creation; the CYR menu replaced that flow, so initialize it here
-            -- (otherwise the F1 menu reads an uninitialized value and shows "Perk Points: -1").
-            -- Spend = trait picks; leftover carries over as perk points to unlock more later.
-            persistData.ptPerk = math.max(nut.config.get("maxTraits", 2) - table.Count(traitData), 0)
+            -- Perk points (ptPerk) are earned from LEVELING only; creation trait picks are free
+            -- baseline choices and grant no perk-point pool, so a fresh (level 1) character starts
+            -- with 0. Setting it explicitly also avoids the F1 menu reading an uninitialized value
+            -- (which showed "Perk Points: -1").
+            persistData.ptPerk = 0
 
             -- Initialise as empty: creation perks are free baseline picks, not "purchased"
             -- ones. Only perks bought post-creation via perkAdd go into this table.
             -- An empty-table (not nil) is important so the respec code takes the new
             -- non-legacy path and does NOT strip creation traits.
             persistData.purchasedPerks = {}
+
+            -- Record the character-creation perk picks on their own. By default a respec
+            -- leaves these alone (they're free baseline choices), but the server-side
+            -- "respecRefundStartPerks" config can opt in to refunding + stripping them.
+            -- Stored separately from purchasedPerks so that decision stays reversible.
+            persistData.creationPerks = table.Copy(traitData)
 
             -- NutScript nutCharCreate expects a flat table where keys match registered variables.
             -- Attributes/Skills are variables, so they must be at the top level.
