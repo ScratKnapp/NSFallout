@@ -39,12 +39,20 @@ do
 	if (SERVER) then
 		function charMeta:updateAttrib(key, value)
 			local attribute = nut.attribs.list[key]
+			local client = self:getPlayer()
+			-- OnCharAttribUpdated expects the new ABSOLUTE attribute value (that is
+			-- what setAttrib and the trait plugin's getAttribs() loop both pass), so
+			-- consumers like the low-attribute trait system (e.g. "thin arms") can test
+			-- value <= 1. updateAttrib is given a delta, so report the resulting total
+			-- here -- not the delta -- otherwise raising str 1->2 still looks like "1"
+			-- and the low-strength trait is never removed.
+			local newValue = value
 
 			if (attribute) then
 				local attrib = self:getAttribs()
-				local client = self:getPlayer()
 
 				attrib[key] = math.min((attrib[key] or 0) + value, attribute.maxValue or nut.config.get("maxAttribs", 10))
+				newValue = attrib[key]
 
 				if (IsValid(client)) then
 					netstream.Start(client, "attrib", self:getID(), key, attrib[key])
@@ -55,7 +63,7 @@ do
 				end
 			end
 
-			hook.Run("OnCharAttribUpdated", client, self, key, value)
+			hook.Run("OnCharAttribUpdated", client, self, key, newValue)
 		end
 
 		function charMeta:setAttrib(key, value)
