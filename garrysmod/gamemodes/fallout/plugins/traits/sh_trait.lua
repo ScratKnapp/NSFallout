@@ -7,14 +7,15 @@ TRAIT.uid = "animal"
 TRAIT.name = "Animal Friend"
 TRAIT.desc = "Allowed to roll speech checks against hostile animals to pacify them."
 TRAIT.category = "Perk (Active)"
-TRAIT.icon = "fonvui/hud/icons/perks/Animal Friend.png"
+TRAIT.icon = "fonvui/hud/icons/perks/2d20_animal_friend.png"
 TRAITS:Register(TRAIT)
 //
 local TRAIT = {}
-TRAIT.uid = "double" 
+TRAIT.uid = "double"
 TRAIT.name = "Double Check"
 TRAIT.desc = "May reroll Luck checks once per encounter."
 TRAIT.category = "Perk (Active)"
+TRAIT.icon = "fonvui/hud/icons/perks/2d20_fortune_finder.png"
 TRAITS:Register(TRAIT)
 //
 local TRAIT = {}
@@ -22,7 +23,7 @@ TRAIT.uid = "light"
 TRAIT.name = "Light Step"
 TRAIT.desc = "May reroll checks against traps once."
 TRAIT.category = "Perk (Active)"
-TRAIT.icon = "fonvui/hud/icons/perks/Light Step.png"
+TRAIT.icon = "fonvui/hud/icons/perks/2d20_lightstep.png"
 TRAITS:Register(TRAIT)
 //
 local TRAIT = {}
@@ -30,7 +31,7 @@ TRAIT.uid = "ninja"
 TRAIT.name = "Ninja"
 TRAIT.desc = "May reroll Stealth checks once."
 TRAIT.category = "Perk (Active)"
-TRAIT.icon = "fonvui/hud/icons/perks/Ninja.png"
+TRAIT.icon = "fonvui/hud/icons/perks/2d20_ninja.png"
 TRAITS:Register(TRAIT)
 //
 local TRAIT = {}
@@ -38,7 +39,7 @@ TRAIT.uid = "nimble"
 TRAIT.name = "Nimble Footed"
 TRAIT.desc = "May reroll Athletics checks once."
 TRAIT.category = "Perk (Active)"
-TRAIT.icon = "fonvui/hud/icons/perks/Nimble Footed.png"
+TRAIT.icon = "fonvui/hud/icons/perks/2d20_action_boy.png"
 TRAITS:Register(TRAIT)
 //
 local TRAIT = {}
@@ -46,7 +47,7 @@ TRAIT.uid = "peer"
 TRAIT.name = "Peer Review"
 TRAIT.desc = "May reroll Science checks once."
 TRAIT.category = "Perk (Active)"
-TRAIT.icon = "fonvui/hud/icons/perks/Peer Review.png"
+TRAIT.icon = "fonvui/hud/icons/perks/2d20_science.png"
 TRAITS:Register(TRAIT)
 //
 local TRAIT = {}
@@ -54,7 +55,7 @@ TRAIT.uid = "talk"
 TRAIT.name = "Smooth Talker"
 TRAIT.desc = "May reroll Speech checks once."
 TRAIT.category = "Perk (Active)"
-TRAIT.icon = "fonvui/hud/icons/perks/Smooth Talker.png"
+TRAIT.icon = "fonvui/hud/icons/perks/2d20_smooth_talker.png"
 TRAITS:Register(TRAIT)
 //
 local TRAIT = {}
@@ -62,7 +63,7 @@ TRAIT.uid = "doctor"
 TRAIT.name = "Miracle Doctor"
 TRAIT.desc = "May reroll Medicine checks once."
 TRAIT.category = "Perk (Active)"
-TRAIT.icon = "fonvui/hud/icons/perks/Miracle Doctor.png"
+TRAIT.icon = "fonvui/hud/icons/perks/2d20_medic.png"
 TRAITS:Register(TRAIT)
 //
 local TRAIT = {}
@@ -70,7 +71,7 @@ TRAIT.uid = "jury"
 TRAIT.name = "Jury Rigging"
 TRAIT.desc = "May reroll Repair checks once."
 TRAIT.category = "Perk (Active)"
-TRAIT.icon = "fonvui/hud/icons/perks/unsorted/Jury Rigging.png"
+TRAIT.icon = "fonvui/hud/icons/perks/2d20_jury_rigger.png"
 TRAITS:Register(TRAIT)
 //
 local TRAIT = {}
@@ -78,7 +79,7 @@ TRAIT.uid = "thief"
 TRAIT.name = "Master Thief"
 TRAIT.desc = "May reroll Lockpicking checks once."
 TRAIT.category = "Perk (Active)"
-TRAIT.icon = "fonvui/hud/icons/perks/Master Thief.png"
+TRAIT.icon = "fonvui/hud/icons/perks/2d20_master_thief.png"
 TRAITS:Register(TRAIT)
 //
 local TRAIT = {}
@@ -94,7 +95,7 @@ TRAIT.uid = "survive"
 TRAIT.name = "Survivalist"
 TRAIT.desc = "May reroll Survival checks once."
 TRAIT.category = "Perk (Active)"
-TRAIT.icon = "fonvui/hud/icons/perks/skills/skills_survival.png"
+TRAIT.icon = "fonvui/hud/icons/perks/2d20_snakeater.png"
 TRAITS:Register(TRAIT)
 
 --PASSIVE PERKS
@@ -104,7 +105,7 @@ TRAIT.uid = "evader"
 TRAIT.name = "Evader"
 TRAIT.desc = "Your Evasion is counted as being 20 points higher."
 TRAIT.category = "Perks (Passive)"
-TRAIT.icon = "fonvui/hud/icons/perks/Evader.png"
+TRAIT.icon = "fonvui/hud/icons/perks/2d20_dodger.png"
 TRAITS:Register(TRAIT)
 //
 local TRAIT = {}
@@ -112,7 +113,7 @@ TRAIT.uid = "skull"
 TRAIT.name = "Adamantium Skull"
 TRAIT.desc = "-30% damage from headshots."
 TRAIT.category = "Perks (Passive)"
-TRAIT.icon = "fonvui/hud/icons/perks/Adamantium Skull.png"
+TRAIT.icon = "fonvui/hud/icons/perks/2d20_adamantium_skeleton.png"
 TRAIT.OnDamageProcess = function(self, attackData, dmgTbl)
 	if(dmgTbl.part and dmgTbl.part == "Head") then
 		for k, v in pairs(dmgTbl.damage or {}) do
@@ -127,7 +128,7 @@ TRAIT.uid = "thickskin"
 TRAIT.name = "Thick Skin"
 TRAIT.desc = "Receive -20% damage from ballistic weapons and melee."
 TRAIT.category = "Perks (Passive)"
-TRAIT.icon = "fonvui/hud/icons/perks/Thick Skin.png"
+TRAIT.icon = "fonvui/hud/icons/perks/2d20_pain_train.png"
 TRAIT.OnDamageProcess = function(self, attackData, dmgTbl)
 	for k, v in pairs(dmgTbl.damage or {}) do
 		local dmgT = v.dmgT
@@ -144,7 +145,7 @@ TRAIT.uid = "mess"
 TRAIT.name = "Bloody Mess"
 TRAIT.desc = "+8% damage with all weapon types."
 TRAIT.category = "Perks (Passive)"
-TRAIT.icon = "fonvui/hud/icons/perks/Bloody Mess.png"
+TRAIT.icon = "fonvui/hud/icons/perks/2d20_bloody_mess.png"
 TRAIT.OnAttackData = function(self, action, attacker, info)
 	if(action.dmg) then
 		action.dmg = action.dmg * 1.08
@@ -157,7 +158,7 @@ TRAIT.uid = "bettercrits"
 TRAIT.name = "Better Crits"
 TRAIT.desc = "+15% Critical Damage"
 TRAIT.category = "Perks (Passive)"
-TRAIT.icon = "fonvui/hud/icons/perks/Better Crits.png"
+TRAIT.icon = "fonvui/hud/icons/perks/2d20_better_criticals.png"
 TRAITS:Register(TRAIT)
 //
 --[[
@@ -166,7 +167,7 @@ TRAIT.uid = "center"
 TRAIT.name = "Center of Mass"
 TRAIT.desc = "Deal +25% more damage to arms and legs."
 TRAIT.category = "Perks (Passive)"
-TRAIT.icon = "fonvui/hud/icons/perks/Center Of Mass.png"
+TRAIT.icon = "fonvui/hud/icons/perks/2d20_center_mass.png"
 TRAIT.OnAttackData = function(self, action, attacker, info)
 	local partString = info.partString
 
@@ -189,7 +190,7 @@ TRAIT.uid = "center"
 TRAIT.name = "Center of Mass"
 TRAIT.desc = "+35% accuracy when targetting the torso."
 TRAIT.category = "Perks (Passive)"
-TRAIT.icon = "fonvui/hud/icons/perks/Center Of Mass.png"
+TRAIT.icon = "fonvui/hud/icons/perks/2d20_center_mass.png"
 TRAIT.OnAttackData = function(self, action, attacker, info)
 	local partString = info.partString
 
@@ -204,7 +205,7 @@ TRAIT.uid = "heave"
 TRAIT.name = "Heave Ho!"
 TRAIT.desc = "May utilize throwing weapons up to 4x movement range."
 TRAIT.category = "Perks (Passive)"
-TRAIT.icon = "fonvui/hud/icons/perks/Heave Ho.png"
+TRAIT.icon = "fonvui/hud/icons/perks/2d20_heave_ho.png"
 TRAITS:Register(TRAIT)
 //
 local TRAIT = {}
@@ -212,7 +213,7 @@ TRAIT.uid = "fist"
 TRAIT.name = "Iron Fist"
 TRAIT.desc = "+15% unarmed (weapon) damage."
 TRAIT.category = "Perks (Passive)"
-TRAIT.icon = "fonvui/hud/icons/perks/Iron Fist.png"
+TRAIT.icon = "fonvui/hud/icons/perks/2d20_iron_fist.png"
 TRAIT.OnAttackData = function(self, action, attacker, info)
 	if(action.uid and action.uid == "punch") then
 		action.dmg = action.dmg*1.15
@@ -235,7 +236,7 @@ TRAIT.uid = "gunslinger"
 TRAIT.name = "Gunslinger"
 TRAIT.desc = "+15% damage with pistols/revolvers using the Guns skill."
 TRAIT.category = "Perks (Passive)"
-TRAIT.icon = "fonvui/hud/icons/perks/Gunslinger.png"
+TRAIT.icon = "fonvui/hud/icons/perks/2d20_gunslinger.png"
 TRAIT.OnAttackData = function(self, action, attacker, info)
 	local weapon = info.weapon
 	if(!weapon) then return end
@@ -254,7 +255,7 @@ TRAIT.uid = "rifleman"
 TRAIT.name = "Rifleman"
 TRAIT.desc = "+15% damage with Precision Rifles and Assault Rifles using the Guns skill."
 TRAIT.category = "Perks (Passive)"
-TRAIT.icon = "fonvui/hud/icons/perks/Rifleman.png"
+TRAIT.icon = "fonvui/hud/icons/perks/2d20_rifleman.png"
 TRAIT.OnAttackData = function(self, action, attacker, info)
 	local weapon = info.weapon
 	if(!weapon) then return end
@@ -294,7 +295,7 @@ TRAIT.uid = "pointman"
 TRAIT.name = "Pointman"
 TRAIT.desc = "+15% damage with SMGs/Shotguns."
 TRAIT.category = "Perks (Passive)"
-TRAIT.icon = "fonvui/hud/icons/perks/Pointman.png"
+TRAIT.icon = "fonvui/hud/icons/perks/2d20_shotgun_surgeon.png"
 TRAIT.OnAttackData = function(self, action, attacker, info)
 	local weapon = info.weapon
 	if(!weapon) then return end
@@ -313,7 +314,7 @@ TRAIT.uid = "heavygunner"
 TRAIT.name = "Heavy Gunner"
 TRAIT.desc = "+15% damage with LMGs."
 TRAIT.category = "Perks (Passive)"
-TRAIT.icon = "fonvui/hud/icons/perks/Heavy Gunner.png"
+TRAIT.icon = "fonvui/hud/icons/perks/2d20_commando.png"
 TRAIT.OnAttackData = function(self, action, attacker, info)
 	local weapon = info.weapon
 	if(!weapon) then return end
@@ -332,7 +333,7 @@ TRAIT.uid = "lasercommando"
 TRAIT.name = "Laser Commando"
 TRAIT.desc = "+15% damage with energy weapons."
 TRAIT.category = "Perks (Passive)"
-TRAIT.icon = "fonvui/hud/icons/perks/Laser Commando.png"
+TRAIT.icon = "fonvui/hud/icons/perks/2d20_laser_commander.png"
 TRAIT.OnAttackData = function(self, action, attacker, info)
 	local weapon = info.weapon
 	if(!weapon) then return end
@@ -351,7 +352,7 @@ TRAIT.uid = "barbarian"
 TRAIT.name = "Barbarian"
 TRAIT.desc = "+15% damage with melee weapons."
 TRAIT.category = "Perks (Passive)"
-TRAIT.icon = "fonvui/hud/icons/perks/Barbarian.png"
+TRAIT.icon = "fonvui/hud/icons/perks/2d20_barbarian.png"
 TRAIT.OnAttackData = function(self, action, attacker, info)
 	local weapon = info.weapon
 	if(!weapon) then return end
@@ -370,7 +371,7 @@ TRAIT.uid = "lifegiver"
 TRAIT.name = "Lifegiver"
 TRAIT.desc = "+50 Max HP."
 TRAIT.category = "Perks (Passive)"
-TRAIT.icon = "fonvui/hud/icons/perks/Life Giver.png"
+TRAIT.icon = "fonvui/hud/icons/perks/2d20_life_giver.png"
 TRAITS:Register(TRAIT)
 //
 local TRAIT = {}
@@ -378,7 +379,7 @@ TRAIT.uid = "quickdraw"
 TRAIT.name = "Quickdraw"
 TRAIT.desc = "May draw and swap weapons without utilizing AP."
 TRAIT.category = "Perks (Passive)"
-TRAIT.icon = "fonvui/hud/icons/perks/Quickdraw.png"
+TRAIT.icon = "fonvui/hud/icons/perks/2d20_quickhands.png"
 TRAITS:Register(TRAIT)
 //
 local TRAIT = {}
@@ -415,7 +416,7 @@ TRAIT.uid = "refractor"
 TRAIT.name = "Refractor"
 TRAIT.desc = "Receive -20% damage from energy weapons."
 TRAIT.category = "Perks (Passive)"
-TRAIT.icon = "fonvui/hud/icons/perks/Refractor.png"
+TRAIT.icon = "fonvui/hud/icons/perks/2d20_refractor.png"
 TRAIT.OnDamageProcess = function(self, attackData, dmgTbl)
 	for k, v in pairs(dmgTbl.damage or {}) do
 		local dmgT = v.dmgT
@@ -432,7 +433,7 @@ TRAIT.uid = "sniper"
 TRAIT.name = "Sniper"
 TRAIT.desc = "+20% accuracy to headshots."
 TRAIT.category = "Perks (Passive)"
-TRAIT.icon = "fonvui/hud/icons/perks/sniper.png"
+TRAIT.icon = "fonvui/hud/icons/perks/2d20_sniper.png"
 TRAIT.OnAttackData = function(self, action, attacker, info)
 	if(info.partString and info.partString == "Head") then
 		action.accuracy = action.accuracy + math.abs(action.accuracy * 0.2)
@@ -442,11 +443,11 @@ TRAITS:Register(TRAIT)
 //
 
 local TRAIT = {}
-TRAIT.uid = "toughness" 
+TRAIT.uid = "toughness"
 TRAIT.name = "Toughness"
 TRAIT.desc = "+10% Damage Resistance."
 TRAIT.category = "Perks (Passive)"
-TRAIT.icon = "fonvui/hud/icons/perks/Toughness.png"
+TRAIT.icon = "fonvui/hud/icons/perks/2d20_toughness.png"
 TRAIT.OnDamageProcess = function(self, attackData, dmgTbl)
 	for k, v in pairs(dmgTbl.damage or {}) do
 		v.dmg = v.dmg * 0.9
@@ -459,7 +460,7 @@ TRAIT.uid = "healer"
 TRAIT.name = "Healer"
 TRAIT.desc = "Heal 25% more when healing other players."
 TRAIT.category = "Perks (Passive)"
-TRAIT.icon = "fonvui/hud/icons/perks/Healer.png"
+TRAIT.icon = "fonvui/hud/icons/perks/2d20_healer.png"
 TRAITS:Register(TRAIT)
 //
 local TRAIT = {}
@@ -467,7 +468,7 @@ TRAIT.uid = "moving_target"
 TRAIT.name = "Moving Target"
 TRAIT.desc = "May move 2 AP distance for the cost of 1."
 TRAIT.category = "Perks (Passive)"
-TRAIT.icon = "fonvui/hud/icons/perks/Moving Target.png"
+TRAIT.icon = "fonvui/hud/icons/perks/2d20_moving_target.png"
 TRAITS:Register(TRAIT)
 --faction innates
 //
@@ -477,7 +478,7 @@ TRAIT.name = "Robotic Body"
 TRAIT.desc = "+30% Kinetic Resistance, -30% Energy Resistance."
 TRAIT.hidden = true
 TRAIT.category = "Perks (Race)"
---TRAIT.icon = "fonvui/hud/icons/perks/Toughness.png"
+TRAIT.icon = "fonvui/hud/icons/perks/Toughness.png"
 TRAIT.onLoaded = function(client)
 	local buff = {
 		uid = TRAIT.uid,
@@ -504,7 +505,7 @@ TRAIT.name = "Ghoul Body"
 TRAIT.desc = "+70% Radiation Resistance."
 TRAIT.category = "Perks (Race)"
 TRAIT.hidden = true
---TRAIT.icon = "fonvui/hud/icons/perks/Toughness.png"
+TRAIT.icon = "fonvui/hud/icons/perks/Toughness.png"
 TRAIT.onLoaded = function(client)
 	local buff = {
 		uid = TRAIT.uid,
@@ -530,7 +531,7 @@ TRAIT.name = "Supermutant Body"
 TRAIT.desc = "+75% Radiation Resistance, -20 Evasion, +100 Health"
 TRAIT.category = "Perks (Race)"
 TRAIT.hidden = true
---TRAIT.icon = "fonvui/hud/icons/perks/Toughness.png"
+TRAIT.icon = "fonvui/hud/icons/perks/Toughness.png"
 TRAIT.onLoaded = function(client)
 	local buff = {
 		uid = TRAIT.uid,
@@ -561,7 +562,7 @@ TRAIT.name = "Thin Arms"
 TRAIT.desc = "You are weak, and wimpy."
 TRAIT.category = "Perks (Attributes)"
 TRAIT.hidden = true
---TRAIT.icon = "fonvui/hud/icons/perks/Toughness.png"
+TRAIT.icon = "fonvui/hud/icons/perks/Toughness.png"
 TRAITS:Register(TRAIT)
 //
 local TRAIT = {}
@@ -570,7 +571,7 @@ TRAIT.name = "Nearsighted"
 TRAIT.desc = "You couldn't hit the broad side of a blurry barn. -20 accuracy."
 TRAIT.category = "Perks (Attributes)"
 TRAIT.hidden = true
---TRAIT.icon = "fonvui/hud/icons/perks/Toughness.png"
+TRAIT.icon = "fonvui/hud/icons/perks/Toughness.png"
 TRAIT.onLoaded = function(client)
 	local buff = {
 		uid = TRAIT.uid,
@@ -594,7 +595,7 @@ TRAIT.name = "Frail Body"
 TRAIT.desc = "You are fragile and easily breakable. Lose -25 max HP."
 TRAIT.category = "Perks (Attributes)"
 TRAIT.hidden = true
---TRAIT.icon = "fonvui/hud/icons/perks/Toughness.png"
+TRAIT.icon = "fonvui/hud/icons/perks/Toughness.png"
 TRAIT.onLoaded = function(client)
 	local buff = {
 		uid = TRAIT.uid,
@@ -615,7 +616,7 @@ TRAIT.name = "Socially Inept"
 TRAIT.desc = "You couldn't talk your way out of an open field."
 TRAIT.category = "Perks (Attributes)"
 TRAIT.hidden = true
---TRAIT.icon = "fonvui/hud/icons/perks/Toughness.png"
+TRAIT.icon = "fonvui/hud/icons/perks/Toughness.png"
 TRAITS:Register(TRAIT)
 //
 local TRAIT = {}
@@ -624,7 +625,7 @@ TRAIT.name = "Village Idiot"
 TRAIT.desc = "u don realy tink gud"
 TRAIT.category = "Perks (Attributes)"
 TRAIT.hidden = true
---TRAIT.icon = "fonvui/hud/icons/perks/Toughness.png"
+TRAIT.icon = "fonvui/hud/icons/perks/Toughness.png"
 TRAITS:Register(TRAIT)
 //
 local TRAIT = {}
@@ -633,7 +634,7 @@ TRAIT.name = "Lethargic"
 TRAIT.desc = "Calling you a slow poke is an insult to slow pokes."
 TRAIT.category = "Perks (Attributes)"
 TRAIT.hidden = true
---TRAIT.icon = "fonvui/hud/icons/perks/Toughness.png"
+TRAIT.icon = "fonvui/hud/icons/perks/Toughness.png"
 TRAITS:Register(TRAIT)
 //
 local TRAIT = {}
@@ -642,7 +643,7 @@ TRAIT.name = "Unlucky"
 TRAIT.desc = "Things just never go well for you, do they?"
 TRAIT.category = "Perks (Attributes)"
 TRAIT.hidden = true
---TRAIT.icon = "fonvui/hud/icons/perks/Toughness.png"
+TRAIT.icon = "fonvui/hud/icons/perks/Toughness.png"
 TRAITS:Register(TRAIT)
 
 //

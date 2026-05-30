@@ -368,17 +368,9 @@ if(SERVER) then
 		
 		local inventory = client:getChar():getInv()
 		nut.item.instance(0, uniqueID, generatedData, 1, 1, function(item) --creates the item
-			local position = client:getItemDropPos()
-			
 			--adds it to the inventory or drops it if inventory full
-			x, y = inventory:findFreePosition(item) 
-			if(x and y) then
-				item:setData("x", x)
-				item:setData("y", y)
-
-				inventory:addItem(item)
-			else
-				item:spawn(position)
+			if not inventory:tryPlaceItem(item) then
+				item:spawn(client:getItemDropPos())
 			end
 		end)
 	end

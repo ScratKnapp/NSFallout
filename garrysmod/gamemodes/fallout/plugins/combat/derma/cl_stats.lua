@@ -320,7 +320,7 @@ function PANEL:Init()
 	end
 	self.skillBars = skillBars
 	
-	local perks = inner:Add("DScrollPanel")
+	local perks = inner:Add("DPanel")
 	perks:SetSize(sizeX*0.32, sizeY)
 	perks:Dock(LEFT)
 	perks:DockMargin(4,4,4,4)
@@ -331,7 +331,8 @@ function PANEL:Init()
 	self.perks = perks
 
 	local levelPerk = (client.canLevelPerk and client:canLevelPerk()) or 0
-	
+	self.levelPerk = levelPerk
+
 	local perkPoints = perks:Add("DLabel")
 	perkPoints:SetSize(0, 40)
 	perkPoints:Dock(TOP)
@@ -340,75 +341,27 @@ function PANEL:Init()
 	perkPoints.Paint = function(self, w, h)
 		--surface.SetDrawColor(255,0,0)
 		--surface.DrawRect(0,0,w,h)
-		
+
 		surface.SetFont("nutMediumFont")
-		
+
 		local pointsMsg = "Perk Points: " ..levelPerk
-		
+
 		local textSizeX, textSizeY = surface.GetTextSize(pointsMsg)
-		
+
 		surface.SetTextPos(w*0.5 - textSizeX*0.5, 0)--h*0.5 - textSizeY*0.5)
 		surface.SetTextColor(0,238,0)
 		surface.DrawText(pointsMsg)
 	end
 
-	for k, v in pairs(client:getTraitsData()) do
-		local name = v.name
-		local desc = v.desc
-	
-		local perkPanel = perks:Add("DButton")
-		perkPanel:SetSize(sizeX*0.33, sizeY*0.1)
-		perkPanel:SetText("")
-		perkPanel:SetTooltip()
-		perkPanel:Dock(TOP)
-		perkPanel:DockMargin(2,2,2,2)
-		perkPanel.Paint = function(self, w, h)
-			surface.SetFont("nutMediumFont")
-		
-			surface.SetDrawColor(0, 0, 0, 200)
-			surface.DrawRect(0, 0, w, h)
-
-			surface.SetDrawColor(50, 255, 50)
-			surface.DrawOutlinedRect(0, 0, w, h, 2)
-			
-			local textSizeX, textSizeY = surface.GetTextSize(name)
-			surface.SetTextColor(50, 255, 50)
-			surface.SetTextPos(w*0.5-textSizeX*0.5, h*0.5-textSizeY*0.5) 
-			surface.DrawText(name)
-			
-			if(v.icon) then
-				if(!v.iconCache) then
-					v.iconCache = Material(v.icon)
-				end
-			
-				local ratio = h/160
-			
-				surface.SetMaterial(v.iconCache or "")
-				surface.SetDrawColor(50, 255, 50)
-				surface.DrawTexturedRect(0, 0, 145*ratio, 160*ratio)
-			end
-		end
-		perkPanel.OnCursorEntered = function(button)
-			local popup = self:PerkPopup(v, button)
-			
-			popup:MoveRightOf(self, -ScrW()*0.3)
-		end
-		perkPanel.OnCursorExited = function(button)
-			if(IsValid(self.perkPopup)) then
-				self.perkPopup:Remove()
-			end
-		end
-	end
-	
-	--new perk button
+	--toggle between owned perks and unlockable perks (only when points are available)
 	if (levelPerk > 0) then
-		local perkPanel = perks:Add("DButton")
-		perkPanel:SetSize(sizeX*0.33, sizeY*0.1)
-		perkPanel:SetText("")
-		perkPanel:SetTooltip("")
-		perkPanel:Dock(TOP)
-		perkPanel:DockMargin(2,2,2,2)
-		perkPanel.Paint = function(self, w, h)
+		local toggle = perks:Add("DButton")
+		toggle:SetSize(0, sizeY*0.07)
+		toggle:SetText("")
+		toggle:SetTooltip("")
+		toggle:Dock(TOP)
+		toggle:DockMargin(2,2,2,6)
+		toggle.Paint = function(panel, w, h)
 			surface.SetFont("nutMediumFont")
 
 			surface.SetDrawColor(0, 0, 0, 200)
@@ -416,21 +369,31 @@ function PANEL:Init()
 
 			surface.SetDrawColor(50, 255, 50)
 			surface.DrawOutlinedRect(0, 0, w, h, 2)
-			
-			local name = "Choose New Perk"
-		
-			local textSizeX, textSizeY = surface.GetTextSize(name)
-			
+
+			local label = self.showAvailablePerks and "View My Perks" or "Unlock New Perk"
+
+			local textSizeX, textSizeY = surface.GetTextSize(label)
+
 			surface.SetTextColor(50, 255, 50)
-			surface.SetTextPos(w*0.5-textSizeX*0.5, h*0.5-textSizeY*0.5) 
-			surface.DrawText(name)
+			surface.SetTextPos(w*0.5-textSizeX*0.5, h*0.5-textSizeY*0.5)
+			surface.DrawText(label)
 		end
-		perkPanel.DoClick = function(panel)
-			self:PerkChoose(panel)
+		toggle.DoClick = function(panel)
+			self.showAvailablePerks = not self.showAvailablePerks
+			self:PopulatePerks()
 		end
-		
-		self.newPerk = perkPanel
+
+		self.perkToggle = toggle
 	end
+
+	local perkList = perks:Add("DScrollPanel")
+	perkList:Dock(FILL)
+	perkList:DockMargin(0,0,0,0)
+	perkList.Paint = function(self, w, h)
+	end
+	self.perkList = perkList
+
+	self:PopulatePerks()
 	
 	local XPBar = vgui.Create("DPanel")
 	XPBar:SetSize(sizeX, ScrH()*0.03)
@@ -719,113 +682,127 @@ function PANEL:PerkPopup(perkData, button)
 	return perkPopup
 end
 
-function PANEL:PerkChoose(button)
-	if(IsValid(self.perkChoose)) then self.perkChoose:Remove() end
-	
+--fills the perks column either with owned perks or with perks available to unlock
+function PANEL:PopulatePerks()
+	local list = self.perkList
+	if(!IsValid(list)) then return end
+
+	list:Clear()
+
 	local client = LocalPlayer()
+	local sizeX, sizeY = self.perks:GetSize()
 
-	--so we can exclude them
-	local clientPerks = client:getTraitsData()
+	local showAvailable = self.showAvailablePerks and (self.levelPerk or 0) > 0
 
-	local perkChoose = vgui.Create("DFrame")
-	perkChoose:SetSize(ScrW()*0.3, ScrH()*0.3)
-	perkChoose:Center()
-	perkChoose:SetX(ScrW()*0.5)
-	perkChoose:SetTitle("")
-	--perkPopup:SetPos(button:GetPos())
-	perkChoose.Paint = function(self, w, h)
-		surface.SetDrawColor(0,0,0)
-		surface.DrawRect(0,0,w,h)
-	end
-	
-	perkChoose:MakePopup()
-	perkChoose.OnKeyCodePressed = function(this, key)
-		if (key == KEY_F1) then
-			self:Remove()
-			
-			if (IsValid(nut.gui.menu)) then
-				nut.gui.menu:remove()
-			end
-		end
-	end
-	
-	local perkScroll = perkChoose:Add("DScrollPanel")
-	perkScroll:Dock(FILL)
-	perkScroll:DockMargin(0,0,0,0)
-	
-	local sizeX, sizeY = perkChoose:GetSize()
+	if(showAvailable) then
+		for k, v in pairs(TRAITS.traits) do
+			if(v.hidden) then continue end
+			if(client:hasTrait(k)) then continue end
 
-	local perks = TRAITS.traits
-	
-	for k, v in pairs(perks) do
-		if(v.hidden) then continue end
-		if(client:hasTrait(k)) then continue end
-	
-		local name = v.name
-		local desc = v.desc
-	
-		local perkPanel = perkScroll:Add("DButton")
-		perkPanel:SetSize(sizeX*0.33, sizeY*0.1)
-		perkPanel:SetText("")
-		perkPanel:SetTooltip("")
-		perkPanel:Dock(TOP)
-		perkPanel:DockMargin(2,2,2,2)
-		perkPanel.Paint = function(self, w, h)
-			surface.SetFont("nutMediumFont")
-		
-			local textSizeX, textSizeY = surface.GetTextSize(name)
-			
-			surface.SetTextColor(50, 255, 50)
-			surface.SetTextPos(w*0.5-textSizeX*0.5, h*0.5-textSizeY*0.5) 
-			surface.DrawText(name)
+			local name = v.name
 
-			surface.SetDrawColor(50, 255, 50)
-			surface.DrawOutlinedRect(0, 0, w, h, 2)
-			
-			if(v.icon) then
-				if(!v.iconCache) then
-					v.iconCache = Material(v.icon)
-				end
-			
-				local ratio = h/160
-			
-				surface.SetMaterial(v.iconCache or "")
+			local perkPanel = list:Add("DButton")
+			perkPanel:SetSize(sizeX*0.33, sizeY*0.1)
+			perkPanel:SetText("")
+			perkPanel:SetTooltip("")
+			perkPanel:Dock(TOP)
+			perkPanel:DockMargin(2,2,2,2)
+			perkPanel.Paint = function(panel, w, h)
+				surface.SetFont("nutMediumFont")
+
+				surface.SetDrawColor(0, 0, 0, 200)
+				surface.DrawRect(0, 0, w, h)
+
 				surface.SetDrawColor(50, 255, 50)
-				surface.DrawTexturedRect(0, 0, 145*ratio, 160*ratio)
-			end
-		end
-		perkPanel.OnCursorEntered = function(button)
-			local popup = self:PerkPopup(v, button)
-			
-			popup:MoveRightOf(self, -ScrW()*0.4)
-		end
-		perkPanel.OnCursorExited = function(button)
-			if(IsValid(self.perkPopup)) then
-				self.perkPopup:Remove()
-			end
-		end
-		perkPanel.DoClick = function(button)
-			Derma_Query("Choose " ..v.name.. "?", "Confirmation", "Yes", function()
-				if(IsValid(self.newPerk)) then
-					self.newPerk:Remove()
-				end				
-				
-				if(IsValid(perkChoose)) then
-					perkChoose:Remove()
+				surface.DrawOutlinedRect(0, 0, w, h, 2)
+
+				local textSizeX, textSizeY = surface.GetTextSize(name)
+				surface.SetTextColor(50, 255, 50)
+				surface.SetTextPos(w*0.5-textSizeX*0.5, h*0.5-textSizeY*0.5)
+				surface.DrawText(name)
+
+				if(v.icon) then
+					if(!v.iconCache) then
+						v.iconCache = Material(v.icon)
+					end
+
+					local ratio = h/160
+
+					surface.SetMaterial(v.iconCache or "")
+					surface.SetDrawColor(50, 255, 50)
+					surface.DrawTexturedRect(0, 0, 145*ratio, 160*ratio)
 				end
-			
-				netstream.Start("perkAdd", v.uid)
-				
-				timer.Simple(0.5, function()
-					self:ReopenPanel()
+			end
+			perkPanel.OnCursorEntered = function(button)
+				local popup = self:PerkPopup(v, button)
+
+				popup:MoveRightOf(self, -ScrW()*0.3)
+			end
+			perkPanel.OnCursorExited = function(button)
+				if(IsValid(self.perkPopup)) then
+					self.perkPopup:Remove()
+				end
+			end
+			perkPanel.DoClick = function(button)
+				Derma_Query("Unlock " ..v.name.. "?", "Confirmation", "Yes", function()
+					netstream.Start("perkAdd", v.uid)
+
+					timer.Simple(0.5, function()
+						self:ReopenPanel()
+					end)
+				end, "No", function()
+
 				end)
-			end, "No", function()
-			
-			end)
+			end
+		end
+	else
+		for k, v in pairs(client:getTraitsData()) do
+			local name = v.name
+
+			local perkPanel = list:Add("DButton")
+			perkPanel:SetSize(sizeX*0.33, sizeY*0.1)
+			perkPanel:SetText("")
+			perkPanel:SetTooltip()
+			perkPanel:Dock(TOP)
+			perkPanel:DockMargin(2,2,2,2)
+			perkPanel.Paint = function(panel, w, h)
+				surface.SetFont("nutMediumFont")
+
+				surface.SetDrawColor(0, 0, 0, 200)
+				surface.DrawRect(0, 0, w, h)
+
+				surface.SetDrawColor(50, 255, 50)
+				surface.DrawOutlinedRect(0, 0, w, h, 2)
+
+				local textSizeX, textSizeY = surface.GetTextSize(name)
+				surface.SetTextColor(50, 255, 50)
+				surface.SetTextPos(w*0.5-textSizeX*0.5, h*0.5-textSizeY*0.5)
+				surface.DrawText(name)
+
+				if(v.icon) then
+					if(!v.iconCache) then
+						v.iconCache = Material(v.icon)
+					end
+
+					local ratio = h/160
+
+					surface.SetMaterial(v.iconCache or "")
+					surface.SetDrawColor(50, 255, 50)
+					surface.DrawTexturedRect(0, 0, 145*ratio, 160*ratio)
+				end
+			end
+			perkPanel.OnCursorEntered = function(button)
+				local popup = self:PerkPopup(v, button)
+
+				popup:MoveRightOf(self, -ScrW()*0.3)
+			end
+			perkPanel.OnCursorExited = function(button)
+				if(IsValid(self.perkPopup)) then
+					self.perkPopup:Remove()
+				end
+			end
 		end
 	end
-	
-	self.perkChoose = perkChoose
 end
 
 function PANEL:Paint(w,h)
@@ -873,8 +850,3 @@ function PANEL:ReopenPanel()
 end
 vgui.Register("nutStats", PANEL, "EditablePanel")
 
-hook.Add("CreateMenuButtons", "nutStats", function(tabs)
-	tabs["Stats"] = function(panel)
-		panel:Add("nutStats")
-	end
-end)

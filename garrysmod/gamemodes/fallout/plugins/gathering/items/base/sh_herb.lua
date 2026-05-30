@@ -70,18 +70,18 @@ ITEM.functions.Stack = {
 			end
 		end
 		
-		if(total <= item.maxstack) then
+		if(total <= (NWL and NWL.GetStackLimit and NWL.GetStackLimit(item.maxstack) or item.maxstack)) then
 			item:setData("Amount", total)
 		else
 			local position = client:getItemDropPos()
 		
-			for i = 1, math.floor(total / item.maxstack) do
+			for i = 1, math.floor(total / (NWL and NWL.GetStackLimit and NWL.GetStackLimit(item.maxstack) or item.maxstack)) do
 				timer.Simple(i/5, function()
-					inventory:addSmart(item.uniqueID, 1, position, {Amount = item.maxstack})
+					inventory:addSmart(item.uniqueID, 1, position, {Amount = (NWL and NWL.GetStackLimit and NWL.GetStackLimit(item.maxstack) or item.maxstack)})
 				end)
 			end
 			
-			local remainder = total - (item.maxstack * math.floor(total / item.maxstack))
+			local remainder = total - ((NWL and NWL.GetStackLimit and NWL.GetStackLimit(item.maxstack) or item.maxstack) * math.floor(total / (NWL and NWL.GetStackLimit and NWL.GetStackLimit(item.maxstack) or item.maxstack)))
 			if(remainder > 0) then
 				item:setData("Amount", remainder)
 			else
@@ -109,9 +109,9 @@ ITEM.onCombine = function(itemSelf, itemTarget)
 
 		local combined = amountSelf + amountTarget
 		
-		if(combined > itemSelf.maxstack) then
-			itemSelf:setData("Amount", itemSelf.maxstack)
-			itemTarget:setData("Amount", combined - itemSelf.maxstack)
+		if(combined > (NWL and NWL.GetStackLimit and NWL.GetStackLimit(itemSelf.maxstack) or itemSelf.maxstack)) then
+			itemSelf:setData("Amount", (NWL and NWL.GetStackLimit and NWL.GetStackLimit(itemSelf.maxstack) or itemSelf.maxstack))
+			itemTarget:setData("Amount", combined - (NWL and NWL.GetStackLimit and NWL.GetStackLimit(itemSelf.maxstack) or itemSelf.maxstack))
 		else
 			itemTarget:remove()
 			itemSelf:setData("Amount", amountSelf + amountTarget)

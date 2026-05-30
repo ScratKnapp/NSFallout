@@ -79,8 +79,22 @@ hook.Add("nut_ActionAttackData", "nut_PartAttackModify", function(action, attack
 	if(weapon) then
 		weaponItem = nut.item.instances[weapon]
 	end
-	
+
 	local partMod = PLUGIN:getPartsModifiers(info.partString, weaponItem)
+
+	-- Per-model limb modifiers from CYR CombatModel registry. Lets pseudo-limbs
+	-- (Tail, Stinger, Front Left Leg, ...) carry their own accuracyMult / dmg
+	-- without having to extend the base parts table. Values overlay the
+	-- standard part mods so custom limbs still benefit from weapon partMod.
+	local target = info.trace and info.trace.Entity
+	if NWL and NWL.CombatModel and IsValid(target) and info.partString then
+		local limb = NWL.CombatModel.GetLimb(target, info.partString)
+		if limb then
+			if limb.dmg          then partMod.dmg          = (partMod.dmg or 1) * limb.dmg end
+			if limb.accuracyMult then partMod.accuracyMult = (partMod.accuracyMult or 1) * limb.accuracyMult end
+			if limb.accuracy     then partMod.accuracy     = (partMod.accuracy or 0) + limb.accuracy end
+		end
+	end
 
 	action.dmg = PLUGIN:PartAttackModifyDamage(action.dmg, partMod)
 	action.accuracy = PLUGIN:PartAttackModifyAccuracy(action.accuracy, partMod)

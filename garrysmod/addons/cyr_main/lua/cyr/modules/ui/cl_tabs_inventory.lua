@@ -1,0 +1,1 @@
+print("Inventory Tab Disabled")
