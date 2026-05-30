@@ -444,7 +444,7 @@ function DrawPly.PERKS()
         end)
     end
 
-    local amtss = (char:getSkillLevel("perkpoints") or 1) - 1
+    local amtss = char:getSkillLevel("perkpoints") or 0
     draw.DrawText("PERK POINTS: " .. amtss, MainFontName .. "@42", 950, 64, amtss > 0 and pip_color or color_white, TEXT_ALIGN_RIGHT)
     local hovered = nil
     local modal_open = PERK_MODAL ~= nil
