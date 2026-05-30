@@ -410,6 +410,14 @@ local function getPartListFor(ent)
 	return {"Head", "Body", "Left Arm", "Right Arm", "Left Leg", "Right Leg"}
 end
 
+-- V.A.T.S. only acts on players and nut_combat scripted entities (the combat
+-- base sets ENT.combat = true, inherited by every nut_combat_* entity). Gates
+-- both the lock-on target list AND the per-limb chip overlay, so limb labels
+-- never appear on props, ragdolls or any other skeletal model.
+local function isVatsEligible(ent)
+	return IsValid(ent) and (ent:IsPlayer() or ent.combat == true)
+end
+
 -- Closest-bone fallback for HitGroup detection. Source returns HITGROUP_GENERIC
 -- for models without hitboxes; when that happens we map the trace HitPos to the
 -- nearest known part bone instead, so limb targeting still works on models
@@ -589,15 +597,16 @@ function SWEP:DrawHUD()
 	-- against combat-registered entities or players.
 	if (action and action.selfOnly) or altPressed then
 		self.viewed = user
-	elseif IsValid(entity) and (entity.combat or entity:IsPlayer()) then
+	elseif isVatsEligible(entity) then
 		self.viewed = entity
 	else
 		self.viewed = nil
 	end
 
-	-- self.vatsTarget is broader: any aimed entity with a skeleton gets the
-	-- per-part hit-chance chips, even if it isn't a combat entity.
-	if IsValid(entity) and entity ~= client and entity:GetModel() and entity.LookupBone then
+	-- self.vatsTarget drives the per-limb hit-chance chips. Restrict it to
+	-- players and nut_combat entities so limb labels never appear on props,
+	-- ragdolls or other skeletal models.
+	if entity ~= client and isVatsEligible(entity) then
 		self.vatsTarget = entity
 	else
 		self.vatsTarget = nil
@@ -1490,8 +1499,8 @@ if CLIENT then
 		local origin = ply:GetPos()
 		local out = {}
 		for _, ent in ipairs(ents.GetAll()) do
-			if IsValid(ent) and ent ~= ply
-				and (ent.combat or ent:IsPlayer())
+			if ent ~= ply
+				and isVatsEligible(ent)
 				and ent:GetPos():DistToSqr(origin) <= VATS_RANGE_SQR
 				and self:VATSCanSee(ent) then
 				out[#out + 1] = ent
