@@ -59,37 +59,6 @@ hook.Add("TooltipInitialize", "nutItemTooltip", function(self, panel)
     self:SetTextColor(TERM_BRIGHT)
 end)
 
-hook.Add("SetupQuickMenu", "CyrColor", function(PANEL)
-    function PANEL:addSlider(text, callback, min, max, decimal)
-        local panel = self.scroll:Add("DPanel")
-        panel:SetTall(56)
-        panel:Dock(TOP)
-        panel:DockMargin(0, 1, 0, 0)
-        panel.Paint = paintButton
-        local label = panel:Add("DLabel")
-        label:SetFont("nutMediumLightFont")
-        label:SetText(text)
-        label:SizeToContents()
-        label:SetPos(8, 4)
-        label:SetTextColor(color_white)
-        label:SetExpensiveShadow(1, Color(0, 0, 0, 150))
-        local slider = panel:Add("DNumSlider")
-        slider:Dock(BOTTOM)
-        slider:DockMargin(8, 0, 8, 8)
-        slider:SetMin(tonumber(min) or 0)
-        slider:SetMax(tonumber(max) or 1)
-        slider:SetDecimals(tonumber(decimal) or 2)
-        -- Note: DNumSlider usually takes value via SetValue.
-        -- We probably need a 'default' or 'value' argument.
-        -- NutScript usually passes: text, callback, value, min, max, decimals?
-        -- sh_plugin.lua:
-        -- menu:addSlider("Desc Width Modifier", func, val, min, max, decimal)
-        -- So 6 args if we include value.
-        -- Let's re-read sh_plugin.lua line 26:
-        -- menu:addSlider(text, callback, value, min, max, decimal)
-    end
-end)
-
 -- Wait, I should rewrite the whole hook for clarity and correctness.
 -- The previous replace call was too small. Let me replace the entire hook block.
 hook.Add("TooltipPaint", "nutItemTooltip", function(self, w, h)

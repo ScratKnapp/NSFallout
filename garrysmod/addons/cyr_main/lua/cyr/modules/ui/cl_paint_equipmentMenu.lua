@@ -369,7 +369,7 @@ local PANEL = {}
 function PANEL:Init()
     if IsValid(nut.gui.quick) then nut.gui.quick:Remove() end
     nut.gui.quick = self
-    self:SetSize(0,0)
+    self:SetSize(400, 36)
     self:SetPos(ScrW() - 36, -36)
     self:MakePopup()
     self:SetKeyboardInputEnabled(false)
@@ -421,7 +421,8 @@ function PANEL:Init()
     self.scroll:SetSize(self:GetWide(), ScrH() * 0.5)
     self:MoveTo(self.x, 30, 0.05)
     self.items = {}
-  
+
+    hook.Run("SetupQuickMenu", self)
 end
 
 local function paintButton(button, w, h)

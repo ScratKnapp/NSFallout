@@ -177,6 +177,10 @@ local deltSt = 0
 -- before firing the nut_respec netstream. Cleared on confirm/cancel and on
 -- pipboy page change (see pip_changepage hook below).
 local RESPEC_MODAL = false
+-- Which attribute's "+" button is held with LMB, and when the next auto-spend
+-- is due. Mirrors the SKILLS tab's hold-to-repeat behaviour.
+local SPECIAL_HOLD_KEY = nil
+local SPECIAL_HOLD_NEXT = 0
 function DrawPly.SPECIAL()
     local ply = LocalPlayer()
     local character = ply:getChar()
@@ -232,13 +236,42 @@ function DrawPly.SPECIAL()
         -- isn't highlighted. Hidden entirely when no specialpoints remain.
         if amts > 0 then
             local bx, by, bs = 515, 120 + (y * 44), 32
+            local attribKey = attri_a[y]
+            local hovered = AddUIButton(bx, by, bs, bs)
+            local holding = hovered and input.IsMouseDown(MOUSE_LEFT)
+
+            -- Hover: faint translucent pip_color wash over the square.
+            if hovered then
+                surface.SetDrawColor(pip_color.r, pip_color.g, pip_color.b, 45)
+                surface.DrawRect(bx, by, bs, bs)
+            end
+            -- Holding: the square fills bottom-up with translucent pip_color as a
+            -- charge meter toward the next 0.2s increment.
+            if holding then
+                local progress = 1 - math.Clamp((SPECIAL_HOLD_NEXT - CurTime()) / 0.2, 0, 1)
+                local fh = bs * progress
+                surface.SetDrawColor(pip_color.r, pip_color.g, pip_color.b, 140)
+                surface.DrawRect(bx, by + bs - fh, bs, fh)
+            end
             surface.SetDrawColor(pip_color)
             surface.DrawOutlinedRect(bx, by, bs, bs)
-            local hit = NzGUI:DrawTextButton("+", MainFontName .. "@42", bx, by - 6, bs, bs, 0, pip_color)
-            if hit then
-                local attribKey = attri_a[y]
-                local newVal = (character:getAttrib(attribKey, 0) or 0) + 1
-                netstream.Start("statIncrease", attribKey, newVal)
+            draw.SimpleText("+", MainFontName .. "@42", bx + bs * 0.5, by + bs * 0.5, pip_color, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
+            -- Hold LMB to keep spending: fire once on press, then every 0.2s.
+            -- statIncrease takes a target value (current + 1), recomputed fresh
+            -- each tick so the server's update is reflected.
+            if holding then
+                if SPECIAL_HOLD_KEY ~= attribKey then
+                    SPECIAL_HOLD_KEY = attribKey
+                    SPECIAL_HOLD_NEXT = 0 -- new hold: fire immediately
+                end
+                if CurTime() >= SPECIAL_HOLD_NEXT then
+                    netstream.Start("statIncrease", attribKey, (character:getAttrib(attribKey, 0) or 0) + 1)
+                    surface.PlaySound("buttons/button14.wav")
+                    SPECIAL_HOLD_NEXT = CurTime() + 0.2
+                end
+            elseif SPECIAL_HOLD_KEY == attribKey then
+                SPECIAL_HOLD_KEY = nil -- released or moved off this button
             end
         end
     end
@@ -528,6 +561,10 @@ function DrawPly.PERKS()
     end
 end
 
+-- Which skill's "+" button is currently being held with LMB, and when the next
+-- auto-increment is due. Persisted across frames so a held click keeps spending.
+local SKILL_HOLD_KEY = nil
+local SKILL_HOLD_NEXT = 0
 function DrawPly.SKILLS()
     local height = 34
     local width = 400
@@ -578,13 +615,42 @@ function DrawPly.SKILLS()
         -- reached the 100 cap.
         if amt > 0 and not atCap then
             local bx, by, bs = 525, offset + 2 + (y * height), 28
+            local hovered = AddUIButton(bx, by, bs, bs)
+            local holding = hovered and input.IsMouseDown(MOUSE_LEFT)
+
+            -- Hover: faint translucent pip_color wash over the square.
+            if hovered then
+                surface.SetDrawColor(pip_color.r, pip_color.g, pip_color.b, 45)
+                surface.DrawRect(bx, by, bs, bs)
+            end
+            -- Holding: the square fills bottom-up with translucent pip_color as a
+            -- charge meter toward the next 0.2s increment.
+            if holding then
+                local progress = 1 - math.Clamp((SKILL_HOLD_NEXT - CurTime()) / 0.2, 0, 1)
+                local fh = bs * progress
+                surface.SetDrawColor(pip_color.r, pip_color.g, pip_color.b, 140)
+                surface.DrawRect(bx, by + bs - fh, bs, fh)
+            end
+            -- Redraw the outline on top of the fill so it stays crisp.
             surface.SetDrawColor(pip_color)
             surface.DrawOutlinedRect(bx, by, bs, bs)
-            local hit = NzGUI:DrawTextButton("+", MainFontName .. "@32", bx, by - 4, bs, bs, 0, pip_color)
-            if hit then
-                -- See the hold-R branch above: skillIncrease is a delta on the
-                -- server side (skills[key] += value), so we send 1.
-                netstream.Start("skillIncrease", v[1], 1)
+            draw.SimpleText("+", MainFontName .. "@32", bx + bs * 0.5, by + bs * 0.5, pip_color, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
+            -- Hold LMB on the button to keep spending: fire once on press, then
+            -- repeat every 0.2s. skillIncrease is a delta server-side (skills[key]
+            -- += value), so we always send 1. The server caps at 100 / 0 points.
+            if holding then
+                if SKILL_HOLD_KEY ~= v[1] then
+                    SKILL_HOLD_KEY = v[1]
+                    SKILL_HOLD_NEXT = 0 -- new hold: fire immediately
+                end
+                if CurTime() >= SKILL_HOLD_NEXT then
+                    netstream.Start("skillIncrease", v[1], 1)
+                    surface.PlaySound("buttons/button14.wav")
+                    SKILL_HOLD_NEXT = CurTime() + 0.2
+                end
+            elseif SKILL_HOLD_KEY == v[1] then
+                SKILL_HOLD_KEY = nil -- released or moved off this button
             end
         end
     end

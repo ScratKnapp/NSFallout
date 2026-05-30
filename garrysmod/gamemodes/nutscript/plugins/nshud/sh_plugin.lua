@@ -22,11 +22,7 @@ local toScreen = FindMetaTable("Vector").ToScreen
 local NUT_CVAR_NSHUD_DESCWIDTH = CreateClientConVar("nut_hud_descwidth", 0.5, true, false)
 
 function PLUGIN:SetupQuickMenu(menu)
-	menu:addCategory("NSHUD")
-	menu:addSlider("Desc Width Modifier", function(panel, value)
-		NUT_CVAR_NSHUD_DESCWIDTH:SetFloat(value)
-	end, NUT_CVAR_NSHUD_DESCWIDTH:GetFloat(), 0.1, 1, 2)
-	menu:addSpacer()
+
 end
 
 function PLUGIN:CanDrawAmmoHUD(weapon)
