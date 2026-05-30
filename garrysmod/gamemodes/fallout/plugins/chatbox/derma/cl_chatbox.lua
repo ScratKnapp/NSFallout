@@ -11,7 +11,7 @@ local PANEL = {}
 		nut.gui.chat = self
 
 		self:SetSize(w, h)
-		self:SetPos(border, scrH - h - border)
+		self:SetPos(border, scrH - h - border - (GetConVar("cyr_ui_y_offset") and ScrH() * (GetConVar("cyr_ui_y_offset"):GetFloat() / 100) or 0))
 
 		self.active = false
 

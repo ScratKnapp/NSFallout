@@ -414,8 +414,13 @@ end
 -- base sets ENT.combat = true, inherited by every nut_combat_* entity). Gates
 -- both the lock-on target list AND the per-limb chip overlay, so limb labels
 -- never appear on props, ragdolls or any other skeletal model.
+-- Noclipping entities (admins flying around) are excluded — MOVETYPE_NOCLIP
+-- specifically, so flying combat NPCs (bloatfly, eyebot, …) using MOVETYPE_FLY
+-- still count.
 local function isVatsEligible(ent)
-	return IsValid(ent) and (ent:IsPlayer() or ent.combat == true)
+	if not IsValid(ent) then return false end
+	if ent:GetMoveType() == MOVETYPE_NOCLIP then return false end
+	return ent:IsPlayer() or ent.combat == true
 end
 
 -- Closest-bone fallback for HitGroup detection. Source returns HITGROUP_GENERIC
