@@ -1,7 +1,7 @@
-ITEM.name = "Potent Healing Salve"
-ITEM.desc = "The salve to cure a Tribals woes, stinging yet effective."
+ITEM.name = "Super Stimpak"
+ITEM.desc = "A more advanced stimpak that comes with a hypodermic needle and an additional vial with more powerful drugs."
 ITEM.uniqueID = "medical_accelerant"
-ITEM.model = "models/maxib123/healingpowder.mdl "
+ITEM.model = "models/mosi/fnv/props/health/superstimpak.mdl"
 ITEM.quantity2 = 1
 ITEM.price = 140
 ITEM.width = 1

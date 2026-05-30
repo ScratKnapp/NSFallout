@@ -1,7 +1,7 @@
-ITEM.name = "Healing Poultice"
-ITEM.desc = "The poultice that has saved a thousand lives, relief."
+ITEM.name = "Stimpak"
+ITEM.desc = "A pre-war syringe full of a mix of stimulants and healing agents to boost regenerative function."
 ITEM.uniqueID = "medical_stimpack"
-ITEM.model = "models/maxib123/healingpowder.mdl "
+ITEM.model = "models/mosi/fallout4/props/aid/stimpak.mdl"
 ITEM.quantity2 = 1
 ITEM.price = 75
 ITEM.width = 1
@@ -12,4 +12,4 @@ ITEM.stomach = false
 
 ITEM.permit = "permit_medical"
 
-ITEM.hp = 50
+ITEM.hp = 65
