@@ -174,6 +174,31 @@ end
 
 SimpleInv:register("simple")
 
+-- Carry weight is derived from Strength and stored on the character's inventory
+-- as "maxWeight" so SimpleInv:getMaxWeight() (and the pipboy/HUD that read it)
+-- pick it up without recomputing. Recompute triggers (str change, config change,
+-- char swap) live in sh_plugin.lua.
+if (SERVER) then
+	local charMeta = nut.meta.character
+
+	function charMeta:CalculateMaxCarryWeight()
+		local inv = self:getInv()
+		if (not inv) then return end
+
+		-- Use BASE Strength (not :getAttrib, which folds in temporary boosts): base
+		-- changes always fire OnCharAttribUpdated, so the stored cap can't desync the
+		-- way it would if a boost expired with no recompute trigger.
+		local str = self:getAttribs()["str"] or 0
+		local base = nut.config.get("FalloutStartCarryWeight", 90)
+		local perStr = nut.config.get("FalloutStrCarryWeight", 10)
+		local maxWeight = base + (str * perStr)
+
+		inv:setData("maxWeight", maxWeight)
+
+		return maxWeight
+	end
+end
+
 -- Inventory-type-agnostic placement helpers. The grid-only
 -- findFreePosition + setData x/y + addItem pattern crashes on the simple
 -- inventory (findFreePosition is nil), so install slot helpers on both
