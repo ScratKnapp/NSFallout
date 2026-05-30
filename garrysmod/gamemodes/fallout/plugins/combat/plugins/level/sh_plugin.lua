@@ -582,10 +582,8 @@ if(SERVER) then
 		local char = client:getChar()
 		if(!char) then return end
 
-		-- Never trust the client for which stat or by how much: the old handler
-		-- did char:setAttrib(attrib, value) with the sent target, so one point
-		-- could set any attribute to any number. Reject unknown keys and let the
-		-- server -- not the packet -- decide the new level (a fixed +1).
+		-- Never trust the client for which stat or by how much. Reject unknown
+		-- keys and let the server -- not the packet -- decide the new level (+1).
 		local attribTbl = nut.attribs.list[attrib]
 		if(!attribTbl) then return end
 

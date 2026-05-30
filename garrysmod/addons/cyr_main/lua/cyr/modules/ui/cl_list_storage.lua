@@ -199,7 +199,7 @@ local ROW = {}
 			self.quantity = self.quantity + itemAmount(it)
 			self.weight   = self.weight + ((GET_ITEM_WEIGHT and GET_ITEM_WEIGHT(it))
 				or (type(it.weight) == "function" and it:weight(it))
-				or it.weight or 1)
+				or it.weight or 0)
 		end
 	end
 
@@ -1105,7 +1105,7 @@ local PANEL = {}
 		local function available()
 			local q = sourceQuantity()
 			if destInv and isfunction(destInv.getMaxWeight) and isfunction(destInv.getWeight) then
-				local base = (type(item.weight) == "function" and item:weight(item)) or item.weight or 1
+				local base = (type(item.weight) == "function" and item:weight(item)) or item.weight or 0
 				if base > 0 then
 					local fit = math.floor((destInv:getMaxWeight() - destInv:getWeight()) / base)
 					q = math.min(q, math.max(0, fit))
@@ -1156,7 +1156,7 @@ local PANEL = {}
 		self.hoveredValue  = (item.getPrice and item:getPrice()) or item.price or 0
 		self.hoveredWeight = (GET_ITEM_WEIGHT and GET_ITEM_WEIGHT(item))
 			or (type(item.weight) == "function" and item:weight(item))
-			or item.weight or 1
+			or item.weight or 0
 
 		-- Extra weapon / ammo stats for the footer stat block. Weapons
 		-- carry .dmg keyed by ammo type, .magSize, and .ammo on the

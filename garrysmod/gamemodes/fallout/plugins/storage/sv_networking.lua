@@ -161,7 +161,7 @@ net.Receive("cyrStorageTransferQuantity", function(_, client)
 	-- Clamp to the destination inventory's carry-weight. Storage has its own
 	-- weight cap too, so depositing is limited the same way as withdrawing.
 	if (isfunction(toInv.getMaxWeight)) then
-		local base = (type(item.weight) == "function" and item:weight(item)) or item.weight or 1
+		local base = (type(item.weight) == "function" and item:weight(item)) or item.weight or 0
 		if (base > 0) then
 			amount = math.min(amount, math.floor((toInv:getMaxWeight() - toInv:getWeight()) / base))
 		end

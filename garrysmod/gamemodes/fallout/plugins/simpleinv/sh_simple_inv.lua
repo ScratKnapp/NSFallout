@@ -8,7 +8,7 @@ end
 
 
 function GET_ITEM_WEIGHT(item)
-	local base = type(item.weight) == "function" and item:weight(item) or item.weight or 1
+	local base = type(item.weight) == "function" and item:weight(item) or item.weight or 0
 	-- A stack of N weighs N * base.
 	local amount = (isfunction(item.getData) and tonumber(item:getData("Amount", 1))) or 1
 	return base * amount
@@ -61,7 +61,7 @@ if SERVER then
 
 		-- Partial stacking by weight: take what fits under the cap, drop the rest.
 		if justAddDirectly and not forced then
-			local base = type(item.weight) == "function" and item:weight(item) or item.weight or 1
+			local base = type(item.weight) == "function" and item:weight(item) or item.weight or 0
 			local amount = tonumber(item:getData("Amount", 1)) or 1
 			local remaining = self:getMaxWeight() - self:getWeight()
 			if base > 0 and amount > 1 and base * amount > remaining then

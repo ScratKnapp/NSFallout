@@ -659,20 +659,14 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
 
     -- The screen itself renders to its RT in a real render hook, once per
     -- frame with a valid paint context, before the 3D and HUD passes that
-    -- sample the texture. Previously this ran inside Move (the prediction
-    -- phase), which is not a paint context and can fire multiple times per
-    -- frame, so screen updates and click sampling raced the frame and
-    -- intermittently dropped. Page logic (input reads, button hits) runs here.
+    -- sample the texture. Page logic (input reads, button hits) runs here.
     -- Persists across frames for the left-click press-edge computed below.
     local pipPrevLMB = false
     hook.Add("PreRender", "pipboy_screen_render", function()
         if not PIPBOY_ON_SCREEN then return end
         -- Deterministic one-frame left-click edge, sampled here in the paint
-        -- phase, so every AddUIButton fires reliably. The shared IsLeftMouseDown
-        -- flag was set in PlayerBindPress and cleared on a 0-delay timer, which
-        -- raced this render and dropped clicks; computing the press edge from
-        -- the physical button here removes that race for the whole UI. (It also
-        -- self-limits to one hit per press, replacing the bind's edge-only fire.)
+        -- phase, so every AddUIButton fires reliably and self-limits to one
+        -- hit per press.
         local lmbNow = input.IsMouseDown(MOUSE_LEFT)
         IsLeftMouseDown = lmbNow and not pipPrevLMB
         pipPrevLMB = lmbNow
@@ -977,8 +971,7 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
             if PIPBOY_ON_SCREEN then
                 if bind == "+attack" then
                     -- Block the world action only. The UI's left-click is sampled
-                    -- as a press-edge in the PreRender pass (see pipPrevLMB), so we
-                    -- no longer set IsLeftMouseDown here.
+                    -- as a press-edge in the PreRender pass (see pipPrevLMB).
                     return true
                 elseif bind == "+attack2" then
                     IsRightMouseDown = true
@@ -1175,8 +1168,7 @@ tablet.pages["snake"] = function(color_main)
         regenFoodLoc()
     end
 
-    -- Movement input is sampled in the "pipboy_snake_input" Think hook below;
-    -- input.WasKeyPressed reads false from this PreRender (paint) context.
+    -- Movement input is sampled in the pipboy_snake_input Think hook below.
 
     if nextTime < CurTime() then
         direction = movementsqueued[1] or direction
@@ -1218,10 +1210,8 @@ tablet.pages["snake"] = function(color_main)
     render.SetViewPort(0, 0, oldW, oldH)
 end
 
--- Snake controls. The screen renders in PreRender (a paint phase) where
--- input.WasKeyPressed always reads false, which silently froze the controls.
--- Poll the physical key state in Think (valid every frame) and edge-detect a
--- fresh press so one tap queues exactly one turn, as WasKeyPressed used to.
+-- Snake controls. Polled in Think (not the render) so input.IsKeyDown is valid;
+-- edge-detect a fresh press so one tap queues exactly one turn.
 local snakePrevKeys = {}
 hook.Add("Think", "pipboy_snake_input", function()
     if not (PIPBOY_ON_SCREEN and pipboy.SelectedHeader == "snake") then return end

@@ -178,14 +178,11 @@ local deltSt = 0
 -- Optimistic point-spend prediction.
 --
 -- Point pools (ptSkill / ptAttrib) and the skill/attrib values they buy are
--- server-authoritative: a spend only reaches the client after a round-trip.
--- The pipboy used to gate the "+" button on the *stale* replicated pool, so
--- under latency it kept letting you click past what you had -- the surplus
--- clicks were rejected server-side and the counter snapped back, reading as an
--- "overspend". We predict locally instead: a spend bumps a per-id delta now,
--- and as the authoritative value replicates we fold the acknowledgement back
--- out so the number holds steady. A short stale-timeout heals any prediction
--- the server silently dropped (e.g. a spend that raced a cap).
+-- server-authoritative: a spend only reaches the client after a round-trip, so
+-- we predict locally -- a spend bumps a per-id delta now, and as the
+-- authoritative value replicates we fold the acknowledgement back out so the
+-- number holds steady. A short stale-timeout heals any prediction the server
+-- silently dropped (e.g. a spend that raced a cap).
 -- ===========================================================================
 local PRED_STALE = 1.5            -- seconds before an un-acked prediction is dropped
 local pred = {}                   -- [id] = {delta, last, fired}
@@ -247,8 +244,7 @@ local SPECIAL_HOLD_NEXT = 0
 function DrawPly.SPECIAL()
     local ply = LocalPlayer()
     local character = ply:getChar()
-    -- specialpoints maps straight to the authoritative ptAttrib pool; show it
-    -- as-is (the old "- 1" was an off-by-one that hid your last point).
+    -- specialpoints maps straight to the authoritative ptAttrib pool.
     local serverPool = character:getSkillLevel("specialpoints") or 0
     local amts = predDisplay(AT_POOL, serverPool, -1)
     draw.DrawText("SPECIAL POINTS: " .. amts, MainFontName .. "@42", 950, 64, amts > 0 and pip_color or color_white, TEXT_ALIGN_RIGHT)
@@ -286,8 +282,8 @@ function DrawPly.SPECIAL()
                         IsReloadUse = false
                         if predPoolLeft(AT_POOL, serverPool) > 0 then
                             -- Server applies a fixed +1 and ignores any sent
-                            -- value (it no longer trusts a client target), so we
-                            -- just name the stat; predBump mirrors the +1 locally.
+                            -- value, so we just name the stat; predBump mirrors
+                            -- the +1 locally.
                             netstream.Start("statIncrease", attribKey)
                             predBump(AT_POOL)
                             predBump(AT_POOL .. ":" .. attribKey)
@@ -384,10 +380,8 @@ for _i, _v in ipairs(skill_def) do
 end
 local SELECTED_HEADER
 local wth, ht = ScrW(), ScrH()
--- Cleans up the screen-space "R [HOLD]) SPEND POINT ON..." hint that the old
--- code attached when the STATS page opened. The counters now live inside the
--- pipboy RT on each sub-page, so this hook is no longer needed; remove any
--- copy that survived a hot-reload.
+-- Strip the screen-space "R [HOLD] SPEND POINT ON..." hint hook (a stray copy
+-- can survive a hot-reload); the spend counters render inside the pipboy RT.
 hook.Remove("PostRenderVGUI", "SKILLS")
 
 hook.Add("pip_changepage", "SKILLS_", function(from, to)
@@ -656,8 +650,7 @@ function DrawPly.SKILLS()
     local offset = 80
     local ply = LocalPlayer()
     local character = ply:getChar()
-    -- skillpoints maps straight to the authoritative ptSkill pool; show it
-    -- as-is (the old "- 1" was an off-by-one that hid your last point).
+    -- skillpoints maps straight to the authoritative ptSkill pool.
     local serverPool = character:getSkillLevel("skillpoints") or 0
     local amt = predDisplay(SK_POOL, serverPool, -1)
     draw.DrawText("SKILL POINTS: " .. amt, MainFontName .. "@42", 950, 64, amt > 0 and pip_color or color_white, TEXT_ALIGN_RIGHT)
@@ -693,9 +686,8 @@ function DrawPly.SKILLS()
                 surface.DrawRect(64, offset + (y * height), ((width + 100) - 64) * p, height)
                 if p == 1 then
                     IsReloadUse = false
-                    -- updateSkill on the server *adds* the value (it's a delta,
-                    -- not a target), so send 1 per spent point. Sending
-                    -- current+1 doubled the skill each click (1->3->7->15).
+                    -- updateSkill on the server *adds* the value (a delta, not a
+                    -- target), so send 1 per spent point.
                     if predPoolLeft(SK_POOL, serverPool) > 0 then
                         netstream.Start("skillIncrease", v[1], 1)
                         predBump(SK_POOL)
