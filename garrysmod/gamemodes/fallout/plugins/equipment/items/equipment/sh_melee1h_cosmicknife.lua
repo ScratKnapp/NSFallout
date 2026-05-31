@@ -28,7 +28,7 @@ ITEM.class = "aus_m_knife_combatknife"
 ITEM.critC = 5
 
 ITEM.dmg = {
-	["Slash"] = 40
+	["Slash"] = 48
 }
 
 --long, medium, close
@@ -46,7 +46,7 @@ ITEM.skillScaleAcc = {
 ["melee"] = 2,}
 
 ITEM.skillScaleDmg = {
-["melee"] = 0.1,}
+["melee"] = 0.2,}
 
 ITEM.actions = {	
 "charge",

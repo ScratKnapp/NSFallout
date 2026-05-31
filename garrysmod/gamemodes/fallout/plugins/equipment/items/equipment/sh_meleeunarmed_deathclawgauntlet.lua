@@ -23,7 +23,7 @@ ITEM.accuracy = 1 --bonus accuracy, can also go negative. defaults to 0 if not s
 ITEM.class = "aus_m_fists_deathclawgauntlet"
 
 ITEM.dmg = {
-	["Slash"] = 16
+	["Slash"] = 24
 }
 
 --long, medium, close
@@ -41,7 +41,7 @@ ITEM.skillScaleAcc = {
 ["unarmed"] = 3,}
 
 ITEM.skillScaleDmg = {
-["unarmed"] = 0.15,}
+["unarmed"] = 0.28,}
 
 ITEM.actions = {	
 "tackle",

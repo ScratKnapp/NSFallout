@@ -27,7 +27,7 @@ ITEM.accuracy = 1 --bonus accuracy, can also go negative. defaults to 0 if not s
 ITEM.class = "aus_m_chineseofficersword"
 
 ITEM.dmg = {
-	["Electric"] = 15
+	["Electric"] = 23
 }
 ITEM.multi = 3 --how many hits it does, dont need to put it here if it's just 1
 
@@ -46,7 +46,7 @@ ITEM.skillScaleAcc = {
 	}
 
 ITEM.skillScaleDmg = {
-["melee"] = 0.09,
+["melee"] = 0.18,
 }
 
 ITEM.actions = {	

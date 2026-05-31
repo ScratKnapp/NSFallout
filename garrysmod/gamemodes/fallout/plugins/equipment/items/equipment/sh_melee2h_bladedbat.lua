@@ -27,7 +27,7 @@ ITEM.accuracy = 1 --bonus accuracy, can also go negative. defaults to 0 if not s
 ITEM.class = "aus_m_baseballbat_wood_bladed"
 
 ITEM.dmg = {
-	["Slash"] = 20
+	["Slash"] = 28
 }
 
 --long, medium, close
@@ -44,7 +44,7 @@ ITEM.skillScaleAcc = {
 ["melee"] = 2,}
 
 ITEM.skillScaleDmg = {
-["melee"] = 0.08,}
+["melee"] = 0.16,}
 
 ITEM.actions = {	
 "charge",

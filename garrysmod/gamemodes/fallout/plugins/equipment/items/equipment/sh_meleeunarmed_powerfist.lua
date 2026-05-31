@@ -23,7 +23,7 @@ ITEM.accuracy = 1 --bonus accuracy, can also go negative. defaults to 0 if not s
 ITEM.class = "aus_m_fists_powerfist"
 
 ITEM.dmg = {
-	["Blunt"] = 13
+	["Blunt"] = 21
 }
 
 --long, medium, close
@@ -48,7 +48,7 @@ ITEM.skillScaleAcc = {
 ["unarmed"] = 3,}
 
 ITEM.skillScaleDmg = {
-["unarmed"] = 0.14,}
+["unarmed"] = 0.28,}
 
 ITEM.actions = {	
 "tackle",

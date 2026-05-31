@@ -20,7 +20,7 @@ ITEM.weight = 1
 ITEM.weapondual = false
 
 ITEM.dmg = {
-	["Blunt"] = 4
+	["Blunt"] = 12
 }
 
 ITEM.costAP = 1 --how much AP is used when using this weapon normally
@@ -53,7 +53,7 @@ ITEM.skillScaleAcc = {
 ["unarmed"] = 3,}
 
 ITEM.skillScaleDmg = {
-["unarmed"] = 0.12,}
+["unarmed"] = 0.25,}
 
 ITEM.actions = {	
 "tackle",

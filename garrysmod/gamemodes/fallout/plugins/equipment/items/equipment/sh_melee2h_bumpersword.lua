@@ -29,7 +29,7 @@ ITEM.accuracy = 1 --bonus accuracy, can also go negative. defaults to 0 if not s
 ITEM.class = "aus_m_twohanded_sledgehammer"
 
 ITEM.dmg = {
-	["Slash"] = 30
+	["Slash"] = 38
 }
 
 --long, medium, close
@@ -47,7 +47,7 @@ ITEM.skillScaleAcc = {
 }
 
 ITEM.skillScaleDmg = {
-["melee"] = 0.1,
+["melee"] = 0.2,
 }
 
 ITEM.actions = {	

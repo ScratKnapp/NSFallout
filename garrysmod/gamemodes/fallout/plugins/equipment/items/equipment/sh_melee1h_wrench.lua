@@ -27,7 +27,7 @@ ITEM.accuracy = 1 --bonus accuracy, can also go negative. defaults to 0 if not s
 ITEM.class = "aus_m_wrench"
 
 ITEM.dmg = {
-	["Blunt"] = 8
+	["Blunt"] = 16
 }
 
 --long, medium, close
@@ -46,7 +46,7 @@ ITEM.skillScaleAcc = {
 }
 
 ITEM.skillScaleDmg = {
-["melee"] = 0.07,
+["melee"] = 0.14,
 }
 
 

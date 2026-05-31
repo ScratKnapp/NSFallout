@@ -23,7 +23,7 @@ ITEM.accuracy = 1 --bonus accuracy, can also go negative. defaults to 0 if not s
 ITEM.class = "aus_m_fists_spikedknuckles"
 
 ITEM.dmg = {
-	["Slash"] = 7
+	["Slash"] = 15
 }
 
 ITEM.partMod = {
@@ -48,7 +48,7 @@ ITEM.skillScaleAcc = {
 ["unarmed"] = 3,}
 
 ITEM.skillScaleDmg = {
-["unarmed"] = 0.13,}
+["unarmed"] = 0.27,}
 
 ITEM.actions = {	
 "tackle",

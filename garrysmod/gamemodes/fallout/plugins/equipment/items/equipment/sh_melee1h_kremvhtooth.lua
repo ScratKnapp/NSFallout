@@ -28,7 +28,7 @@ ITEM.class = "aus_m_kremvhstooth"
 ITEM.critC = 5
 
 ITEM.dmg = {
-	["Slash"] = 42
+	["Slash"] = 50
 }
 
 --long, medium, close
@@ -46,7 +46,7 @@ ITEM.skillScaleAcc = {
 	["melee"] = 2,}
 
 ITEM.skillScaleDmg = {
-["melee"] = 0.09,}
+["melee"] = 0.18,}
 
 ITEM.actions = {	
 "charge",

@@ -28,7 +28,7 @@ ITEM.class = "aus_m_wrench_hooked"
 ITEM.critC = 5
 
 ITEM.dmg = {
-	["Slash"] = 17
+	["Slash"] = 25
 }
 
 --long, medium, close
@@ -46,7 +46,7 @@ ITEM.skillScaleAcc = {
 	["melee"] = 2,}
 
 ITEM.skillScaleDmg = {
-["melee"] = 0.07,}
+["melee"] = 0.14,}
 
 ITEM.actions = {	
 "charge",

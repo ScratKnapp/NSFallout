@@ -28,7 +28,7 @@ ITEM.class = "aus_m_walkingcane"
 ITEM.critC = 5
 
 ITEM.dmg = {
-	["Blunt"] = 12
+	["Blunt"] = 20
 }
 
 --long, medium, close
@@ -45,7 +45,7 @@ ITEM.skillScaleAcc = {
 ["melee"] = 2,}
 
 ITEM.skillScaleDmg = {
-["melee"] = 0.07,}
+["melee"] = 0.14,}
 
 ITEM.actions = {	
 "charge",
