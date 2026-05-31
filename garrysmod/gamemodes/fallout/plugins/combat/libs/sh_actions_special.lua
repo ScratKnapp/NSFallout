@@ -7,7 +7,7 @@ for attribID, v in pairs(nut.attribs.list) do
 			local char = client:getChar()
 		
 			local d20 = math.random(1,20)
-			local attrib = char:getSkill(attribID, 0)
+			local attrib = char:getAttrib(attribID, 0)
 
 			local roll = d20+attrib*0.5
 			
@@ -32,7 +32,7 @@ for attribID, v in pairs(nut.attribs.list) do
 				crit = 1
 			end
 
-			local rollText = "rolls " ..d20*crit.. " + " ..math.Round(attrib*0.5*crit) .. " Stat Bonus "..critText..((bonus and (" + Bonus Of " ..bonus.. " ")) or " ").. " = " ..roll.. " for " ..name.. "."
+			local rollText = "rolls " ..d20*crit.. " + " ..math.Round(attrib*0.5*crit) .. " Stat Bonus"..critText..((bonus and (" + " ..bonus.. " ")) or " ").. "= " ..roll.. " for " ..name.. "."
 
 			if(nut.plugin.list["chatboxextra"]) then
 				nut.plugin.list["chatboxextra"]:ChatboxSend(client, "skillcheck", client:Name().. " " ..rollText)
