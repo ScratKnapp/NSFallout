@@ -55,6 +55,12 @@ function DrawPly.STATS()
     formattedText("HP:", math.ceil(hp) .. "/" .. math.ceil(hpMax), 64, 128 + 64)
     formattedText("Race:", faction and faction.name or "None", 64, 128 + 128)
 
+
+    local gatherData = character:getData("gatherStamina", {}) or {}
+    local stamMax = nut.config.get("gatherStaminaMax", 10)
+    local stam = gatherData.stamina or stamMax
+    formattedText("Gathering Stamina:", stam .. "/" .. stamMax, 64, 128 + 192)
+
     -- DESCRIPTION as its own header with the text in a smaller wrapped body.
     draw.DrawText("DESCRIPTION", MainFontName .. "@48", 64, 380, pip_color)
 
@@ -378,6 +384,28 @@ for _i, _v in ipairs(skill_def) do
     local def = nut.skills and nut.skills.list and nut.skills.list[_v[1]]
     skill_desc[_i] = textWrap(def and def.desc or "", MainFontName .. "@24", 400)
 end
+
+-- Per-skill hover icons (animated VMTs from pipboy_contents/materials), shown on
+-- the SKILLS tab the way the SPECIAL tab shows a vault-boy per attribute. Some
+-- schema skills have no exact icon in the set, so they use the closest match;
+-- athletics/piloting have none -- add a VMT and map it here. (Each VMT carries
+-- $vertexcolor so the pip_color tint applies, matching the vault-boy look.)
+local skill_icon = {
+    guns       = Material("1BSPistolsDisplay"),
+    energy     = Material("1BSScienceDisplay"),      -- no energy-weapon icon; reuse Science
+    explosives = Material("1BSExplosivesDisplay"),
+    throwing   = Material("1BSExplosivesDisplay"),   -- grenades / thrown explosives
+    melee      = Material("1BSMeleeDisplay"),
+    unarmed    = Material("1BSUnarmedDisplay"),
+    science    = Material("1BSScienceDisplay"),
+    medicine   = Material("1BSMedicineDisplay"),
+    repair     = Material("1BSEngineeringDisplay"),
+    lockpick   = Material("1BSLockpickDisplay"),
+    sneak      = Material("1BSSneakDisplay"),
+    evasion    = Material("1BSPickpocketDisplay"),   -- no evasion icon; agility-themed
+    survival   = Material("1BSChemistryDisplay"),    -- no survival icon; crafting/chems
+    speech     = Material("1BSBarterDisplay"),
+}
 local SELECTED_HEADER
 local wth, ht = ScrW(), ScrH()
 -- Strip the screen-space "R [HOLD] SPEND POINT ON..." hint hook (a stray copy
@@ -668,15 +696,53 @@ function DrawPly.SKILLS()
         local atCap = skillVal >= 100
         local fn, click, draww = NzGUI:DrawTextButtonWithDelayedHover(v[2]:upper(), MainFontName .. "@42", 64, offset - 2 + (y * height), width, height, 1, color_white)
         local c = pip_color
+
+        -- SPECIAL contribution to this skill. getSkillLevel returns the raw/base
+        -- value (noSpecial), so the attribute bonus is computed/shown separately.
+        -- Guard on the specialBonus table existing, else getSpecialBonus would
+        -- pairs(nil)-error. Used by the hover breakdown and the "+N" below.
+        local skillTbl = nut.skills and nut.skills.list and nut.skills.list[v[1]]
+        local specialBonus = (skillTbl and skillTbl.specialBonus) and (character:getSpecialBonus(v[1]) or 0) or 0
+
         if fn then
             c = color_black
             surface.SetDrawColor(pip_color)
             surface.DrawRect(64, offset + (y * height), (width + 100) - 64, height)
             c = color_black
             --
-            surface.SetMaterial(attriIMG[1])
-            surface.SetDrawColor(pip_color)
+            -- Per-skill icon, mirroring the SPECIAL tab's vault-boy on hover.
+            -- Drop the SetDrawColor(pip_color) for native colors instead of the
+            -- pip-green tint.
+            local icon = skill_icon[v[1]]
+            if icon then
+                surface.SetMaterial(icon)
+                surface.SetDrawColor(pip_color)
+                surface.DrawTexturedRect(626-50, 64, 400, 400)
+            end
             draw.DrawNonParsedText(skill_desc[y], MainFontName .. "@24", 600, 400, pip_color, 0)
+
+            -- Under the description, break down where this skill's SPECIAL bonus
+            -- comes from: one line per contributing attribute. Mirrors the math
+            -- in charMeta:getSpecialBonus (attrib * bonusMult * attrib.skillBonus).
+            local hSpecial = skillTbl and skillTbl.specialBonus
+            if hSpecial then
+                surface.SetFont(MainFontName .. "@24")
+                local _, lineH = surface.GetTextSize("0")
+                -- skill_desc is pre-wrapped with "\n"; place below its last line.
+                local descLines = select(2, string.gsub(skill_desc[y] or "", "\n", "")) + 1
+                local sy = 400 + descLines * lineH + 18
+                draw.DrawNonParsedText("ATTRIBUTE CONTRIBUTION", MainFontName .. "@24", 600, sy, pip_color, 0)
+                sy = sy + lineH + 6
+                for attribID, bonusMult in SortedPairs(hSpecial) do
+                    local attribTbl = nut.attribs.list[attribID]
+                    local mult = attribTbl and attribTbl.skillBonus and attribTbl.skillBonus[attribID]
+                    if not mult then continue end
+                    local part = math.Round(character:getAttrib(attribID, 0) * bonusMult * mult)
+                    if part <= 0 then continue end
+                    draw.DrawNonParsedText((attribTbl.name or attribID:upper()) .. ":  +" .. part, MainFontName .. "@24", 600, sy, pip_color, 0)
+                    sy = sy + lineH + 2
+                end
+            end
             if IS_R_DOWN and amt > 0 and not atCap then
                 deltSt = deltSt == 0 and CurTime() or deltSt
                 --
@@ -700,7 +766,18 @@ function DrawPly.SKILLS()
             end
         end
 
-        draw.DrawText(skillVal, MainFontName .. "@48", width + 100, offset - 8 + (y * height), c, TEXT_ALIGN_RIGHT)
+        -- Value sits a little left of the column edge to leave room for the
+        -- "+N" SPECIAL bonus right after it; both stay inside the hover
+        -- highlight (which ends at width + 100) so they read black-on-pip.
+        draw.DrawText(skillVal, MainFontName .. "@48", width + 60, offset - 8 + (y * height), c, TEXT_ALIGN_RIGHT)
+
+        -- Dim "+N" right after the value (right-aligned to the column edge so it
+        -- stays inside the hover highlight). Per-attribute sources show on hover.
+        if specialBonus > 0 then
+            local bonusCol = fn and color_black or Color(pip_color.r * 0.6, pip_color.g * 0.6, pip_color.b * 0.6)
+            draw.DrawText("+" .. specialBonus, MainFontName .. "@24", width + 100, offset - 2 + (y * height), bonusCol, TEXT_ALIGN_RIGHT)
+        end
+
         draww(c)
 
         -- Click-to-spend "+" square sits to the right of the value text.
