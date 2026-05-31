@@ -14,7 +14,10 @@ TRAITS = {}
 TRAITS.traits = {}
 function TRAITS:Register(tbl)
 	self.traits[tbl.uid] = tbl
-	tbl.material = Material(tbl.icon, "smooth")
+	
+	if(tbl.icon) then
+		tbl.material = Material(tbl.icon, "smooth")
+	end
 end
 
 function TRAITS:GetAll()
