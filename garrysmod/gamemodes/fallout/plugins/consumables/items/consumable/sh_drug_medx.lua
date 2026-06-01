@@ -1,6 +1,6 @@
-ITEM.name = "Furtivius Centurion"
-ITEM.desc = "Made up of a Mix of Morphine and herbal medicines, the Furtivius dulls the pain of sharp pains and easies the woes of dying soldiers, it is considered a bad omen to be dispensed on a Legionnaire as a sign of impending death."
-ITEM.model = "models/fnv/clutter/nvabsinthebottle/nvabsinthebottle.mdl"
+ITEM.name = "Med-X"
+ITEM.desc = "A hypodermic needle filled of a brand of morphine that reduces the perception of and emotional response to pain."
+ITEM.model = "models/mosi/fallout4/props/aid/medx.mdl"
 ITEM.uniqueID = "drug_medx"
 ITEM.quantity2 = 1
 ITEM.price = 0

@@ -1,6 +1,6 @@
-ITEM.name = "Addictol"
-ITEM.desc = "An inhaler that flushes the effects of addiction and withdrawal, though this often causes intense nausea."
-ITEM.model = "models/fallout/clutter/chems/jet.mdl"
+ITEM.name = "Fixer"
+ITEM.desc = "A set of tablets that flushes the effects of addiction and withdrawal, though this often causes intense nausea."
+ITEM.model = "models/mosi/fnv/props/health/chems/fixer.mdl"
 ITEM.uniqueID = "drug_fixer"
 ITEM.quantity2 = 1
 ITEM.price = 0

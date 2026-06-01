@@ -1,6 +1,6 @@
-ITEM.name = "Potentia"
-ITEM.desc = "A natural muscle stimulant, the Potentia has become a staple of the Legion for their soldiers, most commonly mixed with meals."
-ITEM.model = "models/fnv/clutter/junk/nv/whitehorsenettleberries.mdl"
+ITEM.name = "Buffout"
+ITEM.desc = "A bottle of steroid tablets that increase ones strength and endurance."
+ITEM.model = "models/mosi/fnv/props/health/chems/buffout.mdl"
 ITEM.uniqueID = "drug_buffout"
 ITEM.quantity2 = 1
 ITEM.price = 0

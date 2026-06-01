@@ -1,6 +1,6 @@
-ITEM.name = "Sterci"
-ITEM.desc = "A more powerful and lucid mix of Sudor Stercus, rarer and for the defined herbal-addict."
-ITEM.model = "models/foodnhouseholditems/winebottle3.mdl"
+ITEM.name = "Jet Fuel"
+ITEM.desc = "An small inhaler and canister filled with an extremely highly concentrated and potent form of Jet."
+ITEM.model = "models/mosi/fnv/props/health/chems/jet.mdl"
 ITEM.uniqueID = "drug_jetfuel"
 ITEM.quantity2 = 1
 ITEM.price = 0

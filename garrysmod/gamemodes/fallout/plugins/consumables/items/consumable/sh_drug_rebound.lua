@@ -1,6 +1,6 @@
-ITEM.name = "Resulto"
-ITEM.desc = "A herbal remedy rumoured to be force fed to the Legions strongest slaves to continue to spur them onto hard work."
-ITEM.model = "models/fnv/dlc04/clutter/moonshine/dlc04moonshinejug01.mdl"
+ITEM.name = "Rebound"
+ITEM.desc = "A metal hip flask filled with vials and filled with liquid, that is mixed and then injected on the spot."
+ITEM.model = "models/mosi/fnv/props/health/chems/rebound.mdl"
 ITEM.uniqueID = "drug_rebound"
 ITEM.quantity2 = 1
 ITEM.price = 0
