@@ -5,7 +5,7 @@ ITEM.model = "models/mosi/fallout4/ammo/gammaround.mdl"
 ITEM.category = "Ammunition"
 
 ITEM.ammo = "Energy Cell"
-ITEM.ammoAmount = 30 --single bullet
+ITEM.defaultAmount = 30 --single bullet
 ITEM.bullet = "Energy Cell Thermal Charge"
 ITEM.maxstack = 100
 

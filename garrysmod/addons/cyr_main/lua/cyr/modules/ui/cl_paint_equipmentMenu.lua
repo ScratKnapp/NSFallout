@@ -211,13 +211,15 @@ function InventoryItemSlotPaint(s, w, h)
     else
         s.i = math.max(s.i - FrameTime() * 2, 0)
     end
-
+	
+	local item = s.data.instances[1]
+	
     surface.SetMaterial(FUT_INV_BUTTON)
     surface.SetAlphaMultiplier(0.8)
     surface.SetDrawColor(LerpColor(s.i, CYR_UI.Primary, CYR_UI.PrimaryActive))
     surface.DrawTexturedRect(0, 0, w, h)
-    local amount = s.data.instances[1]:getData("Amount", 1)
-    local quantity2 = s.data.instances[1]:getData("quantity2", -1)
+    local amount = item:getData("Amount", item.defaultAmount or 1)
+    local quantity2 = item:getData("quantity2", -1)
     if quantity2 and quantity2 > 0 then amount = quantity2 end
     -- draw amount at bottom right`
     if amount > 1 then

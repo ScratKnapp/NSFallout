@@ -5,7 +5,7 @@ ITEM.model = "models/mosi/fallout4/ammo/railwayspikes.mdl"
 ITEM.category = "Ammunition"
 
 ITEM.ammo = "Nails"
-ITEM.ammoAmount = 50 --single bullet
+ITEM.defaultAmount = 50 --single bullet
 ITEM.bullet = "Nails"
 ITEM.maxstack = 1000
 

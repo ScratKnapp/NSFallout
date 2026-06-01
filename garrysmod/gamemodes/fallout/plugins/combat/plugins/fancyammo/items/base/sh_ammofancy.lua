@@ -5,7 +5,7 @@ ITEM.model = "models/Items/BoxSRounds.mdl"
 ITEM.width = 1
 ITEM.height = 1
 ITEM.ammo = "pistol"
-ITEM.ammoAmount = 1
+ITEM.defaultAmount = 1
 
 --ITEM.dmgType = ""
 
@@ -38,7 +38,7 @@ ITEM.functions.use = { -- sorry, for name order.
 	name = "Load",
 	icon = "icon16/add.png",
 	onRun = function(item)
-		local total = item:getData("Amount", item.ammoAmount) or 1
+		local total = item:getData("Amount", item.defaultAmount) or 1
 		local ammo = item.ammo
 	
 		item.player:GiveAmmo(total, item.ammo)
@@ -61,7 +61,7 @@ ITEM.functions.useX = { -- sorry, for name order.
 	onRun = function(item)
 		local client = item.player
 	
-		local total = item:getData("Amount", item.ammoAmount) or 1
+		local total = item:getData("Amount", item.defaultAmount) or 1
 		local ammo = item.ammo
 	
 		client:requestString("Split", "", function(text)	
@@ -76,7 +76,7 @@ ITEM.functions.useX = { -- sorry, for name order.
 		return false
 	end,
 	onCanRun = function(item)
-		local total = item:getData("Amount", item.ammoAmount) or 1
+		local total = item:getData("Amount", item.defaultAmount) or 1
 		
 		if(total < 1) then
 			return false
@@ -138,7 +138,7 @@ ITEM.functions.LoadInto = { -- sorry, for name order.
 
 		local magSize = weapon:getData("magSize", weapon.magSize) or 0
 
-		local newAmt = item:getData("Amount", item.ammoAmount)
+		local newAmt = item:getData("Amount", item.defaultAmount)
 		local curAmt = 0
 		
 		local loaded = weapon:getData("currentMag", {})
@@ -183,7 +183,7 @@ ITEM.functions.LoadInto = { -- sorry, for name order.
 		return false
 	end,
 	onCanRun = function(item)
-		local total = item:getData("Amount", item.ammoAmount) or 1
+		local total = item:getData("Amount", item.defaultAmount) or 1
 		
 		if(total < 1) then
 			return false
@@ -201,7 +201,7 @@ ITEM.functions.Split = {
 		local inventory = client:getChar():getInv()
 		local position = client:getItemDropPos()
 		
-		local stack = item:getData("Amount", item.ammoAmount)
+		local stack = item:getData("Amount", item.defaultAmount)
 		if(stack <= 1) then return false end
 
 		client:requestString("Split", "", function(text)	
@@ -236,8 +236,8 @@ ITEM.onCombine = function(itemSelf, itemTarget)
 	end
 
 	if(itemSelf.uniqueID == itemTarget.uniqueID) then
-		local amountSelf = itemSelf:getData("Amount", itemSelf.ammoAmount)
-		local amountTarget = itemTarget:getData("Amount", itemTarget.ammoAmount)
+		local amountSelf = itemSelf:getData("Amount", itemSelf.defaultAmount)
+		local amountTarget = itemTarget:getData("Amount", itemTarget.defaultAmount)
 
 		local combined = amountSelf + amountTarget
 		
@@ -274,7 +274,7 @@ ITEM.onCombineTo = function(itemSelf, itemMagazine)
 		end
 
 		local amountSelf = itemMagazine:getData("Amount", 0)
-		local amountTarget = itemSelf:getData("Amount", itemSelf.ammoAmount)
+		local amountTarget = itemSelf:getData("Amount", itemSelf.defaultAmount)
 
 		local combined = amountSelf + amountTarget
 		
@@ -311,7 +311,7 @@ function ITEM:getDesc()
 		desc = customData.desc
 	end
 	
-	local amount = self:getData("Amount", self.ammoAmount)
+	local amount = self:getData("Amount", self.defaultAmount)
 	local ammo = string.lower(self.ammo)
 	
 	if(ammo) then
@@ -325,7 +325,7 @@ end
 
 if (CLIENT) then
 	function ITEM:paintOver(item, w, h)
-		local amount = item:getData("Amount", item.ammoAmount)
+		local amount = item:getData("Amount", item.defaultAmount)
 	
 		if(amount) then
 			draw.SimpleText(amount, "DermaDefault", w , h - 5, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM, 1, color_black)

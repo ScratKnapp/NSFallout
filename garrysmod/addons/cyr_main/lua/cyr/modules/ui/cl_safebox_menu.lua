@@ -55,7 +55,7 @@ function CYR.UI.OpenSafebox(inventory)
                 category = itemDef.category,
                 weight = itemDef.weight or 0,
                 icon = iconPath,
-                count = v:getData("Amount", 1)
+                count = v:getData("Amount", v.defaultAmount)
             })
         end
         return items

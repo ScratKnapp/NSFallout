@@ -37,8 +37,8 @@ netstream.Hook("cyrCombineItems", function(client, sourceID, targetID)
     local maxstack = NWL.GetStackLimit(itemDef.maxstack) or itemDef.maxQuantity or 1
     print("[STACKING] Max Stack:", maxstack)
     -- Determine current amounts (handle both NS quantity and custom Amount data)
-    local sourceAmt = sourceItem:getData("Amount") or sourceItem:getQuantity() or 1
-    local targetAmt = targetItem:getData("Amount") or targetItem:getQuantity() or 1
+    local sourceAmt = sourceItem:getData("Amount", sourceItem.defaultAmount) or sourceItem:getQuantity() or 1
+    local targetAmt = targetItem:getData("Amount", targetItem.defaultAmount) or targetItem:getQuantity() or 1
     print("[STACKING] Amounts - Source:", sourceAmt, "Target:", targetAmt)
     if maxstack <= 1 then
         print("[STACKING] Item not stackable")
@@ -103,7 +103,7 @@ netstream.Hook("cyrDropQuantity", function(client, itemID, amount)
     local itemDef = nut.item.list[item.uniqueID]
     local maxstack = NWL.GetStackLimit(itemDef and itemDef.maxstack)
     if not maxstack or maxstack <= 1 then return end
-    local current = tonumber(item:getData("Amount")) or 1
+    local current = tonumber(item:getData("Amount", item.defaultAmount)) or 1
     amount = math.floor(amount)
     if amount < 1 then return end
     if amount >= current then
@@ -148,7 +148,7 @@ local function compactStacks(inv, uniqueID)
     if #stacks < 2 then return false end
     local total = 0
     for _, it in ipairs(stacks) do
-        total = total + (tonumber(it:getData("Amount")) or 1)
+        total = total + (tonumber(it:getData("Amount", it.defaultAmount)) or 1)
     end
 
     -- Refill the first ceil(total/maxstack) stacks; drop the rest.

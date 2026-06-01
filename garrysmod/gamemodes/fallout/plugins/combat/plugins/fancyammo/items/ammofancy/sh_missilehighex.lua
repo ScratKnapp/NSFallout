@@ -5,7 +5,7 @@ ITEM.model = "models/mosi/fallout4/ammo/missile.mdl"
 ITEM.category = "Ammunition"
 
 ITEM.ammo = "Missile"
-ITEM.ammoAmount = 1 --single bullet
+ITEM.defaultAmount = 1 --single bullet
 ITEM.bullet = "Missile HE"
 ITEM.maxstack = 10
 

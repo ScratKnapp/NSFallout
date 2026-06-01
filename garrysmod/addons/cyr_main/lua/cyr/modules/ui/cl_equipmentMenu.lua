@@ -167,7 +167,7 @@ function CreateCYRWindow()
             iconPath = "asset://garrysmod/materials/spawnicons/" .. mdl
         end
 
-        local amount = item:getData("Amount") or item:getQuantity() or 1
+        local amount = item:getData("Amount", item.defaultAmount) or item:getQuantity() or 1
         local maxstack = itemDef.maxstack or itemDef.maxQuantity or 1
         return {
             id = item:getID(),

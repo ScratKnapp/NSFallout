@@ -5,7 +5,7 @@ ITEM.model = "models/fallout new vegas/microfusion_cell.mdl"
 ITEM.category = "Ammunition"
 
 ITEM.ammo = "Microfusion Cell"
-ITEM.ammoAmount = 30 --single bullet
+ITEM.defaultAmount = 30 --single bullet
 ITEM.bullet = "Microfusion Cell Max Charge"
 ITEM.maxstack = 100
 

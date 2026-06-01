@@ -5,7 +5,7 @@ ITEM.model = "models/Items/BoxSRounds.mdl"
 ITEM.category = "Ammunition"
 
 ITEM.ammo = ".45-70 Gov't"
-ITEM.ammoAmount = 30 --single bullet
+ITEM.defaultAmount = 30 --single bullet
 ITEM.bullet = ".45-70 Gov't"
 ITEM.maxstack = 100
 

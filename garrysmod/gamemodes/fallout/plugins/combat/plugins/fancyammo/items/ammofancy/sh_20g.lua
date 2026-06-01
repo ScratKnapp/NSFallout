@@ -5,7 +5,7 @@ ITEM.model = "models/mosi/fallout4/ammo/shotgunshells.mdl"
 ITEM.category = "Ammunition"
 
 ITEM.ammo = "20 Gauge"
-ITEM.ammoAmount = 30 --single bullet
+ITEM.defaultAmount = 30 --single bullet
 ITEM.bullet = "20 Gauge"
 ITEM.maxstack = 100
 
