@@ -713,7 +713,7 @@ function DrawCompass(primary, x, y, w, h)
     end
 
     y = y + 10
-    local compassOffset = GetConVar("nwl_compass_offset"):GetFloat()
+    local compassOffset = nut.config.get("compassOffset", 0)
     local heading = (-(ply:EyeAngles().y + compassOffset)) % 360 + HUDCFG.compassHeadingOff
     local fov = HUDCFG.compassFOV
     local u0 = (heading / 360) - (fov / 360) / 2

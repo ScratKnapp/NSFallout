@@ -34,8 +34,6 @@ function Radio_Reset()
             else
                 chat.AddText(Color(255, 140, 0), "Now Playing: ", Color(255, 207, 158), stat)
             end
-
-            if stat == 5 then timer.Create("radio", 5, 1, function() netstream.Start("insi") end) end
         end)
 
         function EV_RADIO_TOGGLE()
@@ -50,53 +48,70 @@ function Radio_Reset()
             return playingindex
         end
 
-        function AUDIORADIO_CALLBACK(s)
-            AUDIORADIO = s
-            s:Play()
-            s:SetVolume(aftermath_cl_radio_volume:GetFloat())
-            loadingnew = true
+
+        local radioRequestID = 0
+
+        local function radioStop()
+            if IsValid(AUDIORADIO) then AUDIORADIO:Stop() end
+            AUDIORADIO = nil
+        end
+
+  
+        local function radioLoad(index)
+            if not stations[index] then return end
+            radioRequestID = radioRequestID + 1
+            local reqID = radioRequestID
+            radioStop()
+            playingindex = index
+            loadingnew = false
+            sound.PlayURL(stations[index], "noplay noblock", function(s)
+                if not IsValid(s) then return end
+                if reqID ~= radioRequestID then s:Stop() return end -- superseded
+                radioStop() -- drop any earlier load that finished before us
+                AUDIORADIO = s
+                s:Play()
+                s:SetVolume(math.Clamp(aftermath_cl_radio_volume:GetFloat(), 0, 10))
+                loadingnew = true
+            end)
+        end
+
+        -- Stop playback and cancel any in-flight load (bumping the id makes their
+        -- callbacks discard themselves).
+        local function radioOff()
+            radioRequestID = radioRequestID + 1
+            radioStop()
+            loadingnew = false
+            playingindex = 0
         end
 
         hook.Add("Think", "think_audioradio", function()
-            if AUDIORADIO and AUDIORADIO:GetState() == GMOD_CHANNEL_STOPPED and loadingnew then
-                loadingnew = false
-                sound.PlayURL(stations[playingindex], "noplay noblock", AUDIORADIO_CALLBACK)
+            -- Auto-recover a stream that dropped (buffer underrun -> STOPPED).
+            if IsValid(AUDIORADIO) and AUDIORADIO:GetState() == GMOD_CHANNEL_STOPPED and loadingnew then
+                radioLoad(playingindex)
             end
 
             local cvarvolume = aftermath_cl_radio_volume:GetFloat()
-            if AUDIORADIO and cvarvolume ~= volumecache then
+            if IsValid(AUDIORADIO) and cvarvolume ~= volumecache then
                 AUDIORADIO:SetVolume(math.Clamp(cvarvolume, 0, 10))
                 volumecache = cvarvolume
             end
         end)
 
         concommand.Add("aftermath_cl_radio_off", function(ply, cmd, args)
-            if AUDIORADIO and (AUDIORADIO:GetState() == GMOD_CHANNEL_PLAYING or AUDIORADIO:GetState() == GMOD_CHANNEL_STALLED) then
-                AUDIORADIO:Stop()
-                AUDIORADIO = nil
-                loadingnew = true
-                playingindex = 8
-            end
+            radioOff()
         end)
 
         concommand.Add("aftermath_cl_radio_on", function(ply, cmd, args)
-            if not (AUDIORADIO and (AUDIORADIO:GetState() == GMOD_CHANNEL_PLAYING or AUDIORADIO:GetState() == GMOD_CHANNEL_STALLED)) then
-                AUDIORADIO:Stop()
-                AUDIORADIO = nil
-                loadingnew = true
-                sound.PlayURL(stations[playingindex], "noplay noblock", AUDIORADIO_CALLBACK)
+            if not (IsValid(AUDIORADIO) and (AUDIORADIO:GetState() == GMOD_CHANNEL_PLAYING or AUDIORADIO:GetState() == GMOD_CHANNEL_STALLED)) then
+                radioLoad(playingindex)
             end
         end)
 
         concommand.Add("aftermath_cl_radio_toggle", function(ply, cmd, args)
-            if AUDIORADIO and (AUDIORADIO:GetState() == GMOD_CHANNEL_PLAYING or AUDIORADIO:GetState() == GMOD_CHANNEL_STALLED) then
-                AUDIORADIO:Stop()
-                AUDIORADIO = nil
-                loadingnew = true
+            if IsValid(AUDIORADIO) and (AUDIORADIO:GetState() == GMOD_CHANNEL_PLAYING or AUDIORADIO:GetState() == GMOD_CHANNEL_STALLED) then
+                radioOff()
             else
-                AUDIORADIO:Stop()
-                AUDIORADIO = nil
-                sound.PlayURL(stations[playingindex], "noplay noblock", AUDIORADIO_CALLBACK)
+                radioLoad(playingindex)
             end
         end)
 
@@ -113,20 +128,17 @@ function Radio_Reset()
         end)
 
         concommand.Add("aftermath_cl_radio_changestation", function(ply, cmd, args)
-            if AUDIORADIO and (AUDIORADIO:GetState() == GMOD_CHANNEL_STALLED) then return end
+            local target
             if #args == 0 then
-                _playinginex = _playinginex + 1
-                _playinginex = _playinginex > #stations and 1 or _playinginex
-            elseif _playinginex ~= tonumber(args[1]) then
-                _playinginex = math.Clamp(tonumber(args[1]), 1, #stations)
-                if tonumber(args[1]) == playingindex then return end
+                -- No arg: advance to the next station, wrapping around.
+                target = (tonumber(playingindex) or 0) % #stations + 1
+            else
+                target = math.Clamp(tonumber(args[1]) or 1, 1, #stations)
             end
-
-            if AUDIORADIO then AUDIORADIO:Stop() end
-            AUDIORADIO = nil
-            sound.PlayURL(stations[_playinginex], "noplay noblock", AUDIORADIO_CALLBACK)
-            if not disablechatmessages then chat.AddText(Color(255, 140, 0), "Changed station to: ", Color(255, 207, 158), StationName[_playinginex]) end
-            playingindex = _playinginex
+            -- Already tuned and actually playing it? Don't restart the stream.
+            if target == playingindex and IsValid(AUDIORADIO) then return end
+            radioLoad(target)
+            if not disablechatmessages then chat.AddText(Color(255, 140, 0), "Changed station to: ", Color(255, 207, 158), StationName[target]) end
         end)
     end
 end

@@ -439,7 +439,7 @@ local function drawItem(item3, y, pip_color, _amt, ITEM_INSTANCE_RRA)
             end
         end
 
-        if IsUseDown and (_G.EatTimer or 0) > CurTime() then IsUseDown = false end
+        if (_G.EatTimer or 0) > CurTime() then pipboy.input:TakeUse() end
         -- ITEM_INSTANCE_RRA is the row's instance; alias for clarity.
         local function resolveInstance()
             return ITEM_INSTANCE_RRA
@@ -465,8 +465,7 @@ local function drawItem(item3, y, pip_color, _amt, ITEM_INSTANCE_RRA)
         end
         -- Item-row inputs are inert while a menu/selector owns the click.
         if not PIP_INV_MENU and not PIP_DROP_SELECTOR then
-            if IsUseDown then
-                IsUseDown = false
+            if pipboy.input:TakeUse() then
                 local v = resolveInstance()
                 if v then
                     netstream.Start("invAct", "use", v.id, v:getID(), v.id)
@@ -478,15 +477,13 @@ local function drawItem(item3, y, pip_color, _amt, ITEM_INSTANCE_RRA)
             elseif click then
                 equipToggle(resolveInstance(), nil)
                 _G.EatTimer = CurTime() + 0.25
-            elseif IsRightMouseDown then
-                IsRightMouseDown = false
+            elseif pipboy.input:TakeRightClick() then
                 local v = resolveInstance()
                 if v then
                     OPEN_PIP_INV_MENU(v, cursor.x, cursor.y)
                     _G.EatTimer = CurTime() + 0.25
                 end
-            elseif IsReloadUse then
-                IsReloadUse = false
+            elseif pipboy.input:TakeReload() then
                 local v = resolveInstance()
                 if v then
                     local cls = nut.item.list[v.uniqueID]
@@ -688,8 +685,6 @@ function OPEN_PIP_INV_MENU(itemTable, x, y)
         options = options,
         itemID  = itemTable:getID(),
         invID   = inv and inv:getID() or nil,
-        -- Seed with current LMB state so a held button isn't read as a click.
-        lmbPrev = input.IsMouseDown(MOUSE_LEFT),
     }
 end
 
@@ -765,11 +760,9 @@ local function pipInvMenuDraw()
     surface.SetDrawColor(pip_color)
     surface.DrawOutlinedRect(mx, my, menuW, menuH)
 
-    -- Raw-input rising-edge click detection (the AddUIButton pulse was
-    -- already consumed by the rows), so each press fires once.
-    local lmbHeld = input.IsMouseDown(MOUSE_LEFT)
-    local justClicked = lmbHeld and not menu.lmbPrev
-    menu.lmbPrev = lmbHeld
+    -- Left press-edge for this frame (shared via the input manager); each
+    -- physical press fires the menu once.
+    local justClicked = pipboy.input:LeftEdge()
 
     local hoveredOpt
     for i, opt in ipairs(menu.options) do
@@ -797,8 +790,7 @@ local function pipInvMenuDraw()
     end
 
     -- Right-click anywhere also dismisses the menu.
-    if IsRightMouseDown then
-        IsRightMouseDown = false
+    if pipboy.input:TakeRightClick() then
         PIP_INV_MENU = nil
     end
 end
@@ -818,7 +810,6 @@ function OPEN_PIP_DROP_SELECTOR(itemTable)
         invID   = inv and inv:getID() or nil,
         max     = max,
         value   = max,
-        lmbPrev = input.IsMouseDown(MOUSE_LEFT),
     }
 end
 
@@ -847,9 +838,7 @@ local function pipDropSelectorDraw()
     local nm = (item.getName and item:getName()) or item.name or ""
     draw.SimpleText(string.upper(nm), MainFontName .. "@32", x + w * 0.5, y + 62, color_white, TEXT_ALIGN_CENTER)
 
-    local lmbHeld = input.IsMouseDown(MOUSE_LEFT)
-    local justClicked = lmbHeld and not sel.lmbPrev
-    sel.lmbPrev = lmbHeld
+    local justClicked = pipboy.input:LeftEdge()
 
     local function rect(rx, ry, rw, rh, label)
         local inside = cursor.x >= rx and cursor.x <= rx + rw
@@ -901,8 +890,7 @@ local function pipDropSelectorDraw()
     end
 
     -- Right-click also cancels, matching the action menu.
-    if IsRightMouseDown then
-        IsRightMouseDown = false
+    if pipboy.input:TakeRightClick() then
         PIP_DROP_SELECTOR = nil
     end
 end
@@ -987,7 +975,7 @@ local function DrawInventoryPage()
     last_item_page_draw_amt = #stack or 0
      
     if cursor.x > 643 and cursor.x < 643 + 10 and cursor.y > 120 and cursor.y < 120 + 540 or PIP_SCROLL_IS_DOWN then
-        if input.IsMouseDown(MOUSE_LEFT) then
+        if pipboy.input:LeftDown() then
             local p = (cursor.y - 120) / 540
             PIP_SCROLL_IS_DOWN = true
             Scroll_POS = math.floor(math.Clamp(p * #stack, 0, last_item_page_draw_amt - 18))
@@ -1171,8 +1159,9 @@ local draw_overview = function(pip_color2)
 end
 
 local draw_repair = function(pip_color2)
-    if ITEM_REPAIRING == nil or IsReloadUse then
-        IsReloadUse = false
+    -- Consume any pending reload up front so it can't leak to the INV page.
+    local reloadPressed = pipboy.input:TakeReload()
+    if ITEM_REPAIRING == nil or reloadPressed then
         CHANGE_PIP_BOY_PAGE("INV")
     end
 
@@ -1214,8 +1203,7 @@ local draw_repair = function(pip_color2)
                 local count = charINV.items[i] or 0
                 -- draw.DrawNonParsedText(tablet.Inventory.items[i]:getName() .. "X " .. nut.item.list[i]:getName(), MainFontName .. "@32", 580, 180, pip_color, 0)
                 repairValue = v
-                if IsUseDown then
-                    IsUseDown = false
+                if pipboy.input:TakeUse() then
                     netstream.Start("weapon_repair", inst.id, i)
                 end
             end

@@ -10,8 +10,19 @@ local function createSkillCheck(skillID, commandName)
 			local d20 = math.random(1,20)
 			local skill = char:getSkill(skillID, 0)
 
-			local roll = d20+skill*0.1
-			
+			-- Add the SPECIAL attributes tied to this skill into the roll.
+			-- Each skill declares its relevant attributes in SKILL.specialBonus
+			-- (e.g. Unarmed = str + luck), so derive them from there.
+			local special = 0
+			local skillTbl = nut.skills.list[skillID]
+			if(skillTbl and skillTbl.specialBonus) then
+				for attribID in pairs(skillTbl.specialBonus) do
+					special = special + char:getAttrib(attribID, 0)
+				end
+			end
+
+			local roll = d20+skill*0.1+special*0.1
+
 			local critText = ""
 			
 			--natural crit
@@ -39,7 +50,7 @@ local function createSkillCheck(skillID, commandName)
 				crit = 1
 			end
 
-			local rollText = "rolls " ..math.Round(d20*crit).. " + " ..math.Round(skill*0.1*crit).. " Stat Bonus"..critText..((bonus and (" + " ..bonus.. " ")) or " ").. "= " ..roll.. " for " ..name.. "."
+			local rollText = "rolls " ..math.Round(d20*crit).. " + " ..math.Round(skill*0.1*crit).. " Skill Bonus + " ..math.Round(special*0.1*crit).. " SPECIAL Bonus"..critText..((bonus and (" + " ..bonus.. " ")) or " ").. "= " ..roll.. " for " ..name.. "."
 
 			if(nut.plugin.list["chatboxextra"]) then
 				nut.plugin.list["chatboxextra"]:ChatboxSend(client, "skillcheck", client:Name().. " " ..rollText)

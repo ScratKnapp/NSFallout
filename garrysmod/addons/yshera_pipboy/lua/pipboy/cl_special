@@ -134,7 +134,7 @@ hook.Add("HUDPaint", "SKILLS", function()
         surface.SetFont(MainFontName .. "@42")
         NzGUI.DrawShadowText(n, 12, 6, c)
         render.SetViewPort(0, 0, wth, ht)
-        if IsReloadUse then CREATE_PERK_MENU() end
+        if pipboy.input:Reload() then CREATE_PERK_MENU() end
     end
 end)
 
@@ -159,14 +159,14 @@ function DrawPly.SKILLS()
             surface.SetMaterial(attriIMG[1])
             surface.SetDrawColor(pip_color)
             draw.DrawNonParsedText(attri_desc[y], MainFontName .. "@24", 600, 400, pip_color, 0)
-            if IS_R_DOWN and amt > 0 then
+            if pipboy.input:ReloadHeld() and amt > 0 then
                 deltSt = deltSt == 0 and CurTime() or deltSt
                 --  
                 local p = math.Clamp((CurTime() - deltSt) * 0.75, 0.01, 1)
                 surface.SetDrawColor(pip_color.r * 0.5, pip_color.g * 0.5, pip_color.b * 0.5)
                 surface.DrawRect(64, 118 + (y * height), ((width + 100) - 64) * p, height)
                 if p == 1 then
-                    IsReloadUse = false
+                    pipboy.input:TakeReload()
                     netstream.Start("statIncrease", v[1])
                     deltSt = 0
                 end

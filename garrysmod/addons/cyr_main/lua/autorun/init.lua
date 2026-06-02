@@ -14,8 +14,9 @@ NWL.CurrencyName = "Credits"
 NWL.CurrencySymbol = "Cr"
 rgb = Color
 NWL.ItemPickupTime = 1.5
--- Compass Calibration
-CreateConVar("nwl_compass_offset", "0", {FCVAR_REPLICATED, FCVAR_ARCHIVE, FCVAR_NOTIFY}, "Global compass degree offset for map geometry alignment.")
+-- Compass Calibration. The heading offset lives in nut.config ("compassOffset",
+-- registered by the compass plugin) so it shows in the admin config menu and
+-- persists/replicates like other settings. This command is an admin shortcut.
 if SERVER then
     concommand.Add("nwl_set_compass_offset", function(ply, cmd, args)
         if IsValid(ply) and not ply:IsAdmin() then
@@ -25,7 +26,7 @@ if SERVER then
 
         local val = tonumber(args[1])
         if val then
-            GetConVar("nwl_compass_offset"):SetFloat(val)
+            nut.config.set("compassOffset", val)
             local name = IsValid(ply) and ply:Nick() or "Console"
             print("[NWL] Compass offset updated to " .. val .. " by " .. name)
         else

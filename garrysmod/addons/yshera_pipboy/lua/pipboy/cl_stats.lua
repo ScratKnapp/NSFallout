@@ -235,10 +235,6 @@ local function predBump(id)
     end
 end
 
--- Previous-frame LMB state, so a hold can require its press to have STARTED on
--- the button (you can't press elsewhere and drag into it). Only one spend page
--- draws per frame, so updating this at the top of each is one write per frame.
-local MOUSE_L_PREV = false
 -- When true, the STATS sub-page draws a confirmation modal over the page
 -- before firing the nut_respec netstream. Cleared on confirm/cancel and on
 -- pipboy page change (see pip_changepage hook below).
@@ -255,10 +251,9 @@ function DrawPly.SPECIAL()
     local amts = predDisplay(AT_POOL, serverPool, -1)
     draw.DrawText("SPECIAL POINTS: " .. amts, MainFontName .. "@42", 950, 64, amts > 0 and pip_color or color_white, TEXT_ALIGN_RIGHT)
 
-    -- LMB edge for "press must start on the button" (see SKILLS for rationale).
-    local lmbDown = input.IsMouseDown(MOUSE_LEFT)
-    local lmbPressed = lmbDown and not MOUSE_L_PREV
-    MOUSE_L_PREV = lmbDown
+    -- LMB held + press-edge from the input manager (press must start on the box).
+    local lmbDown = pipboy.input:LeftDown()
+    local lmbPressed = pipboy.input:LeftEdge()
     if not lmbDown then SPECIAL_HOLD_KEY = nil end
 
     for y, v in pairs(attri) do
@@ -278,14 +273,14 @@ function DrawPly.SPECIAL()
             c = color_black
             surface.SetDrawColor(pip_color)
             surface.DrawRect(64, 118 + (y * 44), 500 - 64, 42)
-            if IS_R_DOWN then
+            if pipboy.input:ReloadHeld() then
                 deltSt = deltSt == 0 and CurTime() or deltSt
                 if amts > 0 and not atCap then
                     local p = math.Clamp((CurTime() - deltSt) * 0.75, 0.01, 1)
                     surface.SetDrawColor(pip_color.r * 0.5, pip_color.g * 0.5, pip_color.b * 0.5)
                     surface.DrawRect(64, 118 + (y * 44), (500 - 64) * p, 42)
                     if p == 1 then
-                        IsReloadUse = false
+                        pipboy.input:TakeReload()
                         if predPoolLeft(AT_POOL, serverPool) > 0 then
                             -- Server applies a fixed +1 and ignores any sent
                             -- value, so we just name the stat; predBump mirrors
@@ -392,12 +387,12 @@ end
 -- $vertexcolor so the pip_color tint applies, matching the vault-boy look.)
 local skill_icon = {
     guns       = Material("1BSPistolsDisplay"),
-    energy     = Material("1BSScienceDisplay"),      -- no energy-weapon icon; reuse Science
+    energy     = Material("1BSHackingDisplay"),      -- no energy-weapon icon; shares Science's
     explosives = Material("1BSExplosivesDisplay"),
     throwing   = Material("1BSExplosivesDisplay"),   -- grenades / thrown explosives
     melee      = Material("1BSMeleeDisplay"),
     unarmed    = Material("1BSUnarmedDisplay"),
-    science    = Material("1BSScienceDisplay"),
+    science    = Material("1BSHackingDisplay"),
     medicine   = Material("1BSMedicineDisplay"),
     repair     = Material("1BSEngineeringDisplay"),
     lockpick   = Material("1BSLockpickDisplay"),
@@ -534,13 +529,13 @@ function DrawPly.PERKS()
                 end
             end
 
-            if IS_R_DOWN and canUnlock then
+            if pipboy.input:ReloadHeld() and canUnlock then
                 deltSt = deltSt == 0 and CurTime() or deltSt
                 local p = math.Clamp((CurTime() - deltSt) * 0.75, 0.01, 1)
                 surface.SetDrawColor(pip_color.r * 0.5, pip_color.g * 0.5, pip_color.b * 0.5)
                 surface.DrawRect(px, py + 2, 240 * p, 24)
                 if p == 1 then
-                    IsReloadUse = false
+                    pipboy.input:TakeReload()
                     netstream.Start("perkAdd", v.uid)
                     deltSt = 0
                 end
@@ -683,11 +678,10 @@ function DrawPly.SKILLS()
     local amt = predDisplay(SK_POOL, serverPool, -1)
     draw.DrawText("SKILL POINTS: " .. amt, MainFontName .. "@42", 950, 64, amt > 0 and pip_color or color_white, TEXT_ALIGN_RIGHT)
 
-    -- LMB edge: a hold only counts if its press STARTED on the "+" box, so you
-    -- can't hold the button down elsewhere and drag across the row to spend.
-    local lmbDown = input.IsMouseDown(MOUSE_LEFT)
-    local lmbPressed = lmbDown and not MOUSE_L_PREV
-    MOUSE_L_PREV = lmbDown
+    -- LMB held + press-edge from the input manager: a hold only counts if its
+    -- press STARTED on the "+" box (can't drag in from elsewhere).
+    local lmbDown = pipboy.input:LeftDown()
+    local lmbPressed = pipboy.input:LeftEdge()
     if not lmbDown then SKILL_HOLD_KEY = nil end
 
     for y, v in pairs(skill_def) do
@@ -743,7 +737,7 @@ function DrawPly.SKILLS()
                     sy = sy + lineH + 2
                 end
             end
-            if IS_R_DOWN and amt > 0 and not atCap then
+            if pipboy.input:ReloadHeld() and amt > 0 and not atCap then
                 deltSt = deltSt == 0 and CurTime() or deltSt
                 --
                 --
@@ -751,7 +745,7 @@ function DrawPly.SKILLS()
                 surface.SetDrawColor(pip_color.r * 0.5, pip_color.g * 0.5, pip_color.b * 0.5)
                 surface.DrawRect(64, offset + (y * height), ((width + 100) - 64) * p, height)
                 if p == 1 then
-                    IsReloadUse = false
+                    pipboy.input:TakeReload()
                     -- updateSkill on the server *adds* the value (a delta, not a
                     -- target), so send 1 per spent point.
                     if predPoolLeft(SK_POOL, serverPool) > 0 then
@@ -868,7 +862,6 @@ local biz_cat_open = false     -- category dropdown expanded?
 local biz_page = 0
 local biz_next_build = 0
 local biz_perpage = 36         -- 2 columns * 15 rows
-local biz_rmb_down = false     -- right-mouse edge tracking (cart removal)
 local biz_paging_y = 690       -- Y of the PREV / PAGE X/X / NEXT row (tweak here)
 local biz_buy_t = 0
 
@@ -1024,8 +1017,8 @@ pipboy:AddRenderPage("BUSINESS", function()
     biz_page = math.Clamp(biz_page, 0, pages - 1)
 
     local hovered = nil
-    local rmb = input.IsMouseDown(MOUSE_RIGHT)
-    local rmbPressed = rmb and not biz_rmb_down
+    -- Right-click (the +attack2 event) removes a cart unit; fires once per press.
+    local rmbPressed = pipboy.input:RightClick()
 
     if not biz_cat_open then
         -- Empty state: the catalogue is permit-gated (CanPlayerUseBusiness), so
@@ -1102,8 +1095,6 @@ pipboy:AddRenderPage("BUSINESS", function()
             if nextC then biz_page = math.min(pages - 1, biz_page + 1) end
         end
     end
-    biz_rmb_down = rmb
-
     -- Right panel: hovered item detail + spinning model preview (INV logic).
     if hovered then
         biz_draw_model(hovered.model, hovered.angle, 600, 96, 180)
@@ -1161,13 +1152,13 @@ pipboy:AddRenderPage("BUSINESS", function()
     -- Hold R to submit the cart (same netstream as the F1 checkout).
     local boxY, boxW = 672, BIZ_R - BIZ_L
     local canBuy = lines > 0 and total <= money
-    if IS_R_DOWN and canBuy then
+    if pipboy.input:ReloadHeld() and canBuy then
         biz_buy_t = biz_buy_t == 0 and CurTime() or biz_buy_t
         local p = math.Clamp((CurTime() - biz_buy_t) * 0.75, 0.01, 1)
         surface.SetDrawColor(pip_color.r * 0.5, pip_color.g * 0.5, pip_color.b * 0.5)
         surface.DrawRect(BIZ_L, boxY, boxW * p, 34)
         if p == 1 then
-            IsReloadUse = false
+            pipboy.input:TakeReload()
             netstream.Start("bizBuy", biz_cart)
             biz_buy_t = 0
         end
@@ -1291,7 +1282,7 @@ local function Slides(str, colorIndex, x, y, width)
     draw.DrawText(str, SecondaryFontName .. "@42", startX, startY)
     surface.DrawLine(startX, startY + 50, startX + width, startY + 50)
     surface.DrawRect(startX + ((pipboyColor[colorIndex] / 255) * width) - 8, startY + 50 - 8, 18, 16)
-    if CheckIfCursorInRange(startX, startY, width, 80) and input.IsMouseDown(MOUSE_LEFT) then
+    if CheckIfCursorInRange(startX, startY, width, 80) and pipboy.input:LeftDown() then
         volIndicator = math.Clamp((cursor.x - startX) / width, 0, 1)
         pipboyColor[colorIndex] = volIndicator * 255
         pip_color = Color(pipboyColor[1], pipboyColor[2], pipboyColor[3])

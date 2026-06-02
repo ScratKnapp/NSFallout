@@ -488,7 +488,6 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
     end
 
     local uiButtonCheck = Color(255, 100, 100)
-    local IsLeftMouseDown = false
     function CheckIfCursorInRange(x, y, width, height)
         --surface.DrawOutlinedRect(x, y, width, height)
         return cursor.x > x and cursor.x < width + x and cursor.y > y and cursor.y < height + y
@@ -501,7 +500,7 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
         local isCursorIn = CheckIfCursorInRange(x, y, width, height)
         --  surface.SetDrawColor(isCursorIn and uiButtonCheck or pip_color)
         local weIN = false
-        if isCursorIn and IsLeftMouseDown and cursor:IsReady() then
+        if isCursorIn and pipboy.input:LeftEdge() and cursor:IsReady() then
             weIN = true
             --	surface.SetDrawColor(0,0,255)
             if PardonMouseUP == false then cursor.WaitingForRelease = true end
@@ -578,7 +577,7 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
         surface.DrawRect(x + (frac * w) - 9, y - 1, 18, 18)
         local fmt = "%." .. decimals .. "f"
         draw.DrawText(string.format(fmt, cur), "Morton Medium@32", x + w + 20, y - 14, pip_color)
-        if CheckIfCursorInRange(x - 8, y - 12, w + 16, 36) and input.IsMouseDown(MOUSE_LEFT) then
+        if CheckIfCursorInRange(x - 8, y - 12, w + 16, 36) and pipboy.input:LeftDown() then
             local nf = math.Clamp((cursor.x - x) / w, 0, 1)
             return minV + nf * span
         end
@@ -683,16 +682,11 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
     -- The screen itself renders to its RT in a real render hook, once per
     -- frame with a valid paint context, before the 3D and HUD passes that
     -- sample the texture. Page logic (input reads, button hits) runs here.
-    -- Persists across frames for the left-click press-edge computed below.
-    local pipPrevLMB = false
     hook.Add("PreRender", "pipboy_screen_render", function()
         if not PIPBOY_ON_SCREEN then return end
-        -- Deterministic one-frame left-click edge, sampled here in the paint
-        -- phase, so every AddUIButton fires reliably and self-limits to one
-        -- hit per press.
-        local lmbNow = input.IsMouseDown(MOUSE_LEFT)
-        IsLeftMouseDown = lmbNow and not pipPrevLMB
-        pipPrevLMB = lmbNow
+        -- Sample the left button for this render pass (one-frame press edge +
+        -- raw held); the active page reads it through pipboy.input below.
+        pipboy.input:Poll()
         render.PushRenderTarget(tex)
         render.OverrideAlphaWriteEnable(true, true)
         render.Clear(0, 0, 0, 0, true)
@@ -705,7 +699,11 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
         drawHeader() -- Draws Header
         DrawCursor()
         -- LEAVE HERE PLS
-        if not IsLeftMouseDown then cursor.WaitingForRelease = false end
+        if not pipboy.input:LeftEdge() then cursor.WaitingForRelease = false end
+        -- Drop any one-shot the active page didn't consume, at the end of the
+        -- render pass, so each press is seen exactly once and never leaks into
+        -- the next frame. (Never clear input on a timer -- it races this pass.)
+        pipboy.input:Clear()
         surface.SetMaterial(dirt_overlay)
         surface.SetDrawColor(78, 84, 85, 6)
         surface.DrawTexturedRect(0, 0, 1200, HEIGHT)
@@ -967,28 +965,14 @@ timer.Simple(3, function () vgui.GetHoveredPanel():Remove() end) ]]
         end)
 
         hook.Add("KeyPress", ">unsureaboutthisone", function(ply, key) if PIPBOY_ON_SCREEN then return true end end)
-        hook.Add("Think", "Pipboy_overwrite_input_listen", function() IS_R_DOWN = input.IsKeyDown(KEY_R) and not PIPBOY_INPUT_BLOCKED() end)
+        hook.Add("Think", "Pipboy_overwrite_input_listen", function() pipboy.input:UpdateHeld() end)
         hook.Add("PlayerBindPress", "Pipboy_overwrite_input", function(ply, bind, pressed)
             if not pressed then return end
-            if PIPBOY_ON_SCREEN then
-                if bind == "+attack" then
-                    -- Block the world action only. The UI's left-click is sampled
-                    -- as a press-edge in the PreRender pass (see pipPrevLMB).
-                    return true
-                elseif bind == "+attack2" then
-                    IsRightMouseDown = true
-                    timer.Simple(0, function() IsRightMouseDown = false end)
-                    return true
-                elseif bind == "+reload" then
-                    IsReloadUse = true
-                    IsReloadHold = true
-                    timer.Simple(0, function() IsReloadUse = false end)
-                    return true
-                elseif bind == "+use" then
-                    IsUseDown = true
-                    timer.Simple(0, function() IsUseDown = false end)
-                    return true
-                end
+            -- The input manager records every pipboy click/use/reload press and
+            -- returns true for the binds it claims, so we block the matching
+            -- world action. One press in -> one event the active page consumes.
+            if PIPBOY_ON_SCREEN and pipboy.input:HandleBind(bind) then
+                return true
             end
         end)
 

@@ -36,10 +36,13 @@ local function IncludeDir(directory)
 end
 
 if SERVER then
+    AddCSLuaFile("cl_input.lua")
     AddCSLuaFile("cl_pipboy.lua")
     AddCSLuaFile("cl_nut_ui_overwrite.lua")
     include("sv_pipboy.lua")
 else
+    -- Input manager must load before cl_pipboy
+    include("cl_input.lua")
     include("cl_pipboy.lua")
     include("cl_nut_ui_overwrite.lua")
 end

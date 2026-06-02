@@ -12,9 +12,6 @@ local audioSamples = {}
 local audioSampleCount = 30
 for i = 1, audioSampleCount do audioSamples[i] = 0 end
 local nextAudioSample = 0
--- Previous physical left-mouse state, used for press-edge click detection
--- (see the station list). Persists across render frames.
-local radioMouseWas = false
 local function video_killed_the_radio_star()
     if radio_vol == nil then
         radio_vol = GetConVar("aftermath_cl_radio_volume")
@@ -47,23 +44,14 @@ local function video_killed_the_radio_star()
     local startX = 600
     local posOfBox = -6000
 
-    -- Frame-accurate left-click. The pipboy's shared IsLeftMouseDown flag is
-    -- set for one frame and cleared on a 0-delay timer, which races this render
-    -- pass and intermittently drops clicks. Reading the physical button and
-    -- detecting the press edge ourselves makes selection reliable.
-    local mouseNow = input.IsMouseDown(MOUSE_LEFT)
-    local clickEdge = mouseNow and not radioMouseWas
-    radioMouseWas = mouseNow
+
+    local clickEdge = pipboy.input:LeftClick()
 
     -- ===== Station list =====
     for i, v in pairs(StationName) do
         local exists = i == EV_RADIO_GETINDEX()
         local rowY = 100 + (48 * i)
-        -- Hover-aware button: gives us the hover state (pure geometry, reliable)
-        -- and a deferred label-draw so we paint the row background first and the
-        -- text on top. We ignore its click return and use the press-edge above
-        -- instead. Hitbox, highlight and label all share rowY now (the tuned
-        -- highlight used to sit 5px below the actual hitbox).
+
         local hovered, _, drawLabel = NzGUI:DrawTextButtonWithDelayedHover(string.upper(v), MainFontName .. (exists and "!" or "@") .. "48", 100, rowY, 420, 42, 1, color_white)
 
         local labelColor = color_white
@@ -88,9 +76,11 @@ local function video_killed_the_radio_star()
         drawLabel(labelColor)
 
         if hovered and clickEdge then
+   
             if exists then
                 EV_RADIO_OFF()
             else
+
                 EV_RADIO_PUBLIC_CON(i)
                 songname = "Fetching..."
             end
@@ -138,8 +128,7 @@ local function video_killed_the_radio_star()
     surface.DrawRect(scopeX + scopeW - cl, scopeBot - 2, cl, 2)
     surface.DrawRect(scopeX + scopeW - 2, scopeBot - cl, 2, cl)
 
-    -- ===== Frequency / status header =====
-    -- Stacked above the scope: title row, then status row, with even gaps.
+
     local tuned = segmentWidth ~= nil
     local freqMHz = 87.5 + ((idx or 0) * 7.3) % 20.5
     local titleY = scopeTop - 118
@@ -174,10 +163,7 @@ local function video_killed_the_radio_star()
         surface.SetDrawColor(pc.r, pc.g, pc.b, big and 160 or 70)
         surface.DrawLine(startX + i, volTop + 6, startX + i, volTop + 6 + (big and 14 or 7))
     end
-    -- knob + interaction. One generous hitbox spans the whole slider strip
-    -- (full track width + tick/knob height) so a click anywhere on it sets the
-    -- volume. The old hitbox only covered a 10px-tall band on the track plus a
-    -- narrow box around the knob, so most of the visible slider did nothing.
+
     local knobX = startX + (volIndicator * 75)
     local sliderHot = CheckIfCursorInRange(startX - 12, volTop - 20, 324, 44)
 
@@ -187,7 +173,7 @@ local function video_killed_the_radio_star()
     surface.SetDrawColor(pc)
     surface.DrawRect(knobX - 3, volTop - 16, 6, 32)
 
-    if sliderHot and input.IsMouseDown(MOUSE_LEFT) then
+    if sliderHot and pipboy.input:LeftDown() then
         volIndicator = math.Clamp((cursor.x - startX) / 75, 0, 4)
         radio_vol:SetFloat(volIndicator)
     end
@@ -206,10 +192,7 @@ local function video_killed_the_radio_star()
 
     -- ===== Waveform with glow trail =====
     local time = CurTime()
-    -- Push one averaged-FFT sample into a 30-slot ring at 30Hz, giving us a
-    -- 1-second window of recent loudness. We then map each x along the scope
-    -- to one of those samples so the wave's amplitude varies across the
-    -- trace instead of bobbing the whole sine up and down uniformly.
+
     if time >= nextAudioSample then
         nextAudioSample = time + 1 / 30
         local lvl = 0
@@ -301,9 +284,8 @@ pipboy:AddRenderPage("Secret", function()
     if IsValid(HTMLWIN) then
         surface.SetMaterial(HTMLWIN:GetHTMLMaterial())
         surface.DrawTexturedRect(-200, 0, 1800, 1600)
-        if IsUseDown then
+        if pipboy.input:TakeUse() then
             HTMLWIN:Call(tog and ' document.getElementById("video").play()' or ' document.getElementById("video").pause()')
-            IsUseDown = false
             tog = not tog
         end
     end
@@ -577,7 +559,7 @@ hook.Add("HUDPaint", "SKILLS", function()
         surface.SetFont(MainFontName .. "@42")
         NzGUI.DrawShadowText(n, 12, 6, c)
         render.SetViewPort(0, 0, wth, ht)
-        if IsReloadUse then CREATE_PERK_MENU() end
+        if pipboy.input:Reload() then CREATE_PERK_MENU() end
     end
 end)
 
@@ -595,7 +577,7 @@ function DrawPly.SKILLS()
             surface.SetDrawColor(pip_color)
             surface.DrawRect(64, 118 + (y * height), (width + 100) - 64, height)
             local amt = (LocalPlayer():getChar():getSkillLevel("skillpoints") or 1) - 1
-            if IS_R_DOWN and amt > 0 then
+            if pipboy.input:ReloadHeld() and amt > 0 then
                 deltSt = deltSt == 0 and CurTime() or deltSt
                 --  
                 --  
@@ -603,7 +585,7 @@ function DrawPly.SKILLS()
                 surface.SetDrawColor(pip_color.r * 0.5, pip_color.g * 0.5, pip_color.b * 0.5)
                 surface.DrawRect(64, 118 + (y * height), ((width + 100) - 64) * p, height)
                 if p == 1 then
-                    IsReloadUse = false
+                    pipboy.input:TakeReload()
                     netstream.Start("statIncrease", v[1])
                     deltSt = 0
                 end

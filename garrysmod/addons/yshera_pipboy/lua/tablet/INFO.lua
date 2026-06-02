@@ -33,7 +33,6 @@ local INFO_LIST_W       = 470
 local INFO_LIST_H       = 540
 local INFO_DETAIL_X     = 560
 local INFO_DETAIL_W     = 400
-local INFO_RMB_PREV     = false
 
 -- Compose the visible roster (faction header + rows). Recognition decides if
 -- the row shows a name or "[unknown]"; admins (with admin-mode toggled on)
@@ -122,7 +121,7 @@ local info_hold_action, info_hold_target, info_hold_start = nil, nil, 0
 local function info_doAction(action, charID, needsHold, label)
     if needsHold then
         -- Track a hold-R confirmation; the caller already drew the button.
-        if IS_R_DOWN then
+        if pipboy.input:ReloadHeld() then
             if info_hold_action ~= action or info_hold_target ~= charID then
                 info_hold_action, info_hold_target, info_hold_start = action, charID, CurTime()
             end
@@ -193,7 +192,7 @@ local function info_drawAdminButton(label, x, y, w, charID, action, needsHold)
     surface.DrawOutlinedRect(x, y, w, 28)
 
     if needsHold and isIn then
-        if IS_R_DOWN then
+        if pipboy.input:ReloadHeld() then
             if info_hold_action ~= action or info_hold_target ~= charID then
                 info_hold_action, info_hold_target, info_hold_start = action, charID, CurTime()
             end
@@ -278,7 +277,7 @@ tablet.pages["INFO"] = function(color_main)
     -- button was being held when it happened. Without this the timer can
     -- "carry over" if the user moved the cursor off the button before
     -- letting go of R.
-    if not IS_R_DOWN then
+    if not pipboy.input:ReloadHeld() then
         info_hold_action, info_hold_target, info_hold_start = nil, nil, 0
     end
 
@@ -319,8 +318,6 @@ tablet.pages["INFO"] = function(color_main)
     -- ============ LEFT: scrolling list ============
     local startIdx = PIPBOY_INFO_SCROLL + 1
     local drawY = INFO_LIST_Y
-    local rmb = input.IsMouseDown(MOUSE_RIGHT)
-    local rmbPressed = rmb and not INFO_RMB_PREV
 
     local selectedRow
     for i = startIdx, #rows do
@@ -385,15 +382,14 @@ tablet.pages["INFO"] = function(color_main)
         local barH = sbH * barP
         surface.DrawRect(sbX, sbY + pos * (sbH - barH), sbW, barH)
 
-        -- Click on bar to jump scroll.
+        -- Click on bar to jump scroll. (Previously read a nil global and never
+        -- fired; now uses the manager's left press-edge.)
         local isIn, click = AddUIButton(sbX, sbY, sbW, sbH, true)
-        if isIn and IsLeftMouseDown then
+        if isIn and pipboy.input:LeftEdge() then
             local frac = (cursor.y - sbY) / sbH
             PIPBOY_INFO_SCROLL = math.Clamp(math.floor(frac * #rows), 0, math.max(0, #rows - visibleRows))
         end
     end
-
-    INFO_RMB_PREV = rmb
 
     -- ============ RIGHT: detail panel ============
     if not selectedRow then
