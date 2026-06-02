@@ -32,11 +32,11 @@ if SERVER then
             local maxstack = NWL.GetStackLimit(itemDef and itemDef.maxstack)
             if inventory and maxstack and maxstack > 1 then
                 item.player = client
-                local remaining = tonumber(item:getData("Amount")) or 1
+                local remaining = tonumber(item:getData("Amount", item.defaultAmount)) or 1
                 local existingCount = #inventory:getItemsOfType(item.uniqueID)
                 for _, existing in pairs(inventory:getItemsOfType(item.uniqueID)) do
                     if remaining <= 0 then break end
-                    local cur = tonumber(existing:getData("Amount")) or 1
+                    local cur = tonumber(existing:getData("Amount", existing.defaultAmount)) or 1
                     local space = maxstack - cur
                     if space > 0 then
                         local move = math.min(space, remaining)

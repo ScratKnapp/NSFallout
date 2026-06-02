@@ -1,6 +1,6 @@
-ITEM.name = "Cruentus"
-ITEM.desc = "A concoction formed by Gladiators of Flagstaff to give them victory, the Cruentus is part hallucinogen part steroid, a unrivaled remedy for fast violent gory action."
-ITEM.model = "models/fnv/clutter/food/desertsalad.mdl"
+ITEM.name = "Psycho"
+ITEM.desc = "A syringe of military grade, psychosis-inducing amphetamines that were created prior to the Great War."
+ITEM.model = "models/mosi/fallout4/props/aid/pyscho.mdl"
 ITEM.uniqueID = "drug_psycho"
 ITEM.quantity2 = 1
 ITEM.price = 0

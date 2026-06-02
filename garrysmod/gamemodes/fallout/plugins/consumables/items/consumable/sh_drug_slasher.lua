@@ -1,6 +1,6 @@
-ITEM.name = "Cuttus"
-ITEM.desc = "A Supplemental Herbal used by the most violent of Tribals for a enraged sense of violence, deranging them to use their slashing weapons to be most effective."
-ITEM.model = "models/mosi/fallout4/props/food/deathclawsouffle.mdl"
+ITEM.name = "Slasher"
+ITEM.desc = "A highly addictive wasteland mix of med-x and psycho."
+ITEM.model = "models/mosi/fnv/props/health/chems/psycho.mdl"
 ITEM.uniqueID = "drug_slasher"
 ITEM.quantity2 = 1
 ITEM.price = 0

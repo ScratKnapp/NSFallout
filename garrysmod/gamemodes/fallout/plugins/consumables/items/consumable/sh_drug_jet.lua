@@ -1,6 +1,6 @@
-ITEM.name = "Sudor Stercus"
-ITEM.desc = "The most addictive and common of the herbal drugs, the Sudor Stercus imbues the user with a temporary cheap high and makes them sweat profusely, even in the coldest of nights as well as other involuntary side effects, with the ingredients of Sudor Stercus changing from Shaman to Maker imbuing it with a feared reputation for the most down and out of the Legion territories."
-ITEM.model = "models/bf1/gadgets/adrenaline syringe.mdl"
+ITEM.name = "Jet"
+ITEM.desc = "An small inhaler and canister filled with a highly addictive aerosol mixed chem."
+ITEM.model = "models/mosi/fallout4/props/aid/jet.mdl"
 ITEM.uniqueID = "drug_jet"
 ITEM.quantity2 = 1
 ITEM.price = 0

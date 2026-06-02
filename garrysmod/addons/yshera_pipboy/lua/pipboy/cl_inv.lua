@@ -317,7 +317,7 @@ local function drawItem(item3, y, pip_color, _amt, ITEM_INSTANCE_RRA)
     -- row's instance-bucket count (_amt) for anything not using Amount.
     local amount = 1
     if ITEM_INSTANCE_RRA and isfunction(ITEM_INSTANCE_RRA.getData) then
-        amount = tonumber(ITEM_INSTANCE_RRA:getData("Amount")) or 1
+        amount = tonumber(ITEM_INSTANCE_RRA:getData("Amount", ITEM_INSTANCE_RRA.defaultAmount)) or 1
     end
     local shown = math.max(amount, _amt or 1)
     local name = (ITEM_INSTANCE_RRA or item):getName()
@@ -488,7 +488,7 @@ local function drawItem(item3, y, pip_color, _amt, ITEM_INSTANCE_RRA)
                 if v then
                     local cls = nut.item.list[v.uniqueID]
                     local maxstack = effMaxStack(cls and cls.maxstack)
-                    local amount = tonumber(v:getData("Amount")) or 1
+                    local amount = tonumber(v:getData("Amount", v.defaultAmount)) or 1
                     if maxstack and maxstack > 1 and amount > 1 then
                         OPEN_PIP_DROP_SELECTOR(v)
                     else
@@ -698,7 +698,7 @@ local function pipInvMenuRun(opt)
     if opt.actionKey == "drop" then
         local cls = nut.item.list[itemTable.uniqueID]
         local maxstack = effMaxStack(cls and cls.maxstack)
-        local amount = tonumber(itemTable:getData("Amount")) or 1
+        local amount = tonumber(itemTable:getData("Amount", itemTable.defaultAmount)) or 1
         if maxstack and maxstack > 1 and amount > 1 then
             PIP_INV_MENU = nil
             OPEN_PIP_DROP_SELECTOR(itemTable)
@@ -802,7 +802,7 @@ PIP_DROP_SELECTOR = nil
 
 function OPEN_PIP_DROP_SELECTOR(itemTable)
     if not itemTable then return end
-    local max = tonumber(itemTable:getData("Amount")) or 1
+    local max = tonumber(itemTable:getData("Amount", itemTable.defaultAmount)) or 1
     if max <= 1 then return end
     local inv = LocalPlayer():getChar():getInv()
     PIP_DROP_SELECTOR = {
@@ -820,7 +820,7 @@ local function pipDropSelectorDraw()
     if not item then PIP_DROP_SELECTOR = nil return end
 
     -- Track the live max in case the stack changes underneath us.
-    sel.max = tonumber(item:getData("Amount")) or sel.max
+    sel.max = tonumber(item:getData("Amount", item.defaultAmount)) or sel.max
     sel.value = math.Clamp(sel.value, 1, sel.max)
 
     local screenW = WIDTH or 1300

@@ -1,6 +1,6 @@
-ITEM.name = "Ingeniousos"
-ITEM.desc = "A herbal mix coveted by the Cult of Mars and for the Elites of the Legion and Tribes, it improves the brain capacities for thoughts and deliberation, famously used by Legates on the eve of battle and Tribal Chiefs for cunning displays."
-ITEM.model = "models/fnv/clutter/nvabsinthebottle/nvabsinthebottle.mdl"
+ITEM.name = "Daddy-O"
+ITEM.desc = "A small syringe with two vials of bright orange liquid, favored by intellectuals."
+ITEM.model = "models/mosi/fallout4/props/aid/daddyo.mdl"
 ITEM.uniqueID = "drug_daddyo"
 ITEM.quantity2 = 1
 ITEM.price = 0

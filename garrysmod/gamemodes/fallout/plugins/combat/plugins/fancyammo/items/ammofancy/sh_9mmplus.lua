@@ -5,7 +5,7 @@ ITEM.model = "models/visualitygaming/fallout/ammo/9mm.mdl"
 ITEM.category = "Ammunition"
 
 ITEM.ammo = "9mm"
-ITEM.ammoAmount = 30 --single bullet
+ITEM.defaultAmount = 30 --single bullet
 ITEM.bullet = "9mm +P"
 ITEM.maxstack = 100
 

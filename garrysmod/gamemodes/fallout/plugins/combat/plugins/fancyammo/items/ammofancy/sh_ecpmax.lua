@@ -5,7 +5,7 @@ ITEM.model = "models/fallout new vegas/electron_charge_pack.mdl"
 ITEM.category = "Ammunition"
 
 ITEM.ammo = "Electron Charge Pack"
-ITEM.ammoAmount = 30 --single bullet
+ITEM.defaultAmount = 30 --single bullet
 ITEM.bullet = "Electron Charge Pack Max Charge"
 ITEM.maxstack = 100
 

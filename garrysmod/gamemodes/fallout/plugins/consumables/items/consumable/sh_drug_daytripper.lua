@@ -1,6 +1,6 @@
-ITEM.name = "Udatana-Iga"
-ITEM.desc = "Used to make the day go by Yavapai Brahmin Herders, developed in the aftermath of Legion Conquest as a looked-down upon concoction for its perceived usefulness and idle-mindedness effect on its user, favoured by Shamans and Cult of Mars for specific religious ceremonies."
-ITEM.model = "models/fnv/clutter/junk/nv/xanderroot.mdl"
+ITEM.name = "Day Tripper"
+ITEM.desc = "A mild hallucinogenic drug favored by those who want a relaxed escape, though it makes a lot of physical activity harder to complete."
+ITEM.model = "models/mosi/fallout4/props/aid/daytripper.mdl"
 ITEM.uniqueID = "drug_daytripper"
 ITEM.quantity2 = 1
 ITEM.price = 0

@@ -5,7 +5,7 @@ ITEM.model = "models/mosi/fallout4/ammo/10mm.mdl"
 ITEM.category = "Ammunition"
 
 ITEM.ammo = "10mm"
-ITEM.ammoAmount = 30 --single bullet
+ITEM.defaultAmount = 30 --single bullet
 ITEM.bullet = "10mm HP"
 ITEM.maxstack = 100
 

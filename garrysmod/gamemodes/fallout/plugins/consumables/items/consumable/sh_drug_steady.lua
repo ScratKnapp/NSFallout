@@ -1,6 +1,6 @@
-ITEM.name = "Oculi"
-ITEM.desc = " A strange sickening concoction used by the sharpshooters of the Navajo for better aim and steadier nerves."
-ITEM.model = "models/fnv/clutter/food/desertsalad.mdl"
+ITEM.name = "Steady"
+ITEM.desc = "A combat chem poured into the bottom of a makeshift inhaler and tinfoil heating element, for roasting the chemical and inhaling the fumes."
+ITEM.model = "models/mosi/fnv/props/health/chems/steady.mdl"
 ITEM.uniqueID = "drug_steady"
 ITEM.quantity2 = 1
 ITEM.price = 0

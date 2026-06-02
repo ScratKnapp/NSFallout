@@ -30,7 +30,7 @@ ITEM.functions.use = {
 }
 
 function ITEM:getDesc()
-	local desc = Format(self.desc, self.ammoAmount)
+	local desc = Format(self.desc, self.defaultAmount)
 	
 	local amount = self:getData("Amount", 0)
 	local ammo = string.lower(tostring(self:getData("ammo")))

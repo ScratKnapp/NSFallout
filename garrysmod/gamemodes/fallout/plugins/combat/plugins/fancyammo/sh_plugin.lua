@@ -54,7 +54,7 @@ function PLUGIN:ReloadFromInventory(client, weapon)
 			ammoTypes[v.dmgT] = ammoTypes[v.dmgT] or {}
 
 			table.insert(ammoTypes[v.dmgT], v)
-			ammoCounts[v.dmgT] = (ammoCounts[v.dmgT] or 0) + v:getData("Amount", v.ammoAmount)
+			ammoCounts[v.dmgT] = (ammoCounts[v.dmgT] or 0) + v:getData("Amount", v.defaultAmount)
 		end
 	end
 
@@ -70,7 +70,7 @@ function PLUGIN:ReloadFromInventory(client, weapon)
 	local ammoToBeLoaded = ammoTypes[largestType]
 	if(ammoToBeLoaded) then
 		for k, v in pairs(ammoToBeLoaded) do
-			local ammoAmount = v:getData("Amount", v.ammoAmount)
+			local ammoAmount = v:getData("Amount", v.defaultAmount)
 			local remain = ammoAmount - needed
 			
 			local newMag

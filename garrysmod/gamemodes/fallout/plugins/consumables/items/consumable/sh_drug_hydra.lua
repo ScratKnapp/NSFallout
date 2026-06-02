@@ -1,6 +1,6 @@
-ITEM.name = "Fire Mancus Water"
-ITEM.desc = " Illegal in Most Legion Territories, yet the sweetly alcohol restores woes in the coldest of desert nights, best hope your Centurion overlooks such contraband."
-ITEM.model = "models/fnv/clutter/liquorbottles/whiskeybottle01.mdl "
+ITEM.name = "Hydra"
+ITEM.desc = "A Supa Yum fruit drink soda with vials of chemicals that are mixed in the central bottle, and the resulting fumes inhaled. Often used on the west coast for field treatments."
+ITEM.model = "models/mosi/fnv/props/health/chems/hydra.mdl"
 ITEM.uniqueID = "drug_hydra"
 ITEM.quantity2 = 1
 ITEM.price = 0

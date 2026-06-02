@@ -5,7 +5,7 @@ ITEM.model = "models/fallout new vegas/22_ammo.mdl"
 ITEM.category = "Ammunition"
 
 ITEM.ammo = ".22LR"
-ITEM.ammoAmount = 30 --single bullet
+ITEM.defaultAmount = 30 --single bullet
 ITEM.bullet = ".22LR HP"
 ITEM.maxstack = 100
 

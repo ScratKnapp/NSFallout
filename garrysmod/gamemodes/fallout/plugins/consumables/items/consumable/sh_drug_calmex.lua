@@ -1,6 +1,6 @@
-ITEM.name = "Usgaya"
-ITEM.desc = "A Cherokee origin herb, used by the Cherokee traditionally for the preparation and mourning process of funerals, its popularity grew out of Legion trade caravans and was brought to the wider Arizona as a herb to calm the persons self in battle."
-ITEM.model = "models/fnv/clutter/food/nv_wastelandomelette.mdl"
+ITEM.name = "Calmex"
+ITEM.desc = "An autoinjector filled with a purple liquid that calms the nerves and heightens senses."
+ITEM.model = "models/mosi/fallout4/props/aid/medx.mdl"
 ITEM.uniqueID = "drug_calmex"
 ITEM.quantity2 = 1
 ITEM.price = 0

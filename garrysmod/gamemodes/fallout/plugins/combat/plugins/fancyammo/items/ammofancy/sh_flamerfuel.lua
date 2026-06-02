@@ -5,7 +5,7 @@ ITEM.model = "models/mosi/fallout4/ammo/flamerfuel.mdl"
 ITEM.category = "Ammunition"
 
 ITEM.ammo = "Flamer Fuel"
-ITEM.ammoAmount = 1000 --single bullet
+ITEM.defaultAmount = 1000 --single bullet
 ITEM.bullet = "Flamer Fuel"
 ITEM.maxstack = 100
 

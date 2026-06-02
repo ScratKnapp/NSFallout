@@ -5,7 +5,7 @@ ITEM.model = "models/mosi/fallout4/ammo/shotgunshells.mdl"
 ITEM.category = "Ammunition"
 
 ITEM.ammo = "12 Gauge"
-ITEM.ammoAmount = 30 --single bullet
+ITEM.defaultAmount = 30 --single bullet
 ITEM.bullet = "12 Gauge Dragon's Breath"
 ITEM.maxstack = 100
 

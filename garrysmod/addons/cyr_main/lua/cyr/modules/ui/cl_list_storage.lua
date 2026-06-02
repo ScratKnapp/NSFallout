@@ -140,7 +140,7 @@ end
 -- data value, then the native quantity field, defaulting to 1.
 local function itemAmount(it)
 	if not it then return 1 end
-	local n = it.getData and (tonumber(it:getData("Amount")) or tonumber(it:getData("quantity")))
+	local n = it.getData and (tonumber(it:getData("Amount", it.defaultAmount)) or tonumber(it:getData("quantity")))
 	if not n and it.getQuantity then n = it:getQuantity() end
 	return tonumber(n) or 1
 end
@@ -1177,7 +1177,7 @@ local PANEL = {}
 		end
 
 		if item.getData then
-			local amount = item:getData("Amount")
+			local amount = item:getData("Amount", item.defaultAmount)
 			local ammo   = item:getData("ammo")
 			if amount and not self.hoveredAmmoSize then
 				self.hoveredAmmoSize = amount

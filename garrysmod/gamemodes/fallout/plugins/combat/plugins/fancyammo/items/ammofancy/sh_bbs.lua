@@ -5,7 +5,7 @@ ITEM.model = "models/mosi/fallout4/props/junk/bobbypinbox.mdl"
 ITEM.category = "Ammunition"
 
 ITEM.ammo = "BB"
-ITEM.ammoAmount = 100 --single bullet
+ITEM.defaultAmount = 100 --single bullet
 ITEM.bullet = "BB"
 ITEM.maxstack = 1000
 
