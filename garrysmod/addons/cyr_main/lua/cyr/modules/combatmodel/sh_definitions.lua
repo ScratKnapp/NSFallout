@@ -297,7 +297,6 @@ CM.RegisterLimbSet("robot_eyebot", {
 })
 CM.AssignModel("models/fallout/eyebot.mdl", "robot_eyebot")
 
-.
 CM.RegisterLimbSet("robot_protectron", {
     ["Head"]      = { bones = {"Bip01 Head", "Bip01 Head Dome", "Dome", "Bip01 Neck", "Bip01 Neck1"} },
     ["Body"]      = { bones = {"Bip01 Spine", "Bip01 Pelvis"} },
