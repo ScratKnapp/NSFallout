@@ -197,10 +197,8 @@ else
 		local pointAttrib = math.floor(charLevel/nut.config.get("specialLevels", 2)) * nut.config.get("specialPerLevel", 1)
 		local pointSkill = math.floor((charLevel-1)/nut.config.get("skillLevels", 1)) * nut.config.get("skillPerLevel", 5)
 
-		--for some reason, there are 9 attributes when there should only be 7
-		--i do not know why, so i guess we'll just use the hardcoded value for now
-		--local attribCount = table.Count(nut.attribs.list)
-		local attribCount = 7
+		--subtracts the attrib count since every attribute has 1 at least.
+		local attribCount = table.Count(nut.attribs.list)
 
 		pointAttrib = pointAttrib + nut.config.get("startAttribs", 28) - attribCount
 		pointSkill = pointSkill + nut.config.get("charCreateSkills", 25)
