@@ -4,7 +4,7 @@ ITEM.model = "models/llama/pipboy3000.mdl"
 ITEM.height = 1
 ITEM.width = 1
 ITEM.price = 5000
-ITEM.armor = 1 --DT based armor
+ITEM.armor = 0
 ITEM.durability = 250
 
 --[[

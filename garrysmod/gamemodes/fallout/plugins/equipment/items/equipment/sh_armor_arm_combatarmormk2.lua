@@ -6,7 +6,10 @@ ITEM.width = 1
 ITEM.price = 3500
 ITEM.durability = 8
 
-ITEM.armor = 16
+ITEM.armor = {
+  ["Left Arm"] = 16,
+  ["Right Arm"] = 16,
+}
 
 ITEM.reqStats = {
   ["str"] = 5,

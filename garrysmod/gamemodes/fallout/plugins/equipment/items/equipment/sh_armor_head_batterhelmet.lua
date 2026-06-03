@@ -13,7 +13,9 @@ outlineColor = Color(15, 250, 0),
 ITEM.price = 50
 ITEM.durability = 6
 
-ITEM.armor = 8
+ITEM.armor = {
+	["Head"] = 8,
+}
 
 ITEM.upgradeSlots = {
 ["Inserts"] = true,
