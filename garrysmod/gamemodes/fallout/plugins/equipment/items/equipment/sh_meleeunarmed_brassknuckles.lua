@@ -20,7 +20,7 @@ ITEM.weight = 1
 ITEM.weapondual = false
 
 ITEM.dmg = {
-	["Blunt"] = 12
+	["Blunt"] = 8
 }
 
 ITEM.costAP = 1 --how much AP is used when using this weapon normally

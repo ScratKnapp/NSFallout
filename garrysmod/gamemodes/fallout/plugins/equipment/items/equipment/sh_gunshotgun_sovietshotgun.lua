@@ -21,10 +21,10 @@ ITEM.weapondual = false
 ITEM.ammo = "12 Gauge"
 
 ITEM.dmg = {
-	["12 Gauge"] = 11
+	["12 Gauge"] = 12
 }
 
-ITEM.multi = 6 --how many hits it does, dont need to put it here if it's just 1
+ITEM.multi = 4 --how many hits it does, dont need to put it here if it's just 1
 ITEM.ammoUse = 1 --how much ammo it should use per shot, will default to 0 if not set
 ITEM.accuracy = 0 --bonus accuracy, can also go negative. defaults to 0 if not set
 ITEM.costAP = 1 --how much AP is used when using this weapon normally
@@ -32,7 +32,7 @@ ITEM.costAP = 1 --how much AP is used when using this weapon normally
 --the number in here determines the affects on accuracy at that range 
 -- -1 in the first spot will reduce accuracy at long range by 1
 -- 1 in the last spot will increase accuracy at close range by 1
-ITEM.range = {-75,-10,0,0}
+ITEM.range = {-75,-15,1,0}
 ITEM.class = "tfa_riot_shotgun"
 
 ITEM.reqStats = {

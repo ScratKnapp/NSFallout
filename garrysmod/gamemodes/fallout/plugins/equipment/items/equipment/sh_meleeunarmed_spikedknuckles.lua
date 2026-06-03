@@ -23,7 +23,7 @@ ITEM.accuracy = 1 --bonus accuracy, can also go negative. defaults to 0 if not s
 ITEM.class = "aus_m_fists_spikedknuckles"
 
 ITEM.dmg = {
-	["Slash"] = 15
+	["Slash"] = 11
 }
 
 ITEM.partMod = {

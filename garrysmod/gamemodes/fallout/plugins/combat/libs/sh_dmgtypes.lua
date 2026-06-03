@@ -405,7 +405,7 @@ PLUGIN.dmgTypes = {
 	
 	["Slash"] = {
 		name = "Slash",
-		armor = 0.9,
+		armor = 0.93,
 		kinetic = true,
 
 	},
@@ -417,7 +417,7 @@ PLUGIN.dmgTypes = {
 	},
 	["Blunt"] = {
 		name = "Blunt",
-		armor = 0.8,
+		armor = 0.9,
 		kinetic = true,
 	},
 	

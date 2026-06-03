@@ -27,10 +27,10 @@ ITEM.WalkAnim = "walk_shotgun"
 ITEM.RunAnim = "run_shotgun"
 
 ITEM.dmg = {
-	["12 Gauge"] = 7
+	["12 Gauge"] = 8
 }
 
-ITEM.multi = 8 --how many hits it does, dont need to put it here if it's just 1
+ITEM.multi = 5 --how many hits it does, dont need to put it here if it's just 1
 ITEM.ammoUse = 1 --how much ammo it should use per shot, will default to 0 if not set
 ITEM.accuracy = 0 --bonus accuracy, can also go negative. defaults to 0 if not set
 ITEM.costAP = 1 --how much AP is used when using this weapon normally
@@ -38,7 +38,7 @@ ITEM.costAP = 1 --how much AP is used when using this weapon normally
 --the number in here determines the affects on accuracy at that range 
 -- -1 in the first spot will reduce accuracy at long range by 1
 -- 1 in the last spot will increase accuracy at close range by 1
-ITEM.range = {-75,0,1,-15}
+ITEM.range = {-75,-15,1,0}
 ITEM.class = "tfa_lever_action_shotgun"
 
 ITEM.reqStats = {
