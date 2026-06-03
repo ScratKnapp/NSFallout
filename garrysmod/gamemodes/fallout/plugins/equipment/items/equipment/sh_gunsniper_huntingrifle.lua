@@ -43,9 +43,9 @@ ITEM.class = "aus_w_huntingrifle"
 
 ITEM.partMod = {
 	["Head"] = { --only affects this spot
-		accuracy = 20, --this is added
+		accuracy = 25, --this is added
 		accuracyMult = 0, --this is a multiplier
-		dmg = 0.4, --this adds to the existing multiplier
+		dmg = 0.5, --this adds to the existing multiplier
 	},
 }
 
