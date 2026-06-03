@@ -37,7 +37,7 @@ ITEM.costAP = 1 --how much AP is used when using this weapon normally
 --the number in here determines the affects on accuracy at that range 
 -- -1 in the first spot will reduce accuracy at long range by 1
 -- 1 in the last spot will increase accuracy at close range by 1
-ITEM.range = {-75,-30,0,1}
+ITEM.range = {-75,-15,0,1}
 ITEM.class = "aus_w_submachinegun"
 
 ITEM.reqStats = {
@@ -61,7 +61,7 @@ ITEM.skillScaleDmg = {
 }
 
 ITEM.skillScaleAcc = {
-["guns"] = 0.65,
+["guns"] = 0.75,
 }
 
 ITEM.actions = {	

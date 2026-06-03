@@ -1145,12 +1145,12 @@ ACTS:Register(ACT)
 local ACT
 ACT = {}
 ACT.uid = "charisma7"
-ACT.name = "Pacify"
-ACT.desc = "Spend 1 AP to convince your enemy to stand down, or run away."
+ACT.name = "Hinder"
+ACT.desc = "Spend 1 AP to throw your enemy off. (-1 AP to target)"
 ACT.category = "Charisma"
 ACT.restrict = false
 ACT.hidden = true
-ACT.attackString = "tries to pacify"
+ACT.attackString = "tries to hinder"
 ACT.CD = 2
 ACT.costAP = 1
 ACT.reqStats = {
@@ -1160,8 +1160,8 @@ ACT.effects = {
     [1] = {
         uid = ACT.uid,
 
-        name = "Pacified",
-        effect = "pacified",
+        name = "Slowed",
+        effect = "slowed",
         duration = 1,
         strength = 1,
         chance = 55,
@@ -1240,12 +1240,12 @@ ACTS:Register(ACT)
 local ACT
 ACT = {}
 ACT.uid = "charisma10"
-ACT.name = "Subjugate"
-ACT.desc = "Attempt to convince a group to surrender."
+ACT.name = "Discourage"
+ACT.desc = "Attempt to discourage a group of targets."
 ACT.category = "Charisma"
 ACT.restrict = false
 ACT.hidden = true
-ACT.attackString = "tries to pacify"
+ACT.attackString = "tries to discourage"
 ACT.CD = 2
 ACT.costAP = 1
 ACT.notarget = true
@@ -1257,8 +1257,8 @@ ACT.effects = {
     [1] = {
         uid = ACT.uid,
 
-        name = "Pacified",
-        effect = "pacified",
+        name = "Slowed",
+        effect = "slowed",
         duration = 1,
         strength = 1,
         chance = 55,

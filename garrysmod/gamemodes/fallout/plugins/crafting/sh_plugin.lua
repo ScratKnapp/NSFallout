@@ -101,8 +101,10 @@ function RECIPES:Register( tbl )
 				
 				for k, v in pairs(self.result) do
 					player:getChar():getInv():addSmart(k, v, player:getItemDropPos(), {creator = char:getID()})
-					
-					nut.log.addRaw(player:Name().. " crafted " ..nut.item.list[k].name.. ".")
+
+					local name = nut.item.list[k] and nut.item.list[k].name or ("ERROR: Invalid crafted item " ..k.. ".")
+
+					nut.log.addRaw(player:Name().. " crafted " ..name.. ".")
 				end
 				
 				--gives experience to profession levels

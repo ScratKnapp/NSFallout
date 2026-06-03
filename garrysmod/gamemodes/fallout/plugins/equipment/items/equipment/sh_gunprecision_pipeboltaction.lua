@@ -27,7 +27,7 @@ ITEM.WalkAnim = "walk_ar2"
 ITEM.RunAnim = "run_ar2"
 
 ITEM.dmg = {
-	[".38"] = 8
+	[".38"] = 11
 }
 
 ITEM.multi = 1 --how many hits it does, dont need to put it here if it's just 1
@@ -43,9 +43,9 @@ ITEM.class = "aus_w_pipebolt"
 
 ITEM.partMod = {
 	["Head"] = { --only affects this spot
-		accuracy = 15, --this is added
+		accuracy = 25, --this is added
 		accuracyMult = 0, --this is a multiplier
-		dmg = 0.25, --this adds to the existing multiplier
+		dmg = 0.5, --this adds to the existing multiplier
 	},
 }
 
