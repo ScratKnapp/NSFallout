@@ -20,6 +20,7 @@ RECIPE.name = "Meal"
 RECIPE.category = "Cooking (Free Craft)"
 RECIPE.model = "models/props_junk/garbage_metalcan002a.mdl"
 RECIPE.desc = "A meal."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_cooking"}
 RECIPE.level = 0
 RECIPE.xp = 0.01
@@ -42,6 +43,7 @@ RECIPE.name = "Drug (Tier-1)"
 RECIPE.category = "Drugs (Free Craft)"
 RECIPE.model = "models/props_junk/garbage_metalcan002a.mdl"
 RECIPE.desc = "Some kind of drug."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_drug"}
 RECIPE.tblLevel = 1
 RECIPE.xp = 0.01
@@ -62,6 +64,7 @@ RECIPE.name = "Drug (Tier-2)"
 RECIPE.category = "Drugs (Free Craft)"
 RECIPE.model = "models/props_junk/garbage_metalcan002a.mdl"
 RECIPE.desc = "Some kind of drug."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_drug"}
 RECIPE.tblLevel = 2
 RECIPE.xp = 0.01
@@ -82,6 +85,7 @@ RECIPE.name = "Drug (Tier-3)"
 RECIPE.category = "Drugs (Free Craft)"
 RECIPE.model = "models/props_junk/garbage_metalcan002a.mdl"
 RECIPE.desc = "Some kind of drug."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_drug"}
 RECIPE.tblLevel = 3
 RECIPE.xp = 0.01
@@ -102,6 +106,7 @@ RECIPE.name = "Drug (Tier-5)"
 RECIPE.category = "Drugs (Free Craft)"
 RECIPE.model = "models/props_junk/garbage_metalcan002a.mdl"
 RECIPE.desc = "Some kind of drug."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_drug"}
 RECIPE.tblLevel = 5
 RECIPE.xp = 0.01
@@ -127,6 +132,7 @@ RECIPE.name = "Atomic Cocktail"
 RECIPE.category = "Drinks"
 RECIPE.model = "models/mosi/fnv/props/drink/alcohol/atomiccocktail.mdl"
 RECIPE.desc = "A novelty drink mixer shaped like a rocket ship, filled with equal parts vodka and Nuka-Cola, and ground mentats."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_cooking"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -147,6 +153,7 @@ RECIPE.name = "Cowboy Coffee"
 RECIPE.category = "Drinks"
 RECIPE.model = "models/mosi/fnv/props/drink/antnog.mdl"
 RECIPE.desc = "Boiled honey mesquite pods, mixed with a healthy kick of whiskey."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_cooking"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -167,6 +174,7 @@ RECIPE.name = "Dirty Wastelander"
 RECIPE.category = "Drinks"
 RECIPE.model = "models/mosi/fallout4/props/alcohol/warebrew.mdl"
 RECIPE.desc = "An east coast cocktail with a tart and sweet taste."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_cooking"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -188,6 +196,7 @@ RECIPE.name = "Cactus Water"
 RECIPE.category = "Drinks"
 RECIPE.model = "models/mosi/fnv/props/drink/water_dirty.mdl"
 RECIPE.desc = "Cut and boiled prickly pear juice."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_cooking"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -207,6 +216,7 @@ RECIPE.name = "Homebrew Cola"
 RECIPE.category = "Drinks"
 RECIPE.model = "models/mosi/fnv/props/drink/nukacola_quartz.mdl"
 RECIPE.desc = "A poor post-war imitation of the popular fizzy drink, Nuka Cola."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_cooking"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -228,6 +238,7 @@ RECIPE.name = "Homebrew Sarsaparilla"
 RECIPE.category = "Drinks"
 RECIPE.model = "models/mosi/fnv/props/drink/sunsetsasparilla.mdl"
 RECIPE.desc = "A poor imitation of the most popular sarsaparilla."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_cooking"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -249,6 +260,7 @@ RECIPE.name = "Wasteland Tequila"
 RECIPE.category = "Drinks"
 RECIPE.model = "models/mosi/fallout4/props/alcohol/warebrew.mdl"
 RECIPE.desc = "Home brewed tequila made from local agave plants."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_cooking"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -282,6 +294,7 @@ RECIPE.name = "Dry Loaf"
 RECIPE.category = "Food"
 RECIPE.model = "models/foodnhouseholditems/bread-4.mdl"
 RECIPE.desc = "A dry, tough loaf of bread made with razorgrain."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_cooking"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -304,6 +317,7 @@ RECIPE.name = "Bighorner Steak"
 RECIPE.category = "Food"
 RECIPE.model = "models/fnv/clutter/food/steak01.mdl"
 RECIPE.desc = "A cut of prime Bighorner, grilled to medium well."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_cooking"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -324,6 +338,7 @@ RECIPE.name = "Brahmin Cheese"
 RECIPE.category = "Food"
 RECIPE.model = "models/foodnhouseholditems/cheesewheel2c.mdl"
 RECIPE.desc = "Salted and curdled Brahmin milk."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_cooking"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -344,6 +359,7 @@ RECIPE.name = "Baked Bloatfly"
 RECIPE.category = "Food"
 RECIPE.model = "models/mosi/fallout4/props/food/bloatflymeat.mdl"
 RECIPE.desc = "A cut of bloatfly roasted nearly to the point of burning to clean it."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_cooking"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -364,6 +380,7 @@ RECIPE.name = "Brahmin Strip Steak"
 RECIPE.category = "Food"
 RECIPE.model = "models/fnv/clutter/food/steak01.mdl"
 RECIPE.desc = "A cut of prime Brahmin, grilled to medium well."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_cooking"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -384,6 +401,7 @@ RECIPE.name = "Mutt Chops"
 RECIPE.category = "Food"
 RECIPE.model = "models/mosi/fallout4/props/food/dogmeat.mdl"
 RECIPE.desc = "A roasted mongrel thigh."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_cooking"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -404,6 +422,7 @@ RECIPE.name = "Gecko Kebab"
 RECIPE.category = "Food"
 RECIPE.model = "models/fnv/clutter/food/iguanabits.mdl"
 RECIPE.desc = "Chunks of grilled gecko, stuck onto a skewer and salted for flavor."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_cooking"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -424,6 +443,7 @@ RECIPE.name = "Mole Rat Chunks"
 RECIPE.category = "Food"
 RECIPE.model = "models/foodnhouseholditems/meat6.mdl"
 RECIPE.desc = "Several cuts of mole rat meat, lightly fried."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_cooking"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -445,6 +465,7 @@ RECIPE.name = "Dried Noodles"
 RECIPE.category = "Food"
 RECIPE.model = "models/fnv/clutter/food/ramen01.mdl"
 RECIPE.desc = "A bundle of dried noodles for later use. Can be eaten raw if necessary."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_cooking"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -465,6 +486,7 @@ RECIPE.name = "Radroach Roast"
 RECIPE.category = "Food"
 RECIPE.model = "models/mosi/fallout4/props/food/radroachmeat.mdl"
 RECIPE.desc = "A cut of radroach, roasted to near burning to make it palatable."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_cooking"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -485,6 +507,7 @@ RECIPE.name = "Mirelurk Cake"
 RECIPE.category = "Food - Advanced"
 RECIPE.model = "models/fnv/clutter/food/mirelurkcake01.mdl"
 RECIPE.desc = "A patty of ground mirelurk meat and an egg that's been fried."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_cooking"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -507,6 +530,7 @@ RECIPE.name = "Roasted Radscorpion"
 RECIPE.category = "Food"
 RECIPE.model = "models/mosi/fallout4/props/food/radscorpionsteak.mdl"
 RECIPE.desc = "A roasted chunk of oily scorpion meat."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_cooking"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -527,6 +551,7 @@ RECIPE.name = "Deathclaw Wellington"
 RECIPE.category = "Food - Advanced"
 RECIPE.model = "models/foodnhouseholditems/bread-2.mdl"
 RECIPE.desc = "A filet of Deathclaw encased in a layer of ground and pasted, salted pinyon nuts, and a second layer of bread around it. Considered a luxury meal."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_cooking"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -552,6 +577,7 @@ RECIPE.name = "Caravan Lunch"
 RECIPE.category = "Food"
 RECIPE.model = "models/mosi/fnv/props/food/lunchbox_meal.mdl"
 RECIPE.desc = "A lunchbox packed full of pre-war foods, used as a cheap and easy caravan ration."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_cooking"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -573,6 +599,7 @@ RECIPE.name = "Mole Rat Stew"
 RECIPE.category = "Food - Advanced"
 RECIPE.model = "models/fnv/clutter/food/ratstew01.mdl"
 RECIPE.desc = "A stew made of mole rat meat and vegetables, simple and seasoned enough to mask the pungent taste of mole rat."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_cooking"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -595,6 +622,7 @@ RECIPE.name = "Scorpion Omelet"
 RECIPE.category = "Food - Advanced"
 RECIPE.model = "models/mosi/fnv/props/food/wastelandomelette.mdl"
 RECIPE.desc = "Fried scorpion eggs, topped with salt."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_cooking"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -615,6 +643,7 @@ RECIPE.name = "Wasteland Slam"
 RECIPE.category = "Food - Advanced"
 RECIPE.model = "models/foodnhouseholditems/pancake.mdl"
 RECIPE.desc = "A hearty breakfast, fit for any chosen sole wandering courier, with two fried deathclaw eggs, a set of bighorner bacon and a cut of Brahmin ribeye with some pickled peppers to the side."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_cooking"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -638,6 +667,7 @@ RECIPE.name = "Radramen"
 RECIPE.category = "Food - Advanced"
 RECIPE.model = "models/fnv/clutter/food/ramen01.mdl"
 RECIPE.desc = "A bowl of boiled noodles with slices of Brahmin meat, shredded and softened xander root, and salted cuts of cave fungus. For the most discerning of tastes, and popular on the west coast."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_cooking"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -662,6 +692,7 @@ RECIPE.name = "Atom Bomb Burger"
 RECIPE.category = "Food - Advanced"
 RECIPE.model = "models/foodnhouseholditems/burgergtasa.mdl"
 RECIPE.desc = "The glory of American culinary advancements, reborn.\nA loaf of toasted bread, with a large prime deathclaw patty, covered in a thin melted Brahmin cheese, a fried deathclaw egg, one slice of tato, and slices of jalapeno pepper on top.\nOften paired with Nuka-Cola, for the taste of pre-war greatness."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_cooking"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -735,6 +766,7 @@ RECIPE.name = "Pipe Revolver"
 RECIPE.category = "Guns - Pipe Guns"
 RECIPE.model = "models/illusion/fwp/w_piperevolver.mdl"
 RECIPE.desc = "A scrap metal revolver for those unfortunate enough to not afford a real gun. Uses .38 ammunition."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -757,6 +789,7 @@ RECIPE.name = "Pipe Auto-Rifle"
 RECIPE.category = "Guns - Pipe Guns"
 RECIPE.model = "models/illusion/fwp/w_piperiflesemi.mdl"
 RECIPE.desc = "A scrap metal rifle for those unfortunate enough to not afford a real gun. Uses .38 ammunition."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -779,6 +812,7 @@ RECIPE.name = "Pipe Bolt Action"
 RECIPE.category = "Guns - Pipe Guns"
 RECIPE.model = "models/illusion/fwp/w_pipebolt.mdl"
 RECIPE.desc = "A scrap bolt-action rifle for those unfortunate enough to not afford a real gun. Uses .38 ammunition."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -801,6 +835,7 @@ RECIPE.name = "Pipe Scoped Bolt Action"
 RECIPE.category = "Guns - Pipe Guns"
 RECIPE.model = "models/illusion/fwp/w_pipeboltscoped.mdl"
 RECIPE.desc = "A scrap metal 'scoped' rifle for those unfortunate enough to not afford a real gun. Uses .38 ammunition."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -863,6 +898,7 @@ RECIPE.name = "9mm Pistol Extended Magazine"
 RECIPE.category = "Attachments - Pistols"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A longer double stacked magazine that increases the magazine size to 20."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -885,6 +921,7 @@ RECIPE.name = "9mm Pistol Scope"
 RECIPE.category = "Attachments - Pistols"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A short range 2x20 scope that is attached via a rail mount on the underside of the pistol."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -906,6 +943,7 @@ RECIPE.name = "9mm SMG Drum"
 RECIPE.category = "Attachments - SMGs"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A drum magazine that increases magazine capacity from 30 to 60 rounds."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -927,6 +965,7 @@ RECIPE.name = "9mm SMG Light Bolt"
 RECIPE.category = "Attachments - SMGs"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A modified, shorter bolt that increases the fire rate of a 9mm SMG."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -948,6 +987,7 @@ RECIPE.name = "10mm Pistol Extended Magazine"
 RECIPE.category = "Attachments - Pistols"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A long magazine that increases the round capacity of a 10mm pistol from 12 to 16."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -970,6 +1010,7 @@ RECIPE.name = "10mm Pistol Laser Sight"
 RECIPE.category = "Attachments - Pistols"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A mounted laser sight that attaches over the weighted tube under the end of a 10mm pistol barrel, to assist with target acquisition."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -991,6 +1032,7 @@ RECIPE.name = "10mm Pistol Silencer"
 RECIPE.category = "Attachments - Pistols"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A barrel threading kit and threaded suppressor that attaches to the end of a 10mm pistol."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1011,6 +1053,7 @@ RECIPE.name = "10mm SMG Extended Magazine"
 RECIPE.category = "Attachments - SMGs"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A long magazine that increases the round capacity of a 10mm SMG from 30 to 40."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1032,6 +1075,7 @@ RECIPE.name = "10mm SMG Recoil Compensator"
 RECIPE.category = "Attachments - SMGs"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A muzzle device that attaches to the barrel to reduce recoil and muzzle flip."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1053,6 +1097,7 @@ RECIPE.name = ".22 SMG Expanded Drum"
 RECIPE.category = "Attachments - Pistols"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A drum magazine that increases the round capacity of a .22 SMG from 180 to 240."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1074,6 +1119,7 @@ RECIPE.name = ".44 Revolver Heavy Frame"
 RECIPE.category = "Attachments - Pistols"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A heavy frame that allows for better recoil control."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1095,6 +1141,7 @@ RECIPE.name = ".44 Revolver Scope"
 RECIPE.category = "Attachments - Pistols"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A short range 1.86x scope that is mounted on top of the revolver."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1115,6 +1162,7 @@ RECIPE.name = ".45 AP HD Slide"
 RECIPE.category = "Attachments - Pistols"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A front weighted, heavy duty slide that helps drag the pistol down and counteract recoil."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1136,6 +1184,7 @@ RECIPE.name = ".45 AP Silencer"
 RECIPE.category = "Attachments - Pistols"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A barrel threading kit and threaded suppressor that attach to the end of a .45 AP Pistol."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1157,6 +1206,7 @@ RECIPE.name = ".45 Auto SMG Compensator"
 RECIPE.category = "Attachments - SMGs"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A compensator that is attached to the end of an SMG barrel to help disperse muzzle flip and recoil."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1178,6 +1228,7 @@ RECIPE.name = ".45 Auto SMG Drum"
 RECIPE.category = "Attachments - Pistols"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A drum magazine that increases the round capacity of a .45 AP SMG from 30 to 50."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1199,6 +1250,7 @@ RECIPE.name = "12.7mm Pistol Silencer"
 RECIPE.category = "Attachments - Pistols"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A barrel threading kit and large can suppressor that attach to the end of a 12.7mm Pistol."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1220,6 +1272,7 @@ RECIPE.name = "Assault Carbine Extended Magazine"
 RECIPE.category = "Attachments - Rifles"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A longer magazine that increases the magazine size from 30 to 42 rounds."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1241,6 +1294,7 @@ RECIPE.name = "Assault Carbine Improved Sights"
 RECIPE.category = "Attachments - Rifles"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A durable steel forged receiver with clearer sights on its carrying handle."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1262,6 +1316,7 @@ RECIPE.name = "Assault Carbine Light Bolt"
 RECIPE.category = "Attachments - Rifles"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A modified, shorter bolt that increases the fire rate of an assault carbine."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1283,6 +1338,7 @@ RECIPE.name = "Anti-Mat CF Parts"
 RECIPE.category = "Attachments - Rifles"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A carbon fiber replacement stock and grip that allows for easier handling."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1305,6 +1361,7 @@ RECIPE.name = "Anti-Mat Custom Bolt"
 RECIPE.category = "Attachments - Rifles"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A modified, shorter bolt that allows for faster bolting of rounds."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1327,6 +1384,7 @@ RECIPE.name = "Anti-Mat Suppressor"
 RECIPE.category = "Attachments - Rifles"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A barrel threading kit and threaded suppressor that attaches to the end of an Antimaterial Rifle."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1349,6 +1407,7 @@ RECIPE.name = "Automatic Rifle Upgraded Internals"
 RECIPE.category = "Attachments - Rifles"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "An upgraded set of internal parts that increase the fire rate on automatic rifles."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1370,6 +1429,7 @@ RECIPE.name = "Brush Gun Forged Receiver"
 RECIPE.category = "Attachments - Rifles"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "An improved receiver that improves the lever action for easier recocking."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1391,6 +1451,7 @@ RECIPE.name = "Repeater Maple Stock"
 RECIPE.category = "Attachments - Rifles"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A new, decorated Maple stock to allow for better control of the repeater."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1413,6 +1474,7 @@ RECIPE.name = "Repeater Custom Barrel"
 RECIPE.category = "Attachments - Rifles"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "An improved custom, long barrel that increases bullet velocity and gives rounds a flatter trajectory."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1435,6 +1497,7 @@ RECIPE.name = "Repeater Long Tube"
 RECIPE.category = "Attachments - Rifles"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A longer tube for loading more ammunition at a time."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1457,6 +1520,7 @@ RECIPE.name = "Hunting Revolver 6 Shot Cylinder"
 RECIPE.category = "Attachments - Pistols"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A larger cylinder to hold six rounds rather than five."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1478,6 +1542,7 @@ RECIPE.name = "Hunting Revolver Match Barrel"
 RECIPE.category = "Attachments - Pistols"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A custom made long barrel that increases accuracy on the revolver."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1499,6 +1564,7 @@ RECIPE.name = "Hunting Rifle Custom Action"
 RECIPE.category = "Attachments - Rifles"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A custom action that allows the bolt to cycle rounds faster."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1521,6 +1587,7 @@ RECIPE.name = "Hunting Rifle Extended Magazine"
 RECIPE.category = "Attachments - Rifles"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A larger magazine that holds ten rounds."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1543,6 +1610,7 @@ RECIPE.name = "Hunting Rifle Scope"
 RECIPE.category = "Attachments - Rifles"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A long 3-9x40 scope meant to be attached to a hunting rifle."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1564,6 +1632,7 @@ RECIPE.name = "Hunting Shotgun Choke"
 RECIPE.category = "Attachments - Shotguns"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A muzzle choke placed at the end of the barrel that keeps pellet spread closer to increase accuracy."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1586,6 +1655,7 @@ RECIPE.name = "Hunting Shotgun Long Tube"
 RECIPE.category = "Attachments - Shotguns"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A tube magazine extension that allows for more shells to be loaded at a time to a hunting shotgun."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1608,6 +1678,7 @@ RECIPE.name = "LMG Drum"
 RECIPE.category = "Attachments - LMGs"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A large drum magazine that holds a greater number of rounds than the typical box or belt."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1630,6 +1701,7 @@ RECIPE.name = "Service Rifle Forged Receiver"
 RECIPE.category = "Attachments - Rifles"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A custom forged upper receiver for a service rifle that improves the durability of the weapon."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1652,6 +1724,7 @@ RECIPE.name = "Service Rifle Upgraded Barrel"
 RECIPE.category = "Attachments - Rifles"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A longer barrel with custom rifling that improves the range and velocity of rounds."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1674,6 +1747,7 @@ RECIPE.name = "Service Rifle Scope"
 RECIPE.category = "Attachments - Rifles"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A 3.5x magnification scope, intended to be mounted on top of a service rifle carry handle."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1695,6 +1769,7 @@ RECIPE.name = "Sniper Rifle Carbon Fiber Parts"
 RECIPE.category = "Attachments - Rifles"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A set of custom fiber parts that reduce the overall weight of the rifle."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1717,6 +1792,7 @@ RECIPE.name = "Sniper Rifle Suppressor"
 RECIPE.category = "Attachments - Rifles"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A custom suppressor mounted on a sniper rifle that drastically reduces the noise from firing a round."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1739,6 +1815,7 @@ RECIPE.name = "Trail Carbine Scope"
 RECIPE.category = "Attachments - Rifles"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A precision mid-range scope with 3.5x magnification."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1760,6 +1837,7 @@ RECIPE.name = "Varmint Rifle Extended Magazine"
 RECIPE.category = "Attachments - Rifles"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A set of longer fitting magazines for the Varmint Rifle that hold twice as many rounds before needing to be reloaded."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1782,6 +1860,7 @@ RECIPE.name = "Varmint Rifle Night Scope"
 RECIPE.category = "Attachments - Rifles"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A telescopic sight that automatically detects whether or not to enable night vision depending on light conditions, and provides a green monochrome image for target acquisition at night."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1803,6 +1882,7 @@ RECIPE.name = "Varmint Rifle Silencer"
 RECIPE.category = "Attachments - Rifles"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A custom suppressor mounted on a varmint rifle that drastically reduces the noise from firing a round."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1826,6 +1906,7 @@ RECIPE.name = "Handmade Assault Rifle Scope"
 RECIPE.category = "Attachments - Rifles"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A low magnification scope with a glowing reticle for the most common assault rifle in the wasteland."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1850,6 +1931,7 @@ RECIPE.name = "Handmade Assault Rifle Custom Bolt"
 RECIPE.category = "Attachments - Rifles"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A custom heavy bolt for the handmade assault rifle that improves its ballistic capabilities."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1873,6 +1955,7 @@ RECIPE.name = "Handmade Assault Rifle Milled Receiver"
 RECIPE.category = "Attachments - Rifles"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A heavy duty milled receiver for the handmade assault rifle that increases durability."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1895,6 +1978,7 @@ RECIPE.name = "10mm SMG Upgraded Barrel"
 RECIPE.category = "Attachments - SMGs"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A slightly longer barrel with a higher rifling twist rate that improves accuracy and damage."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1917,6 +2001,7 @@ RECIPE.name = "LMG Heavy Barrel"
 RECIPE.category = "Attachments - LMGs"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A heavy barrel for the LMG that drastically increases bullet velocity and damage output."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1939,6 +2024,7 @@ RECIPE.name = "LMG Scope"
 RECIPE.category = "Attachments - LMGs"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A short 2.5x magnification scope for the LMG. Improves accuracy."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1962,6 +2048,7 @@ RECIPE.name = "R91 Scope"
 RECIPE.category = "Attachments - Rifles"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A short 2x magnification scope for the R91."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -1985,6 +2072,7 @@ RECIPE.name = "R91 Heavy Barrel"
 RECIPE.category = "Attachments - Rifles"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A heavy barrel for the R91 that improves bullet velocity and damage."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -2007,6 +2095,7 @@ RECIPE.name = "Marksman Carbine Heavy Barrel"
 RECIPE.category = "Attachments - Rifles"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A heavy barrel for the Marksman Carbine that improves bullet velocity and damage."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -2029,6 +2118,7 @@ RECIPE.name = "Marksman Carbine Custom Bolt"
 RECIPE.category = "Attachments - Rifles"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A custom bolt for the marksman carbine that marginally increases chamber pressures for better damage."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -2052,6 +2142,7 @@ RECIPE.name = "Marksman Carbine Improved Rifling"
 RECIPE.category = "Attachments - Rifles"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "Improves the rifling of a pre-existing barrel to increase accuracy on the marksman carbine."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -2074,6 +2165,7 @@ RECIPE.name = "5.56 SMG Heavy Barrel"
 RECIPE.category = "Attachments - SMGs"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A heavier barrel that supports better chamber pressures with a higher twist rate. More velocity for more damage."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -2097,6 +2189,7 @@ RECIPE.name = "5.56 SMG Holographic Sight"
 RECIPE.category = "Attachments - SMGs"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A simple, robust sight made with reinforced glass with a projected laser."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -2118,6 +2211,7 @@ RECIPE.name = "Gunrunner's Stamped MG Barrel"
 RECIPE.category = "Attachments - LMGs"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A special LMG barrel that replaces the water cooling heatsink with a reinforced air-cooled barrel, steel heat shield, and improved sights."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -2141,6 +2235,7 @@ RECIPE.name = "Hunting Shotgun Conversion Kit"
 RECIPE.category = "Attachments - Shotguns"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A conversion kit that enables the hunting shotgun to fit longer shells, marginally boosting its damage."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -2203,6 +2298,7 @@ RECIPE.name = "Armored Vault Suit"
 RECIPE.category = "Armor - Light"
 RECIPE.model = "models/fallout/apparel/vaultsuit.mdl"
 RECIPE.desc = "An insulated vault suit modified with padding."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
 RECIPE.reqSkills = {
   ["repair"] = 40,
@@ -2228,6 +2324,7 @@ RECIPE.name = "Leather Jacket"
 RECIPE.category = "Armor - Light"
 RECIPE.model = "models/thespireroleplay/items/clothes/group051.mdl"
 RECIPE.desc = "A tailored leather jacket."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
 RECIPE.reqSkills = {
   ["repair"] = 20,
@@ -2251,6 +2348,7 @@ RECIPE.name = "Leather Vest"
 RECIPE.category = "Armor - Light"
 RECIPE.model = "models/thespireroleplay/items/clothes/group052.mdl"
 RECIPE.desc = "A protective leather vest."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
 RECIPE.reqSkills = {
   ["repair"] = 20,
@@ -2274,6 +2372,7 @@ RECIPE.name = "Leather Brace"
 RECIPE.category = "Armor - Light"
 RECIPE.model = "models/mosi/fallout4/props/junk/ammobag.mdl"
 RECIPE.desc = "A set of protective leather armpads."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
 RECIPE.reqSkills = {
   ["repair"] = 20,
@@ -2297,6 +2396,7 @@ RECIPE.name = "Reinforced Leather Brace"
 RECIPE.category = "Armor - Light"
 RECIPE.model = "models/mosi/fallout4/props/junk/ammobag.mdl"
 RECIPE.desc = "A set of protective leather armpads."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
 RECIPE.reqSkills = {
   ["repair"] = 40,
@@ -2322,6 +2422,7 @@ RECIPE.name = "Leather Light"
 RECIPE.category = "Armor - Light"
 RECIPE.model = "models/mosi/fallout4/props/junk/ammobag.mdl"
 RECIPE.desc = "A set of protective leather kneepads."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
 RECIPE.reqSkills = {
   ["repair"] = 20,
@@ -2345,6 +2446,7 @@ RECIPE.name = "Reinforced Leather Kneepads"
 RECIPE.category = "Armor - Light"
 RECIPE.model = "models/mosi/fallout4/props/junk/ammobag.mdl"
 RECIPE.desc = "A set of protective leather kneepads."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
 RECIPE.reqSkills = {
   ["repair"] = 40,
@@ -2370,6 +2472,7 @@ RECIPE.name = "Reinforced Leather Jacket"
 RECIPE.category = "Armor - Light"
 RECIPE.model = "models/thespireroleplay/items/clothes/group052.mdl"
 RECIPE.desc = "A reinforced protective leather vest."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
 RECIPE.reqSkills = {
   ["repair"] = 40,
@@ -2395,6 +2498,7 @@ RECIPE.name = "Metal Vest"
 RECIPE.category = "Armor - Heavy"
 RECIPE.model = "models/fallout/apparel/metalarmor.mdl"
 RECIPE.desc = "A heavy, crudely fashioned metal vest."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
 RECIPE.reqSkills = {
   ["repair"] = 40,
@@ -2418,6 +2522,7 @@ RECIPE.name = "Reinforced Metal Vest"
 RECIPE.category = "Armor - Heavy"
 RECIPE.model = "models/fallout/apparel/metalarmor.mdl"
 RECIPE.desc = "A heavy, crudely fashioned reinforced metal vest."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
 RECIPE.reqSkills = {
   ["repair"] = 60,
@@ -2442,6 +2547,7 @@ RECIPE.name = "Metal Armguard"
 RECIPE.category = "Armor - Heavy"
 RECIPE.model = "models/mosi/fallout4/props/junk/ammobag.mdl"
 RECIPE.desc = "A set of protective metal armguards."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
 RECIPE.reqSkills = {
   ["repair"] = 40,
@@ -2465,6 +2571,7 @@ RECIPE.name = "Reinforced Metal Armguard"
 RECIPE.category = "Armor - Heavy"
 RECIPE.model = "models/mosi/fallout4/props/junk/ammobag.mdl"
 RECIPE.desc = "A set of protective metal armguards."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
 RECIPE.reqSkills = {
   ["repair"] = 60,
@@ -2489,6 +2596,7 @@ RECIPE.name = "Metal Legguards"
 RECIPE.category = "Armor - Heavy"
 RECIPE.model = "models/mosi/fallout4/props/junk/ammobag.mdl"
 RECIPE.desc = "A set of protective metal leg guards."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
 RECIPE.reqSkills = {
   ["repair"] = 40,
@@ -2512,6 +2620,7 @@ RECIPE.name = "Reinforced Metal Legguards"
 RECIPE.category = "Armor - Heavy"
 RECIPE.model = "models/mosi/fallout4/props/junk/ammobag.mdl"
 RECIPE.desc = "A set of protective metal leg guards."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
 RECIPE.reqSkills = {
   ["repair"] = 60,
@@ -2536,6 +2645,7 @@ RECIPE.name = "Metal Helmet"
 RECIPE.category = "Armor - Heavy"
 RECIPE.model = "models/fallout/apparel/helmetmetalarmor.mdl"
 RECIPE.desc = "A metal helmet."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
 RECIPE.reqSkills = {
   ["repair"] = 40,
@@ -2559,6 +2669,7 @@ RECIPE.name = "Reinforced Metal Helmet"
 RECIPE.category = "Armor - Heavy"
 RECIPE.model = "models/fallout/apparel/helmetmetalarmor.mdl"
 RECIPE.desc = "A reinforced metal helmet."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
 RECIPE.reqSkills = {
   ["repair"] = 60,
@@ -2583,6 +2694,7 @@ RECIPE.name = "Combat Armor"
 RECIPE.category = "Armor - Medium"
 RECIPE.model = "models/thespireroleplay/items/clothes/group053.mdl"
 RECIPE.desc = "A ballistic fiber reinforced armor."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
 RECIPE.reqSkills = {
   ["repair"] = 60,
@@ -2608,6 +2720,7 @@ RECIPE.name = "Combat Armor Helmet"
 RECIPE.category = "Armor - Medium"
 RECIPE.model = "models/fallout/apparel/combatarmorhelmet.mdl"
 RECIPE.desc = "A ballistic fiber reinforced helmet."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
 RECIPE.reqSkills = {
   ["repair"] = 60,
@@ -2633,6 +2746,7 @@ RECIPE.name = "Combat Armor Legguards"
 RECIPE.category = "Armor - Medium"
 RECIPE.model = "models/mosi/fallout4/props/junk/ammobag.mdl"
 RECIPE.desc = "A ballistic fiber reinforced legguards."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
 RECIPE.reqSkills = {
   ["repair"] = 60,
@@ -2658,6 +2772,7 @@ RECIPE.name = "Combat Armor Armguards"
 RECIPE.category = "Armor - Medium"
 RECIPE.model = "models/mosi/fallout4/props/junk/ammobag.mdl"
 RECIPE.desc = "A ballistic fiber reinforced armguards."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
 RECIPE.reqSkills = {
   ["repair"] = 60,
@@ -2690,6 +2805,7 @@ RECIPE.name = "Scrap Plate Covering"
 RECIPE.category = "Armor - Padding and Inserts"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A set of raw scrap metal pieces welded together to be placed over armor, as additional protection."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -2712,6 +2828,7 @@ RECIPE.name = "Weight Reduction Kit"
 RECIPE.category = "Armor - Padding and Inserts"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A set of replacement fabrics and tools to reduce the overall weight of armor and clothing."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -2733,6 +2850,7 @@ RECIPE.name = "Rubber Insulation Inserts"
 RECIPE.category = "Armor - Padding and Inserts"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A set of custom inserts to be applied to, or inserted into clothing and armor to help protect from energy based damage."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -2754,6 +2872,7 @@ RECIPE.name = "Kevlar Inserts"
 RECIPE.category = "Armor - Padding and Inserts"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A set of custom inserts to be applied to, or inserted into clothing and armor to help protect from physical/ballistic based damage."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -2793,6 +2912,7 @@ RECIPE.name = "Bufftats"
 RECIPE.category = "Chems"
 RECIPE.model = "models/mosi/fnv/props/health/chems/buffout.mdl"
 RECIPE.desc = "A post-war pharmaceutical concoction that attempted to sell pills that not only effectively gave one strength, but also affected mental processing power to make you stronger, AND smarter than everyone else."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_cooking"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -2814,6 +2934,7 @@ RECIPE.name = "Jet"
 RECIPE.category = "Chems"
 RECIPE.model = "models/mosi/fallout4/props/aid/jet.mdl"
 RECIPE.desc = "An small inhaler and canister filled with a highly addictive aerosol mixed chem."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_cooking"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -2833,6 +2954,7 @@ RECIPE.name = "Jetfuel"
 RECIPE.category = "Chems"
 RECIPE.model = "models/mosi/fnv/props/health/chems/jet.mdl"
 RECIPE.desc = "An small inhaler and canister filled with an extremely highly concentrated and potent form of Jet."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_cooking"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -2853,6 +2975,7 @@ RECIPE.name = "Psycho"
 RECIPE.category = "Chems"
 RECIPE.model = "models/mosi/fallout4/props/aid/pyscho.mdl"
 RECIPE.desc = "A syringe of military grade, psychosis-inducing amphetamines that were created prior to the Great War."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_cooking"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -2875,6 +2998,7 @@ RECIPE.name = "Rebound"
 RECIPE.category = "Chems"
 RECIPE.model = "modelpath"
 RECIPE.desc = "desc."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_cooking"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -2896,6 +3020,7 @@ RECIPE.name = "Slasher"
 RECIPE.category = "Chems"
 RECIPE.model = "modelpath"
 RECIPE.desc = "A highly addictive wasteland mix of med-x and psycho."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_cooking"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -2916,6 +3041,7 @@ RECIPE.name = "Steady"
 RECIPE.category = "Chems"
 RECIPE.model = "models/mosi/fnv/props/health/chems/steady.mdl"
 RECIPE.desc = "A combat chem poured into the bottom of a makeshift inhaler and tinfoil heating element, for roasting the chemical and inhaling the fumes."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_cooking"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -2936,6 +3062,7 @@ RECIPE.name = "Turbo"
 RECIPE.category = "Chems"
 RECIPE.model = "models/mosi/fnv/props/health/chems/turbo.mdl"
 RECIPE.desc = "A canister of jet rigged to a can of hairspray, as a makeshift, oversized aerosol propellant."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_cooking"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -2978,6 +3105,7 @@ RECIPE.name = "Microfusion Cells Over Charged"
 RECIPE.category = "Science - Ammo"
 RECIPE.model = "models/fallout new vegas/microfusion_cell.mdl"
 RECIPE.desc = "A medium sized self-contained fusion plant for rifle-sized energy weapons. This one is overcharged."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -2998,6 +3126,7 @@ RECIPE.name = "Microfusion Cells"
 RECIPE.category = "Science - Ammo"
 RECIPE.model = "models/fallout new vegas/microfusion_cell.mdl"
 RECIPE.desc = "A medium sized self-contained fusion plant for rifle-sized energy weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -3018,6 +3147,7 @@ RECIPE.name = "Energy Cells Over Charged"
 RECIPE.category = "Science - Ammo"
 RECIPE.model = "models/mosi/fallout4/ammo/gammaround.mdl"
 RECIPE.desc = "A small self-contained energy unit for one-handed energy weapons. This one is fully charged."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -3038,6 +3168,7 @@ RECIPE.name = "Energy Cells Max Charge"
 RECIPE.category = "Science - Ammo"
 RECIPE.model = "models/mosi/fallout4/ammo/gammaround.mdl"
 RECIPE.desc = "A small self-contained energy unit for one-handed energy weapons. This one is fully charged."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -3058,6 +3189,7 @@ RECIPE.name = "Energy Cells"
 RECIPE.category = "Science - Ammo"
 RECIPE.model = "models/mosi/fallout4/ammo/gammaround.mdl"
 RECIPE.desc = "A small self-contained energy unit for one-handed energy weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -3077,6 +3209,7 @@ RECIPE.name = "Electron Charge Pack Overcharged"
 RECIPE.category = "Science - Ammo"
 RECIPE.model = "models/fallout new vegas/electron_charge_pack.mdl"
 RECIPE.desc = "A small electron battery for rapid-firing energy weapons. This one is over charged."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -3097,6 +3230,7 @@ RECIPE.name = "Electron Charge Pack Max Charge"
 RECIPE.category = "Science - Ammo"
 RECIPE.model = "models/fallout new vegas/electron_charge_pack.mdl"
 RECIPE.desc = "A small electron battery for rapid-firing energy weapons. This one is fully charged."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -3117,6 +3251,7 @@ RECIPE.name = "Electron Charge Pack - Max Charge"
 RECIPE.category = "Science - Ammo"
 RECIPE.model = "models/fallout new vegas/electron_charge_pack.mdl"
 RECIPE.desc = "A small electron battery for rapid-firing energy weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -3137,6 +3272,7 @@ RECIPE.name = "Laser Pistol Combat Sight"
 RECIPE.category = "Science - Attachments"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "Luminscent dot iron sights that allow for enhanced accuracy."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -3158,6 +3294,7 @@ RECIPE.name = "Laser Pistol Focus Optic"
 RECIPE.category = "Science - Attachments"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "An extension to the pistol's 'barrel' that places several focusing lenses to strengthen the output of outbound lasers."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -3179,6 +3316,7 @@ RECIPE.name = "Laser Pistol Recycler"
 RECIPE.category = "Science - Attachments"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A module mounted to the back of the pistol which uses the 'action' of the laser pistol to generate charge for extra shots."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -3202,6 +3340,7 @@ RECIPE.name = "Laser Revolver Combat Sight"
 RECIPE.category = "Science - Attachments"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "Luminscent dot iron sights that allow for enhanced accuracy."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -3223,6 +3362,7 @@ RECIPE.name = "Laser Revolver Focus Optic"
 RECIPE.category = "Science - Attachments"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "An extension to the revolver's 'barrel' that places several focusing lenses to strengthen the output of outbound lasers."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -3244,6 +3384,7 @@ RECIPE.name = "Laser Revolver Recycler"
 RECIPE.category = "Science - Attachments"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A module mounted to the back of the revolver which uses the 'action' of the laser revolver to generate charge for extra shots."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -3266,6 +3407,7 @@ RECIPE.name = "Laser RCW Recycler"
 RECIPE.category = "Science - Attachments"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A module mounted to the back of the drum pack which uses the 'action' of the RCW to generate charge for extra shots."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -3289,6 +3431,7 @@ RECIPE.name = "Laser Rifle Focus Optics"
 RECIPE.category = "Science - Attachments"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "An extension to the rifle's 'barrel' that places several focusing lenses to strengthen the output of outbound lasers."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -3311,6 +3454,7 @@ RECIPE.name = "Laser Rifle Scope"
 RECIPE.category = "Science - Attachments"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A precision 3.5x magnification optic specifically designed to mount on top of laser rifles."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -3333,6 +3477,7 @@ RECIPE.name = "Laser Musket Scope"
 RECIPE.category = "Science - Attachments"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A short range scope for a Laser Musket to replace its basic iron sights."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -3355,6 +3500,7 @@ RECIPE.name = "Laser Musket 2 Shot Capacitor"
 RECIPE.category = "Science - Attachments"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A short range scope for a Laser Musket to replace its basic iron sights."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -3377,6 +3523,7 @@ RECIPE.name = "Laser Repeater Scope"
 RECIPE.category = "Science - Attachments"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A holographic sight for a Laser Repeater."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -3398,6 +3545,7 @@ RECIPE.name = "Laser Repeater Focus Optics"
 RECIPE.category = "Science - Attachments"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "An extension to the repeater's 'barrel' that places several focusing lenses to strengthen the output of outbound lasers."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -3422,6 +3570,7 @@ RECIPE.name = "Plasma Pistol Ionizer"
 RECIPE.category = "Science - Attachments"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A pair of chambers that receive run-off gasses, improving the energy output of outgoing plasma."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -3444,6 +3593,7 @@ RECIPE.name = "Plasma Pistol Magnetic Accelerator"
 RECIPE.category = "Science - Attachments"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A front mounted set of probes that improve the projectile speed of plasma fired from the weapon, improving range."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -3466,6 +3616,7 @@ RECIPE.name = "Plasma Pistol Recycler"
 RECIPE.category = "Science - Attachments"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "An improved set of tubes and chamber that recycles gasses released by the ionization process to allow for extra shots."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -3488,6 +3639,7 @@ RECIPE.name = "Plasma Rifle Magnetic Accelerator"
 RECIPE.category = "Science - Attachments"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A front mounted set of probes that improve the projectile speed of plasma fired from the weapon."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -3510,6 +3662,7 @@ RECIPE.name = "Plasma Rifle Scope"
 RECIPE.category = "Science - Attachments"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A 3.5x magnification precision scope, designed to be mounted on top of a plasma rifle."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -3532,6 +3685,7 @@ RECIPE.name = "Wattz 3000 Focus Optics"
 RECIPE.category = "Science - Attachments"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "An extension to the rifle's 'barrel' that places several focusing lenses to strengthen the output of outbound lasers."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -3554,6 +3708,7 @@ RECIPE.name = "Wattz 3000 Night Scope"
 RECIPE.category = "Science - Attachments"
 RECIPE.model = "models/mosi/fallout4/props/junk/modcrate.mdl"
 RECIPE.desc = "A telescopic sight that automatically detects whether or not to enable night vision depending on light conditions, and provides a green monochrome image for target acquisition at night."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -3576,6 +3731,7 @@ RECIPE.name = "Healing Powder"
 RECIPE.category = "Science - Medical"
 RECIPE.model = "models/maxib123/healingpowder.mdl"
 RECIPE.desc = "Healing Powder +25HP"
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.reqSkills = {
   ["medicine"] = 20,
@@ -3598,6 +3754,7 @@ RECIPE.name = "Healing Poultice"
 RECIPE.category = "Science - Medical"
 RECIPE.model = "models/maxib123/healingpowder.mdl"
 RECIPE.desc = "Healing Poultice +50HP"
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.reqSkills = {
   ["medicine"] = 40,
@@ -3621,6 +3778,7 @@ RECIPE.name = "Potent Healing Poultice"
 RECIPE.category = "Science - Medical"
 RECIPE.model = "models/maxib123/healingpowder.mdl"
 RECIPE.desc = "Potent Healing Poultice +100HP"
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.reqSkills = {
   ["medicine"] = 80,
@@ -3645,6 +3803,7 @@ RECIPE.name = "First Aid Kit"
 RECIPE.category = "Science - Medical"
 RECIPE.model = "models/mccarran/medbay/firstaidkit01.mdl"
 RECIPE.desc = "First Aid Kit +75HP"
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.reqSkills = {
   ["medicine"] = 60,
@@ -3670,6 +3829,7 @@ RECIPE.name = "Doctor's Bag"
 RECIPE.category = "Science - Medical"
 RECIPE.model = "models/maxib123/doctorsbag.mdl"
 RECIPE.desc = "Doctor's Bag Equipment Item"
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.reqSkills = {
   ["medicine"] = 60,
@@ -3697,6 +3857,7 @@ RECIPE.name = "Paramedic's Bag"
 RECIPE.category = "Science - Medical"
 RECIPE.model = "models/vex/fallout76/backpacks/atx_backpack_firstresponders.mdl"
 RECIPE.desc = "Paramedic's Bag Equipment Item"
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.reqSkills = {
   ["medicine"] = 80,
@@ -3726,6 +3887,7 @@ RECIPE.name = "Surgeon's Kit"
 RECIPE.category = "Science - Medical"
 RECIPE.model = "models/vex/fallout76/backpacks/atx_backpack_firstresponders.mdl"
 RECIPE.desc = "Surgeon's Kit Equipment Item"
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.reqSkills = {
   ["medicine"] = 100,
@@ -3798,6 +3960,7 @@ RECIPE.name = "Melee Weight and Sharpening Kit"
 RECIPE.category = "Melee - Upgrades"
 RECIPE.model = "models/mosi/fnv/props/health/repairkit.mdl"
 RECIPE.desc = "A kit which has the tools needed to add extra weight, or sharpening blades, for more lethality.\nDamage Bonus: 1."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -3820,6 +3983,7 @@ RECIPE.name = "Melee Rebalancing Kit"
 RECIPE.category = "Melee - Upgrades"
 RECIPE.model = "models/mosi/fnv/props/health/repairkit.mdl"
 RECIPE.desc = "A kit which has the tools needed to rebalance a melee weapon, for more precision and refined movement and handling.\nAccuracy Bonus: 1."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -3837,124 +4001,237 @@ RECIPES:Register(RECIPE)
 
 -- repair kit recipes
 
+-- WEAPON REPAIR
+
 RECIPE = {}
-RECIPE.uid = "make_repair_20"
-RECIPE.name = "Rusty Tool Roll"
+RECIPE.uid = "make_weaponrepair_20"
+RECIPE.name = "Smith's Tool Roll"
 RECIPE.category = "Weapons - Repair"
 RECIPE.model = "models/mosi/fnv/props/health/repairkit.mdl"
-RECIPE.desc = "A kit which has the tools needed to repair a weapon. Repairs up to 20% durability."
+RECIPE.desc = "A small roll with tools for maintaining weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
-RECIPE.reqSkills = {
-  ["repair"] = 20,
-} 
+RECIPE.reqSkills = { 
+ ["repair"] = 20,
+}
 RECIPE.items = {
-    --uniqueID, if unspecified in the file, are the file name without the sh_
-    ["plastic"] = 3,
-	["steel"] = 15,
-	["oil"] = 1,
-	
+ ["plastic"] = 3,
+ ["steel"] = 15,
+ ["oil"] = 1,
 }
 RECIPE.result = {
-    ["repair_20"] = 1
+ ["weaponrepair_20"] = 1
 }
 RECIPES:Register(RECIPE)
-
 //
 
+
 RECIPE = {}
-RECIPE.uid = "make_repair_40"
-RECIPE.name = "Small Tool Bag"
+RECIPE.uid = "make_weaponrepair_40"
+RECIPE.name = "Smith's Tool Kit"
 RECIPE.category = "Weapons - Repair"
 RECIPE.model = "models/mosi/fnv/props/health/repairkit.mdl"
-RECIPE.desc = "A kit which has the tools needed to repair a weapon. Repairs up to 40% durability."
+RECIPE.desc = "A small kit for maintaining weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
-RECIPE.reqSkills = {
-  ["repair"] = 40,
-} 
+RECIPE.reqSkills = { 
+ ["repair"] = 40,
+}
 RECIPE.items = {
-    --uniqueID, if unspecified in the file, are the file name without the sh_
-    ["plastic"] = 5,
-	["steel"] = 20,
-	["oil"] = 2,
-	
+ ["plastic"] = 5,
+ ["steel"] = 20,
+ ["oil"] = 2,
 }
 RECIPE.result = {
-    ["repair_40"] = 1
+ ["weaponrepair_40"] = 1
 }
 RECIPES:Register(RECIPE)
-
 //
 
+
 RECIPE = {}
-RECIPE.uid = "make_repair_60"
-RECIPE.name = "Large Tool Bag"
+RECIPE.uid = "make_weaponrepair_60"
+RECIPE.name = "Smith's Tool Bag"
 RECIPE.category = "Weapons - Repair"
 RECIPE.model = "models/mosi/fnv/props/health/repairkit.mdl"
-RECIPE.desc = "A kit which has the tools needed to repair a weapon. Repairs up to 60% durability."
+RECIPE.desc = "A large bag for maintaining weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
-RECIPE.reqSkills = {
-  ["repair"] = 60,
-} 
+RECIPE.reqSkills = { 
+ ["repair"] = 60,
+}
 RECIPE.items = {
-    --uniqueID, if unspecified in the file, are the file name without the sh_
-    ["plastic"] = 8,
-	["steel"] = 25,
-	["oil"] = 3,
-	
+ ["plastic"] = 8,
+ ["steel"] = 25,
+ ["oil"] = 3,
 }
 RECIPE.result = {
-    ["repair_60"] = 1
+ ["weaponrepair_60"] = 1
 }
 RECIPES:Register(RECIPE)
-
 //
 
+
 RECIPE = {}
-RECIPE.uid = "make_repair_80"
-RECIPE.name = "Field Repair Kit"
+RECIPE.uid = "make_weaponrepair_80"
+RECIPE.name = "Smith's Field Repair Kit"
 RECIPE.category = "Weapons - Repair"
 RECIPE.model = "models/mosi/fnv/props/health/repairkit.mdl"
-RECIPE.desc = "A kit which has the tools needed to repair a weapon. Repairs up to 80% durability."
+RECIPE.desc = "A field repair kit for weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
-RECIPE.reqSkills = {
-  ["repair"] = 80,
-} 
+RECIPE.reqSkills = { 
+ ["repair"] = 80,
+}
 RECIPE.items = {
-    --uniqueID, if unspecified in the file, are the file name without the sh_
-    ["plastic"] = 10,
-	["steel"] = 30,
-	["oil"] = 3,
-	
+ ["plastic"] = 10,
+ ["steel"] = 30,
+ ["oil"] = 3,
 }
 RECIPE.result = {
-    ["repair_80"] = 1
+ ["weaponrepair_80"] = 1
 }
 RECIPES:Register(RECIPE)
-
 //
 
+
 RECIPE = {}
-RECIPE.uid = "make_repair_100"
-RECIPE.name = "Armorer's Kit"
+RECIPE.uid = "make_weaponrepair_100"
+RECIPE.name = "Master Smith's Kit"
 RECIPE.category = "Weapons - Repair"
 RECIPE.model = "models/mosi/fnv/props/health/repairkit.mdl"
-RECIPE.desc = "A kit which has the tools needed to repair a weapon. Repairs up to 100% durability."
+RECIPE.desc = "A full kit for advanced weapon repair."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
-RECIPE.reqSkills = {
-  ["repair"] = 100,
-} 
+RECIPE.reqSkills = { 
+ ["repair"] = 100,
+}
 RECIPE.items = {
-    --uniqueID, if unspecified in the file, are the file name without the sh_
-    ["plastic"] = 15,
-	["steel"] = 40,
-	["oil"] = 3,
-	
+ ["plastic"] = 15,
+ ["steel"] = 40,
+ ["oil"] = 3,
 }
 RECIPE.result = {
-    ["repair_100"] = 1
+ ["weaponrepair_100"] = 1
 }
 RECIPES:Register(RECIPE)
+//
 
+
+-- ARMOR REPAIR
+
+RECIPE = {}
+RECIPE.uid = "make_armorrepair_20"
+RECIPE.name = "Armorer's Tool Roll"
+RECIPE.category = "Armor - Repair"
+RECIPE.model = "models/mosi/fnv/props/health/repairkit.mdl"
+RECIPE.desc = "A small roll with tools for maintaining armor."
+RECIPE.tableDamage = 0.5
+RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = { 
+ ["repair"] = 20,
+}
+RECIPE.items = {
+ ["plastic"] = 3,
+ ["steel"] = 3,
+ ["oil"] = 1,
+}
+RECIPE.result = {
+ ["armorrepair_20"] = 1
+}
+RECIPES:Register(RECIPE)
+//
+
+
+RECIPE = {}
+RECIPE.uid = "make_armorrepair_40"
+RECIPE.name = "Armorer's Tool Kit"
+RECIPE.category = "Armor - Repair"
+RECIPE.model = "models/mosi/fnv/props/health/repairkit.mdl"
+RECIPE.desc = "A small kit for maintaining armor."
+RECIPE.tableDamage = 0.5
+RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = { 
+ ["repair"] = 40,
+}
+RECIPE.items = {
+ ["plastic"] = 3,
+ ["steel"] = 5,
+ ["oil"] = 1,
+}
+RECIPE.result = {
+ ["armorrepair_40"] = 1
+}
+RECIPES:Register(RECIPE)
+//
+
+
+RECIPE = {}
+RECIPE.uid = "make_armorrepair_60"
+RECIPE.name = "Armorer's Tool Bag"
+RECIPE.category = "Armor - Repair"
+RECIPE.model = "models/mosi/fnv/props/health/repairkit.mdl"
+RECIPE.desc = "A large bag for maintaining armor."
+RECIPE.tableDamage = 0.5
+RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = { 
+ ["repair"] = 60,
+}
+RECIPE.items = {
+ ["plastic"] = 3,
+ ["steel"] = 7,
+ ["oil"] = 1,
+}
+RECIPE.result = {
+ ["armorrepair_60"] = 1
+}
+RECIPES:Register(RECIPE)
+//
+
+
+RECIPE = {}
+RECIPE.uid = "make_armorrepair_80"
+RECIPE.name = "Armorer's Field Repair Kit"
+RECIPE.category = "Armor - Repair"
+RECIPE.model = "models/mosi/fnv/props/health/repairkit.mdl"
+RECIPE.desc = "A field repair kit for armor."
+RECIPE.tableDamage = 0.5
+RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = { 
+ ["repair"] = 80,
+}
+RECIPE.items = {
+ ["plastic"] = 3,
+ ["steel"] = 10,
+ ["oil"] = 2,
+}
+RECIPE.result = {
+ ["armorrepair_80"] = 1
+}
+RECIPES:Register(RECIPE)
+//
+
+
+RECIPE = {}
+RECIPE.uid = "make_armorrepair_100"
+RECIPE.name = "Master Armorer's Kit"
+RECIPE.category = "Armor - Repair"
+RECIPE.model = "models/mosi/fnv/props/health/repairkit.mdl"
+RECIPE.desc = "A full kit for advanced armor repair."
+RECIPE.tableDamage = 0.5
+RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = { 
+ ["repair"] = 100,
+}
+RECIPE.items = {
+ ["plastic"] = 3,
+ ["steel"] = 15,
+ ["oil"] = 3,
+}
+RECIPE.result = {
+ ["armorrepair_100"] = 1
+}
+RECIPES:Register(RECIPE)
 //
 
 
@@ -3969,6 +4246,7 @@ RECIPE.name = "Make Charcoal"
 RECIPE.category = "Ammo - Components"
 RECIPE.model = "models/fallout3/furniture/campfire03.mdl"
 RECIPE.desc = "A piece of charcoal"
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -3986,6 +4264,7 @@ RECIPE.name = "Make Gunpowder"
 RECIPE.category = "Ammo - Components"
 RECIPE.model = "models/mosi/fnv/props/workstations/reloadingbench.mdl"
 RECIPE.desc = "A mix of sulfur and charcoal"
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4005,6 +4284,7 @@ RECIPE.name = "22LR Ammo"
 RECIPE.category = "Ammo - Standard Ammo Types"
 RECIPE.model = "models/fallout new vegas/22_ammo.mdl"
 RECIPE.desc = "A box of .22LR ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4024,6 +4304,7 @@ RECIPE.name = "22LR HP Ammo"
 RECIPE.category = "Ammo - Special Ammo Types"
 RECIPE.model = "models/fallout new vegas/22_ammo.mdl"
 RECIPE.desc = "A box of .22LR HP ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4043,6 +4324,7 @@ RECIPE.name = "5mm Ammo"
 RECIPE.category = "Ammo - Standard Ammo Types"
 RECIPE.model = "models/mosi/fallout4/ammo/5mm.mdl"
 RECIPE.desc = "A box of 5mm ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4062,6 +4344,7 @@ RECIPE.name = "5mm AP Ammo"
 RECIPE.category = "Ammo - Special Ammo Types"
 RECIPE.model = "models/mosi/fallout4/ammo/5mm.mdl"
 RECIPE.desc = "A box of 5mm AP ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4081,6 +4364,7 @@ RECIPE.name = "5mm HP Ammo"
 RECIPE.category = "Ammo - Special Ammo Types"
 RECIPE.model = "models/mosi/fallout4/ammo/5mm.mdl"
 RECIPE.desc = "A box of 5mm HP ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4100,6 +4384,7 @@ RECIPE.name = "5mm Surplus Ammo"
 RECIPE.category = "Ammo - Special Ammo Types"
 RECIPE.model = "models/mosi/fallout4/ammo/5mm.mdl"
 RECIPE.desc = "A box of 5mm Surplus ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4119,6 +4404,7 @@ RECIPE.name = "38 Special Ammo"
 RECIPE.category = "Ammo - Standard Ammo Types"
 RECIPE.model = "models/mosi/fallout4/ammo/38.mdl"
 RECIPE.desc = "A box of 38 Special ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4138,6 +4424,7 @@ RECIPE.name = "38 Special HP Ammo"
 RECIPE.category = "Ammo - Special Ammo Types"
 RECIPE.model = "models/mosi/fallout4/ammo/38.mdl"
 RECIPE.desc = "A box of 38 Special HP ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4157,6 +4444,7 @@ RECIPE.name = "9mm Ammo"
 RECIPE.category = "Ammo - Standard Ammo Types"
 RECIPE.model = "models/illusion/fwp/9mmammo.mdl"
 RECIPE.desc = "A box of 9mm ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4176,6 +4464,7 @@ RECIPE.name = "9mm HP Ammo"
 RECIPE.category = "Ammo - Special Ammo Types"
 RECIPE.model = "models/illusion/fwp/9mmammo.mdl"
 RECIPE.desc = "A box of 9mm HP ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4195,6 +4484,7 @@ RECIPE.name = "9mm +P Ammo"
 RECIPE.category = "Ammo - Special Ammo Types"
 RECIPE.model = "models/illusion/fwp/9mmammo.mdl"
 RECIPE.desc = "A box of 9mm +P ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4214,6 +4504,7 @@ RECIPE.name = "10mm Ammo"
 RECIPE.category = "Ammo - Standard Ammo Types"
 RECIPE.model = "models/mosi/fallout4/ammo/10mm.mdl"
 RECIPE.desc = "A box of 10mm ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4233,6 +4524,7 @@ RECIPE.name = "10mm HP Ammo"
 RECIPE.category = "Ammo - Special Ammo Types"
 RECIPE.model = "models/mosi/fallout4/ammo/10mm.mdl"
 RECIPE.desc = "A box of 10mm HP ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4252,6 +4544,7 @@ RECIPE.name = "45 Auto Ammo"
 RECIPE.category = "Ammo - Standard Ammo Types"
 RECIPE.model = "models/mosi/fallout4/ammo/45.mdl"
 RECIPE.desc = "A box of 45 Auto ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4271,6 +4564,7 @@ RECIPE.name = "45 Auto HP Ammo"
 RECIPE.category = "Ammo - Special Ammo Types"
 RECIPE.model = "models/mosi/fallout4/ammo/45.mdl"
 RECIPE.desc = "A box of 45 Auto HP ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4290,6 +4584,7 @@ RECIPE.name = "45 Auto +P Ammo"
 RECIPE.category = "Ammo - Special Ammo Types"
 RECIPE.model = "models/mosi/fallout4/ammo/45.mdl"
 RECIPE.desc = "A box of 45 Auto +P ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4309,6 +4604,7 @@ RECIPE.name = "20 Gauge Ammo"
 RECIPE.category = "Ammo - Standard Ammo Types"
 RECIPE.model = "models/fallout new vegas/shotgun_ammo.mdl"
 RECIPE.desc = "A box of 20 Gauge ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4329,6 +4625,7 @@ RECIPE.name = "12 Gauge Ammo"
 RECIPE.category = "Ammo - Standard Ammo Types"
 RECIPE.model = "models/mosi/fallout4/ammo/shotgunshells.mdl"
 RECIPE.desc = "A box of 12 Gauge ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4349,6 +4646,7 @@ RECIPE.name = "12 Gauge Dragon's Breath Ammo"
 RECIPE.category = "Ammo - Special Ammo Types"
 RECIPE.model = "models/mosi/fallout4/ammo/shotgunshells.mdl"
 RECIPE.desc = "A box of 12 Gauge Dragon's Breath ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4370,6 +4668,7 @@ RECIPE.name = "12 Gauge Explosive Ammo"
 RECIPE.category = "Ammo - Special Ammo Types"
 RECIPE.model = "models/mosi/fallout4/ammo/shotgunshells.mdl"
 RECIPE.desc = "A box of 12 Gauge Explosive ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4390,6 +4689,7 @@ RECIPE.name = "12 Gauge Flechette Ammo"
 RECIPE.category = "Ammo - Special Ammo Types"
 RECIPE.model = "models/mosi/fallout4/ammo/shotgunshells.mdl"
 RECIPE.desc = "A box of 12 Gauge Flechette ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4410,6 +4710,7 @@ RECIPE.name = "12 Gauge Rubber Ammo"
 RECIPE.category = "Ammo - Special Ammo Types"
 RECIPE.model = "models/mosi/fallout4/ammo/shotgunshells.mdl"
 RECIPE.desc = "A box of 12 Gauge Rubber ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4430,6 +4731,7 @@ RECIPE.name = "357 Magnum Ammo"
 RECIPE.category = "Ammo - Standard Ammo Types"
 RECIPE.model = "models/items/357ammo.mdl"
 RECIPE.desc = "A box of 357 Magnum ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4449,6 +4751,7 @@ RECIPE.name = "357 Magnum HP Ammo"
 RECIPE.category = "Ammo - Special Ammo Types"
 RECIPE.model = "models/items/357ammo.mdl"
 RECIPE.desc = "A box of 357 Magnum HP ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4468,6 +4771,7 @@ RECIPE.name = "44 Magnum Ammo"
 RECIPE.category = "Ammo - Standard Ammo Types"
 RECIPE.model = "models/mosi/fallout4/ammo/44.mdl"
 RECIPE.desc = "A box of 44 Magnum ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4488,6 +4792,7 @@ RECIPE.name = "44 Magnum HP Ammo"
 RECIPE.category = "Ammo - Special Ammo Types"
 RECIPE.model = "models/mosi/fallout4/ammo/44.mdl"
 RECIPE.desc = "A box of 44 Magnum HP ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4508,6 +4813,7 @@ RECIPE.name = "44 Magnum SWC Ammo"
 RECIPE.category = "Ammo - Special Ammo Types"
 RECIPE.model = "models/mosi/fallout4/ammo/44.mdl"
 RECIPE.desc = "A box of 44 Magnum SWC ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4528,6 +4834,7 @@ RECIPE.name = "5.56 Ammo"
 RECIPE.category = "Ammo - Standard Ammo Types"
 RECIPE.model = "models/mosi/fallout4/ammo/556.mdl"
 RECIPE.desc = "A box of 5.56 ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4547,6 +4854,7 @@ RECIPE.name = "5.56 AP Ammo"
 RECIPE.category = "Ammo - Special Ammo Types"
 RECIPE.model = "models/mosi/fallout4/ammo/556.mdl"
 RECIPE.desc = "A box of 5.56 AP ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4566,6 +4874,7 @@ RECIPE.name = "5.56 HP Ammo"
 RECIPE.category = "Ammo - Special Ammo Types"
 RECIPE.model = "models/mosi/fallout4/ammo/556.mdl"
 RECIPE.desc = "A box of 5.56 HP ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4585,6 +4894,7 @@ RECIPE.name = ".308 Ammo"
 RECIPE.category = "Ammo - Standard Ammo Types"
 RECIPE.model = "models/mosi/fallout4/ammo/308.mdl"
 RECIPE.desc = "A box of .308 ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4605,6 +4915,7 @@ RECIPE.name = ".308 AP Ammo"
 RECIPE.category = "Ammo - Special Ammo Types"
 RECIPE.model = "models/mosi/fallout4/ammo/308.mdl"
 RECIPE.desc = "A box of .308 AP ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4625,6 +4936,7 @@ RECIPE.name = ".45-70 Gov't Ammo"
 RECIPE.category = "Ammo - Standard Ammo Types"
 RECIPE.model = "models/Items/BoxSRounds.mdl"
 RECIPE.desc = "A box of .45-70 Gov't ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4645,6 +4957,7 @@ RECIPE.name = ".45-70 Gov't HP Ammo"
 RECIPE.category = "Ammo - Special Ammo Types"
 RECIPE.model = "models/Items/BoxSRounds.mdl"
 RECIPE.desc = "A box of .45-70 Gov't HP ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4665,6 +4978,7 @@ RECIPE.name = ".45-70 Gov't SWC Ammo"
 RECIPE.category = "Ammo - Special Ammo Types"
 RECIPE.model = "models/Items/BoxSRounds.mdl"
 RECIPE.desc = "A box of .45-70 Gov't SWC ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4685,6 +4999,7 @@ RECIPE.name = "12.7mm Ammo"
 RECIPE.category = "Ammo - Standard Ammo Types"
 RECIPE.model = "models/illusion/fwp/127ammobox.mdl"
 RECIPE.desc = "A box of 12.7mm ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4705,6 +5020,7 @@ RECIPE.name = "12.7mm HP Ammo"
 RECIPE.category = "Ammo - Special Ammo Types"
 RECIPE.model = "models/illusion/fwp/127ammobox.mdl"
 RECIPE.desc = "A box of 12.7mm HP ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4725,6 +5041,7 @@ RECIPE.name = ".50 MG Ammo"
 RECIPE.category = "Ammo - Standard Ammo Types"
 RECIPE.model = "models/mosi/fallout4/ammo/50.mdl"
 RECIPE.desc = "A box of .50 MG ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4745,6 +5062,7 @@ RECIPE.name = ".50 MG AP Ammo"
 RECIPE.category = "Ammo - Special Ammo Types"
 RECIPE.model = "models/mosi/fallout4/ammo/50.mdl"
 RECIPE.desc = "A box of .50 MG AP ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4765,6 +5083,7 @@ RECIPE.name = ".50 MG Explosive Ammo"
 RECIPE.category = "Ammo - Special Ammo Types"
 RECIPE.model = "models/mosi/fallout4/ammo/50.mdl"
 RECIPE.desc = "A box of .50 MG Explosive ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4785,6 +5104,7 @@ RECIPE.name = ".50 MG Incendiary Ammo"
 RECIPE.category = "Ammo - Special Ammo Types"
 RECIPE.model = "models/mosi/fallout4/ammo/50.mdl"
 RECIPE.desc = "A box of .50 MG Incendiary ammo."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_ammosmith"}
 RECIPE.xp = 0.01
 RECIPE.items = {
@@ -4809,6 +5129,7 @@ RECIPE.name = "Spiked Walking Cane"
 RECIPE.category = "Weapons - 1H Melee"
 RECIPE.model = "models/mosi/fallout4/props/weapons/melee/walkingcane.mdl"
 RECIPE.desc = "A makeshift weapon combining a walking cane and spikes."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.reqSkills = {
   ["repair"] = 40,
@@ -4833,6 +5154,7 @@ RECIPE.name = "Bladed Rolling Pin"
 RECIPE.category = "Weapons - 1H Melee"
 RECIPE.model = "models/mosi/fallout4/props/weapons/melee/rollingpin.mdl"
 RECIPE.desc = "A makeshift weapon made by attaching blades to a rolling pin."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.reqSkills = {
   ["repair"] = 40,
@@ -4857,6 +5179,7 @@ RECIPE.name = "Combat Knife"
 RECIPE.category = "Weapons - 1H Melee"
 RECIPE.model = "models/weapons/bowieknife.mdl"
 RECIPE.desc = "A makeshift combat knife forged out of steel."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.reqSkills = {
   ["repair"] = 40,
@@ -4880,6 +5203,7 @@ RECIPE.name = "Hooked Wrench"
 RECIPE.category = "Weapons - 1H Melee"
 RECIPE.model = "models/mosi/fallout4/props/weapons/melee/pipewrench.mdl"
 RECIPE.desc = "A makeshift wrench combined with several hooks."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.reqSkills = {
   ["repair"] = 40,
@@ -4904,6 +5228,7 @@ RECIPE.name = "Spiked Bat"
 RECIPE.category = "Weapons - 2H Melee"
 RECIPE.model = "models/mosi/fallout4/props/weapons/melee/baseballbat.mdl"
 RECIPE.desc = "A makeshift weapon created by drilling spikes into a wooden bat."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.reqSkills = {
   ["repair"] = 40,
@@ -4929,6 +5254,7 @@ RECIPE.name = "Bladed Bat"
 RECIPE.category = "Weapons - 2H Melee"
 RECIPE.model = "models/mosi/fallout4/props/weapons/melee/baseballbat.mdl"
 RECIPE.desc = "A makeshift weapon created by attaching blades onto a wooden bat."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.reqSkills = {
   ["repair"] = 40,
@@ -4954,6 +5280,7 @@ RECIPE.name = "Barbwire Bat"
 RECIPE.category = "Weapons - 2H Melee"
 RECIPE.model = "models/mosi/fallout4/props/weapons/melee/baseballbat.mdl"
 RECIPE.desc = "A makeshift weapon created by wrapping barbed wire around a wooden bat."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.reqSkills = {
   ["repair"] = 40,
@@ -4978,6 +5305,7 @@ RECIPE.name = "Metal Razor Bat"
 RECIPE.category = "Weapons - 2H Melee"
 RECIPE.model = "models/mosi/fallout4/props/weapons/melee/baseballbat.mdl"
 RECIPE.desc = "A makeshift weapon created by installing razor blades around a metal bat."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.reqSkills = {
   ["repair"] = 40,
@@ -5003,6 +5331,7 @@ RECIPE.name = "Metal Chained Bat"
 RECIPE.category = "Weapons - 2H Melee"
 RECIPE.model = "models/mosi/fallout4/props/weapons/melee/baseballbat.mdl"
 RECIPE.desc = "A makeshift weapon created by wrapping chains around a metal bat."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.reqSkills = {
   ["repair"] = 40,
@@ -5027,6 +5356,7 @@ RECIPE.name = "Wooden Board"
 RECIPE.category = "Weapons - 2H Melee"
 RECIPE.model = "models/mosi/fallout4/props/weapons/melee/board.mdl"
 RECIPE.desc = "A makeshift weapon made out of wood."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.reqSkills = {
   ["repair"] = 20,
@@ -5050,6 +5380,7 @@ RECIPE.name = "Bladed Board"
 RECIPE.category = "Weapons - 2H Melee"
 RECIPE.model = "models/mosi/fallout4/props/weapons/melee/board.mdl"
 RECIPE.desc = "A makeshift weapon made out of attaching blades to a board."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.reqSkills = {
   ["repair"] = 40,
@@ -5074,6 +5405,7 @@ RECIPE.name = "Spiked Board"
 RECIPE.category = "Weapons - 2H Melee"
 RECIPE.model = "models/mosi/fallout4/props/weapons/melee/board.mdl"
 RECIPE.desc = "A makeshift weapon made out of attaching spikes to a board."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.reqSkills = {
   ["repair"] = 40,
@@ -5098,6 +5430,7 @@ RECIPE.name = "Serrated Board"
 RECIPE.category = "Weapons - 2H Melee"
 RECIPE.model = "models/mosi/fallout4/props/weapons/melee/board.mdl"
 RECIPE.desc = "A makeshift weapon made out of attaching a serrated blade to a board."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.reqSkills = {
   ["repair"] = 40,
@@ -5122,6 +5455,7 @@ RECIPE.name = "Machete"
 RECIPE.category = "Weapons - 1H Melee"
 RECIPE.model = "models/mosi/fallout4/props/weapons/melee/machete.mdl"
 RECIPE.desc = "A makeshift weapon created forging steel and attaching a handle."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.reqSkills = {
   ["repair"] = 60,
@@ -5146,6 +5480,7 @@ RECIPE.name = "Katana"
 RECIPE.category = "Weapons - 2H Melee"
 RECIPE.model = "models/halokiller38/fallout/weapons/melee/katana.mdl"
 RECIPE.desc = "A makeshift katana created forging steel and attaching a handle."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.reqSkills = {
   ["repair"] = 60,
@@ -5170,6 +5505,7 @@ RECIPE.name = "Revolotionary Sword"
 RECIPE.category = "Weapons - 1H Melee"
 RECIPE.model = "models/mosi/fallout4/props/weapons/melee/revolutionarysword.mdl"
 RECIPE.desc = "A makeshift sword made in the forge. It resembles an artifact from the past."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.reqSkills = {
   ["repair"] = 60,
@@ -5194,6 +5530,7 @@ RECIPE.name = "Tomahawk"
 RECIPE.category = "Weapons - 1H Melee"
 RECIPE.model = "models/weapons/tomahawk.mdl"
 RECIPE.desc = "A makeshift tomahawk made in the forge."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.reqSkills = {
   ["repair"] = 60,
@@ -5219,6 +5556,7 @@ RECIPE.name = "Bumper Sword"
 RECIPE.category = "Weapons - 2H Melee"
 RECIPE.model = "models/halokiller38/fallout/weapons/melee/bumpersword.mdl"
 RECIPE.desc = "A makeshift sword created forging car bumper and attaching a handle."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.reqSkills = {
   ["repair"] = 60,
@@ -5243,6 +5581,7 @@ RECIPE.name = "Tire Iron Axe"
 RECIPE.category = "Weapons - 1H Melee"
 RECIPE.model = "models/mosi/fallout4/props/weapons/melee/tireiron.mdl"
 RECIPE.desc = "A makeshift weapon created by attaching an axe blade to a tire iron."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.reqSkills = {
   ["repair"] = 40,
@@ -5267,6 +5606,7 @@ RECIPE.name = "Tire Iron Axe"
 RECIPE.category = "Weapons - 1H Melee"
 RECIPE.model = "models/halokiller38/fallout/weapons/melee/warclub.mdl"
 RECIPE.desc = "A makeshift club made out of wood. Ooga Booga."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.reqSkills = {
   ["repair"] = 40,
@@ -5291,6 +5631,7 @@ RECIPE.name = "Pole Hook"
 RECIPE.category = "Weapons - 2H Melee"
 RECIPE.model = "models/mosi/fallout4/props/weapons/melee/polehook.mdl"
 RECIPE.desc = "A makeshift weapon created by attaching a hook to a metal pole."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.reqSkills = {
   ["repair"] = 20,
@@ -5315,6 +5656,7 @@ RECIPE.name = "Pool Cue Spear"
 RECIPE.category = "Weapons - 2H Melee"
 RECIPE.model = "models/mosi/fallout4/props/weapons/melee/poolcue.mdl"
 RECIPE.desc = "A makeshift weapon created by attaching a spike to a pool cue."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.reqSkills = {
   ["repair"] = 20,
@@ -5340,6 +5682,7 @@ RECIPE.name = "Pool Cue Spear and Shield"
 RECIPE.category = "Weapons - 2H Melee"
 RECIPE.model = "models/mosi/fallout4/props/weapons/melee/poolcue.mdl"
 RECIPE.desc = "A makeshift weapon created by attaching a spike to a pool cue and wielding a sheet metal shield."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.reqSkills = {
   ["repair"] = 40,
@@ -5362,6 +5705,7 @@ RECIPE.name = "Brass Knuckles"
 RECIPE.category = "Weapons - Unarmed Melee"
 RECIPE.model = "models/halokiller38/fallout/weapons/melee/brassknuckles.mdl"
 RECIPE.desc = "A makeshift pair of brass knuckles made in the forge."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.reqSkills = {
   ["repair"] = 20,
@@ -5385,6 +5729,7 @@ RECIPE.name = "Spiked Knuckles"
 RECIPE.category = "Weapons - Unarmed Melee"
 RECIPE.model = "models/mosi/fallout4/props/weapons/melee/knuckles.mdl"
 RECIPE.desc = "These look pointy."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.reqSkills = {
   ["repair"] = 40,
@@ -5409,6 +5754,7 @@ RECIPE.name = "Mantis Gauntlet"
 RECIPE.category = "Weapons - Unarmed Melee"
 RECIPE.model = "models/halokiller38/fallout/weapons/melee/mantisgauntlet.mdl"
 RECIPE.desc = "Gauntlets made out mantis legs. Gross."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.reqSkills = {
   ["repair"] = 40,
@@ -5433,6 +5779,7 @@ RECIPE.name = "Power Fist"
 RECIPE.category = "Weapons - Unarmed Melee"
 RECIPE.model = "models/mosi/fallout4/props/weapons/melee/powerfist.mdl"
 RECIPE.desc = "A big ass power fist. Nuff said."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.reqSkills = {
   ["repair"] = 60,
@@ -5455,80 +5802,156 @@ RECIPES:Register(RECIPE)
 -- throwing weapons
 
 RECIPE = {}
-RECIPE.uid = "make_throwing_knife"
+RECIPE.uid = "make_throwing_1knife"
 RECIPE.name = "Throwing Knife"
 RECIPE.category = "Throwing Weapons"
-RECIPE.model = "models/mosi/fallout4/props/weapons/melee/knife.mdl"
+RECIPE.model = "models/halokiller38/fallout/weapons/melee/bowieknife.mdl"
 RECIPE.desc = "A weighted, thin blade with no handle, meant for throwing."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.reqSkills = {
-  ["repair"] = 20,
+ ["repair"] = 20,
 }
 RECIPE.xp = 0.01
 RECIPE.items = {
-	["adhesive"] = 1,
-	["wood"] = 1,
-	["steel"] = 5,
-	["screw"] = 1,
+ ["adhesive"] = 1,
+ ["wood"] = 1,
+ ["steel"] = 5,
+ ["screw"] = 1,
 }
 RECIPE.result = {
-	["throwing_knife"] = 1
+ ["throwing_1knife"] = 1
 }
 RECIPES:Register(RECIPE)
-
 //
+
 RECIPE = {}
-RECIPE.uid = "make_throwing_hatchet"
+RECIPE.uid = "make_throwing_2tomahawk"
+RECIPE.name = "Throwing Tomahawk"
+RECIPE.category = "Throwing Weapons"
+RECIPE.model = "models/halokiller38/fallout/weapons/melee/tomahawk.mdl"
+RECIPE.desc = "A short hatchet weighted and balanced to be thrown."
+RECIPE.tableDamage = 0.5
+RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+ ["repair"] = 30,
+}
+RECIPE.xp = 0.01
+RECIPE.items = {
+ ["adhesive"] = 1,
+ ["wood"] = 2,
+ ["steel"] = 6,
+ ["screw"] = 2,
+}
+RECIPE.result = {
+ ["throwing_2tomahawk"] = 1
+}
+RECIPES:Register(RECIPE)
+//
+
+RECIPE = {}
+RECIPE.uid = "make_throwing_3knifespear"
+RECIPE.name = "Throwing Knife Spear"
+RECIPE.category = "Throwing Weapons"
+RECIPE.model = "models/halokiller38/fallout/weapons/melee/bm_spear.mdl"
+RECIPE.desc = "A makeshift weapon created by attaching a knife to a wooden pole."
+RECIPE.tableDamage = 0.5
+RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+ ["repair"] = 40,
+}
+RECIPE.xp = 0.01
+RECIPE.items = {
+ ["adhesive"] = 2,
+ ["wood"] = 3,
+ ["steel"] = 7,
+ ["screw"] = 2,
+}
+RECIPE.result = {
+ ["throwing_3knifespear"] = 1
+}
+RECIPES:Register(RECIPE)
+//
+
+RECIPE = {}
+RECIPE.uid = "make_throwing_4hatchet"
 RECIPE.name = "Throwing Hatchet"
 RECIPE.category = "Throwing Weapons"
-RECIPE.model = "models/fo3_axe.mdl"
+RECIPE.model = "models/halokiller38/fallout/weapons/melee/throwinghatchet.mdl"
 RECIPE.desc = "A short hatchet weighted and balanced to be thrown."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.reqSkills = {
-  ["repair"] = 60,
+ ["repair"] = 50,
 }
 RECIPE.xp = 0.01
 RECIPE.items = {
-	["adhesive"] = 1,
-	["wood"] = 2,
-	["steel"] = 10,
-	["screw"] = 1,
+ ["adhesive"] = 2,
+ ["wood"] = 3,
+ ["steel"] = 9,
+ ["screw"] = 3,
 }
 RECIPE.result = {
-	["throwing_knife"] = 1
+ ["throwing_4hatchet"] = 1
 }
 RECIPES:Register(RECIPE)
-
 //
+
 RECIPE = {}
-RECIPE.uid = "make_throwing_spear"
+RECIPE.uid = "make_throwing_5cleaver"
+RECIPE.name = "Throwing Cleaver"
+RECIPE.category = "Throwing Weapons"
+RECIPE.model = "models/halokiller38/fallout/weapons/melee/cleaver.mdl"
+RECIPE.desc = "A weighted cleaver adapted for throwing."
+RECIPE.tableDamage = 0.5
+RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
+RECIPE.reqSkills = {
+ ["repair"] = 60,
+}
+RECIPE.xp = 0.01
+RECIPE.items = {
+ ["adhesive"] = 3,
+ ["wood"] = 3,
+ ["steel"] = 11,
+ ["screw"] = 3,
+}
+RECIPE.result = {
+ ["throwing_5cleaver"] = 1
+}
+RECIPES:Register(RECIPE)
+//
+
+RECIPE = {}
+RECIPE.uid = "make_throwing_6spear"
 RECIPE.name = "Throwing Spear"
 RECIPE.category = "Throwing Weapons"
 RECIPE.model = "models/halokiller38/fallout/weapons/melee/bm_spear.mdl"
 RECIPE.desc = "A makeshift weapon created by attaching a spike to a wooden pole."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.reqSkills = {
-  ["repair"] = 80,
+ ["repair"] = 80,
 }
 RECIPE.xp = 0.01
 RECIPE.items = {
-	["adhesive"] = 1,
-	["wood"] = 3,
-	["steel"] = 15,
-	["screw"] = 1,
+ ["adhesive"] = 3,
+ ["wood"] = 4,
+ ["steel"] = 13,
+ ["screw"] = 4,
 }
 RECIPE.result = {
-	["throwing_spear"] = 1
+ ["throwing_6spear"] = 1
 }
 RECIPES:Register(RECIPE)
-
 //
+
 RECIPE = {}
 RECIPE.uid = "make_grenade_dynamite"
 RECIPE.name = "Dynamite"
 RECIPE.category = "Throwing Weapons"
 RECIPE.model = "models/halokiller38/fallout/weapons/explosives/dynamite.mdl"
 RECIPE.desc = "A makeshift stick of dynamite."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.reqSkills = {
   ["explosives"] = 40,
@@ -5551,6 +5974,7 @@ RECIPE.name = "Tin Can Grenade"
 RECIPE.category = "Throwing Weapons"
 RECIPE.model = "models/mosi/fnv/props/junk/tincan01.mdl"
 RECIPE.desc = "A makeshift grenade made with a tin can."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.reqSkills = {
   ["explosives"] = 40,
@@ -5574,6 +5998,7 @@ RECIPE.name = "Bottlecap Mine"
 RECIPE.category = "Throwing Weapons"
 RECIPE.model = "models/halokiller38/fallout/weapons/mines/bottlecapmine.mdl"
 RECIPE.desc = "Make a high yield placed explosive with a load of gunpowder, shrapnel, and a container."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.reqSkills = {
   ["explosives"] = 80,
@@ -5597,6 +6022,7 @@ RECIPE.name = "MFC Cluster Grenade"
 RECIPE.category = "Throwing Weapons"
 RECIPE.model = "models/mosi/fallout4/ammo/microfusioncell.mdl"
 RECIPE.desc = "With some copper wire and adhesive, link three MFC Grenades together into a multi-hitting clusterbomb."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.reqSkills = {
   ["explosives"] = 100,
@@ -5620,6 +6046,7 @@ RECIPE.name = "Microfusion Cell Grenade"
 RECIPE.category = "Throwing Weapons"
 RECIPE.model = "models/mosi/fallout4/ammo/microfusioncell.mdl"
 RECIPE.desc = "A makeshift grenade made a microfusion cell."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.reqSkills = {
   ["explosives"] = 80,
@@ -5642,6 +6069,7 @@ RECIPE.name = "Firebomb"
 RECIPE.category = "Throwing Weapons"
 RECIPE.model = "models/halokiller38/fallout/weapons/explosives/firebomb.mdl"
 RECIPE.desc = "A makeshift incendiary grenade made from flammable fluids inside a glass bottle."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.reqSkills = {
   ["explosives"] = 20,
@@ -5669,7 +6097,7 @@ RECIPE.name = "Bobbypin"
 RECIPE.category = "Miscelaneous"
 RECIPE.model = "models/mosi/fallout4/props/junk/bobbypin.mdl"
 RECIPE.desc = "A makeshift bobbypin."
---RECIPE.tableDamage = 0.5
+RECIPE.tableDamage = 0.5
 RECIPE.items = {
 	["steel"] = 3,
 }
@@ -5688,6 +6116,7 @@ RECIPE.name = "Small Backpack"
 RECIPE.category = "Storage"
 RECIPE.model = "models/vex/fallout76/backpacks/backpack_01.mdl"
 RECIPE.desc = "A small makeshift backpack."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.reqSkills = {
   ["survival"] = 25,
@@ -5710,6 +6139,7 @@ RECIPE.name = "Medium Backpack"
 RECIPE.category = "Storage"
 RECIPE.model = "models/vex/fallout76/backpacks/atx_backpack_pioneer.mdl"
 RECIPE.desc = "A medium makeshift backpack."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.reqSkills = {
   ["survival"] = 50,
@@ -5732,6 +6162,7 @@ RECIPE.name = "Large Backpack"
 RECIPE.category = "Storage"
 RECIPE.model = "models/vex/fallout76/backpacks/atx_backpack_surplussack.mdl"
 RECIPE.desc = "A large makeshift backpack."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.reqSkills = {
   ["survival"] = 75,
@@ -5755,6 +6186,7 @@ RECIPE.name = "Breakdown 9mm Pistol"
 RECIPE.category = "Breakdown - Weapon (Pistols)"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -5775,6 +6207,7 @@ RECIPE.name = "Breakdown 22 Pistol"
 RECIPE.category = "Breakdown - Weapon (Pistols)"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -5795,6 +6228,7 @@ RECIPE.name = "Breakdown 22 SMG"
 RECIPE.category = "Breakdown - Weapon (SMGs)"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -5815,6 +6249,7 @@ RECIPE.name = "Breakdown Chinese SMG"
 RECIPE.category = "Breakdown - Weapon (SMGs)"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -5836,6 +6271,7 @@ RECIPE.name = "Breakdown 9mm SMG"
 RECIPE.category = "Breakdown - Weapon (SMGs)"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -5856,6 +6292,7 @@ RECIPE.name = "Breakdown Auxiliary Revolver"
 RECIPE.category = "Breakdown - Weapon (Pistols)"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -5877,6 +6314,7 @@ RECIPE.name = "Breakdown Light Carbine"
 RECIPE.category = "Breakdown - Weapon (Rifles)"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -5898,6 +6336,7 @@ RECIPE.name = "Breakdown Revolving Carbine"
 RECIPE.category = "Breakdown - Weapon (Rifles)"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -5919,6 +6358,7 @@ RECIPE.name = "Breakdown Scout Rifle"
 RECIPE.category = "Breakdown - Weapon (Rifles)"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -5940,6 +6380,7 @@ RECIPE.name = "Breakdown 38 Revolver"
 RECIPE.category = "Breakdown - Weapon (Pistols)"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -5961,6 +6402,7 @@ RECIPE.name = "Breakdown Varmint Rifle"
 RECIPE.category = "Breakdown - Weapon (Rifles)"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -5981,6 +6423,7 @@ RECIPE.name = "Breakdown Caravan Shotgun"
 RECIPE.category = "Breakdown - Weapon (Shotguns)"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6002,6 +6445,7 @@ RECIPE.name = "Breakdown Hunting Shotgun"
 RECIPE.category = "Breakdown - Weapon (Shotguns)"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6023,6 +6467,7 @@ RECIPE.name = "Breakdown Service Rifle"
 RECIPE.category = "Breakdown - Weapon (Rifles)"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6044,6 +6489,7 @@ RECIPE.name = "Breakdown 45 Pistol"
 RECIPE.category = "Breakdown - Weapon (Pistols)"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6065,6 +6511,7 @@ RECIPE.name = "Breakdown 45 SMG"
 RECIPE.category = "Breakdown - Weapon (SMGs)"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6086,6 +6533,7 @@ RECIPE.name = "Breakdown 10mm Pistol"
 RECIPE.category = "Breakdown - Weapon (Pistols)"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6105,6 +6553,7 @@ RECIPE.name = "Breakdown 10mm SMG"
 RECIPE.category = "Breakdown - Weapon (SMGs)"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6125,6 +6574,7 @@ RECIPE.name = "Breakdown Combat Rifle"
 RECIPE.category = "Breakdown - Weapon (Rifles)"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6145,6 +6595,7 @@ RECIPE.name = "Breakdown Handmade AR"
 RECIPE.category = "Breakdown - Weapon (Rifles)"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6165,6 +6616,7 @@ RECIPE.name = "Breakdown Stamped MG"
 RECIPE.category = "Breakdown - Weapon (Rifles)"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6185,6 +6637,7 @@ RECIPE.name = "Breakdown 357 Revolver"
 RECIPE.category = "Breakdown - Weapon (Pistols)"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6206,6 +6659,7 @@ RECIPE.name = "Breakdown Lever Action Shotgun"
 RECIPE.category = "Breakdown - Weapon (Shotguns)"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6227,6 +6681,7 @@ RECIPE.name = "Breakdown Auxiliary Rifle"
 RECIPE.category = "Breakdown - Weapon (Rifles)"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6248,6 +6703,7 @@ RECIPE.name = "Breakdown Cowboy Repeater"
 RECIPE.category = "Breakdown - Weapon (Rifles)"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6268,6 +6724,7 @@ RECIPE.name = "Breakdown Pipe Revolver"
 RECIPE.category = "Breakdown - Weapon (Pistols)"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6289,6 +6746,7 @@ RECIPE.name = "Breakdown Pipe Rifle"
 RECIPE.category = "Breakdown - Weapon (Rifles)"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6310,6 +6768,7 @@ RECIPE.name = "Breakdown Pipe Bolt Action"
 RECIPE.category = "Breakdown - Weapon (Rifles)"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6331,6 +6790,7 @@ RECIPE.name = "Breakdown Pipe Scoped Bolt Action"
 RECIPE.category = "Breakdown - Weapon (Rifles)"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_weaponmaster"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6354,6 +6814,7 @@ RECIPE.name = "Breakdown Laser Musket"
 RECIPE.category = "Breakdown - Weapon (Energy Weapons)"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6379,6 +6840,7 @@ RECIPE.name = "Breakdown Laser Revolver"
 RECIPE.category = "Breakdown - Weapon (Energy Weapons)"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6402,6 +6864,7 @@ RECIPE.name = "Breakdown AEP-9 Laser Pistol"
 RECIPE.category = "Breakdown - Weapon (Energy Weapons)"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6425,6 +6888,7 @@ RECIPE.name = "Breakdown Laser Repeater"
 RECIPE.category = "Breakdown - Weapon (Energy Weapons)"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_science"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6448,6 +6912,7 @@ RECIPE.name = "Breakdown Boxing Glove"
 RECIPE.category = "Breakdown - Melee Weapons"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6467,6 +6932,7 @@ RECIPE.name = "Breakdown Switchblade"
 RECIPE.category = "Breakdown - Melee Weapons"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6487,6 +6953,7 @@ RECIPE.name = "Breakdown Combat Knife"
 RECIPE.category = "Breakdown - Melee Weapons"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6505,6 +6972,7 @@ RECIPE.name = "Breakdown Lead Pipe"
 RECIPE.category = "Breakdown - Melee Weapons"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6523,6 +6991,7 @@ RECIPE.name = "Breakdown Wooden Board"
 RECIPE.category = "Breakdown - Melee Weapons"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6541,6 +7010,7 @@ RECIPE.name = "Breakdown Walking Cane"
 RECIPE.category = "Breakdown - Melee Weapons"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6559,6 +7029,7 @@ RECIPE.name = "Breakdown Wrench"
 RECIPE.category = "Breakdown - Melee Weapons"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6578,6 +7049,7 @@ RECIPE.name = "Breakdown Commie Whacker"
 RECIPE.category = "Breakdown - Melee Weapons"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6597,6 +7069,7 @@ RECIPE.name = "Breakdown Baseball Bat"
 RECIPE.category = "Breakdown - Melee Weapons"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6615,6 +7088,7 @@ RECIPE.name = "Breakdown Spiked Walking Cane"
 RECIPE.category = "Breakdown - Melee Weapons"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6636,6 +7110,7 @@ RECIPE.name = "Breakdown Bladed Rolling Pin"
 RECIPE.category = "Breakdown - Melee Weapons"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6657,6 +7132,7 @@ RECIPE.name = "Breakdown Bladed Commie Whacker"
 RECIPE.category = "Breakdown - Melee Weapons"
 RECIPE.model = "models/fallout3/clutter/scrapmetal.mdl"
 RECIPE.desc = "Crudely break down the materials of weapons."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_blacksmithinganvil"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6680,6 +7156,7 @@ RECIPE.name = "Breakdown Leather Jacket"
 RECIPE.category = "Breakdown Armor"
 RECIPE.model = "models/thespireroleplay/items/clothes/group051.mdl"
 RECIPE.desc = "Crudely break down the materials of armor."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6700,6 +7177,7 @@ RECIPE.name = "Breakdown Leather Vest"
 RECIPE.category = "Breakdown Armor"
 RECIPE.model = "models/thespireroleplay/items/clothes/group052.mdl"
 RECIPE.desc = "Crudely break down the materials of armor."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6719,6 +7197,7 @@ RECIPE.name = "Breakdown Leather Brace"
 RECIPE.category = "Breakdown Armor"
 RECIPE.model = "models/mosi/fallout4/props/junk/ammobag.mdl"
 RECIPE.desc = "Crudely break down the materials of armor."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6738,6 +7217,7 @@ RECIPE.name = "Breakdown Reinforced Leather Brace"
 RECIPE.category = "Breakdown Armor"
 RECIPE.model = "models/mosi/fallout4/props/junk/ammobag.mdl"
 RECIPE.desc = "Crudely break down the materials of armor."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6759,6 +7239,7 @@ RECIPE.name = "Breakdown Leather Kneepads"
 RECIPE.category = "Breakdown Armor"
 RECIPE.model = "models/mosi/fallout4/props/junk/ammobag.mdl"
 RECIPE.desc = "Crudely break down the materials of armor."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6779,6 +7260,7 @@ RECIPE.name = "Breakdown Reinforced Leather Kneepads"
 RECIPE.category = "Breakdown Armor"
 RECIPE.model = "models/mosi/fallout4/props/junk/ammobag.mdl"
 RECIPE.desc = "Crudely break down the materials of armor."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6800,6 +7282,7 @@ RECIPE.name = "Breakdown Reinforced Leather Jacket"
 RECIPE.category = "Breakdown Armor"
 RECIPE.model = "models/thespireroleplay/items/clothes/group052.mdl"
 RECIPE.desc = "Crudely break down the materials of armor."
+RECIPE.tableDamage = 0.5
 RECIPE.craftEnts = {"nut_craftingtable_armorsmith"}
 RECIPE.items = {
     --uniqueID, if unspecified in the file, are the file name without the sh_
@@ -6814,3 +7297,153 @@ RECIPE.result = {
 }
 RECIPES:Register(RECIPE)
 //
+RECIPE = {}
+RECIPE.uid = "make_crafting_cooking"
+RECIPE.name = "Cooking Station"
+RECIPE.category = "Crafting Stations"
+RECIPE.model = "models/mosi/fallout4/furniture/workstations/cooking_station_4.mdl"
+RECIPE.desc = "A crafting bench for cooking."
+RECIPE.tableDamage = 0.5
+RECIPE.craftEnts = {"nut_craftingtable_firepit"}
+RECIPE.reqSkills = {
+ ["repair"] = 20,
+}
+RECIPE.items = {
+ ["adhesive"] = 3,
+ ["steel"] = 10,
+ ["cloth"] = 10,
+ ["plastic"] = 10,
+ ["screw"] = 5,
+}
+RECIPE.result = {
+ ["crafting_cook"] = 1
+}
+RECIPES:Register(RECIPE)
+//
+
+
+RECIPE = {}
+RECIPE.uid = "make_crafting_weapon"
+RECIPE.name = "Gunsmith Workbench"
+RECIPE.category = "Crafting Stations"
+RECIPE.model = "models/mosi/fallout4/furniture/workstations/weapon_workbench_1.mdl"
+RECIPE.desc = "A workbench for crafting weaponry."
+RECIPE.tableDamage = 0.5
+RECIPE.craftEnts = {"nut_craftingtable_firepit"}
+RECIPE.reqSkills = {
+ ["repair"] = 20,
+}
+RECIPE.items = {
+ ["adhesive"] = 3,
+ ["steel"] = 10,
+ ["cloth"] = 10,
+ ["plastic"] = 10,
+ ["screw"] = 5,
+}
+RECIPE.result = {
+ ["crafting_weapon"] = 1
+}
+RECIPES:Register(RECIPE)
+//
+
+
+RECIPE = {}
+RECIPE.uid = "make_crafting_armor"
+RECIPE.name = "Armorsmithing Bench"
+RECIPE.category = "Crafting Stations"
+RECIPE.model = "models/mosi/fallout4/furniture/workstations/weapon_workbench_2.mdl"
+RECIPE.desc = "A crafting bench for armor."
+RECIPE.tableDamage = 0.5
+RECIPE.craftEnts = {"nut_craftingtable_firepit"}
+RECIPE.reqSkills = {
+ ["repair"] = 40,
+}
+RECIPE.items = {
+ ["adhesive"] = 3,
+ ["steel"] = 10,
+ ["cloth"] = 10,
+ ["plastic"] = 10,
+ ["screw"] = 5,
+}
+RECIPE.result = {
+ ["crafting_armor"] = 1
+}
+RECIPES:Register(RECIPE)
+//
+
+
+RECIPE = {}
+RECIPE.uid = "make_crafting_blacksmith"
+RECIPE.name = "Blacksmithing Anvil"
+RECIPE.category = "Crafting Stations"
+RECIPE.model = "models/mosi/fallout4/furniture/workstations/armor_workbench.mdl"
+RECIPE.desc = "A crafting bench for armor."
+RECIPE.tableDamage = 0.5
+RECIPE.craftEnts = {"nut_craftingtable_firepit"}
+RECIPE.reqSkills = {
+ ["repair"] = 40,
+}
+RECIPE.items = {
+ ["adhesive"] = 3,
+ ["steel"] = 10,
+ ["cloth"] = 10,
+ ["plastic"] = 10,
+ ["screw"] = 5,
+}
+RECIPE.result = {
+ ["crafting_blacksmith"] = 1
+}
+RECIPES:Register(RECIPE)
+//
+
+
+RECIPE = {}
+RECIPE.uid = "make_crafting_ammo"
+RECIPE.name = "Ammosmithing Bench"
+RECIPE.category = "Crafting Stations"
+RECIPE.model = "models/fallout new vegas/reload_bench.mdl"
+RECIPE.desc = "A crafting bench for ammunition."
+RECIPE.tableDamage = 0.5
+RECIPE.craftEnts = {"nut_craftingtable_firepit"}
+RECIPE.reqSkills = {
+ ["repair"] = 20,
+}
+RECIPE.items = {
+ ["adhesive"] = 3,
+ ["steel"] = 10,
+ ["cloth"] = 10,
+ ["plastic"] = 10,
+ ["screw"] = 5,
+}
+RECIPE.result = {
+ ["crafting_ammo"] = 1
+}
+RECIPES:Register(RECIPE)
+//
+
+
+RECIPE = {}
+RECIPE.uid = "make_crafting_science"
+RECIPE.name = "Science Station"
+RECIPE.category = "Crafting Stations"
+RECIPE.model = "models/maxib123/workbench.mdl"
+RECIPE.desc = "A scientific workbench."
+RECIPE.tableDamage = 0.5
+RECIPE.craftEnts = {"nut_craftingtable_firepit"}
+RECIPE.reqSkills = {
+ ["science"] = 20,
+}
+RECIPE.items = {
+ ["adhesive"] = 3,
+ ["steel"] = 10,
+ ["cloth"] = 10,
+ ["plastic"] = 10,
+ ["screw"] = 5,
+ ["circuitry"] = 5,
+}
+RECIPE.result = {
+ ["crafting_science"] = 1
+}
+RECIPES:Register(RECIPE)
+//
+``
