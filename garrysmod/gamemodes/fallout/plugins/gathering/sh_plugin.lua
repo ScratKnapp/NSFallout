@@ -51,10 +51,15 @@ local gatherItems = {
 	["plant_coyotechew"] = true,
 	["plant_gourd"] = true,
 	["plant_maize"] = true,
+	["plant_agave"] = true,
+	["plant_cavefungus"] = true,
 	["plant_pintobeans"] = true,
+	["plant_xanderroot"] = true,
+	["plant_brocflower"] = true,
 	
 	["tree_birch"] = true,
 	["vein_iron"] = true,
+	["vein_sulfur"] = true,
 }
 
 function PLUGIN:UpdateStamina(client, char, add)
