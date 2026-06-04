@@ -1,6 +1,6 @@
 ENT.Type = "anim"
 ENT.Base = "nut_gathering"
-ENT.PrintName = "Pinto Bean Plant"
+ENT.PrintName = "Broc Flower Plant"
 ENT.Author = ""
 ENT.Spawnable = true
 ENT.AdminOnly = true
@@ -13,12 +13,12 @@ ENT.plant = true
 ENT.growthTime = 1200
 
 ENT.models = {
-	"models/mosi/fnv/props/plants/pinto.mdl"
+	"models/mosi/fnv/props/plants/brocflower.mdl"
 }
 
 ENT.resources = {
-	["food_pintobeans"] = 3,
-	["seed_pintobeans"] = 2
+	["plant_brocflower"] = 3,
+	["seed_brocflower"] = 1
 }
 
 ENT.RenderGroup = RENDERGROUP_TRANSLUCENT
