@@ -17,7 +17,7 @@ ENT.models = {
 }
 
 ENT.resources = {
-	["plant_brocflower"] = 3,
+	["food_brocflower"] = 3,
 	["seed_brocflower"] = 1
 }
 
