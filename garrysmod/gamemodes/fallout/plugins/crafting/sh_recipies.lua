@@ -7446,4 +7446,3 @@ RECIPE.result = {
 }
 RECIPES:Register(RECIPE)
 //
-``

@@ -10,6 +10,7 @@ ITEM.upgradeLimit = 5
 
 ITEM.combiner = true
 ITEM.weaponOnly = true
+ITEM.meleeOnly = true
 
 ITEM.dmg = {
 	["Slash"] = 1,

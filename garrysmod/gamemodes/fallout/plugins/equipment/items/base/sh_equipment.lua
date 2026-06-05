@@ -7,6 +7,8 @@ ITEM.height = 1
 ITEM.flag = "v"
 ITEM.slot = "Default"
 
+ITEM.equipment = true
+
 --gives SWEP on equip
 --ITEM.class = "weapon_pistol"
 
@@ -374,8 +376,6 @@ ITEM.functions.EquipSlot = {
 	isMulti = true,
 	multiOptions = function(item, client)
 		local targets = {}
-		
-		local inventory = client:getChar():getInv()
 
 		local slots
 		if(istable(item.specialSlot)) then
@@ -499,22 +499,28 @@ ITEM.functions.RemoveAttach = {
 	end,
 	onRun = function(item, data)
 		if(!data) then return false end
-	
+
 		local upgradeSlot = data[1]
 		local upgradeUID = data[2]
 	
 		local client = item.player
 		local char = client:getChar()
 		local inventory = char:getInv()
-	
+
 		local upgradeItem = nut.item.list[upgradeUID]
 		if(upgradeItem) then
-			inventory:addSmart(upgradeUID)
-			upgradeItem:upgrade(upgradeItem, item, true)
-			
 			local upgradeSlots = item:getData("upgradeSlots", {})
 			upgradeSlots[upgradeSlot] = nil
+			
 			item:setData("upgradeSlots", upgradeSlots)
+		
+			inventory:addSmart(upgradeUID)
+			upgradeItem:upgrade(upgradeItem, item, true)
+
+			--for some reason this needs a timer or the database might not properly update?
+			--timer.Simple(1, function()
+			--	item:setData("upgradeSlots", upgradeSlots)
+			--end)
 		end
 	
 		return false
